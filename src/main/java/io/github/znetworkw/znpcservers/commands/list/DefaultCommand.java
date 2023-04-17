@@ -29,18 +29,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+@SuppressWarnings({"UnstableApiUsage", "deprecation"})
 public class DefaultCommand extends Command {
-    private static final String WHITESPACE = " ";
-
     private static final Splitter SPACE_SPLITTER = Splitter.on(" ");
 
     private static final Joiner SPACE_JOINER = Joiner.on(" ");
 
-    private static final SkinFunction DO_APPLY_SKIN;
-
-    static {
-        DO_APPLY_SKIN = ((sender, npc, skin) -> NPCSkin.forName(skin, ()));
-    }
+    private static final SkinFunction DO_APPLY_SKIN = (sender, npc, skin) -> NPCSkin.forName(skin, (values, ex) -> {
+        if (ex != null) throw new RuntimeException(ex);
+        npc.changeSkin(NPCSkin.forValues(values));
+    });
 
     public DefaultCommand() {
         super("znpcs");
@@ -69,7 +67,7 @@ public class DefaultCommand extends Command {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INVALID_NUMBER);
             return;
         }
-        boolean foundNPC = ConfigurationConstants.NPC_LIST.stream().anyMatch(npc -> (npc.getId() == id.intValue()));
+        boolean foundNPC = ConfigurationConstants.NPC_LIST.stream().anyMatch(npc -> (npc.getId() == id));
         if (foundNPC) {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.NPC_FOUND);
             return;
@@ -80,7 +78,7 @@ public class DefaultCommand extends Command {
             return;
         }
         NPCType npcType = NPCType.valueOf(args.get("type").toUpperCase());
-        NPC npc = ZNPCsPlus.createNPC(id.intValue(), npcType, sender.getPlayer().getLocation(), name);
+        NPC npc = ZNPCsPlus.createNPC(id, npcType, sender.getPlayer().getLocation(), name);
         Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.SUCCESS);
         if (npcType == NPCType.PLAYER) {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.FETCHING_SKIN, name);
@@ -99,12 +97,12 @@ public class DefaultCommand extends Command {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INVALID_NUMBER);
             return;
         }
-        NPC foundNPC = NPC.find(id.intValue());
+        NPC foundNPC = NPC.find(id);
         if (foundNPC == null) {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.NPC_NOT_FOUND);
             return;
         }
-        ZNPCsPlus.deleteNPC(id.intValue());
+        ZNPCsPlus.deleteNPC(id);
         Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.SUCCESS);
     }
 
@@ -121,7 +119,7 @@ public class DefaultCommand extends Command {
                 textComponent.setColor(ChatColor.GREEN);
                 parts.add(textComponent);
                 TextComponent textComponent2 = new TextComponent("[TELEPORT]");
-                textComponent2.setBold(Boolean.valueOf(true));
+                textComponent2.setBold(true);
                 textComponent2.setColor(ChatColor.DARK_GREEN);
                 textComponent2.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, (new ComponentBuilder("Click to teleport this npc!"))
 
@@ -131,7 +129,7 @@ public class DefaultCommand extends Command {
                 parts.add(textComponent2);
                 parts.add(new TextComponent(" "));
                 TextComponent textComponent3 = new TextComponent("[DELETE]");
-                textComponent3.setBold(Boolean.valueOf(true));
+                textComponent3.setBold(true);
                 textComponent3.setColor(ChatColor.DARK_RED);
                 textComponent3.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, (new ComponentBuilder("Click to delete this npc!"))
 
@@ -155,7 +153,7 @@ public class DefaultCommand extends Command {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INVALID_NUMBER);
             return;
         }
-        NPC foundNPC = NPC.find(id.intValue());
+        NPC foundNPC = NPC.find(id);
         if (foundNPC == null) {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.NPC_NOT_FOUND);
             return;
@@ -176,7 +174,7 @@ public class DefaultCommand extends Command {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INVALID_NUMBER);
             return;
         }
-        NPC foundNPC = NPC.find(id.intValue());
+        NPC foundNPC = NPC.find(id);
         if (foundNPC == null) {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.NPC_NOT_FOUND);
             return;
@@ -202,7 +200,7 @@ public class DefaultCommand extends Command {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INVALID_NUMBER);
             return;
         }
-        NPC foundNPC = NPC.find(id.intValue());
+        NPC foundNPC = NPC.find(id);
         if (foundNPC == null) {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.NPC_NOT_FOUND);
             return;
@@ -223,7 +221,7 @@ public class DefaultCommand extends Command {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INVALID_NUMBER);
             return;
         }
-        NPC foundNPC = NPC.find(id.intValue());
+        NPC foundNPC = NPC.find(id);
         if (foundNPC == null) {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.NPC_NOT_FOUND);
             return;
@@ -244,7 +242,7 @@ public class DefaultCommand extends Command {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INVALID_NUMBER);
             return;
         }
-        NPC foundNPC = NPC.find(id.intValue());
+        NPC foundNPC = NPC.find(id);
         if (foundNPC == null) {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.NPC_NOT_FOUND);
             return;
@@ -275,7 +273,7 @@ public class DefaultCommand extends Command {
                 Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INVALID_NUMBER);
                 return;
             }
-            NPC foundNPC = NPC.find(id.intValue());
+            NPC foundNPC = NPC.find(id);
             if (foundNPC == null) {
                 Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.NPC_NOT_FOUND);
                 return;
@@ -289,7 +287,7 @@ public class DefaultCommand extends Command {
                 Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INVALID_NUMBER);
                 return;
             }
-            NPC foundNPC = NPC.find(id.intValue());
+            NPC foundNPC = NPC.find(id);
             if (foundNPC == null) {
                 Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.NPC_NOT_FOUND);
                 return;
@@ -298,7 +296,7 @@ public class DefaultCommand extends Command {
             if (actionId == null) {
                 Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INVALID_NUMBER);
             } else {
-                if (actionId.intValue() >= foundNPC.getNpcPojo().getClickActions().size()) {
+                if (actionId >= foundNPC.getNpcPojo().getClickActions().size()) {
                     Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.NO_ACTION_FOUND);
                     return;
                 }
@@ -316,21 +314,21 @@ public class DefaultCommand extends Command {
                 Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INVALID_NUMBER);
                 return;
             }
-            NPC foundNPC = NPC.find(id.intValue());
+            NPC foundNPC = NPC.find(id);
             if (foundNPC == null) {
                 Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.NPC_NOT_FOUND);
                 return;
             }
             Integer actionId = Ints.tryParse(split.get(1));
             Integer actionDelay = Ints.tryParse(split.get(2));
-            if (actionId == null || id == null || actionDelay == null) {
+            if (actionId == null || actionDelay == null) {
                 Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INVALID_NUMBER);
             } else {
-                if (actionId.intValue() >= foundNPC.getNpcPojo().getClickActions().size()) {
+                if (actionId >= foundNPC.getNpcPojo().getClickActions().size()) {
                     Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.NO_ACTION_FOUND);
                     return;
                 }
-                foundNPC.getNpcPojo().getClickActions().get(actionId.intValue()).setDelay(actionDelay.intValue());
+                foundNPC.getNpcPojo().getClickActions().get(actionId).setDelay(actionDelay);
                 Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.SUCCESS);
             }
         } else if (args.containsKey("list")) {
@@ -339,7 +337,7 @@ public class DefaultCommand extends Command {
                 Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INVALID_NUMBER);
                 return;
             }
-            NPC foundNPC = NPC.find(id.intValue());
+            NPC foundNPC = NPC.find(id);
             if (foundNPC == null) {
                 Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.NPC_NOT_FOUND);
                 return;
@@ -363,7 +361,7 @@ public class DefaultCommand extends Command {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INVALID_NUMBER);
             return;
         }
-        NPC foundNPC = NPC.find(id.intValue());
+        NPC foundNPC = NPC.find(id);
         if (foundNPC == null) {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.NPC_NOT_FOUND);
             return;
@@ -388,7 +386,7 @@ public class DefaultCommand extends Command {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INVALID_NUMBER);
             return;
         }
-        NPC foundNPC = NPC.find(id.intValue());
+        NPC foundNPC = NPC.find(id);
         if (foundNPC == null) {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.NPC_NOT_FOUND);
             return;
@@ -434,7 +432,7 @@ public class DefaultCommand extends Command {
                 Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INVALID_NUMBER);
                 return;
             }
-            NPC foundNPC = NPC.find(id.intValue());
+            NPC foundNPC = NPC.find(id);
             if (foundNPC == null) {
                 Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.NPC_NOT_FOUND);
                 return;
@@ -480,7 +478,7 @@ public class DefaultCommand extends Command {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INVALID_NUMBER);
             return;
         }
-        NPC foundNPC = NPC.find(id.intValue());
+        NPC foundNPC = NPC.find(id);
         if (foundNPC == null) {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.NPC_NOT_FOUND);
             return;
@@ -499,7 +497,7 @@ public class DefaultCommand extends Command {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INVALID_NUMBER);
             return;
         }
-        NPC foundNPC = NPC.find(id.intValue());
+        NPC foundNPC = NPC.find(id);
         if (foundNPC == null) {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.NPC_NOT_FOUND);
             return;
@@ -509,7 +507,7 @@ public class DefaultCommand extends Command {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INVALID_NUMBER);
             return;
         }
-        foundNPC.getNpcPojo().setHologramHeight(givenHeight.doubleValue());
+        foundNPC.getNpcPojo().setHologramHeight(givenHeight);
         foundNPC.getHologram().createHologram();
         Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.SUCCESS);
     }
@@ -553,7 +551,7 @@ public class DefaultCommand extends Command {
                 Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INVALID_NUMBER);
                 return;
             }
-            NPC foundNPC = NPC.find(id.intValue());
+            NPC foundNPC = NPC.find(id);
             if (foundNPC == null) {
                 Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.NPC_NOT_FOUND);
                 return;

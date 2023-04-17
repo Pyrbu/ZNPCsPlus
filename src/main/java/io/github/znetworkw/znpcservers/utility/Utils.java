@@ -4,6 +4,7 @@ import io.github.znetworkw.znpcservers.cache.CacheRegistry;
 import io.github.znetworkw.znpcservers.configuration.ConfigurationConstants;
 import io.github.znetworkw.znpcservers.user.ZUser;
 import me.clip.placeholderapi.PlaceholderAPI;
+import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -11,11 +12,9 @@ import org.bukkit.entity.Player;
 import java.lang.reflect.Field;
 import java.util.concurrent.ThreadLocalRandom;
 
+@SuppressWarnings("deprecation")
 public final class Utils {
     public static final int BUKKIT_VERSION;
-
-    public static final long SECOND_INTERVAL_NANOS = 1000000000L;
-
     public static boolean PLACEHOLDER_SUPPORT = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
 
     static {

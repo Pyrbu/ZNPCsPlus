@@ -19,6 +19,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@SuppressWarnings("ALL")
 public interface NPCPath {
     void initialize(DataInputStream paramDataInputStream) throws IOException;
 
@@ -251,7 +252,7 @@ public interface NPCPath {
                         this.npcUser.setHasPath(false);
                         write();
                     }
-                }1, 1);
+                }, 1, 1);
             }
 
             public MovementPath getPath(NPC npc) {

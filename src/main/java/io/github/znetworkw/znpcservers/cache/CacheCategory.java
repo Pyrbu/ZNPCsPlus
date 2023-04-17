@@ -16,8 +16,6 @@ public enum CacheCategory {
     SERVER_NETWORK("server.network"),
     SERVER("server");
 
-    private static final String EMPTY_STRING = "";
-
     private final String subPackageName;
 
     private final String packageName;

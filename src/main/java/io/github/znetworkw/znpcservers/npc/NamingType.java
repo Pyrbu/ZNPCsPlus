@@ -9,7 +9,5 @@ public enum NamingType {
         }
     };
 
-    private static final int FIXED_LENGTH = 6;
-
     public abstract String resolve(NPC paramNPC);
 }

@@ -16,10 +16,10 @@ import io.github.znetworkw.znpcservers.npc.task.NPCManagerTask;
 import io.github.znetworkw.znpcservers.npc.task.NPCSaveTask;
 import io.github.znetworkw.znpcservers.user.ZUser;
 import io.github.znetworkw.znpcservers.utility.BungeeUtils;
-import io.github.znetworkw.znpcservers.utility.MetricsLite;
 import io.github.znetworkw.znpcservers.utility.SchedulerUtils;
 import io.github.znetworkw.znpcservers.utility.itemstack.ItemStackSerializer;
 import io.github.znetworkw.znpcservers.utility.location.ZLocation;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
@@ -65,7 +65,7 @@ public class ZNPCsPlus extends JavaPlugin {
 
         loadAllPaths();
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        new MetricsLite(this, PLUGIN_ID);
+        new Metrics(this, PLUGIN_ID);
         new DefaultCommand();
         SCHEDULER = new SchedulerUtils(this);
         BUNGEE_UTILS = new BungeeUtils(this);

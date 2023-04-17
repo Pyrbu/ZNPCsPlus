@@ -15,13 +15,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class SkinFetcher {
-    private static final String EMPTY_STRING = "";
-
-    private static final String DEFAULT_CHARSET = "UTF-8";
-
     private static final ExecutorService SKIN_EXECUTOR_SERVICE = Executors.newCachedThreadPool();
-
-    private static final JsonParser JSON_PARSER = new JsonParser();
 
     private final SkinFetcherBuilder builder;
 
@@ -53,7 +47,7 @@ public class SkinFetcher {
                 try {
                     Reader reader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8);
                     try {
-                        completableFuture.complete(JSON_PARSER.parse(reader).getAsJsonObject());
+                        completableFuture.complete(JsonParser.parseReader(reader).getAsJsonObject());
                         reader.close();
                     } catch (Throwable throwable) {
                         try {

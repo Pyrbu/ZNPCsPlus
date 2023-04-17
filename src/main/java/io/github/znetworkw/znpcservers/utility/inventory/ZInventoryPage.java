@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("deprecation")
 public abstract class ZInventoryPage {
     private final ZInventory zInventory;
 
@@ -27,7 +28,7 @@ public abstract class ZInventoryPage {
             ZInventoryPage zInventoryPage = zInventory.getPage();
             addItem(ItemStackBuilder.forMaterial(Material.ARROW)
                     .setName(ChatColor.GREEN + "Go back")
-                    .setLore(new String[]{ChatColor.GRAY + "click here..."}, ).build(), this.rows - 9, true, event -> {
+                    .setLore(ChatColor.GRAY + "click here...").build(), this.rows - 9, true, event -> {
                 zInventory.setCurrentPage(zInventoryPage);
                 openInventory();
             });

@@ -6,8 +6,6 @@ import io.github.znetworkw.znpcservers.npc.FunctionFactory;
 import io.github.znetworkw.znpcservers.npc.NPC;
 import io.github.znetworkw.znpcservers.npc.NPCFunction;
 
-import java.lang.reflect.Constructor;
-
 public class GlowFunction extends NPCFunction {
     public GlowFunction() {
         super("glow");
@@ -25,9 +23,9 @@ public class GlowFunction extends NPCFunction {
             npc.getNpcPojo().setGlowName(glowColorName);
             npc.setGlowColor(glowColor);
             CacheRegistry.SET_DATA_WATCHER_METHOD.load().invoke(CacheRegistry.GET_DATA_WATCHER_METHOD
-                    .load().invoke(npc.getNmsEntity()), ((Constructor) CacheRegistry.DATA_WATCHER_OBJECT_CONSTRUCTOR
-                    .load()).newInstance(Integer.valueOf(0), CacheRegistry.DATA_WATCHER_REGISTER_FIELD
-                    .load()), Byte.valueOf(!FunctionFactory.isTrue(npc, this) ? 64 : 0));
+                    .load().invoke(npc.getNmsEntity()), CacheRegistry.DATA_WATCHER_OBJECT_CONSTRUCTOR
+                    .load().newInstance(0, CacheRegistry.DATA_WATCHER_REGISTER_FIELD
+                    .load()), (byte) (!FunctionFactory.isTrue(npc, this) ? 64 : 0));
             npc.getPackets().getProxyInstance().update(npc.getPackets());
             npc.deleteViewers();
             return NPCFunction.ResultType.SUCCESS;

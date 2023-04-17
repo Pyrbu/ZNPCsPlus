@@ -2,7 +2,6 @@ package io.github.znetworkw.znpcservers.cache;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.UnmodifiableIterator;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -53,8 +52,6 @@ public interface TypeCache {
     }
 
     class CacheBuilder {
-        private static final String EMPTY_STRING = "";
-
         private final CachePackage cachePackage;
 
         private final CacheCategory cacheCategory;
@@ -66,8 +63,6 @@ public interface TypeCache {
         private final List<String> methods;
 
         private final String additionalData;
-
-        private final Class<?> clazz;
 
         private final ImmutableList<Class<?>[]> parameterTypes;
 
@@ -87,7 +82,6 @@ public interface TypeCache {
             this.fieldName = fieldName;
             this.additionalData = additionalData;
             this.parameterTypes = parameterTypes;
-            this.clazz = null;
             this.expectType = expectType;
         }
 
@@ -97,20 +91,18 @@ public interface TypeCache {
 
         public CacheBuilder withClassName(String className) {
             return new CacheBuilder(this.cachePackage, this.cacheCategory,
-                    (List<String>) ImmutableList.builder().addAll(this.className)
+                    new ImmutableList.Builder<String>().addAll(this.className)
                             .add(formatClass(className)).build(), this.fieldName, this.methods, this.additionalData, this.parameterTypes, this.expectType);
         }
 
         public CacheBuilder withClassName(Class<?> clazz) {
             return new CacheBuilder(this.cachePackage, this.cacheCategory,
-
-                    (List<String>) ImmutableList.builder().addAll(this.className).add((clazz == null) ? "" : clazz.getName()).build(), this.fieldName, this.methods, this.additionalData, this.parameterTypes, this.expectType);
+                    new ImmutableList.Builder<String>().addAll(this.className).add((clazz == null) ? "" : clazz.getName()).build(), this.fieldName, this.methods, this.additionalData, this.parameterTypes, this.expectType);
         }
 
         public CacheBuilder withMethodName(String methodName) {
             return new CacheBuilder(this.cachePackage, this.cacheCategory, this.className, this.fieldName,
-
-                    (List<String>) ImmutableList.builder().addAll(this.methods).add(methodName).build(), this.additionalData, this.parameterTypes, this.expectType);
+                    new ImmutableList.Builder<String>().addAll(this.methods).add(methodName).build(), this.additionalData, this.parameterTypes, this.expectType);
         }
 
         public CacheBuilder withFieldName(String fieldName) {
@@ -123,8 +115,7 @@ public interface TypeCache {
 
         public CacheBuilder withParameterTypes(Class<?>... types) {
             return new CacheBuilder(this.cachePackage, this.cacheCategory, this.className, this.fieldName, this.methods, this.additionalData,
-
-                    ImmutableList.copyOf(Iterables.concat((Iterable) this.parameterTypes, (Iterable) ImmutableList.of(types))), this.expectType);
+                    ImmutableList.copyOf(Iterables.concat(this.parameterTypes, ImmutableList.of(types))), this.expectType);
         }
 
         public CacheBuilder withExpectResult(Class<?> expectType) {
@@ -132,15 +123,11 @@ public interface TypeCache {
         }
 
         protected String formatClass(String className) {
-            switch (this.cachePackage) {
-                case MINECRAFT_SERVER:
-                case CRAFT_BUKKIT:
-                    return String.format(((this.cachePackage == CachePackage.CRAFT_BUKKIT) ?
-                            this.cachePackage.getFixedPackageName() : this.cachePackage.getForCategory(this.cacheCategory, this.additionalData)) + ".%s", className);
-                case DEFAULT:
-                    return className;
-            }
-            throw new IllegalArgumentException("Unexpected package " + this.cachePackage.name());
+            return switch (this.cachePackage) {
+                case MINECRAFT_SERVER, CRAFT_BUKKIT -> String.format(((this.cachePackage == CachePackage.CRAFT_BUKKIT) ?
+                        this.cachePackage.getFixedPackageName() : this.cachePackage.getForCategory(this.cacheCategory, this.additionalData)) + ".%s", className);
+                case DEFAULT -> className;
+            };
         }
     }
 
@@ -160,7 +147,7 @@ public interface TypeCache {
             for (String classes : cacheBuilder.className) {
                 try {
                     this.BUILDER_CLASS = Class.forName(classes);
-                } catch (ClassNotFoundException classNotFoundException) {
+                } catch (ClassNotFoundException ignored) {
                 }
             }
         }
@@ -219,7 +206,7 @@ public interface TypeCache {
                     try {
                         Method maybeGet;
                         if (!Iterables.isEmpty(this.cacheBuilder.parameterTypes)) {
-                            maybeGet = this.BUILDER_CLASS.getDeclaredMethod(methodName, (Class[]) Iterables.get((Iterable) this.cacheBuilder.parameterTypes, 0));
+                            maybeGet = this.BUILDER_CLASS.getDeclaredMethod(methodName, Iterables.get(this.cacheBuilder.parameterTypes, 0));
                         } else {
                             maybeGet = this.BUILDER_CLASS.getDeclaredMethod(methodName);
                         }
@@ -227,7 +214,7 @@ public interface TypeCache {
                             continue;
                         maybeGet.setAccessible(true);
                         methodThis = maybeGet;
-                    } catch (NoSuchMethodException noSuchMethodException) {
+                    } catch (NoSuchMethodException ignored) {
                     }
                 }
                 return methodThis;
@@ -279,15 +266,14 @@ public interface TypeCache {
             protected Constructor<?> onLoad() throws NoSuchMethodException {
                 Constructor<?> constructor = null;
                 if (Iterables.size(this.cacheBuilder.parameterTypes) > 1) {
-                    for (UnmodifiableIterator<Class<?>[]> unmodifiableIterator = this.cacheBuilder.parameterTypes.iterator(); unmodifiableIterator.hasNext(); ) {
-                        Class<?>[] keyParameters = unmodifiableIterator.next();
+                    for (Class<?>[] keyParameters : this.cacheBuilder.parameterTypes) {
                         try {
                             constructor = this.BUILDER_CLASS.getDeclaredConstructor(keyParameters);
-                        } catch (NoSuchMethodException noSuchMethodException) {
+                        } catch (NoSuchMethodException ignored) {
                         }
                     }
                 } else {
-                    constructor = (Iterables.size(this.cacheBuilder.parameterTypes) > 0) ? this.BUILDER_CLASS.getDeclaredConstructor((Class[]) Iterables.get((Iterable) this.cacheBuilder.parameterTypes, 0)) : this.BUILDER_CLASS.getDeclaredConstructor();
+                    constructor = (Iterables.size(this.cacheBuilder.parameterTypes) > 0) ? this.BUILDER_CLASS.getDeclaredConstructor(Iterables.get(this.cacheBuilder.parameterTypes, 0)) : this.BUILDER_CLASS.getDeclaredConstructor();
                 }
                 if (constructor != null)
                     constructor.setAccessible(true);
@@ -301,10 +287,10 @@ public interface TypeCache {
             }
 
             protected Enum<?>[] onLoad() {
-                Enum[] arrayOfEnum = (Enum[]) this.BUILDER_CLASS.getEnumConstants();
+                Enum<?>[] arrayOfEnum = (Enum<?>[]) this.BUILDER_CLASS.getEnumConstants();
                 for (Enum<?> enumConstant : arrayOfEnum)
                     TypeCache.ClassCache.register(enumConstant.name(), enumConstant, this.BUILDER_CLASS);
-                return (Enum<?>[]) arrayOfEnum;
+                return arrayOfEnum;
             }
         }
     }

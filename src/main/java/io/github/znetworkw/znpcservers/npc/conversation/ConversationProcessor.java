@@ -69,11 +69,11 @@ public class ConversationProcessor {
                     try {
                         Sound sound = Sound.valueOf(conversationKey.getSoundName().toUpperCase());
                         ConversationProcessor.this.player.playSound(ConversationProcessor.this.player.getLocation(), sound, 0.2F, 1.0F);
-                    } catch (IllegalArgumentException illegalArgumentException) {
+                    } catch (IllegalArgumentException ignored) {
                     }
                 ConversationProcessor.this.conversationIndexDelay = System.nanoTime();
                 ConversationProcessor.this.conversationIndex++;
             }
-        }5, 20);
+        }, 5, 20);
     }
 }

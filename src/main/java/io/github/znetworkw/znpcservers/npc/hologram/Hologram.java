@@ -12,7 +12,6 @@ import io.github.znetworkw.znpcservers.utility.Utils;
 import org.bukkit.Location;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +21,7 @@ public class Hologram {
 
     private static final boolean NEW_METHOD = (Utils.BUKKIT_VERSION > 12);
 
-    private static final double LINE_SPACING = ((Double) Configuration.CONFIGURATION.getValue(ConfigurationValue.LINE_SPACING)).doubleValue();
+    private static final double LINE_SPACING = Configuration.CONFIGURATION.getValue(ConfigurationValue.LINE_SPACING);
 
     private final List<HologramLine> hologramLines = new ArrayList<>();
 
@@ -40,15 +39,15 @@ public class Hologram {
             Location location = this.npc.getLocation();
             for (String line : this.npc.getNpcPojo().getHologramLines()) {
                 boolean visible = !line.equalsIgnoreCase("%space%");
-                Object armorStand = ((Constructor) CacheRegistry.ENTITY_CONSTRUCTOR.load()).newInstance(CacheRegistry.GET_HANDLE_WORLD_METHOD.load().invoke(location.getWorld()),
-                        Double.valueOf(location.getX()), Double.valueOf(location.getY() - 0.15D + y), Double.valueOf(location.getZ()));
+                Object armorStand = CacheRegistry.ENTITY_CONSTRUCTOR.load().newInstance(CacheRegistry.GET_HANDLE_WORLD_METHOD.load().invoke(location.getWorld()),
+                        location.getX(), location.getY() - 0.15D + y, location.getZ());
                 if (visible) {
-                    CacheRegistry.SET_CUSTOM_NAME_VISIBLE_METHOD.load().invoke(armorStand, Boolean.valueOf(true));
+                    CacheRegistry.SET_CUSTOM_NAME_VISIBLE_METHOD.load().invoke(armorStand, true);
                     updateLine(line, armorStand, null);
                 }
-                CacheRegistry.SET_INVISIBLE_METHOD.load().invoke(armorStand, Boolean.valueOf(true));
-                this.hologramLines.add(new HologramLine(line.replace(ConfigurationConstants.SPACE_SYMBOL, " "), armorStand, ((Integer) CacheRegistry.GET_ENTITY_ID
-                        .load().invoke(armorStand, new Object[0])).intValue()));
+                CacheRegistry.SET_INVISIBLE_METHOD.load().invoke(armorStand, true);
+                this.hologramLines.add(new HologramLine(line.replace(ConfigurationConstants.SPACE_SYMBOL, " "), armorStand, (Integer) CacheRegistry.GET_ENTITY_ID
+                        .load().invoke(armorStand)));
                 y += LINE_SPACING;
             }
             setLocation(location, 0.0D);
@@ -73,7 +72,7 @@ public class Hologram {
     public void delete(ZUser user) {
         this.hologramLines.forEach(hologramLine -> {
             try {
-                Utils.sendPackets(user, this.npc.getPackets().getProxyInstance().getDestroyPacket(HologramLine.access$200(hologramLine)));
+                Utils.sendPackets(user, this.npc.getPackets().getProxyInstance().getDestroyPacket(hologramLine.id));
             } catch (ReflectiveOperationException operationException) {
                 throw new UnexpectedCallException(operationException);
             }
@@ -95,25 +94,26 @@ public class Hologram {
     public void updateLocation() {
         this.hologramLines.forEach(hologramLine -> {
             try {
-                Object packet = ((Constructor) CacheRegistry.PACKET_PLAY_OUT_ENTITY_TELEPORT_CONSTRUCTOR.load()).newInstance(new Object[]{HologramLine.access$100(hologramLine)});
-                this.npc.getViewers().forEach(());
-            } catch (ReflectiveOperationException operationException) {
+                Object packet = CacheRegistry.PACKET_PLAY_OUT_ENTITY_TELEPORT_CONSTRUCTOR.load().newInstance(hologramLine.armorStand);
+                this.npc.getViewers().forEach(player -> Utils.sendPackets(player, packet));
+            }
+            catch (ReflectiveOperationException operationException) {
                 throw new UnexpectedCallException(operationException);
             }
         });
     }
 
     public void setLocation(Location location, double height) {
-        location = location.clone().add(0.0D, height, 0.0D);
+        location = location.clone().add(0.0, height, 0.0);
         try {
             double y = this.npc.getNpcPojo().getHologramHeight();
             for (HologramLine hologramLine : this.hologramLines) {
-                CacheRegistry.SET_LOCATION_METHOD.load().invoke(hologramLine.armorStand, Double.valueOf(location.getX()), Double.valueOf(location.getY() - 0.15D + y),
-                        Double.valueOf(location.getZ()), Float.valueOf(location.getYaw()), Float.valueOf(location.getPitch()));
+                CacheRegistry.SET_LOCATION_METHOD.load().invoke(hologramLine.armorStand, location.getX(), location.getY() - 0.15 + y, location.getZ(), location.getYaw(), location.getPitch());
                 y += LINE_SPACING;
             }
-            updateLocation();
-        } catch (ReflectiveOperationException operationException) {
+            this.updateLocation();
+        }
+        catch (ReflectiveOperationException operationException) {
             throw new UnexpectedCallException(operationException);
         }
     }

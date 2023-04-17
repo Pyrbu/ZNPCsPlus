@@ -6,6 +6,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
+@SuppressWarnings("unused")
 public class NPCModel {
     private static final String EMPTY_STRING = "";
 

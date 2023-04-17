@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+@SuppressWarnings("unused")
 public class PacketCache {
     protected static final ImmutableMap<Method, PacketValue> VALUE_LOOKUP_BY_NAME;
 
@@ -47,6 +48,7 @@ public class PacketCache {
         if (!VALUE_LOOKUP_BY_NAME.containsKey(method))
             throw new IllegalStateException("value not found for method: " + method.getName());
         PacketValue packetValue = VALUE_LOOKUP_BY_NAME.get(method);
+        assert packetValue != null;
         String keyString = packetValue.valueType().resolve(packetValue.keyName(), args);
         return this.packetResultCache.computeIfAbsent(keyString, o -> {
             try {
@@ -65,7 +67,7 @@ public class PacketCache {
 
     public void flushCache() {
         flushCache(VALUE_LOOKUP_BY_NAME.values().stream()
-                .map(PacketValue::keyName).toArray(x$0 -> new String[x$0]));
+                .map(PacketValue::keyName).toArray(String[]::new));
     }
 
     private static class PacketHandler implements InvocationHandler {

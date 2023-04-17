@@ -11,6 +11,7 @@ import org.bukkit.command.defaults.BukkitCommand;
 import java.lang.reflect.Method;
 import java.util.*;
 
+@SuppressWarnings("deprecation")
 public class Command extends BukkitCommand {
     private static final String WHITESPACE = " ";
 
@@ -69,15 +70,13 @@ public class Command extends BukkitCommand {
 
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
         Optional<Map.Entry<CommandInformation, CommandInvoker>> subCommandOptional = this.subCommands.entrySet().stream().filter(command -> command.getKey().name().contentEquals((args.length > 0) ? args[0] : "")).findFirst();
-        if (!subCommandOptional.isPresent()) {
+        if (subCommandOptional.isEmpty()) {
             sender.sendMessage(ChatColor.RED + "can't find command: " + commandLabel + ".");
             return false;
         }
         try {
             Map.Entry<CommandInformation, CommandInvoker> subCommand = subCommandOptional.get();
-            ((CommandInvoker) subCommand.getValue()).execute(new CommandSender(sender),
-
-                    loadArgs(subCommand.getKey(), Arrays.asList(args)));
+            subCommand.getValue().execute(new io.github.znetworkw.znpcservers.commands.CommandSender(sender), loadArgs(subCommand.getKey(), Arrays.asList(args)));
         } catch (CommandExecuteException e) {
             sender.sendMessage(ChatColor.RED + "can't execute command.");
             e.printStackTrace();

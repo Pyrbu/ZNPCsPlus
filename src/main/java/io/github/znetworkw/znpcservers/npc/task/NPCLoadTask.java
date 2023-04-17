@@ -7,10 +7,6 @@ import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class NPCLoadTask extends BukkitRunnable {
-    private static final int DELAY = 40;
-
-    private static final int MAX_TRIES = 10;
-
     private final NPC npc;
 
     private int tries = 0;

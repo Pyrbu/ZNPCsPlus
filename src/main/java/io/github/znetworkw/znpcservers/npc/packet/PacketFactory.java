@@ -6,7 +6,7 @@ import io.github.znetworkw.znpcservers.utility.Utils;
 import java.util.Comparator;
 
 public final class PacketFactory {
-    public static final ImmutableSet<Packet> ALL = ImmutableSet.of(new PacketV8(), new PacketV9(), new PacketV16(), new PacketV17(), new PacketV18(), new PacketV19(), (Object[]) new Packet[0]);
+    public static final ImmutableSet<Packet> ALL = ImmutableSet.of(new PacketV8(), new PacketV9(), new PacketV16(), new PacketV17(), new PacketV18(), new PacketV19());
 
     public static final Packet PACKET_FOR_CURRENT_VERSION = findPacketForVersion(Utils.BUKKIT_VERSION);
 

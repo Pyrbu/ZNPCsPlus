@@ -81,11 +81,11 @@ public class ZLocation {
         public JsonElement serialize(ZLocation src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("world", src.getWorldName());
-            jsonObject.addProperty("x", Double.valueOf(src.getX()));
-            jsonObject.addProperty("y", Double.valueOf(src.getY()));
-            jsonObject.addProperty("z", Double.valueOf(src.getZ()));
-            jsonObject.addProperty("yaw", Float.valueOf(src.getYaw()));
-            jsonObject.addProperty("pitch", Float.valueOf(src.getPitch()));
+            jsonObject.addProperty("x", src.getX());
+            jsonObject.addProperty("y", src.getY());
+            jsonObject.addProperty("z", src.getZ());
+            jsonObject.addProperty("yaw", src.getYaw());
+            jsonObject.addProperty("pitch", src.getPitch());
             return jsonObject;
         }
 

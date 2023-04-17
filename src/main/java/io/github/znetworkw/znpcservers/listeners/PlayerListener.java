@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 
+@SuppressWarnings("deprecation")
 public class PlayerListener implements Listener {
     public PlayerListener(Plugin serversNPC) {
         serversNPC.getServer().getPluginManager().registerEvents(this, serversNPC);

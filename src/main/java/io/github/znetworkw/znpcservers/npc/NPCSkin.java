@@ -5,8 +5,6 @@ import io.github.znetworkw.znpcservers.skin.SkinFetcherResult;
 import io.github.znetworkw.znpcservers.utility.Utils;
 
 public class NPCSkin {
-    private static final String EMPTY_STRING = "";
-
     private static final String[] EMPTY_ARRAY = new String[]{"", ""};
 
     private static final int LAYER_INDEX = SkinLayerValues.findLayerByVersion();

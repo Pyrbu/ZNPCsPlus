@@ -1,26 +1,21 @@
 package io.github.znetworkw.znpcservers.user;
 
 import com.mojang.authlib.GameProfile;
-import lol.pyr.znpcsplus.ZNPCsPlus;
 import io.github.znetworkw.znpcservers.cache.CacheRegistry;
 import io.github.znetworkw.znpcservers.npc.NPC;
 import io.github.znetworkw.znpcservers.npc.NPCAction;
 import io.github.znetworkw.znpcservers.npc.event.ClickType;
 import io.github.znetworkw.znpcservers.npc.event.NPCInteractEvent;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
+import lol.pyr.znpcsplus.ZNPCsPlus;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.*;
 
 public class ZUser {
-    private static final String CHANNEL_NAME = "npc_interact";
-
-    private static final int DEFAULT_DELAY = 1;
-
     private static final Map<UUID, ZUser> USER_MAP = new HashMap<>();
 
     private final Map<Integer, Long> lastClicked;
@@ -48,7 +43,7 @@ public class ZUser {
                     .get(this.playerConnection = CacheRegistry.PLAYER_CONNECTION_FIELD.load().get(playerHandle)));
             if (channel.pipeline().names().contains("npc_interact"))
                 channel.pipeline().remove("npc_interact");
-            channel.pipeline().addAfter("decoder", "npc_interact", (ChannelHandler) new ZNPCSocketDecoder());
+            channel.pipeline().addAfter("decoder", "npc_interact", new ZNPCSocketDecoder());
         } catch (IllegalAccessException | java.lang.reflect.InvocationTargetException e) {
             throw new IllegalStateException("can't create player " + uuid.toString(), e.getCause());
         }
@@ -123,16 +118,16 @@ public class ZUser {
                             continue;
                         if (npcAction.getDelay() > 0) {
                             int actionId = npc.getNpcPojo().getClickActions().indexOf(npcAction);
-                            if (ZUser.this.lastClicked.containsKey(Integer.valueOf(actionId))) {
-                                long lastClickNanos = System.nanoTime() - ZUser.this.lastClicked.get(Integer.valueOf(actionId)).longValue();
+                            if (ZUser.this.lastClicked.containsKey(actionId)) {
+                                long lastClickNanos = System.nanoTime() - ZUser.this.lastClicked.get(actionId);
                                 if (lastClickNanos < npcAction.getFixedDelay())
                                     continue;
                             }
-                            ZUser.this.lastClicked.put(Integer.valueOf(actionId), Long.valueOf(System.nanoTime()));
+                            ZUser.this.lastClicked.put(actionId, System.nanoTime());
                         }
                         npcAction.run(ZUser.this, npcAction.getAction());
                     }
-                }1);
+                }, 1);
             }
         }
     }

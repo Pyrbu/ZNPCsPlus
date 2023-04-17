@@ -32,11 +32,12 @@ public class ZInventory {
         this.page = page;
     }
 
+    @SuppressWarnings("deprecation")
     public Inventory build(ZInventoryPage page) {
         if (page == null)
             throw new IllegalStateException("page is null");
         if (page.getRows() / 9 > 6)
-            throw new IllegalArgumentException(String.format("Unexpected rows size. Has %d, max %d", Integer.valueOf(page.getRows()), Integer.valueOf(6)));
+            throw new IllegalArgumentException(String.format("Unexpected rows size. Has %d, max %d", page.getRows(), 6));
         setCurrentPage(page);
         page.getInventoryItems().removeIf(zInventoryItem -> !zInventoryItem.isDefault());
         page.update();

@@ -10,7 +10,7 @@ public final class FunctionFactory {
 
     public static ImmutableList<NPCFunction> WITH_FUNCTION = ImmutableList.of(new GlowFunction());
 
-    public static ImmutableList<NPCFunction> ALL = ImmutableList.builder()
+    public static ImmutableList<NPCFunction> ALL = new ImmutableList.Builder<NPCFunction>()
             .addAll(WITHOUT_FUNCTION)
             .addAll(WITH_FUNCTION)
             .build();
@@ -32,7 +32,7 @@ public final class FunctionFactory {
     }
 
     public static boolean isTrue(NPC npc, NPCFunction function) {
-        return npc.getNpcPojo().getFunctions().getOrDefault(function.getName(), Boolean.FALSE).booleanValue();
+        return npc.getNpcPojo().getFunctions().getOrDefault(function.getName(), false);
     }
 
     public static boolean isTrue(NPC npc, String function) {

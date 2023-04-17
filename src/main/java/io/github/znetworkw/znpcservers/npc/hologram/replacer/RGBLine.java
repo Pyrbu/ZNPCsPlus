@@ -6,11 +6,8 @@ import net.md_5.bungee.api.ChatColor;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+@SuppressWarnings("deprecation")
 public class RGBLine implements LineReplacer {
-    private static final char HEX_COLOR_CHAR = '#';
-
-    private static final int HEX_COLOR_LENGTH = 6;
-
     public String make(String string) {
         String rgbString = string;
         for (int i = 0; i < rgbString.length(); i++) {
@@ -31,7 +28,7 @@ public class RGBLine implements LineReplacer {
                 if (success)
                     try {
                         rgbString = rgbString.substring(0, i) + ChatColor.of(hexCodeStringBuilder.toString()) + rgbString.substring(endIndex);
-                    } catch (Exception exception) {
+                    } catch (Exception ignored) {
                     }
             }
         }

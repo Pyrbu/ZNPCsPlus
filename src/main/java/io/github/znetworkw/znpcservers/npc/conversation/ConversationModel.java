@@ -43,14 +43,14 @@ public class ConversationModel {
         if (ConversationProcessor.isPlayerConversing(player.getUniqueId()))
             return;
         if (this.lastStarted.containsKey(player.getUniqueId())) {
-            long lastConversationNanos = System.nanoTime() - this.lastStarted.get(player.getUniqueId()).longValue();
+            long lastConversationNanos = System.nanoTime() - this.lastStarted.get(player.getUniqueId());
             if (lastConversationNanos < 1000000000L * getConversation().getDelay())
                 return;
         }
         this.lastStarted.remove(player.getUniqueId());
         if (this.conversationType.canStart(npc, getConversation(), player)) {
             new ConversationProcessor(npc, this, player);
-            this.lastStarted.put(player.getUniqueId(), Long.valueOf(System.nanoTime()));
+            this.lastStarted.put(player.getUniqueId(), System.nanoTime());
         }
     }
 

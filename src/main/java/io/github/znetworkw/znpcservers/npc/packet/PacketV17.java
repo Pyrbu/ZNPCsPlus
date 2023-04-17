@@ -6,15 +6,13 @@ import io.github.znetworkw.znpcservers.npc.NPC;
 import io.github.znetworkw.znpcservers.utility.Utils;
 import org.bukkit.Bukkit;
 
-import java.lang.reflect.Constructor;
-
 public class PacketV17 extends PacketV16 {
     public int version() {
         return 17;
     }
 
     public Object getPlayerPacket(Object nmsWorld, GameProfile gameProfile) throws ReflectiveOperationException {
-        return ((Constructor) CacheRegistry.PLAYER_CONSTRUCTOR_NEW.load()).newInstance(new Object[]{CacheRegistry.GET_SERVER_METHOD.load().invoke(Bukkit.getServer()), nmsWorld, gameProfile});
+        return CacheRegistry.PLAYER_CONSTRUCTOR_NEW.load().newInstance(CacheRegistry.GET_SERVER_METHOD.load().invoke(Bukkit.getServer()), nmsWorld, gameProfile);
     }
 
     public void updateGlowPacket(NPC npc, Object packet) throws ReflectiveOperationException {

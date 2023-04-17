@@ -65,6 +65,7 @@ public class NPCAction {
                 .toString();
     }
 
+    @SuppressWarnings("deprecation")
     enum ActionType {
         CMD {
             public void run(ZUser user, String actionValue) {

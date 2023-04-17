@@ -19,19 +19,19 @@ public class PacketV8 implements Packet {
 
     public Object getPlayerPacket(Object nmsWorld, GameProfile gameProfile) throws ReflectiveOperationException {
         Constructor<?> constructor = (Utils.BUKKIT_VERSION > 13) ? CacheRegistry.PLAYER_INTERACT_MANAGER_NEW_CONSTRUCTOR.load() : CacheRegistry.PLAYER_INTERACT_MANAGER_OLD_CONSTRUCTOR.load();
-        return ((Constructor) CacheRegistry.PLAYER_CONSTRUCTOR_OLD.load()).newInstance(new Object[]{CacheRegistry.GET_SERVER_METHOD
+        return CacheRegistry.PLAYER_CONSTRUCTOR_OLD.load().newInstance(CacheRegistry.GET_SERVER_METHOD
                 .load().invoke(Bukkit.getServer()), nmsWorld, gameProfile, constructor
 
-                .newInstance(nmsWorld)});
+                .newInstance(nmsWorld));
     }
 
     public Object getSpawnPacket(Object nmsEntity, boolean isPlayer) throws ReflectiveOperationException {
-        return isPlayer ? ((Constructor) CacheRegistry.PACKET_PLAY_OUT_NAMED_ENTITY_CONSTRUCTOR.load()).newInstance(nmsEntity) : ((Constructor) CacheRegistry.PACKET_PLAY_OUT_SPAWN_ENTITY_CONSTRUCTOR.load()).newInstance(nmsEntity);
+        return isPlayer ? CacheRegistry.PACKET_PLAY_OUT_NAMED_ENTITY_CONSTRUCTOR.load().newInstance(nmsEntity) : CacheRegistry.PACKET_PLAY_OUT_SPAWN_ENTITY_CONSTRUCTOR.load().newInstance(nmsEntity);
     }
 
     public Object convertItemStack(int entityId, ItemSlot itemSlot, ItemStack itemStack) throws ReflectiveOperationException {
-        return ((Constructor) CacheRegistry.PACKET_PLAY_OUT_ENTITY_EQUIPMENT_CONSTRUCTOR_OLD.load()).newInstance(Integer.valueOf(entityId),
-                Integer.valueOf(itemSlot.getSlotOld()), CacheRegistry.AS_NMS_COPY_METHOD
+        return CacheRegistry.PACKET_PLAY_OUT_ENTITY_EQUIPMENT_CONSTRUCTOR_OLD.load().newInstance(entityId,
+                itemSlot.getSlotOld(), CacheRegistry.AS_NMS_COPY_METHOD
                         .load().invoke(CacheRegistry.CRAFT_ITEM_STACK_CLASS, itemStack));
     }
 
@@ -42,24 +42,24 @@ public class PacketV8 implements Packet {
     public Object getMetadataPacket(int entityId, Object nmsEntity) throws ReflectiveOperationException {
         Object dataWatcher = CacheRegistry.GET_DATA_WATCHER_METHOD.load().invoke(nmsEntity);
         try {
-            return ((Constructor) CacheRegistry.PACKET_PLAY_OUT_ENTITY_META_DATA_CONSTRUCTOR.load()).newInstance(Integer.valueOf(entityId), dataWatcher, Boolean.valueOf(true));
+            return CacheRegistry.PACKET_PLAY_OUT_ENTITY_META_DATA_CONSTRUCTOR.load().newInstance(entityId, dataWatcher, true);
         } catch (Exception e2) {
-            return ((Constructor) CacheRegistry.PACKET_PLAY_OUT_ENTITY_META_DATA_CONSTRUCTOR_V1
-                    .load())
-                    .newInstance(Integer.valueOf(entityId), CacheRegistry.GET_DATAWATCHER_B_LIST
+            return CacheRegistry.PACKET_PLAY_OUT_ENTITY_META_DATA_CONSTRUCTOR_V1
+                    .load()
+                    .newInstance(entityId, CacheRegistry.GET_DATAWATCHER_B_LIST
                             .load().invoke(dataWatcher));
         }
     }
 
     public Object getHologramSpawnPacket(Object armorStand) throws ReflectiveOperationException {
-        return ((Constructor) CacheRegistry.PACKET_PLAY_OUT_SPAWN_ENTITY_CONSTRUCTOR.load()).newInstance(armorStand);
+        return CacheRegistry.PACKET_PLAY_OUT_SPAWN_ENTITY_CONSTRUCTOR.load().newInstance(armorStand);
     }
 
     public ImmutableList<Object> getEquipPackets(NPC npc) throws ReflectiveOperationException {
         ImmutableList.Builder<Object> builder = ImmutableList.builder();
         for (Map.Entry<ItemSlot, ItemStack> stackEntry : npc.getNpcPojo().getNpcEquip().entrySet()) {
-            builder.add(((Constructor) CacheRegistry.PACKET_PLAY_OUT_ENTITY_EQUIPMENT_CONSTRUCTOR_OLD.load()).newInstance(Integer.valueOf(npc.getEntityID()),
-                    Integer.valueOf(stackEntry.getKey().getSlotOld()),
+            builder.add(CacheRegistry.PACKET_PLAY_OUT_ENTITY_EQUIPMENT_CONSTRUCTOR_OLD.load().newInstance(npc.getEntityID(),
+                    stackEntry.getKey().getSlotOld(),
                     convertItemStack(npc.getEntityID(), stackEntry.getKey(), stackEntry.getValue())));
         }
         return builder.build();

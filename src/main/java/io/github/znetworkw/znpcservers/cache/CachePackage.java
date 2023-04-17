@@ -7,10 +7,6 @@ public enum CachePackage {
     CRAFT_BUKKIT("org.bukkit.craftbukkit." + Utils.getBukkitPackage()),
     MINECRAFT_SERVER("net.minecraft");
 
-    private static final String EMPTY_STRING = "";
-
-    private static final String DOT = ".";
-
     private final String fixedPackageName;
 
     CachePackage(String packageName) {

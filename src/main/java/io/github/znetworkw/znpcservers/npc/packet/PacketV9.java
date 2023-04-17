@@ -7,7 +7,6 @@ import io.github.znetworkw.znpcservers.npc.NPC;
 import io.github.znetworkw.znpcservers.utility.Utils;
 import org.bukkit.inventory.ItemStack;
 
-import java.lang.reflect.Constructor;
 import java.util.Map;
 
 public class PacketV9 extends PacketV8 {
@@ -22,7 +21,7 @@ public class PacketV9 extends PacketV8 {
     public ImmutableList<Object> getEquipPackets(NPC npc) throws ReflectiveOperationException {
         ImmutableList.Builder<Object> builder = ImmutableList.builder();
         for (Map.Entry<ItemSlot, ItemStack> stackEntry : npc.getNpcPojo().getNpcEquip().entrySet()) {
-            builder.add(((Constructor) CacheRegistry.PACKET_PLAY_OUT_ENTITY_EQUIPMENT_CONSTRUCTOR_NEWEST_OLD.load()).newInstance(Integer.valueOf(npc.getEntityID()),
+            builder.add(CacheRegistry.PACKET_PLAY_OUT_ENTITY_EQUIPMENT_CONSTRUCTOR_NEWEST_OLD.load().newInstance(npc.getEntityID(),
                     getItemSlot(stackEntry.getKey().getSlot()),
                     convertItemStack(npc.getEntityID(), stackEntry.getKey(), stackEntry.getValue())));
         }
@@ -33,7 +32,7 @@ public class PacketV9 extends PacketV8 {
         Object enumChatString = CacheRegistry.ENUM_CHAT_TO_STRING_METHOD.load().invoke(npc.getGlowColor());
         if (Utils.BUKKIT_VERSION > 12) {
             Utils.setValue(packet, npc.getGlowColor(), CacheRegistry.ENUM_CHAT_CLASS);
-            Utils.setValue(packet, "c", ((Constructor) CacheRegistry.I_CHAT_BASE_COMPONENT_A_CONSTRUCTOR.load()).newInstance(enumChatString));
+            Utils.setValue(packet, "c", CacheRegistry.I_CHAT_BASE_COMPONENT_A_CONSTRUCTOR.load().newInstance(enumChatString));
         } else {
             Utils.setValue(packet, "g", CacheRegistry.GET_ENUM_CHAT_ID_METHOD.load().invoke(npc.getGlowColor()));
             Utils.setValue(packet, "c", enumChatString);

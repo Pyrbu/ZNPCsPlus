@@ -12,14 +12,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public enum ConfigurationValue {
-    NPC_LIST("data", new ArrayList(), NPCModel.class),
-    VIEW_DISTANCE("config", Integer.valueOf(32), Integer.class),
+    NPC_LIST("data", new ArrayList<>(), NPCModel.class),
+    VIEW_DISTANCE("config", 32, Integer.class),
     REPLACE_SYMBOL("config", "-", String.class),
-    SAVE_NPCS_DELAY_SECONDS("config", Integer.valueOf(600), Integer.class),
-    MAX_PATH_LOCATIONS("config", Integer.valueOf(500), Integer.class),
+    SAVE_NPCS_DELAY_SECONDS("config", 600, Integer.class),
+    MAX_PATH_LOCATIONS("config", 500, Integer.class),
     NAMING_METHOD("config", NamingType.DEFAULT, NamingType.class),
     DEBUG_ENABLED("config", Boolean.TRUE, Boolean.class),
-    LINE_SPACING("config", Double.valueOf(0.3D), Double.class),
+    LINE_SPACING("config", 0.3D, Double.class),
     ANIMATION_RGB("config", Boolean.FALSE, Boolean.class),
     NO_PERMISSION("messages", "&cYou do not have permission to execute this command.", String.class),
     SUCCESS("messages", "&aDone...", String.class),
@@ -50,7 +50,7 @@ public enum ConfigurationValue {
     FETCHING_SKIN("messages", "&aFetching skin for name: &f%s&a, wait...", String.class),
     CANT_GET_SKIN("messages", "&ccan't fetch skin with name: %s.", String.class),
     GET_SKIN("messages", "&aSkin fetched.", String.class),
-    CONVERSATION_LIST("conversations", new ArrayList(), Conversation.class);
+    CONVERSATION_LIST("conversations", new ArrayList<>(), Conversation.class);
 
     public static final Map<String, ImmutableSet<ConfigurationValue>> VALUES_BY_NAME;
 

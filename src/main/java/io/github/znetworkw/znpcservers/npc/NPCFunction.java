@@ -20,7 +20,7 @@ public abstract class NPCFunction {
             return;
         ResultType resultType = runFunction(npc, functionContext);
         if (resultType == ResultType.SUCCESS)
-            npc.getNpcPojo().getFunctions().put(getName(), Boolean.valueOf(!isTrue(npc)));
+            npc.getNpcPojo().getFunctions().put(getName(), !isTrue(npc));
     }
 
     protected ResultType resolve(NPC npc) {

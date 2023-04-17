@@ -11,7 +11,6 @@ import io.github.znetworkw.znpcservers.utility.ReflectionUtils;
 import io.github.znetworkw.znpcservers.utility.Utils;
 import org.bukkit.inventory.ItemStack;
 
-import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -33,10 +32,11 @@ public interface Packet {
     @PacketValue(keyName = "hologramSpawnPacket", valueType = ValueType.ARGUMENTS)
     Object getHologramSpawnPacket(Object paramObject) throws ReflectiveOperationException;
 
+    @SuppressWarnings("SuspiciousTernaryOperatorInVarargsCall")
     @PacketValue(keyName = "destroyPacket", valueType = ValueType.ARGUMENTS)
     default Object getDestroyPacket(int entityId) throws ReflectiveOperationException {
         (new int[1])[0] = entityId;
-        return ((Constructor) CacheRegistry.PACKET_PLAY_OUT_ENTITY_DESTROY_CONSTRUCTOR.load()).newInstance(((Constructor) CacheRegistry.PACKET_PLAY_OUT_ENTITY_DESTROY_CONSTRUCTOR.load()).getParameterTypes()[0].isArray() ? new int[1] : Integer.valueOf(entityId));
+        return CacheRegistry.PACKET_PLAY_OUT_ENTITY_DESTROY_CONSTRUCTOR.load().newInstance(CacheRegistry.PACKET_PLAY_OUT_ENTITY_DESTROY_CONSTRUCTOR.load().getParameterTypes()[0].isArray() ? new int[1] : entityId);
     }
 
     @PacketValue(keyName = "enumSlot", valueType = ValueType.ARGUMENTS)
@@ -47,15 +47,15 @@ public interface Packet {
     @PacketValue(keyName = "removeTab")
     default Object getTabRemovePacket(Object nmsEntity) throws ReflectiveOperationException {
         try {
-            return ((Constructor) CacheRegistry.PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR.load()).newInstance(CacheRegistry.REMOVE_PLAYER_FIELD
+            return CacheRegistry.PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR.load().newInstance(CacheRegistry.REMOVE_PLAYER_FIELD
                             .load(),
                     Collections.singletonList(nmsEntity));
         } catch (Throwable throwable) {
             boolean useOldMethod = (CacheRegistry.PACKET_PLAY_OUT_PLAYER_INFO_REMOVE_CLASS != null);
             if (useOldMethod)
-                return ((Constructor) CacheRegistry.PACKET_PLAY_OUT_PLAYER_INFO_REMOVE_CONSTRUCTOR.load())
+                return CacheRegistry.PACKET_PLAY_OUT_PLAYER_INFO_REMOVE_CONSTRUCTOR.load()
                         .newInstance(Collections.singletonList(CacheRegistry.GET_UNIQUE_ID_METHOD.load().invoke(nmsEntity)));
-            return ((Constructor) CacheRegistry.PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR.load()).newInstance(CacheRegistry.REMOVE_PLAYER_FIELD
+            return CacheRegistry.PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR.load().newInstance(CacheRegistry.REMOVE_PLAYER_FIELD
                     .load(), nmsEntity);
         }
     }
@@ -63,19 +63,20 @@ public interface Packet {
     @PacketValue(keyName = "equipPackets")
     ImmutableList<Object> getEquipPackets(NPC paramNPC) throws ReflectiveOperationException;
 
+    @SuppressWarnings("unchecked")
     @PacketValue(keyName = "scoreboardPackets")
     default ImmutableList<Object> updateScoreboard(NPC npc) throws ReflectiveOperationException {
         ImmutableList.Builder<Object> builder = ImmutableList.builder();
         boolean isVersion17 = (Utils.BUKKIT_VERSION > 16);
         boolean isVersion9 = (Utils.BUKKIT_VERSION > 8);
-        Object scoreboardTeamPacket = isVersion17 ? ((Constructor) CacheRegistry.SCOREBOARD_TEAM_CONSTRUCTOR.load()).newInstance(new Object[]{null, npc.getGameProfile().getName()}) : ((Constructor) CacheRegistry.PACKET_PLAY_OUT_SCOREBOARD_TEAM_CONSTRUCTOR_OLD.load()).newInstance();
+        Object scoreboardTeamPacket = isVersion17 ? CacheRegistry.SCOREBOARD_TEAM_CONSTRUCTOR.load().newInstance(null, npc.getGameProfile().getName()) : CacheRegistry.PACKET_PLAY_OUT_SCOREBOARD_TEAM_CONSTRUCTOR_OLD.load().newInstance();
         if (!isVersion17) {
             Utils.setValue(scoreboardTeamPacket, "a", npc.getGameProfile().getName());
-            Utils.setValue(scoreboardTeamPacket, isVersion9 ? "i" : "h", Integer.valueOf(1));
+            Utils.setValue(scoreboardTeamPacket, isVersion9 ? "i" : "h", 1);
         }
         builder.add(isVersion17 ? CacheRegistry.PACKET_PLAY_OUT_SCOREBOARD_TEAM_CREATE_V1.load().invoke(null, scoreboardTeamPacket) : scoreboardTeamPacket);
         if (isVersion17) {
-            scoreboardTeamPacket = ((Constructor) CacheRegistry.SCOREBOARD_TEAM_CONSTRUCTOR.load()).newInstance(new Object[]{null, npc.getGameProfile().getName()});
+            scoreboardTeamPacket = CacheRegistry.SCOREBOARD_TEAM_CONSTRUCTOR.load().newInstance(null, npc.getGameProfile().getName());
             if (Utils.BUKKIT_VERSION > 17) {
                 Utils.setValue(scoreboardTeamPacket, "d", npc.getGameProfile().getName());
                 ReflectionUtils.findFieldForClassAndSet(scoreboardTeamPacket, CacheRegistry.ENUM_TAG_VISIBILITY, CacheRegistry.ENUM_TAG_VISIBILITY_NEVER_FIELD.load());
@@ -85,12 +86,12 @@ public interface Packet {
                 Utils.setValue(scoreboardTeamPacket, "l", CacheRegistry.ENUM_TAG_VISIBILITY_NEVER_FIELD.load());
             }
         } else {
-            scoreboardTeamPacket = ((Constructor) CacheRegistry.PACKET_PLAY_OUT_SCOREBOARD_TEAM_CONSTRUCTOR_OLD.load()).newInstance();
+            scoreboardTeamPacket = CacheRegistry.PACKET_PLAY_OUT_SCOREBOARD_TEAM_CONSTRUCTOR_OLD.load().newInstance();
             Utils.setValue(scoreboardTeamPacket, "a", npc.getGameProfile().getName());
             Utils.setValue(scoreboardTeamPacket, "e", "never");
-            Utils.setValue(scoreboardTeamPacket, isVersion9 ? "i" : "h", Integer.valueOf(0));
+            Utils.setValue(scoreboardTeamPacket, isVersion9 ? "i" : "h", 0);
         }
-        Collection<String> collection = isVersion17 ? (Collection<String>) CacheRegistry.SCOREBOARD_PLAYER_LIST.load().invoke(scoreboardTeamPacket, new Object[0]) : (Collection<String>) Utils.getValue(scoreboardTeamPacket, isVersion9 ? "h" : "g");
+        Collection<String> collection = isVersion17 ? (Collection<String>) CacheRegistry.SCOREBOARD_PLAYER_LIST.load().invoke(scoreboardTeamPacket) : (Collection<String>) Utils.getValue(scoreboardTeamPacket, isVersion9 ? "h" : "g");
         if (npc.getNpcPojo().getNpcType() == NPCType.PLAYER) {
             collection.add(npc.getGameProfile().getName());
         } else {
