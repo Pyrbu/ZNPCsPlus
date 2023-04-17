@@ -1,6 +1,7 @@
 plugins {
     id "java"
-    id "com.github.johnrengelman.shadow" version "8.1.0"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
+    id "io.papermc.paperweight.userdev" version "1.5.4"
 }
 
 group "lol.pyr"
@@ -9,22 +10,21 @@ version "1.0"
 repositories {
     mavenCentral()
     maven {
-        url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+        url "https://repo.papermc.io/repository/maven-public/"
     }
     maven {
         url "https://repo.extendedclip.com/content/repositories/placeholderapi/"
     }
-    maven {
-        url "https://repo.pyr.lol/releases/"
-    }
 }
 
 dependencies {
-    compileOnly "org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT"
+    paperweight.paperDevBundle "1.19.4-R0.1-SNAPSHOT"
+    compileOnly "io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT"
     compileOnly "me.clip:placeholderapi:2.11.1"
+    implementation "org.bstats:bstats-bukkit:3.0.2"
 }
 
-group "net.boxpvpv"
+group "lol.pyr"
 version "1.0.0"
 
 compileJava {
@@ -32,8 +32,7 @@ compileJava {
 }
 
 shadowJar {
-    archiveClassifier.set ""
-    relocate "lol.pyr.extendedcommands", "lol.pyr.znpcsplus.lib.command"
+    relocate "org.bstats", "lol.pyr.znpcsplus.lib.bstats"
     minimize()
 }
 
@@ -41,5 +40,5 @@ processResources {
     expand("version": version)
 }
 
+tasks.assemble.dependsOn reobfJar
 tasks.compileJava.dependsOn clean
-tasks.jar.finalizedBy shadowJar
