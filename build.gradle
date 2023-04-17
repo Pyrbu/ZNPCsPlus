@@ -1,0 +1,45 @@
+plugins {
+    id "java"
+    id "com.github.johnrengelman.shadow" version "8.1.0"
+}
+
+group "lol.pyr"
+version "1.0"
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+    }
+    maven {
+        url "https://repo.extendedclip.com/content/repositories/placeholderapi/"
+    }
+    maven {
+        url "https://repo.pyr.lol/releases/"
+    }
+}
+
+dependencies {
+    compileOnly "org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT"
+    compileOnly "me.clip:placeholderapi:2.11.1"
+}
+
+group "net.boxpvpv"
+version "1.0.0"
+
+compileJava {
+    options.release.set(17)
+}
+
+shadowJar {
+    archiveClassifier.set ""
+    relocate "lol.pyr.extendedcommands", "lol.pyr.znpcsplus.lib.command"
+    minimize()
+}
+
+processResources {
+    expand("version": version)
+}
+
+tasks.compileJava.dependsOn clean
+tasks.jar.finalizedBy shadowJar
