@@ -151,7 +151,10 @@ public interface TypeCache {
                 if (eval == null) throw new NullPointerException();
             } catch (Throwable throwable) {
                 if (!missAllowed) {
-                    log("Cache for class failed to load due to the following exception: " + this.cacheBuilder.className);
+                    log("Cache load failed!");
+                    log("Class Names: " + this.cacheBuilder.className.toString());
+                    log("Loader Type: " + getClass().getCanonicalName());
+                    log("Exception:");
                     throwable.printStackTrace();
                 }
             }

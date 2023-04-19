@@ -495,6 +495,7 @@ public final class CacheRegistry {
             .withMethodName("getId")
             .withMethodName("ae")
             .withMethodName("ah")
+            .withMethodName("af")
             .withExpectResult(int.class));
 
     public static final TypeCache.BaseCache<Method> GET_HANDLE_PLAYER_METHOD = new TypeCache.BaseCache.MethodLoader((new TypeCache.CacheBuilder(CachePackage.CRAFT_BUKKIT))
@@ -567,6 +568,7 @@ public final class CacheRegistry {
             .withMethodName("getDataWatcher")
             .withMethodName("ai")
             .withMethodName("al")
+            .withMethodName("aj")
             .withExpectResult(DATA_WATCHER_CLASS));
 
     public static final TypeCache.BaseCache<Method> GET_BUKKIT_ENTITY_METHOD = new TypeCache.BaseCache.MethodLoader((new TypeCache.CacheBuilder(CachePackage.MINECRAFT_SERVER))

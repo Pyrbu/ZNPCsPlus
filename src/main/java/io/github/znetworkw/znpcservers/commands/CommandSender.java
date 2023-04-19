@@ -32,7 +32,7 @@ public class CommandSender {
     }
 
     public void sendMessage(CommandInformation subCommand) {
-        sendMessage(" &7» &6/&eznpcs " + subCommand.name() + " " +
+        sendMessage(" &7\u00BB &6/&eznpcs " + subCommand.name() + " " +
                         Arrays.stream(subCommand.arguments())
                                 .map(s -> "<" + s + ">")
                                 .collect(Collectors.joining(" ")),

@@ -47,7 +47,7 @@ public class DefaultCommand extends Command {
     @CommandInformation(arguments = {}, name = "", permission = "")
     public void defaultCommand(CommandSender sender, Map<String, String> args) {
         sender.sendMessage("&6&m------------------------------------------");
-        sender.sendMessage("&b&lZNPCS &8» &7ZNetwork");
+        sender.sendMessage("&b&lZNPCS &8\u00BB &7ZNetwork");
         sender.sendMessage("&6https://www.spigotmc.org/resources/znpcs.80940");
         Objects.requireNonNull(sender);
         getCommands().forEach(sender::sendMessage);
@@ -77,12 +77,8 @@ public class DefaultCommand extends Command {
             return;
         }
         NPCType npcType = NPCType.valueOf(args.get("type").toUpperCase());
-        NPC npc = ZNPCsPlus.createNPC(id, npcType, sender.getPlayer().getLocation(), name);
+        ZNPCsPlus.createNPC(id, npcType, sender.getPlayer().getLocation(), name);
         Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.SUCCESS);
-        if (npcType == NPCType.PLAYER) {
-            Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.FETCHING_SKIN, name);
-            DO_APPLY_SKIN.apply(sender.getPlayer(), npc, name);
-        }
     }
 
     @CommandInformation(arguments = {"id"}, name = "delete", permission = "znpcs.cmd.delete", help = {" &f&l* &e/znpcs delete <npc_id>"})

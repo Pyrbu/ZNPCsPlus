@@ -35,8 +35,7 @@ public interface Packet {
     @SuppressWarnings("SuspiciousTernaryOperatorInVarargsCall")
     @PacketValue(keyName = "destroyPacket", valueType = ValueType.ARGUMENTS)
     default Object getDestroyPacket(int entityId) throws ReflectiveOperationException {
-        (new int[1])[0] = entityId;
-        return CacheRegistry.PACKET_PLAY_OUT_ENTITY_DESTROY_CONSTRUCTOR.load().newInstance(CacheRegistry.PACKET_PLAY_OUT_ENTITY_DESTROY_CONSTRUCTOR.load().getParameterTypes()[0].isArray() ? new int[1] : entityId);
+        return CacheRegistry.PACKET_PLAY_OUT_ENTITY_DESTROY_CONSTRUCTOR.load().newInstance(CacheRegistry.PACKET_PLAY_OUT_ENTITY_DESTROY_CONSTRUCTOR.load().getParameterTypes()[0].isArray() ? new int[] {entityId} : entityId);
     }
 
     @PacketValue(keyName = "enumSlot", valueType = ValueType.ARGUMENTS)
@@ -47,16 +46,11 @@ public interface Packet {
     @PacketValue(keyName = "removeTab")
     default Object getTabRemovePacket(Object nmsEntity) throws ReflectiveOperationException {
         try {
-            return CacheRegistry.PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR.load().newInstance(CacheRegistry.REMOVE_PLAYER_FIELD
-                            .load(),
-                    Collections.singletonList(nmsEntity));
+            return CacheRegistry.PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR.load().newInstance(CacheRegistry.REMOVE_PLAYER_FIELD.load(), Collections.singletonList(nmsEntity));
         } catch (Throwable throwable) {
             boolean useOldMethod = (CacheRegistry.PACKET_PLAY_OUT_PLAYER_INFO_REMOVE_CLASS != null);
-            if (useOldMethod)
-                return CacheRegistry.PACKET_PLAY_OUT_PLAYER_INFO_REMOVE_CONSTRUCTOR.load()
-                        .newInstance(Collections.singletonList(CacheRegistry.GET_UNIQUE_ID_METHOD.load().invoke(nmsEntity)));
-            return CacheRegistry.PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR.load().newInstance(CacheRegistry.REMOVE_PLAYER_FIELD
-                    .load(), nmsEntity);
+            if (useOldMethod) return CacheRegistry.PACKET_PLAY_OUT_PLAYER_INFO_REMOVE_CONSTRUCTOR.load().newInstance(Collections.singletonList(CacheRegistry.GET_UNIQUE_ID_METHOD.load().invoke(nmsEntity)));
+            return CacheRegistry.PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR.load().newInstance(CacheRegistry.REMOVE_PLAYER_FIELD.load(), nmsEntity);
         }
     }
 
