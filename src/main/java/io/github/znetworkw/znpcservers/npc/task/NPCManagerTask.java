@@ -12,16 +12,17 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class NPCManagerTask extends BukkitRunnable {
     public NPCManagerTask(Plugin serversNPC) {
-        runTaskTimerAsynchronously(serversNPC, 60L, 1L);
+        runTaskTimerAsynchronously(serversNPC, 60L, 10L);
     }
 
     public void run() {
+        int distSq = ConfigurationConstants.VIEW_DISTANCE * ConfigurationConstants.VIEW_DISTANCE;
         for (NPC npc : NPC.all()) {
             boolean hasPath = (npc.getNpcPath() != null);
             if (hasPath) npc.getNpcPath().handle();
             for (Player player : Bukkit.getOnlinePlayers()) {
                 ZUser zUser = ZUser.find(player);
-                boolean canSeeNPC = (player.getWorld() == npc.getLocation().getWorld() && player.getLocation().distance(npc.getLocation()) <= ConfigurationConstants.VIEW_DISTANCE);
+                boolean canSeeNPC = (player.getWorld() == npc.getLocation().getWorld() && player.getLocation().distanceSquared(npc.getLocation()) <= distSq);
                 if (npc.getViewers().contains(zUser) && !canSeeNPC) {
                     npc.delete(zUser);
                     continue;

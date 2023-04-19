@@ -201,8 +201,7 @@ public class NPC {
     }
 
     public synchronized void spawn(ZUser user) {
-        if (this.viewers.contains(user))
-            throw new IllegalStateException(user.getUUID().toString() + " is already a viewer.");
+        if (this.viewers.contains(user)) throw new IllegalStateException(user.getUUID().toString() + " is already a viewer.");
         try {
             this.viewers.add(user);
             boolean npcIsPlayer = (this.npcPojo.getNpcType() == NPCType.PLAYER);

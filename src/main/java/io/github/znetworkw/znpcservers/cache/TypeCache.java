@@ -140,16 +140,20 @@ public interface TypeCache {
         }
 
         public T load() {
+            return load(false);
+        }
+
+        public T load(boolean missAllowed) {
             if (this.loaded) return this.cached;
             try {
-                if (this.BUILDER_CLASS == null) throw new IllegalStateException("can't find class for: " + this.cacheBuilder.className);
+                if (this.BUILDER_CLASS == null) throw new ClassNotFoundException("No class found: " + this.cacheBuilder.className.toString());
                 T eval = (this.cached != null) ? this.cached : (this.cached = onLoad());
                 if (eval == null) throw new NullPointerException();
             } catch (Throwable throwable) {
-                throwable.printStackTrace();
-                if (throwable instanceof IllegalStateException) log("No cache found for: " + this.cacheBuilder.className);
-                log("No cache found for: " + this.cacheBuilder.className + " : " + this.cacheBuilder.methods.toString());
-                log("Skipping cache for " + this.cacheBuilder.className);
+                if (!missAllowed) {
+                    log("Cache for class failed to load due to the following exception: " + this.cacheBuilder.className);
+                    throwable.printStackTrace();
+                }
             }
             this.loaded = true;
             return this.cached;

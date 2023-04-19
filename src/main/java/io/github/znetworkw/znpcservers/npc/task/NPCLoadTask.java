@@ -22,8 +22,7 @@ public class NPCLoadTask extends BukkitRunnable {
             return;
         }
         World world = Bukkit.getWorld(this.npc.getNpcPojo().getLocation().getWorldName());
-        if (world == null)
-            return;
+        if (world == null) return;
         cancel();
         this.npc.onLoad();
     }
