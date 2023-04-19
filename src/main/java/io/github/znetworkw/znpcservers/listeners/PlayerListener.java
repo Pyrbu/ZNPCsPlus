@@ -5,6 +5,7 @@ import io.github.znetworkw.znpcservers.npc.event.NPCInteractEvent;
 import io.github.znetworkw.znpcservers.user.EventService;
 import io.github.znetworkw.znpcservers.user.ZUser;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -27,7 +28,7 @@ public class PlayerListener implements Listener {
         ZUser.unregister(event.getPlayer());
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onTalk(AsyncPlayerChatEvent event) {
         ZUser zUser = ZUser.find(event.getPlayer());
         if (EventService.hasService(zUser, AsyncPlayerChatEvent.class)) {
@@ -41,9 +42,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onConversation(NPCInteractEvent event) {
         ConversationModel conversationStorage = event.getNpc().getNpcPojo().getConversation();
-        if (conversationStorage == null || conversationStorage
-                .getConversationType() != ConversationModel.ConversationType.CLICK)
-            return;
+        if (conversationStorage == null || conversationStorage.getConversationType() != ConversationModel.ConversationType.CLICK) return;
         event.getNpc().tryStartConversation(event.getPlayer());
     }
 }

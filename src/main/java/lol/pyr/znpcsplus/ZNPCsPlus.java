@@ -30,15 +30,14 @@ import java.util.Collections;
 
 public class ZNPCsPlus extends JavaPlugin {
     public static final File PLUGIN_FOLDER = new File("plugins/ServersNPC");
-
     public static final File PATH_FOLDER = new File("plugins/ServersNPC/paths");
-    public static final Gson GSON = (new GsonBuilder())
+    public static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(ZLocation.class, ZLocation.SERIALIZER)
             .registerTypeHierarchyAdapter(ItemStack.class, new ItemStackSerializer())
             .setPrettyPrinting()
             .disableHtmlEscaping()
             .create();
-    private static final int PLUGIN_ID = 8054;
+    private static final int PLUGIN_ID = 18244;
     public static SchedulerUtils SCHEDULER;
     public static BungeeUtils BUNGEE_UTILS;
 
@@ -53,8 +52,7 @@ public class ZNPCsPlus extends JavaPlugin {
 
     public static void deleteNPC(int npcID) {
         NPC npc = NPC.find(npcID);
-        if (npc == null)
-            throw new IllegalStateException("can't find npc:  " + npcID);
+        if (npc == null) throw new IllegalStateException("can't find npc:  " + npcID);
         NPC.unregister(npcID);
         ConfigurationConstants.NPC_LIST.remove(npc.getNpcPojo());
     }
@@ -82,14 +80,12 @@ public class ZNPCsPlus extends JavaPlugin {
     }
 
     public void loadAllPaths() {
-        File[] listFiles = PATH_FOLDER.listFiles();
-        if (listFiles == null)
-            return;
-        for (File file : listFiles) {
-            if (file.getName().endsWith(".path")) {
-                NPCPath.AbstractTypeWriter abstractTypeWriter = NPCPath.AbstractTypeWriter.forFile(file, NPCPath.AbstractTypeWriter.TypeWriter.MOVEMENT);
-                abstractTypeWriter.load();
-            }
+        File[] files = PATH_FOLDER.listFiles();
+        if (files == null) return;
+        for (File file : files) {
+            if (!file.getName().endsWith(".path")) continue;
+            NPCPath.AbstractTypeWriter abstractTypeWriter = NPCPath.AbstractTypeWriter.forFile(file, NPCPath.AbstractTypeWriter.TypeWriter.MOVEMENT);
+            abstractTypeWriter.load();
         }
     }
 }

@@ -18,8 +18,7 @@ public class NPCManagerTask extends BukkitRunnable {
     public void run() {
         for (NPC npc : NPC.all()) {
             boolean hasPath = (npc.getNpcPath() != null);
-            if (hasPath)
-                npc.getNpcPath().handle();
+            if (hasPath) npc.getNpcPath().handle();
             for (Player player : Bukkit.getOnlinePlayers()) {
                 ZUser zUser = ZUser.find(player);
                 boolean canSeeNPC = (player.getWorld() == npc.getLocation().getWorld() && player.getLocation().distance(npc.getLocation()) <= ConfigurationConstants.VIEW_DISTANCE);
@@ -28,14 +27,11 @@ public class NPCManagerTask extends BukkitRunnable {
                     continue;
                 }
                 if (canSeeNPC) {
-                    if (!npc.getViewers().contains(zUser))
-                        npc.spawn(zUser);
-                    if (FunctionFactory.isTrue(npc, "look") && !hasPath)
-                        npc.lookAt(zUser, player.getLocation(), false);
+                    if (!npc.getViewers().contains(zUser)) npc.spawn(zUser);
+                    if (FunctionFactory.isTrue(npc, "look") && !hasPath) npc.lookAt(zUser, player.getLocation(), false);
                     npc.getHologram().updateNames(zUser);
                     ConversationModel conversationStorage = npc.getNpcPojo().getConversation();
-                    if (conversationStorage != null && conversationStorage.getConversationType() == ConversationModel.ConversationType.RADIUS)
-                        npc.tryStartConversation(player);
+                    if (conversationStorage != null && conversationStorage.getConversationType() == ConversationModel.ConversationType.RADIUS) npc.tryStartConversation(player);
                 }
             }
         }

@@ -1,7 +1,7 @@
 package io.github.znetworkw.znpcservers.listeners;
 
-import io.github.znetworkw.znpcservers.utility.inventory.ZInventory;
 import io.github.znetworkw.znpcservers.utility.inventory.ZInventoryHolder;
+import io.github.znetworkw.znpcservers.utility.inventory.ZInventoryPage;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,17 +15,15 @@ public class InventoryListener implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player))
-            return;
-        if (event.getCurrentItem() == null)
-            return;
-        if (!(event.getInventory().getHolder() instanceof ZInventoryHolder))
-            return;
+        if (!(event.getWhoClicked() instanceof Player player)) return;
+        if (event.getCurrentItem() == null) return;
+        if (!(event.getInventory().getHolder() instanceof ZInventoryHolder holder)) return;
         event.setCancelled(true);
-        ZInventory zInventory = ((ZInventoryHolder) event.getInventory().getHolder()).getzInventory();
-        if (!zInventory.getPage().containsItem(event.getRawSlot()))
-            return;
-        zInventory.getPage().findItem(event.getRawSlot()).getInventoryCallback().onClick(event);
-        ((Player) event.getWhoClicked()).updateInventory();
+
+        ZInventoryPage page = holder.getzInventory().getPage();
+        if (!page.containsItem(event.getRawSlot())) return;
+
+        page.findItem(event.getRawSlot()).getInventoryCallback().onClick(event);
+        player.updateInventory();
     }
 }

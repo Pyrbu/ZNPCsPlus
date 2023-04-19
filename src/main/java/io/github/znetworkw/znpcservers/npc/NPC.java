@@ -22,41 +22,21 @@ import java.util.concurrent.ConcurrentMap;
 
 public class NPC {
     private static final ConcurrentMap<Integer, NPC> NPC_MAP = new ConcurrentHashMap<>();
-
-    private static final String PROFILE_TEXTURES = "textures";
-
-    private static final String START_PREFIX = "[ZNPC] ";
-
     private final Set<ZUser> viewers = new HashSet<>();
-
     private final PacketCache packets = new PacketCache();
-
     private final NPCModel npcPojo;
-
     private final Hologram hologram;
-
     private final String npcName;
-
     private final NPCSkin npcSkin;
-
     private long lastMove = -1L;
-
     private int entityID;
-
     private Object glowColor;
-
     private Object tabConstructor;
-
     private Object updateTabConstructor;
-
     private Object nmsEntity;
-
     private Object bukkitEntity;
-
     private UUID uuid;
-
     private GameProfile gameProfile;
-
     private NPCPath.PathInitializer npcPath;
 
     public NPC(NPCModel npcModel, boolean load) {
@@ -155,8 +135,7 @@ public class NPC {
         try {
             if (this.npcPath == null) {
                 lookAt(null, location, true);
-                if (updateTime)
-                    this.lastMove = System.nanoTime();
+                if (updateTime) this.lastMove = System.nanoTime();
                 this.npcPojo.setLocation(new ZLocation(location = new Location(location.getWorld(), location.getBlockX() + 0.5D, location.getY(), location.getBlockZ() + 0.5D, location.getYaw(), location.getPitch())));
             }
             CacheRegistry.SET_LOCATION_METHOD.load().invoke(this.nmsEntity, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
@@ -172,8 +151,7 @@ public class NPC {
         this.npcPojo.setSkin(skinFetch.getTexture());
         this.npcPojo.setSignature(skinFetch.getSignature());
         this.gameProfile.getProperties().clear();
-        this.gameProfile.getProperties().put("textures", new Property("textures", this.npcPojo
-                .getSkin(), this.npcPojo.getSignature()));
+        this.gameProfile.getProperties().put("textures", new Property("textures", this.npcPojo.getSkin(), this.npcPojo.getSignature()));
         updateProfile(this.gameProfile.getProperties());
         deleteViewers();
     }
@@ -182,9 +160,9 @@ public class NPC {
         try {
             Object dataWatcherObject = CacheRegistry.GET_DATA_WATCHER_METHOD.load().invoke(this.nmsEntity);
             if (Utils.versionNewer(9)) {
-                CacheRegistry.SET_DATA_WATCHER_METHOD.load().invoke(dataWatcherObject, CacheRegistry.DATA_WATCHER_OBJECT_CONSTRUCTOR
-                        .load().newInstance(this.npcSkin.getLayerIndex(), CacheRegistry.DATA_WATCHER_REGISTER_FIELD
-                        .load()), (byte) 127);
+                CacheRegistry.SET_DATA_WATCHER_METHOD.load().invoke(dataWatcherObject,
+                        CacheRegistry.DATA_WATCHER_OBJECT_CONSTRUCTOR.load()
+                                .newInstance(this.npcSkin.getLayerIndex(), CacheRegistry.DATA_WATCHER_REGISTER_FIELD.load()), (byte) 127);
             } else {
                 CacheRegistry.WATCH_DATA_WATCHER_METHOD.load().invoke(dataWatcherObject, 10, (byte) 127);
             }
@@ -233,13 +211,11 @@ public class NPC {
                 scoreboardPackets.forEach(p -> Utils.sendPackets(user, p));
             }
             if (npcIsPlayer) {
-                if (FunctionFactory.isTrue(this, "mirror"))
-                    updateProfile(user.getGameProfile().getProperties());
+                if (FunctionFactory.isTrue(this, "mirror")) updateProfile(user.getGameProfile().getProperties());
                 Utils.sendPackets(user, this.tabConstructor, this.updateTabConstructor);
             }
             Utils.sendPackets(user, this.packets.getProxyInstance().getSpawnPacket(this.nmsEntity, npcIsPlayer));
-            if (FunctionFactory.isTrue(this, "holo"))
-                this.hologram.spawn(user);
+            if (FunctionFactory.isTrue(this, "holo")) this.hologram.spawn(user);
             updateMetadata(Collections.singleton(user));
             sendEquipPackets(user);
             lookAt(user, getLocation(), true);
@@ -254,16 +230,14 @@ public class NPC {
     }
 
     public synchronized void delete(ZUser user) {
-        if (!this.viewers.contains(user))
-            throw new IllegalStateException(user.getUUID().toString() + " is not a viewer.");
+        if (!this.viewers.contains(user)) throw new IllegalStateException(user.getUUID().toString() + " is not a viewer.");
         this.viewers.remove(user);
         handleDelete(user);
     }
 
     private void handleDelete(ZUser user) {
         try {
-            if (this.npcPojo.getNpcType() == NPCType.PLAYER)
-                this.packets.getProxyInstance().getTabRemovePacket(this.nmsEntity);
+            if (this.npcPojo.getNpcType() == NPCType.PLAYER) this.packets.getProxyInstance().getTabRemovePacket(this.nmsEntity);
             this.hologram.delete(user);
             Utils.sendPackets(user, this.packets.getProxyInstance().getDestroyPacket(this.entityID));
         } catch (ReflectiveOperationException operationException) {
@@ -273,34 +247,27 @@ public class NPC {
 
     public void lookAt(ZUser player, Location location, boolean rotation) {
         long lastMoveNanos = System.nanoTime() - this.lastMove;
-        if (this.lastMove > 1L && lastMoveNanos < 1000000000L)
-            return;
+        if (this.lastMove > 1L && lastMoveNanos < 1000000000L) return;
         Location direction = rotation ? location : this.npcPojo.getLocation().bukkitLocation().clone().setDirection(location.clone().subtract(this.npcPojo.getLocation().bukkitLocation().clone()).toVector());
         try {
             Object lookPacket = CacheRegistry.PACKET_PLAY_OUT_ENTITY_LOOK_CONSTRUCTOR.load().newInstance(this.entityID, (byte) (int) (direction.getYaw() * 256.0F / 360.0F), (byte) (int) (direction.getPitch() * 256.0F / 360.0F), true);
             Object headRotationPacket = CacheRegistry.PACKET_PLAY_OUT_ENTITY_HEAD_ROTATION_CONSTRUCTOR.load().newInstance(this.nmsEntity, (byte) (int) (direction.getYaw() * 256.0F / 360.0F));
-            if (player != null) {
-                Utils.sendPackets(player, lookPacket, headRotationPacket);
-            } else {
-                this.viewers.forEach(players -> Utils.sendPackets(players, headRotationPacket));
-            }
+            if (player != null) Utils.sendPackets(player, lookPacket, headRotationPacket);
+            else this.viewers.forEach(players -> Utils.sendPackets(players, headRotationPacket));
         } catch (ReflectiveOperationException operationException) {
             throw new UnexpectedCallException(operationException);
         }
     }
 
     public void deleteViewers() {
-        for (ZUser user : this.viewers)
-            handleDelete(user);
+        for (ZUser user : this.viewers) handleDelete(user);
         this.viewers.clear();
     }
 
     protected void updateMetadata(Iterable<ZUser> users) {
         try {
             Object metaData = this.packets.getProxyInstance().getMetadataPacket(this.entityID, this.nmsEntity);
-            for (ZUser user : users) {
-                Utils.sendPackets(user, metaData);
-            }
+            for (ZUser user : users) Utils.sendPackets(user, metaData);
         } catch (ReflectiveOperationException operationException) {
             operationException.getCause().printStackTrace();
             operationException.printStackTrace();
@@ -308,8 +275,7 @@ public class NPC {
     }
 
     public void updateProfile(PropertyMap propertyMap) {
-        if (this.npcPojo.getNpcType() != NPCType.PLAYER)
-            return;
+        if (this.npcPojo.getNpcType() != NPCType.PLAYER) return;
         try {
             Object gameProfileObj = CacheRegistry.GET_PROFILE_METHOD.load().invoke(this.nmsEntity);
             Utils.setValue(gameProfileObj, "name", this.gameProfile.getName());
@@ -321,8 +287,7 @@ public class NPC {
     }
 
     public void sendEquipPackets(ZUser zUser) {
-        if (this.npcPojo.getNpcEquip().isEmpty())
-            return;
+        if (this.npcPojo.getNpcEquip().isEmpty()) return;
         try {
             ImmutableList<Object> equipPackets = this.packets.getProxyInstance().getEquipPackets(this);
             equipPackets.forEach(o -> Utils.sendPackets(zUser, o));
@@ -343,13 +308,12 @@ public class NPC {
 
     public void tryStartConversation(Player player) {
         ConversationModel conversation = this.npcPojo.getConversation();
-        if (conversation == null)
-            throw new IllegalStateException("can't find conversation");
+        if (conversation == null) throw new IllegalStateException("can't find conversation");
         conversation.startConversation(this, player);
     }
 
     public Location getLocation() {
-        return (this.npcPath != null) ?
+        return this.npcPath != null ?
                 this.npcPath.getLocation().bukkitLocation() :
                 this.npcPojo.getLocation().bukkitLocation();
     }
