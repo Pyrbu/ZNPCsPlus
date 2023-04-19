@@ -13,8 +13,6 @@ import java.util.*;
 
 @SuppressWarnings("deprecation")
 public class Command extends BukkitCommand {
-    private static final String WHITESPACE = " ";
-
     private static final CommandMap COMMAND_MAP;
 
     static {

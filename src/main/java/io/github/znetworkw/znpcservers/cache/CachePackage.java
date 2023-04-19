@@ -10,9 +10,7 @@ public enum CachePackage {
     private final String fixedPackageName;
 
     CachePackage(String packageName) {
-        this
-
-                .fixedPackageName = Utils.versionNewer(17) ? packageName : (packageName + (packageName.contains("minecraft") ? (".server." + Utils.getBukkitPackage()) : ""));
+        this.fixedPackageName = Utils.versionNewer(17) ? packageName : (packageName + (packageName.contains("minecraft") ? (".server." + Utils.getBukkitPackage()) : ""));
     }
 
     CachePackage() {

@@ -17,10 +17,6 @@ import java.util.UUID;
 public class ConversationProcessor {
     private static final Map<UUID, String> RUNNING_CONVERSATIONS = new HashMap<>();
 
-    private static final String WHITE_SPACE = " ";
-
-    private static final int CONVERSATION_DELAY = 20;
-
     private final NPC npc;
 
     private final ConversationModel conversationModel;

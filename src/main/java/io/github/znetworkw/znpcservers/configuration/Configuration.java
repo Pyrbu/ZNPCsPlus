@@ -3,6 +3,7 @@ package io.github.znetworkw.znpcservers.configuration;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.internal.$Gson$Types;
 import io.github.znetworkw.znpcservers.utility.Utils;
 import lol.pyr.znpcsplus.ZNPCsPlus;
 
@@ -58,9 +59,7 @@ public class Configuration {
                                 if (!single && configValue.getPrimitiveType().isEnum()) {
                                     this.configurationValues.put(configValue, ZNPCsPlus.GSON.fromJson(jsonElement, configValue.getPrimitiveType()));
                                 } else {
-                                    throw new RuntimeException();
-                                    // what is this fuckery??
-                                    // this.configurationValues.put(configValue, ZNPCsPlus.GSON.fromJson(jsonElement, $Gson$Types.newParameterizedTypeWithOwner((Type)null, configValue.getValue().getClass(), new Type[]{configValue.getPrimitiveType()})));
+                                    this.configurationValues.put(configValue, ZNPCsPlus.GSON.fromJson(jsonElement, $Gson$Types.newParameterizedTypeWithOwner(null, configValue.getValue().getClass(), configValue.getPrimitiveType())));
                                 }
                             }
                         }
@@ -94,7 +93,6 @@ public class Configuration {
         synchronized(this.path) {
             try {
                 Writer writer = Files.newBufferedWriter(this.path, CHARSET);
-
                 try {
                     ZNPCsPlus.GSON.toJson(this.configurationValues.size() == 1 ? this.configurationValues.values().iterator().next() : this.configurationValues, writer);
                     writer.close();
@@ -104,13 +102,11 @@ public class Configuration {
                     } catch (Throwable var6) {
                         var7.addSuppressed(var6);
                     }
-
                     throw var7;
                 }
             } catch (IOException var8) {
                 throw new IllegalStateException("Failed to save config: " + this.name);
             }
-
         }
     }
 

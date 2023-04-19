@@ -8,8 +8,6 @@ import java.util.*;
 
 @SuppressWarnings("unused")
 public class NPCModel {
-    private static final String EMPTY_STRING = "";
-
     private int id;
 
     private double hologramHeight;

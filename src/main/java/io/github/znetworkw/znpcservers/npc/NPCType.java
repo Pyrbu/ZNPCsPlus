@@ -60,7 +60,6 @@ public enum NPCType {
     AXOLOTL(ENTITY_AXOLOTL_CLASS, -1.0, "setVariant", "setAge"),
     GOAT(ENTITY_GOAT_CLASS, -0.5, "setScreamingGoat", "setAge");
 
-    private static final String EMPTY_STRING = "";
     private final double holoHeight;
     private final CustomizationLoader customizationLoader;
     private final Constructor<?> constructor;
@@ -94,7 +93,7 @@ public enum NPCType {
     }
 
     NPCType(Class<?> entityClass, double holoHeight, String ... customization) {
-        this(entityClass, EMPTY_STRING, holoHeight, customization);
+        this(entityClass, "", holoHeight, customization);
     }
 
     public double getHoloHeight() {

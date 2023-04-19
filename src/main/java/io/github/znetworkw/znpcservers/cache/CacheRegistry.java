@@ -174,7 +174,7 @@ public final class CacheRegistry {
 
             .withCategory(CacheCategory.ENTITY)
             .withAdditionalData("monster.warden")
-            .withClassName("EntityWarden"))).load();
+            .withClassName("Warden"))).load();
 
     public static final Class<?> ENTITY_BEE_CLASS = (new TypeCache.BaseCache.ClazzLoader((new TypeCache.CacheBuilder(CachePackage.MINECRAFT_SERVER))
 
