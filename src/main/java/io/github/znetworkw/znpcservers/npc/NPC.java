@@ -312,8 +312,7 @@ public class NPC {
     }
 
     public Location getLocation() {
-        return this.npcPath != null ?
-                this.npcPath.getLocation().bukkitLocation() :
-                this.npcPojo.getLocation().bukkitLocation();
+        if (this.npcPath != null && this.npcPath.getLocation() != null) return  this.npcPath.getLocation().bukkitLocation();
+        return this.npcPojo.getLocation().bukkitLocation();
     }
 }
