@@ -91,20 +91,9 @@ public class Configuration {
 
     public void save() {
         synchronized(this.path) {
-            try {
-                Writer writer = Files.newBufferedWriter(this.path, CHARSET);
-                try {
-                    ZNPCsPlus.GSON.toJson(this.configurationValues.size() == 1 ? this.configurationValues.values().iterator().next() : this.configurationValues, writer);
-                    writer.close();
-                } catch (Throwable var7) {
-                    try {
-                        writer.close();
-                    } catch (Throwable var6) {
-                        var7.addSuppressed(var6);
-                    }
-                    throw var7;
-                }
-            } catch (IOException var8) {
+            try (Writer writer = Files.newBufferedWriter(this.path, CHARSET)) {
+                ZNPCsPlus.GSON.toJson(this.configurationValues.size() == 1 ? this.configurationValues.values().iterator().next() : this.configurationValues, writer);
+            } catch (IOException ex) {
                 throw new IllegalStateException("Failed to save config: " + this.name);
             }
         }
