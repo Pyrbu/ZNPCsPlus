@@ -50,7 +50,6 @@ public class DefaultCommand extends Command {
         sender.sendMessage("&b&lZNPCS &8» &7ZNetwork");
         sender.sendMessage("&6https://www.spigotmc.org/resources/znpcs.80940");
         Objects.requireNonNull(sender);
-        Objects.requireNonNull(sender);
         getCommands().forEach(sender::sendMessage);
         sender.sendMessage(ChatColor.DARK_GRAY + "Hover over the commands to see help for the command.");
         sender.sendMessage("&6&m------------------------------------------");

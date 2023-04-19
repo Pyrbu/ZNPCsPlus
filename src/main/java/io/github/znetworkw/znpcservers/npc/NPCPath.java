@@ -1,10 +1,10 @@
 package io.github.znetworkw.znpcservers.npc;
 
-import lol.pyr.znpcsplus.ZNPCsPlus;
 import io.github.znetworkw.znpcservers.configuration.Configuration;
 import io.github.znetworkw.znpcservers.configuration.ConfigurationValue;
 import io.github.znetworkw.znpcservers.user.ZUser;
 import io.github.znetworkw.znpcservers.utility.location.ZLocation;
+import lol.pyr.znpcsplus.ZNPCsPlus;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
@@ -16,8 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @SuppressWarnings("ALL")
 public interface NPCPath {
@@ -89,8 +87,6 @@ public interface NPCPath {
     }
 
     abstract class AbstractTypeWriter implements NPCPath {
-        private static final Logger LOGGER = Logger.getLogger(AbstractTypeWriter.class.getName());
-
         private static final ConcurrentMap<String, AbstractTypeWriter> PATH_TYPES = new ConcurrentHashMap<>();
 
         private static final int PATH_DELAY = 1;
@@ -153,7 +149,8 @@ public interface NPCPath {
                     throw throwable;
                 }
             } catch (IOException e) {
-                LOGGER.log(Level.WARNING, String.format("The path %s could not be loaded", this.file.getName()));
+                ZNPCsPlus.LOGGER.warning("[AbstractTypeWriter] " + String.format("The path %s could not be loaded", this.file.getName()));
+                e.printStackTrace();
             }
         }
 
@@ -174,7 +171,8 @@ public interface NPCPath {
                     throw throwable;
                 }
             } catch (IOException e) {
-                LOGGER.log(Level.WARNING, String.format("Path %s could not be created", getName()), e);
+                ZNPCsPlus.LOGGER.warning("[AbstractTypeWriter] " + String.format("Path %s could not be created", getName()));
+                e.printStackTrace();
             }
         }
 

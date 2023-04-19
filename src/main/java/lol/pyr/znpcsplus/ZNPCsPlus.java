@@ -1,6 +1,5 @@
 package lol.pyr.znpcsplus;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.github.znetworkw.znpcservers.commands.list.DefaultCommand;
@@ -27,10 +26,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.logging.Logger;
 
 public class ZNPCsPlus extends JavaPlugin {
-    public static final File PLUGIN_FOLDER = new File("plugins/ServersNPC");
-    public static final File PATH_FOLDER = new File("plugins/ServersNPC/paths");
+    public static Logger LOGGER;
+    public static File PLUGIN_FOLDER;
+    public static File PATH_FOLDER;
     public static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(ZLocation.class, ZLocation.SERIALIZER)
             .registerTypeHierarchyAdapter(ItemStack.class, new ItemStackSerializer())
@@ -57,9 +58,17 @@ public class ZNPCsPlus extends JavaPlugin {
         ConfigurationConstants.NPC_LIST.remove(npc.getNpcPojo());
     }
 
+    @Override
+    public void onLoad() {
+        LOGGER = getLogger();
+        PLUGIN_FOLDER = getDataFolder();
+        PATH_FOLDER = new File(PLUGIN_FOLDER, "paths");
+    }
+
+    @Override
     public void onEnable() {
-        ImmutableList<File> files = ImmutableList.of(PLUGIN_FOLDER, PATH_FOLDER);
-        for (File file : files) file.mkdirs();
+        PLUGIN_FOLDER.mkdirs();
+        PATH_FOLDER.mkdirs();
 
         loadAllPaths();
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
@@ -74,6 +83,7 @@ public class ZNPCsPlus extends JavaPlugin {
         new InventoryListener(this);
     }
 
+    @Override
     public void onDisable() {
         Configuration.SAVE_CONFIGURATIONS.forEach(Configuration::save);
         Bukkit.getOnlinePlayers().forEach(ZUser::unregister);

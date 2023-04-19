@@ -20,9 +20,7 @@ public class PacketV8 implements Packet {
     public Object getPlayerPacket(Object nmsWorld, GameProfile gameProfile) throws ReflectiveOperationException {
         Constructor<?> constructor = (Utils.BUKKIT_VERSION > 13) ? CacheRegistry.PLAYER_INTERACT_MANAGER_NEW_CONSTRUCTOR.load() : CacheRegistry.PLAYER_INTERACT_MANAGER_OLD_CONSTRUCTOR.load();
         return CacheRegistry.PLAYER_CONSTRUCTOR_OLD.load().newInstance(CacheRegistry.GET_SERVER_METHOD
-                .load().invoke(Bukkit.getServer()), nmsWorld, gameProfile, constructor
-
-                .newInstance(nmsWorld));
+                .load().invoke(Bukkit.getServer()), nmsWorld, gameProfile, constructor.newInstance(nmsWorld));
     }
 
     public Object getSpawnPacket(Object nmsEntity, boolean isPlayer) throws ReflectiveOperationException {
@@ -31,8 +29,7 @@ public class PacketV8 implements Packet {
 
     public Object convertItemStack(int entityId, ItemSlot itemSlot, ItemStack itemStack) throws ReflectiveOperationException {
         return CacheRegistry.PACKET_PLAY_OUT_ENTITY_EQUIPMENT_CONSTRUCTOR_OLD.load().newInstance(entityId,
-                itemSlot.getSlotOld(), CacheRegistry.AS_NMS_COPY_METHOD
-                        .load().invoke(CacheRegistry.CRAFT_ITEM_STACK_CLASS, itemStack));
+                itemSlot.getSlotOld(), CacheRegistry.AS_NMS_COPY_METHOD.load().invoke(CacheRegistry.CRAFT_ITEM_STACK_CLASS, itemStack));
     }
 
     public Object getClickType(Object interactPacket) throws ReflectiveOperationException {
@@ -44,10 +41,7 @@ public class PacketV8 implements Packet {
         try {
             return CacheRegistry.PACKET_PLAY_OUT_ENTITY_META_DATA_CONSTRUCTOR.load().newInstance(entityId, dataWatcher, true);
         } catch (Exception e2) {
-            return CacheRegistry.PACKET_PLAY_OUT_ENTITY_META_DATA_CONSTRUCTOR_V1
-                    .load()
-                    .newInstance(entityId, CacheRegistry.GET_DATAWATCHER_B_LIST
-                            .load().invoke(dataWatcher));
+            return CacheRegistry.PACKET_PLAY_OUT_ENTITY_META_DATA_CONSTRUCTOR_V1.load().newInstance(entityId, CacheRegistry.GET_DATAWATCHER_B_LIST.load().invoke(dataWatcher));
         }
     }
 
@@ -58,8 +52,7 @@ public class PacketV8 implements Packet {
     public ImmutableList<Object> getEquipPackets(NPC npc) throws ReflectiveOperationException {
         ImmutableList.Builder<Object> builder = ImmutableList.builder();
         for (Map.Entry<ItemSlot, ItemStack> stackEntry : npc.getNpcPojo().getNpcEquip().entrySet()) {
-            builder.add(CacheRegistry.PACKET_PLAY_OUT_ENTITY_EQUIPMENT_CONSTRUCTOR_OLD.load().newInstance(npc.getEntityID(),
-                    stackEntry.getKey().getSlotOld(),
+            builder.add(CacheRegistry.PACKET_PLAY_OUT_ENTITY_EQUIPMENT_CONSTRUCTOR_OLD.load().newInstance(npc.getEntityID(), stackEntry.getKey().getSlotOld(),
                     convertItemStack(npc.getEntityID(), stackEntry.getKey(), stackEntry.getValue())));
         }
         return builder.build();

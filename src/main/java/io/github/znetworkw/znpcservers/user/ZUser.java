@@ -10,9 +10,13 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
 import lol.pyr.znpcsplus.ZNPCsPlus;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class ZUser {
@@ -39,13 +43,48 @@ public class ZUser {
         try {
             Object playerHandle = CacheRegistry.GET_HANDLE_PLAYER_METHOD.load().invoke(toPlayer());
             this.gameProfile = (GameProfile) CacheRegistry.GET_PROFILE_METHOD.load().invoke(playerHandle, new Object[0]);
-            Channel channel = (Channel) CacheRegistry.CHANNEL_FIELD.load().get(CacheRegistry.NETWORK_MANAGER_FIELD.load()
-                    .get(this.playerConnection = CacheRegistry.PLAYER_CONNECTION_FIELD.load().get(playerHandle)));
-            if (channel.pipeline().names().contains("npc_interact"))
-                channel.pipeline().remove("npc_interact");
+            this.playerConnection = CacheRegistry.PLAYER_CONNECTION_FIELD.load().get(playerHandle);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new IllegalStateException("can't create user for player " + uuid.toString(), e.getCause());
+        }
+        if (!tryRegisterChannel()) ZNPCsPlus.SCHEDULER.runTaskTimer(new ChannelRegistrationFallbackTask(this), 3);
+    }
+
+    private static class ChannelRegistrationFallbackTask extends BukkitRunnable {
+        private final ZUser user;
+        private final Player player;
+        private int tries = 5;
+
+        private ChannelRegistrationFallbackTask(ZUser user) {
+            this.user = user;
+            this.player = user.toPlayer();
+        }
+
+        @Override
+        public void run() {
+            if (!player.isOnline() || user.tryRegisterChannel()) {
+                cancel();
+                return;
+            }
+            if (tries-- > 0) return;
+            cancel();
+            player.kick(Component.text("[ZNPCsPlus]", NamedTextColor.RED).appendNewline()
+                    .append(Component.text("Couldn't inject interaction detector to channel", NamedTextColor.WHITE)).appendNewline()
+                    .append(Component.text("Please report this at https://github.com/Pyrbu/ZNPCsPlus", NamedTextColor.WHITE)));
+            ZNPCsPlus.LOGGER.severe("Couldn't inject interaction detector to channel for player " + player.getName() + " (" + player.getUniqueId() + ")");
+        }
+    }
+
+    private boolean tryRegisterChannel() {
+        try {
+            Channel channel = (Channel) CacheRegistry.CHANNEL_FIELD.load().get(CacheRegistry.NETWORK_MANAGER_FIELD.load().get(this.playerConnection));
+            if (channel.pipeline().names().contains("npc_interact")) channel.pipeline().remove("npc_interact");
             channel.pipeline().addAfter("decoder", "npc_interact", new ZNPCSocketDecoder());
-        } catch (IllegalAccessException | java.lang.reflect.InvocationTargetException e) {
-            throw new IllegalStateException("can't create player " + uuid.toString(), e.getCause());
+            return true;
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("illegal access exception while trying to register npc_interact channel");
+        } catch (NoSuchElementException e) {
+            return false;
         }
     }
 

@@ -41,5 +41,9 @@ processResources {
     expand("version": version)
 }
 
+runServer {
+    minecraftVersion "1.19.3"
+}
+
 tasks.assemble.dependsOn reobfJar
 tasks.compileJava.dependsOn clean
