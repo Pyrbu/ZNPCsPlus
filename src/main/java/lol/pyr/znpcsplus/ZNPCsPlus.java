@@ -12,13 +12,14 @@ import io.github.znetworkw.znpcservers.npc.NPCModel;
 import io.github.znetworkw.znpcservers.npc.NPCPath;
 import io.github.znetworkw.znpcservers.npc.NPCType;
 import io.github.znetworkw.znpcservers.npc.task.NPCPathTask;
-import io.github.znetworkw.znpcservers.npc.task.NPCUpdateTask;
 import io.github.znetworkw.znpcservers.npc.task.NPCSaveTask;
+import io.github.znetworkw.znpcservers.npc.task.NPCUpdateTask;
 import io.github.znetworkw.znpcservers.user.ZUser;
 import io.github.znetworkw.znpcservers.utility.BungeeUtils;
 import io.github.znetworkw.znpcservers.utility.SchedulerUtils;
 import io.github.znetworkw.znpcservers.utility.itemstack.ItemStackSerializer;
 import io.github.znetworkw.znpcservers.utility.location.ZLocation;
+import org.apache.commons.io.FileUtils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -26,6 +27,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.logging.Logger;
 
@@ -42,6 +44,8 @@ public class ZNPCsPlus extends JavaPlugin {
     private static final int PLUGIN_ID = 18244;
     public static SchedulerUtils SCHEDULER;
     public static BungeeUtils BUNGEE_UTILS;
+
+    private boolean enabled = false;
 
     public static NPC createNPC(int id, NPCType npcType, Location location, String name) {
         NPC find = NPC.find(id);
@@ -68,6 +72,12 @@ public class ZNPCsPlus extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        if (Bukkit.getPluginManager().isPluginEnabled("ServersNPC")) {
+            LOGGER.severe("Detected old version of ZNPCs! Disabling the plugin...");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+        checkOldFolder();
         PLUGIN_FOLDER.mkdirs();
         PATH_FOLDER.mkdirs();
 
@@ -83,10 +93,12 @@ public class ZNPCsPlus extends JavaPlugin {
         new NPCSaveTask(this, ConfigurationConstants.SAVE_DELAY);
         new PlayerListener(this);
         new InventoryListener(this);
+        enabled = true;
     }
 
     @Override
     public void onDisable() {
+        if (!enabled) return;
         Configuration.SAVE_CONFIGURATIONS.forEach(Configuration::save);
         Bukkit.getOnlinePlayers().forEach(ZUser::unregister);
     }
@@ -98,6 +110,19 @@ public class ZNPCsPlus extends JavaPlugin {
             if (!file.getName().endsWith(".path")) continue;
             NPCPath.AbstractTypeWriter abstractTypeWriter = NPCPath.AbstractTypeWriter.forFile(file, NPCPath.AbstractTypeWriter.TypeWriter.MOVEMENT);
             abstractTypeWriter.load();
+        }
+    }
+
+    private void checkOldFolder() {
+        if (PLUGIN_FOLDER.exists()) return;
+        File oldFolder = new File(PLUGIN_FOLDER.getParent(), "ServersNPC");
+        if (!oldFolder.exists()) return;
+        LOGGER.info("Detected old ZNPCs files and no new ones present, converting...");
+        try {
+            FileUtils.moveDirectory(oldFolder, PLUGIN_FOLDER);
+        } catch (IOException e) {
+            LOGGER.severe("Failed to convert old ZNPCs files:");
+            e.printStackTrace();
         }
     }
 }

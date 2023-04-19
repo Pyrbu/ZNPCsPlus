@@ -3,4 +3,4 @@ main: lol.pyr.znpcsplus.ZNPCsPlus
 load: POSTWORLD
 version: ${version}
 api-version: 1.13
-softdepend: [ PlaceholderAPI ]
+softdepend: [ PlaceholderAPI, ServersNPC ]
