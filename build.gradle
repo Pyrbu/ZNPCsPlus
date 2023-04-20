@@ -23,7 +23,7 @@ dependencies {
 }
 
 group "lol.pyr"
-version "1.0.0"
+version "1.0.1"
 
 compileJava {
     options.release.set(17)
@@ -39,7 +39,7 @@ processResources {
 }
 
 runServer {
-    minecraftVersion "1.19.3"
+    minecraftVersion "1.19.4"
 }
 
 tasks.assemble.dependsOn reobfJar
