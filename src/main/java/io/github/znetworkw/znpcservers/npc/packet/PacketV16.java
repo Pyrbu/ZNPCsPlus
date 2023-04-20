@@ -3,7 +3,7 @@ package io.github.znetworkw.znpcservers.npc.packet;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
-import io.github.znetworkw.znpcservers.cache.CacheRegistry;
+import io.github.znetworkw.znpcservers.reflection.ReflectionCache;
 import io.github.znetworkw.znpcservers.npc.ItemSlot;
 import io.github.znetworkw.znpcservers.npc.NPC;
 import org.bukkit.inventory.ItemStack;
@@ -22,6 +22,6 @@ public class PacketV16 extends PacketV9 {
             pairs.add(new Pair<>(getItemSlot(entry
                     .getKey().getSlot()),
                     convertItemStack(npc.getEntityID(), entry.getKey(), entry.getValue())));
-        return ImmutableList.of(CacheRegistry.PACKET_PLAY_OUT_ENTITY_EQUIPMENT_CONSTRUCTOR_V1.load().newInstance(npc.getEntityID(), pairs));
+        return ImmutableList.of(ReflectionCache.PACKET_PLAY_OUT_ENTITY_EQUIPMENT_CONSTRUCTOR_V1.load().newInstance(npc.getEntityID(), pairs));
     }
 }

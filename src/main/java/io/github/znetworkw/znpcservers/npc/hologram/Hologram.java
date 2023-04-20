@@ -1,7 +1,7 @@
 package io.github.znetworkw.znpcservers.npc.hologram;
 
 import io.github.znetworkw.znpcservers.UnexpectedCallException;
-import io.github.znetworkw.znpcservers.cache.CacheRegistry;
+import io.github.znetworkw.znpcservers.reflection.ReflectionCache;
 import io.github.znetworkw.znpcservers.configuration.Configuration;
 import io.github.znetworkw.znpcservers.configuration.ConfigurationConstants;
 import io.github.znetworkw.znpcservers.configuration.ConfigurationValue;
@@ -37,14 +37,14 @@ public class Hologram {
             Location location = this.npc.getLocation();
             for (String line : this.npc.getNpcPojo().getHologramLines()) {
                 boolean visible = !line.equalsIgnoreCase("%space%");
-                Object armorStand = CacheRegistry.ENTITY_CONSTRUCTOR.load().newInstance(CacheRegistry.GET_HANDLE_WORLD_METHOD.load().invoke(location.getWorld()),
+                Object armorStand = ReflectionCache.ENTITY_CONSTRUCTOR.load().newInstance(ReflectionCache.GET_HANDLE_WORLD_METHOD.load().invoke(location.getWorld()),
                         location.getX(), location.getY() - 0.15D + y, location.getZ());
                 if (visible) {
-                    CacheRegistry.SET_CUSTOM_NAME_VISIBLE_METHOD.load().invoke(armorStand, true);
+                    ReflectionCache.SET_CUSTOM_NAME_VISIBLE_METHOD.load().invoke(armorStand, true);
                     updateLine(line, armorStand, null);
                 }
-                CacheRegistry.SET_INVISIBLE_METHOD.load().invoke(armorStand, true);
-                this.hologramLines.add(new HologramLine(line.replace(ConfigurationConstants.SPACE_SYMBOL, " "), armorStand, (Integer) CacheRegistry.GET_ENTITY_ID
+                ReflectionCache.SET_INVISIBLE_METHOD.load().invoke(armorStand, true);
+                this.hologramLines.add(new HologramLine(line.replace(ConfigurationConstants.SPACE_SYMBOL, " "), armorStand, (Integer) ReflectionCache.GET_ENTITY_ID
                         .load().invoke(armorStand)));
                 y += LINE_SPACING;
             }
@@ -92,7 +92,7 @@ public class Hologram {
     public void updateLocation() {
         this.hologramLines.forEach(hologramLine -> {
             try {
-                Object packet = CacheRegistry.PACKET_PLAY_OUT_ENTITY_TELEPORT_CONSTRUCTOR.load().newInstance(hologramLine.armorStand);
+                Object packet = ReflectionCache.PACKET_PLAY_OUT_ENTITY_TELEPORT_CONSTRUCTOR.load().newInstance(hologramLine.armorStand);
                 this.npc.getViewers().forEach(player -> Utils.sendPackets(player, packet));
             }
             catch (ReflectiveOperationException operationException) {
@@ -106,7 +106,7 @@ public class Hologram {
         try {
             double y = this.npc.getNpcPojo().getHologramHeight();
             for (HologramLine hologramLine : this.hologramLines) {
-                CacheRegistry.SET_LOCATION_METHOD.load().invoke(hologramLine.armorStand, location.getX(), location.getY() - 0.15 + y, location.getZ(), location.getYaw(), location.getPitch());
+                ReflectionCache.SET_LOCATION_METHOD.load().invoke(hologramLine.armorStand, location.getX(), location.getY() - 0.15 + y, location.getZ(), location.getYaw(), location.getPitch());
                 y += LINE_SPACING;
             }
             this.updateLocation();
@@ -118,9 +118,9 @@ public class Hologram {
 
     private void updateLine(String line, Object armorStand, @Nullable ZUser user) throws InvocationTargetException, IllegalAccessException {
         if (NEW_METHOD) {
-            CacheRegistry.SET_CUSTOM_NAME_NEW_METHOD.load().invoke(armorStand, CacheRegistry.CRAFT_CHAT_MESSAGE_METHOD.load().invoke(null, LineReplacer.makeAll(user, line)));
+            ReflectionCache.SET_CUSTOM_NAME_NEW_METHOD.load().invoke(armorStand, ReflectionCache.CRAFT_CHAT_MESSAGE_METHOD.load().invoke(null, LineReplacer.makeAll(user, line)));
         } else {
-            CacheRegistry.SET_CUSTOM_NAME_OLD_METHOD.load().invoke(armorStand, LineReplacer.makeAll(user, line));
+            ReflectionCache.SET_CUSTOM_NAME_OLD_METHOD.load().invoke(armorStand, LineReplacer.makeAll(user, line));
         }
     }
 

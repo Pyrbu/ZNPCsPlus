@@ -1,6 +1,6 @@
 package io.github.znetworkw.znpcservers.utility;
 
-import io.github.znetworkw.znpcservers.cache.CacheRegistry;
+import io.github.znetworkw.znpcservers.reflection.ReflectionCache;
 import io.github.znetworkw.znpcservers.configuration.ConfigurationConstants;
 import io.github.znetworkw.znpcservers.user.ZUser;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -76,7 +76,7 @@ public final class Utils {
         try {
             for (Object packet : packets) {
                 if (packet != null)
-                    CacheRegistry.SEND_PACKET_METHOD.load().invoke(user.getPlayerConnection(), packet);
+                    ReflectionCache.SEND_PACKET_METHOD.load().invoke(user.getPlayerConnection(), packet);
             }
         } catch (IllegalAccessException | java.lang.reflect.InvocationTargetException e) {
             e.printStackTrace();

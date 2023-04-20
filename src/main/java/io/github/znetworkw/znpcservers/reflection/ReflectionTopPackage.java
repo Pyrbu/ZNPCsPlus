@@ -1,6 +1,6 @@
-package io.github.znetworkw.znpcservers.cache;
+package io.github.znetworkw.znpcservers.reflection;
 
-public enum CacheCategory {
+public enum ReflectionTopPackage {
     DEFAULT(""),
     NETWORK("network"),
     PROTOCOL("network.protocol"),
@@ -16,22 +16,15 @@ public enum CacheCategory {
     SERVER_NETWORK("server.network"),
     SERVER("server");
 
-    private final String subPackageName;
-
     private final String packageName;
 
-    CacheCategory(String subPackageName) {
-        this.subPackageName = subPackageName;
-        StringBuilder stringBuilder = new StringBuilder(CachePackage.MINECRAFT_SERVER.getFixedPackageName());
+    ReflectionTopPackage(String subPackageName) {
+        StringBuilder stringBuilder = new StringBuilder(ReflectionBasePackage.MINECRAFT_SERVER.getFixedPackageName());
         if (subPackageName.length() > 0) {
             stringBuilder.append(".");
             stringBuilder.append(subPackageName);
         }
         this.packageName = stringBuilder.toString();
-    }
-
-    public String getSubPackageName() {
-        return this.subPackageName;
     }
 
     public String getPackageName() {

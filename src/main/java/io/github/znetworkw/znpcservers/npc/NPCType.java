@@ -1,7 +1,7 @@
 package io.github.znetworkw.znpcservers.npc;
 
 import io.github.znetworkw.znpcservers.UnexpectedCallException;
-import io.github.znetworkw.znpcservers.cache.TypeCache;
+import io.github.znetworkw.znpcservers.reflection.TypeCache;
 import io.github.znetworkw.znpcservers.utility.Utils;
 import org.bukkit.entity.EntityType;
 
@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Optional;
 
-import static io.github.znetworkw.znpcservers.cache.CacheRegistry.*;
+import static io.github.znetworkw.znpcservers.reflection.ReflectionCache.*;
 
 @SuppressWarnings("unused")
 public enum NPCType {

@@ -1,7 +1,7 @@
 package io.github.znetworkw.znpcservers.commands;
 
 import com.google.common.collect.Iterables;
-import io.github.znetworkw.znpcservers.cache.CacheRegistry;
+import io.github.znetworkw.znpcservers.reflection.ReflectionCache;
 import io.github.znetworkw.znpcservers.commands.exception.CommandException;
 import io.github.znetworkw.znpcservers.commands.exception.CommandExecuteException;
 import io.github.znetworkw.znpcservers.commands.exception.CommandPermissionException;
@@ -20,7 +20,7 @@ public class Command extends BukkitCommand {
 
     static {
         try {
-            COMMAND_MAP = (CommandMap) CacheRegistry.BUKKIT_COMMAND_MAP.load().get(Bukkit.getServer());
+            COMMAND_MAP = (CommandMap) ReflectionCache.BUKKIT_COMMAND_MAP.load().get(Bukkit.getServer());
         } catch (IllegalAccessException exception) {
             throw new IllegalStateException("Unable to register Bukkit command map.");
         }

@@ -1,8 +1,8 @@
 package io.github.znetworkw.znpcservers.npc;
 
 import com.google.common.collect.Iterables;
-import io.github.znetworkw.znpcservers.cache.CachePackage;
-import io.github.znetworkw.znpcservers.cache.TypeCache;
+import io.github.znetworkw.znpcservers.reflection.ReflectionBasePackage;
+import io.github.znetworkw.znpcservers.reflection.TypeCache;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
@@ -32,7 +32,7 @@ public class CustomizationLoader {
                 for (Class<?> parameter : method.getParameterTypes()) {
                     TypeProperty typeProperty = TypeProperty.forType(parameter);
                     if (typeProperty == null && parameter.isEnum())
-                        (new TypeCache.BaseCache.EnumLoader((new TypeCache.CacheBuilder(CachePackage.DEFAULT))
+                        (new TypeCache.BaseReflection.EnumReflection((new TypeCache.ReflectionBuilder(ReflectionBasePackage.DEFAULT))
                                 .withClassName(parameter.getTypeName()))).load();
                 }
                 builder.put(method.getName(), method);
