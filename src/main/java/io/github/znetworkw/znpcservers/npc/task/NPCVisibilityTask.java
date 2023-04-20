@@ -1,7 +1,6 @@
 package io.github.znetworkw.znpcservers.npc.task;
 
 import io.github.znetworkw.znpcservers.configuration.ConfigurationConstants;
-import io.github.znetworkw.znpcservers.npc.FunctionFactory;
 import io.github.znetworkw.znpcservers.npc.NPC;
 import io.github.znetworkw.znpcservers.npc.conversation.ConversationModel;
 import io.github.znetworkw.znpcservers.user.ZUser;
@@ -10,8 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class NPCUpdateTask extends BukkitRunnable {
-    public NPCUpdateTask(Plugin serversNPC) {
+public class NPCVisibilityTask extends BukkitRunnable {
+    public NPCVisibilityTask(Plugin serversNPC) {
         runTaskTimerAsynchronously(serversNPC, 60L, 10L);
     }
 
@@ -26,7 +25,6 @@ public class NPCUpdateTask extends BukkitRunnable {
             }
             if (canSeeNPC) {
                 if (!npc.getViewers().contains(zUser)) npc.spawn(zUser);
-                if (FunctionFactory.isTrue(npc, "look") && npc.getNpcPath() == null) npc.lookAt(zUser, player.getLocation(), false);
                 npc.getHologram().updateNames(zUser);
                 ConversationModel conversationStorage = npc.getNpcPojo().getConversation();
                 if (conversationStorage != null && conversationStorage.getConversationType() == ConversationModel.ConversationType.RADIUS) npc.tryStartConversation(player);

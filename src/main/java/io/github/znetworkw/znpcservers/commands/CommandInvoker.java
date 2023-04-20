@@ -1,5 +1,7 @@
 package io.github.znetworkw.znpcservers.commands;
 
+import org.bukkit.entity.Player;
+
 import java.lang.reflect.Method;
 
 public class CommandInvoker {
