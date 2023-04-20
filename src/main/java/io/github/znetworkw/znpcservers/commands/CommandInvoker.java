@@ -20,7 +20,7 @@ public class CommandInvoker {
 
     public void execute(CommandSender sender, Object command) throws CommandException {
         // Check if the sender is not a player
-        if (!(sender instanceof Player player))
+        if (!(sender.getCommandSender() instanceof Player player))
             throw new CommandException("Only players may execute this command.");
 
         // Check if the permission is not empty and the player does not have the permission

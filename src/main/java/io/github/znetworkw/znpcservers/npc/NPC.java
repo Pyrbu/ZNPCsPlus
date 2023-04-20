@@ -13,7 +13,6 @@ import io.github.znetworkw.znpcservers.user.ZUser;
 import io.github.znetworkw.znpcservers.utility.Utils;
 import io.github.znetworkw.znpcservers.utility.location.ZLocation;
 import lol.pyr.znpcsplus.ZNPCsPlus;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -21,7 +20,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-@SuppressWarnings("deprecation")
 public class NPC {
     private static final ConcurrentMap<Integer, NPC> NPC_MAP = new ConcurrentHashMap<>();
     private final Set<ZUser> viewers = new HashSet<>();
@@ -72,7 +70,7 @@ public class NPC {
 
     public void onLoad() {
         if (NPC_MAP.containsKey(getNpcPojo().getId())) throw new IllegalStateException("npc with id " + getNpcPojo().getId() + " already exists.");
-        this.gameProfile = new GameProfile(UUID.randomUUID(), ChatColor.GRAY + "[ZNPC] " + this.npcName);
+        this.gameProfile = new GameProfile(UUID.randomUUID(), "[ZNPC] " + this.npcName);
         this.gameProfile.getProperties().put("textures", new Property("textures", this.npcPojo.getSkin(), this.npcPojo.getSignature()));
         changeType(this.npcPojo.getNpcType());
         updateProfile(this.gameProfile.getProperties());
