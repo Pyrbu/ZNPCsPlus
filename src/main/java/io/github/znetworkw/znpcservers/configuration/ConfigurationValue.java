@@ -50,7 +50,7 @@ public enum ConfigurationValue {
     FETCHING_SKIN("messages", "&aFetching skin for name: &f%s&a. Please wait...", String.class),
     CANT_GET_SKIN("messages", "&cCould not fetch skin for name: %s.", String.class),
     GET_SKIN("messages", "&aSkin successfully fetched!", String.class),
-    CONVERSATION_LIST("Conversations", new ArrayList<>(), Conversation.class);
+    CONVERSATION_LIST("conversations" /* Leave this lowercase or it will break */, new ArrayList<>(), Conversation.class);
 
     public static final Map<String, ImmutableSet<ConfigurationValue>> VALUES_BY_NAME;
 

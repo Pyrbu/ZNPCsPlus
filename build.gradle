@@ -23,7 +23,7 @@ dependencies {
 }
 
 group "lol.pyr"
-version "1.0.1"
+version "1.0.2"
 
 compileJava {
     options.release.set(17)
