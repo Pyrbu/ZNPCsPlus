@@ -1,7 +1,7 @@
 package io.github.znetworkw.znpcservers.npc;
 
 import io.github.znetworkw.znpcservers.UnexpectedCallException;
-import io.github.znetworkw.znpcservers.reflection.TypeCache;
+import io.github.znetworkw.znpcservers.reflection.ClassCache;
 import io.github.znetworkw.znpcservers.utility.Utils;
 import org.bukkit.entity.EntityType;
 
@@ -81,7 +81,7 @@ public enum NPCType {
         }
         try {
             if (Utils.versionNewer(14)) {
-                this.nmsEntityType = ((Optional<?>) ENTITY_TYPES_A_METHOD.load().invoke(null, this.bukkitEntityType.getKey().getKey().toLowerCase())).get();
+                this.nmsEntityType = ((Optional<?>) ENTITY_TYPES_A_METHOD.get().invoke(null, this.bukkitEntityType.getKey().getKey().toLowerCase())).get();
                 this.constructor = entityClass.getConstructor(ENTITY_TYPES_CLASS, WORLD_CLASS);
             } else {
                 this.constructor = entityClass.getConstructor(WORLD_CLASS);
@@ -117,7 +117,7 @@ public enum NPCType {
         Object[] newArray = new Object[methodParameterTypes.length];
         for (int i = 0; i < methodParameterTypes.length; ++i) {
             TypeProperty typeProperty = TypeProperty.forType(methodParameterTypes[i]);
-            newArray[i] = typeProperty != null ? typeProperty.getFunction().apply(strings[i]) : TypeCache.ClassCache.find(strings[i], methodParameterTypes[i]);
+            newArray[i] = typeProperty != null ? typeProperty.getFunction().apply(strings[i]) : ClassCache.find(strings[i], methodParameterTypes[i]);
         }
         return newArray;
     }

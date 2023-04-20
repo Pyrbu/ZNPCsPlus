@@ -16,16 +16,16 @@ public class GlowFunction extends NPCFunction {
             throw new IllegalStateException("invalid context type, " + functionContext.getClass().getSimpleName() + ", expected ContextWithValue.");
         String glowColorName = ((FunctionContext.ContextWithValue) functionContext).getValue();
         try {
-            Object glowColor = ReflectionCache.ENUM_CHAT_FORMAT_FIND.load().invoke(null, (
+            Object glowColor = ReflectionCache.ENUM_CHAT_FORMAT_FIND.get().invoke(null, (
                     glowColorName == null || glowColorName.length() == 0) ? "WHITE" : glowColorName);
             if (glowColor == null)
                 return NPCFunction.ResultType.FAIL;
             npc.getNpcPojo().setGlowName(glowColorName);
             npc.setGlowColor(glowColor);
-            ReflectionCache.SET_DATA_WATCHER_METHOD.load().invoke(ReflectionCache.GET_DATA_WATCHER_METHOD
-                    .load().invoke(npc.getNmsEntity()), ReflectionCache.DATA_WATCHER_OBJECT_CONSTRUCTOR
-                    .load().newInstance(0, ReflectionCache.DATA_WATCHER_REGISTER_FIELD
-                    .load()), (byte) (!FunctionFactory.isTrue(npc, this) ? 64 : 0));
+            ReflectionCache.SET_DATA_WATCHER_METHOD.get().invoke(ReflectionCache.GET_DATA_WATCHER_METHOD
+                    .get().invoke(npc.getNmsEntity()), ReflectionCache.DATA_WATCHER_OBJECT_CONSTRUCTOR
+                    .get().newInstance(0, ReflectionCache.DATA_WATCHER_REGISTER_FIELD
+                    .get()), (byte) (!FunctionFactory.isTrue(npc, this) ? 64 : 0));
             npc.getPackets().getProxyInstance().update(npc.getPackets());
             npc.deleteViewers();
             return NPCFunction.ResultType.SUCCESS;

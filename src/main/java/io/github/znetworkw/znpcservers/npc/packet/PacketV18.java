@@ -10,6 +10,6 @@ public class PacketV18 extends PacketV17 {
     }
 
     public void updateGlowPacket(NPC npc, Object packet) throws ReflectiveOperationException {
-        Utils.setValue(packet, "m", ReflectionCache.ENUM_CHAT_FORMAT_FIND.load().invoke(null, npc.getNpcPojo().getGlowName()));
+        Utils.setValue(packet, "m", ReflectionCache.ENUM_CHAT_FORMAT_FIND.get().invoke(null, npc.getNpcPojo().getGlowName()));
     }
 }

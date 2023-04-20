@@ -1,13 +1,11 @@
 package io.github.znetworkw.znpcservers.commands;
 
 import com.google.common.collect.Iterables;
-import io.github.znetworkw.znpcservers.reflection.ReflectionCache;
 import io.github.znetworkw.znpcservers.commands.exception.CommandException;
 import io.github.znetworkw.znpcservers.commands.exception.CommandExecuteException;
 import io.github.znetworkw.znpcservers.commands.exception.CommandPermissionException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 
@@ -16,16 +14,6 @@ import java.util.*;
 
 @SuppressWarnings("deprecation")
 public class Command extends BukkitCommand {
-    private static final CommandMap COMMAND_MAP;
-
-    static {
-        try {
-            COMMAND_MAP = (CommandMap) ReflectionCache.BUKKIT_COMMAND_MAP.load().get(Bukkit.getServer());
-        } catch (IllegalAccessException exception) {
-            throw new IllegalStateException("Unable to register Bukkit command map.");
-        }
-    }
-
     private final Map<CommandInformation, CommandInvoker> subCommands;
 
     public Command(String name) {
@@ -35,7 +23,7 @@ public class Command extends BukkitCommand {
     }
 
     private void load() {
-        COMMAND_MAP.register(getName(), this);
+        Bukkit.getCommandMap().register(getName(), this);
         for (Method method : getClass().getMethods()) {
             if (method.isAnnotationPresent(CommandInformation.class)) {
                 CommandInformation cmdInfo = method.getAnnotation(CommandInformation.class);
@@ -48,20 +36,19 @@ public class Command extends BukkitCommand {
         int size = Iterables.size(args);
         int subCommandsSize = (subCommand.arguments()).length;
         Map<String, String> argsMap = new HashMap<>();
-        if (size > 1)
-            if (subCommand.isMultiple()) {
-                argsMap.put(Iterables.get(args, 1), String.join(" ", Iterables.skip(args, 2)));
-            } else {
-                for (int i = 0; i < Math.min(subCommandsSize, size); i++) {
-                    int fixedLength = i + 1;
-                    if (size > fixedLength) {
-                        String input = Iterables.get(args, fixedLength);
-                        if (fixedLength == subCommandsSize)
-                            input = String.join(" ", Iterables.skip(args, subCommandsSize));
-                        argsMap.put(subCommand.arguments()[i], input);
-                    }
+        if (size > 1) if (subCommand.isMultiple()) {
+            argsMap.put(Iterables.get(args, 1), String.join(" ", Iterables.skip(args, 2)));
+        } else {
+            for (int i = 0; i < Math.min(subCommandsSize, size); i++) {
+                int fixedLength = i + 1;
+                if (size > fixedLength) {
+                    String input = Iterables.get(args, fixedLength);
+                    if (fixedLength == subCommandsSize)
+                        input = String.join(" ", Iterables.skip(args, subCommandsSize));
+                    argsMap.put(subCommand.arguments()[i], input);
                 }
             }
+        }
         return argsMap;
     }
 

@@ -1,8 +1,9 @@
 package io.github.znetworkw.znpcservers.npc;
 
 import com.google.common.collect.Iterables;
-import io.github.znetworkw.znpcservers.reflection.ReflectionBasePackage;
-import io.github.znetworkw.znpcservers.reflection.TypeCache;
+import io.github.znetworkw.znpcservers.reflection.ReflectionBuilder;
+import io.github.znetworkw.znpcservers.reflection.ReflectionPackage;
+import io.github.znetworkw.znpcservers.reflection.types.EnumReflection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
@@ -32,8 +33,7 @@ public class CustomizationLoader {
                 for (Class<?> parameter : method.getParameterTypes()) {
                     TypeProperty typeProperty = TypeProperty.forType(parameter);
                     if (typeProperty == null && parameter.isEnum())
-                        (new TypeCache.BaseReflection.EnumReflection((new TypeCache.ReflectionBuilder(ReflectionBasePackage.DEFAULT))
-                                .withClassName(parameter.getTypeName()))).load();
+                        new EnumReflection(new ReflectionBuilder(ReflectionPackage.MINECRAFT).withClassName(parameter)).get();
                 }
                 builder.put(method.getName(), method);
             }

@@ -41,9 +41,9 @@ public class ZUser {
         this.lastClicked = new HashMap<>();
         this.eventServices = new ArrayList<>();
         try {
-            Object playerHandle = ReflectionCache.GET_HANDLE_PLAYER_METHOD.load().invoke(toPlayer());
-            this.gameProfile = (GameProfile) ReflectionCache.GET_PROFILE_METHOD.load().invoke(playerHandle, new Object[0]);
-            this.playerConnection = ReflectionCache.PLAYER_CONNECTION_FIELD.load().get(playerHandle);
+            Object playerHandle = ReflectionCache.GET_HANDLE_PLAYER_METHOD.get().invoke(toPlayer());
+            this.gameProfile = (GameProfile) ReflectionCache.GET_PROFILE_METHOD.get().invoke(playerHandle, new Object[0]);
+            this.playerConnection = ReflectionCache.PLAYER_CONNECTION_FIELD.get().get(playerHandle);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new IllegalStateException("can't create user for player " + uuid.toString(), e.getCause());
         }
@@ -77,7 +77,7 @@ public class ZUser {
 
     private boolean tryRegisterChannel() {
         try {
-            Channel channel = (Channel) ReflectionCache.CHANNEL_FIELD.load().get(ReflectionCache.NETWORK_MANAGER_FIELD.load().get(this.playerConnection));
+            Channel channel = (Channel) ReflectionCache.CHANNEL_FIELD.get().get(ReflectionCache.NETWORK_MANAGER_FIELD.get().get(this.playerConnection));
             if (channel.pipeline().names().contains("npc_interact")) channel.pipeline().remove("npc_interact");
             channel.pipeline().addAfter("decoder", "npc_interact", new ZNPCSocketDecoder());
             return true;
@@ -141,7 +141,7 @@ public class ZUser {
                 long lastInteractNanos = System.nanoTime() - ZUser.this.lastInteract;
                 if (ZUser.this.lastInteract != 0L && lastInteractNanos < 1000000000L)
                     return;
-                int entityId = ReflectionCache.PACKET_IN_USE_ENTITY_ID_FIELD.load().getInt(packet);
+                int entityId = ReflectionCache.PACKET_IN_USE_ENTITY_ID_FIELD.get().getInt(packet);
                 NPC npc = NPC.all().stream().filter(npc1 -> (npc1.getEntityID() == entityId)).findFirst().orElse(null);
                 if (npc == null)
                     return;

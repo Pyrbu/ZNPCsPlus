@@ -12,11 +12,11 @@ public class PacketV17 extends PacketV16 {
     }
 
     public Object getPlayerPacket(Object nmsWorld, GameProfile gameProfile) throws ReflectiveOperationException {
-        return ReflectionCache.PLAYER_CONSTRUCTOR_NEW.load().newInstance(ReflectionCache.GET_SERVER_METHOD.load().invoke(Bukkit.getServer()), nmsWorld, gameProfile);
+        return ReflectionCache.PLAYER_CONSTRUCTOR_NEW.get().newInstance(ReflectionCache.GET_SERVER_METHOD.get().invoke(Bukkit.getServer()), nmsWorld, gameProfile);
     }
 
     public void updateGlowPacket(NPC npc, Object packet) throws ReflectiveOperationException {
-        Utils.setValue(packet, "n", ReflectionCache.ENUM_CHAT_FORMAT_FIND.load().invoke(null, npc.getNpcPojo().getGlowName()));
+        Utils.setValue(packet, "n", ReflectionCache.ENUM_CHAT_FORMAT_FIND.get().invoke(null, npc.getNpcPojo().getGlowName()));
     }
 
     public Object getClickType(Object interactPacket) {

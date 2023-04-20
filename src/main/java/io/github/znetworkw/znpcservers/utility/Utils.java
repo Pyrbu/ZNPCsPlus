@@ -76,7 +76,7 @@ public final class Utils {
         try {
             for (Object packet : packets) {
                 if (packet != null)
-                    ReflectionCache.SEND_PACKET_METHOD.load().invoke(user.getPlayerConnection(), packet);
+                    ReflectionCache.SEND_PACKET_METHOD.get().invoke(user.getPlayerConnection(), packet);
             }
         } catch (IllegalAccessException | java.lang.reflect.InvocationTargetException e) {
             e.printStackTrace();

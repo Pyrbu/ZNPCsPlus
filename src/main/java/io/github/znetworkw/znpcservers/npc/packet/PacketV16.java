@@ -22,6 +22,6 @@ public class PacketV16 extends PacketV9 {
             pairs.add(new Pair<>(getItemSlot(entry
                     .getKey().getSlot()),
                     convertItemStack(npc.getEntityID(), entry.getKey(), entry.getValue())));
-        return ImmutableList.of(ReflectionCache.PACKET_PLAY_OUT_ENTITY_EQUIPMENT_CONSTRUCTOR_V1.load().newInstance(npc.getEntityID(), pairs));
+        return ImmutableList.of(ReflectionCache.PACKET_PLAY_OUT_ENTITY_EQUIPMENT_CONSTRUCTOR_V1.get().newInstance(npc.getEntityID(), pairs));
     }
 }

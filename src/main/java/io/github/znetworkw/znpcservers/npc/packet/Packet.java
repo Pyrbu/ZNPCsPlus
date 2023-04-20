@@ -35,7 +35,7 @@ public interface Packet {
     @SuppressWarnings("SuspiciousTernaryOperatorInVarargsCall")
     @PacketValue(keyName = "destroyPacket", valueType = ValueType.ARGUMENTS)
     default Object getDestroyPacket(int entityId) throws ReflectiveOperationException {
-        return ReflectionCache.PACKET_PLAY_OUT_ENTITY_DESTROY_CONSTRUCTOR.load().newInstance(ReflectionCache.PACKET_PLAY_OUT_ENTITY_DESTROY_CONSTRUCTOR.load().getParameterTypes()[0].isArray() ? new int[] {entityId} : entityId);
+        return ReflectionCache.PACKET_PLAY_OUT_ENTITY_DESTROY_CONSTRUCTOR.get().newInstance(ReflectionCache.PACKET_PLAY_OUT_ENTITY_DESTROY_CONSTRUCTOR.get().getParameterTypes()[0].isArray() ? new int[] {entityId} : entityId);
     }
 
     @PacketValue(keyName = "enumSlot", valueType = ValueType.ARGUMENTS)
@@ -46,11 +46,11 @@ public interface Packet {
     @PacketValue(keyName = "removeTab")
     default Object getTabRemovePacket(Object nmsEntity) throws ReflectiveOperationException {
         try {
-            return ReflectionCache.PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR.load().newInstance(ReflectionCache.REMOVE_PLAYER_FIELD.load(), Collections.singletonList(nmsEntity));
+            return ReflectionCache.PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR.get().newInstance(ReflectionCache.REMOVE_PLAYER_FIELD.get(), Collections.singletonList(nmsEntity));
         } catch (Throwable throwable) {
             boolean useOldMethod = (ReflectionCache.PACKET_PLAY_OUT_PLAYER_INFO_REMOVE_CLASS != null);
-            if (useOldMethod) return ReflectionCache.PACKET_PLAY_OUT_PLAYER_INFO_REMOVE_CONSTRUCTOR.load().newInstance(Collections.singletonList(ReflectionCache.GET_UNIQUE_ID_METHOD.load().invoke(nmsEntity)));
-            return ReflectionCache.PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR.load().newInstance(ReflectionCache.REMOVE_PLAYER_FIELD.load(), nmsEntity);
+            if (useOldMethod) return ReflectionCache.PACKET_PLAY_OUT_PLAYER_INFO_REMOVE_CONSTRUCTOR.get().newInstance(Collections.singletonList(ReflectionCache.GET_UNIQUE_ID_METHOD.get().invoke(nmsEntity)));
+            return ReflectionCache.PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR.get().newInstance(ReflectionCache.REMOVE_PLAYER_FIELD.get(), nmsEntity);
         }
     }
 
@@ -63,29 +63,29 @@ public interface Packet {
         ImmutableList.Builder<Object> builder = ImmutableList.builder();
         boolean isVersion17 = (Utils.BUKKIT_VERSION > 16);
         boolean isVersion9 = (Utils.BUKKIT_VERSION > 8);
-        Object scoreboardTeamPacket = isVersion17 ? ReflectionCache.SCOREBOARD_TEAM_CONSTRUCTOR.load().newInstance(null, npc.getGameProfile().getName()) : ReflectionCache.PACKET_PLAY_OUT_SCOREBOARD_TEAM_CONSTRUCTOR_OLD.load().newInstance();
+        Object scoreboardTeamPacket = isVersion17 ? ReflectionCache.SCOREBOARD_TEAM_CONSTRUCTOR.get().newInstance(null, npc.getGameProfile().getName()) : ReflectionCache.PACKET_PLAY_OUT_SCOREBOARD_TEAM_CONSTRUCTOR_OLD.get().newInstance();
         if (!isVersion17) {
             Utils.setValue(scoreboardTeamPacket, "a", npc.getGameProfile().getName());
             Utils.setValue(scoreboardTeamPacket, isVersion9 ? "i" : "h", 1);
         }
-        builder.add(isVersion17 ? ReflectionCache.PACKET_PLAY_OUT_SCOREBOARD_TEAM_CREATE_V1.load().invoke(null, scoreboardTeamPacket) : scoreboardTeamPacket);
+        builder.add(isVersion17 ? ReflectionCache.PACKET_PLAY_OUT_SCOREBOARD_TEAM_CREATE_V1.get().invoke(null, scoreboardTeamPacket) : scoreboardTeamPacket);
         if (isVersion17) {
-            scoreboardTeamPacket = ReflectionCache.SCOREBOARD_TEAM_CONSTRUCTOR.load().newInstance(null, npc.getGameProfile().getName());
+            scoreboardTeamPacket = ReflectionCache.SCOREBOARD_TEAM_CONSTRUCTOR.get().newInstance(null, npc.getGameProfile().getName());
             if (Utils.BUKKIT_VERSION > 17) {
                 Utils.setValue(scoreboardTeamPacket, "d", npc.getGameProfile().getName());
-                ReflectionUtils.findFieldForClassAndSet(scoreboardTeamPacket, ReflectionCache.ENUM_TAG_VISIBILITY, ReflectionCache.ENUM_TAG_VISIBILITY_NEVER_FIELD.load());
-                Utils.setValue(scoreboardTeamPacket, "m", ReflectionCache.ENUM_CHAT_FORMAT_FIND.load().invoke(null, "DARK_GRAY"));
+                ReflectionUtils.findFieldForClassAndSet(scoreboardTeamPacket, ReflectionCache.ENUM_TAG_VISIBILITY, ReflectionCache.ENUM_TAG_VISIBILITY_NEVER_FIELD.get());
+                Utils.setValue(scoreboardTeamPacket, "m", ReflectionCache.ENUM_CHAT_FORMAT_FIND.get().invoke(null, "DARK_GRAY"));
             } else {
                 Utils.setValue(scoreboardTeamPacket, "e", npc.getGameProfile().getName());
-                Utils.setValue(scoreboardTeamPacket, "l", ReflectionCache.ENUM_TAG_VISIBILITY_NEVER_FIELD.load());
+                Utils.setValue(scoreboardTeamPacket, "l", ReflectionCache.ENUM_TAG_VISIBILITY_NEVER_FIELD.get());
             }
         } else {
-            scoreboardTeamPacket = ReflectionCache.PACKET_PLAY_OUT_SCOREBOARD_TEAM_CONSTRUCTOR_OLD.load().newInstance();
+            scoreboardTeamPacket = ReflectionCache.PACKET_PLAY_OUT_SCOREBOARD_TEAM_CONSTRUCTOR_OLD.get().newInstance();
             Utils.setValue(scoreboardTeamPacket, "a", npc.getGameProfile().getName());
             Utils.setValue(scoreboardTeamPacket, "e", "never");
             Utils.setValue(scoreboardTeamPacket, isVersion9 ? "i" : "h", 0);
         }
-        Collection<String> collection = isVersion17 ? (Collection<String>) ReflectionCache.SCOREBOARD_PLAYER_LIST.load().invoke(scoreboardTeamPacket) : (Collection<String>) Utils.getValue(scoreboardTeamPacket, isVersion9 ? "h" : "g");
+        Collection<String> collection = isVersion17 ? (Collection<String>) ReflectionCache.SCOREBOARD_PLAYER_LIST.get().invoke(scoreboardTeamPacket) : (Collection<String>) Utils.getValue(scoreboardTeamPacket, isVersion9 ? "h" : "g");
         if (npc.getNpcPojo().getNpcType() == NPCType.PLAYER) {
             collection.add(npc.getGameProfile().getName());
         } else {
@@ -93,7 +93,7 @@ public interface Packet {
         }
         if (allowGlowColor() && FunctionFactory.isTrue(npc, "glow"))
             updateGlowPacket(npc, scoreboardTeamPacket);
-        builder.add(isVersion17 ? ReflectionCache.PACKET_PLAY_OUT_SCOREBOARD_TEAM_CREATE.load().invoke(null, scoreboardTeamPacket, Boolean.TRUE) : scoreboardTeamPacket);
+        builder.add(isVersion17 ? ReflectionCache.PACKET_PLAY_OUT_SCOREBOARD_TEAM_CREATE.get().invoke(null, scoreboardTeamPacket, Boolean.TRUE) : scoreboardTeamPacket);
         return builder.build();
     }
 
