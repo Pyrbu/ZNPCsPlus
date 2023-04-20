@@ -119,7 +119,7 @@ public class ConversationGUI extends ZInventory {
                     });
                 }
                 this.addItem(ItemStackBuilder.forMaterial(Material.EMERALD).setName(ChatColor.AQUA + "ADD A NEW ACTION").setLore("&7click here...").build(), this.getRows() - 5, clickEvent -> {
-                    Utils.sendTitle(this.getPlayer(), "&d&lADD ACTION", "&7Type the action...");
+                    Utils.sendTitle(this.getPlayer(), "&d&lADD ACTION", "&7Type the new action...");
                     EventService.addService(ZUser.find(this.getPlayer()), AsyncPlayerChatEvent.class).addConsumer(event -> {
                         if (ConfigurationConstants.NPC_CONVERSATIONS.contains(this.conversation) && this.conversation.getTexts().contains(this.conversationKey)) {
                             List<String> stringList = SPACE_SPLITTER.splitToList(event.getMessage());
