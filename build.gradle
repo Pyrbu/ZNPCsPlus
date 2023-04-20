@@ -18,9 +18,10 @@ dependencies {
     compileOnly "io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT"
     compileOnly "me.clip:placeholderapi:2.11.1"
 
+    //noinspection GradlePackageUpdate
+    compileOnly "io.netty:netty-all:4.1.87.Final"
     compileOnly "com.mojang:authlib:3.4.40"
     compileOnly "com.mojang:datafixerupper:6.0.8"
-    compileOnly "io.netty:netty-all:4.1.87.Final"
 
     implementation "org.apache.commons:commons-lang3:3.12.0"
     implementation "commons-io:commons-io:2.11.0"
@@ -29,7 +30,7 @@ dependencies {
 }
 
 group "lol.pyr"
-version "1.0.2"
+version "1.0.3"
 
 compileJava {
     options.release.set(17)
