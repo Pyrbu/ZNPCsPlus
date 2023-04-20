@@ -19,7 +19,7 @@ public class Command extends BukkitCommand {
         try {
             COMMAND_MAP = (CommandMap) CacheRegistry.BUKKIT_COMMAND_MAP.load().get(Bukkit.getServer());
         } catch (IllegalAccessException exception) {
-            throw new IllegalStateException("can't access bukkit command map.");
+            throw new IllegalStateException("Unable to register Bukkit command map.");
         }
     }
 
@@ -69,17 +69,17 @@ public class Command extends BukkitCommand {
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
         Optional<Map.Entry<CommandInformation, CommandInvoker>> subCommandOptional = this.subCommands.entrySet().stream().filter(command -> command.getKey().name().contentEquals((args.length > 0) ? args[0] : "")).findFirst();
         if (subCommandOptional.isEmpty()) {
-            sender.sendMessage(ChatColor.RED + "can't find command: " + commandLabel + ".");
+            sender.sendMessage(ChatColor.RED + "Unable to locate the following command: " + commandLabel + ".");
             return false;
         }
         try {
             Map.Entry<CommandInformation, CommandInvoker> subCommand = subCommandOptional.get();
             subCommand.getValue().execute(new io.github.znetworkw.znpcservers.commands.CommandSender(sender), loadArgs(subCommand.getKey(), Arrays.asList(args)));
         } catch (CommandExecuteException e) {
-            sender.sendMessage(ChatColor.RED + "can't execute command.");
+            sender.sendMessage(ChatColor.RED + "Cannot execute this command or this command execution has failed.");
             e.printStackTrace();
         } catch (CommandPermissionException e) {
-            sender.sendMessage(ChatColor.RED + "no permission for run this command.");
+            sender.sendMessage(ChatColor.RED + "You do not have permission to execute this command.");
         }
         return true;
     }

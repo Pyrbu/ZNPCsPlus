@@ -47,15 +47,15 @@ public class DefaultCommand extends Command {
     @CommandInformation(arguments = {}, name = "", permission = "")
     public void defaultCommand(CommandSender sender, Map<String, String> args) {
         sender.sendMessage("&6&m------------------------------------------");
-        sender.sendMessage("&b&lZNPCS &8\u00BB &7ZNetwork");
-        sender.sendMessage("&6https://www.spigotmc.org/resources/znpcs.80940");
+        sender.sendMessage("&b&lZNPCS &8\u00BB &7ZNetwork & Pyr");
+        sender.sendMessage("&6https://www.spigotmc.org/resources/znpcsplus.109380/");
         Objects.requireNonNull(sender);
         getCommands().forEach(sender::sendMessage);
-        sender.sendMessage(ChatColor.DARK_GRAY + "Hover over the commands to see help for the command.");
+        sender.sendMessage(ChatColor.DARK_GRAY + "Hover over the commands to view command arguments.");
         sender.sendMessage("&6&m------------------------------------------");
     }
 
-    @CommandInformation(arguments = {"id", "type", "name"}, name = "create", permission = "znpcs.cmd.create", help = {" &f&l* &e/znpcs create <npc_id> PLAYER Qentin"})
+    @CommandInformation(arguments = {"id", "type", "name"}, name = "create", permission = "znpcs.cmd.create", help = {" &f&l* &e/znpcs create <npc_id> PLAYER Steve"})
     public void createNPC(CommandSender sender, Map<String, String> args) {
         if (args.size() < 3) {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INCORRECT_USAGE);
@@ -116,7 +116,7 @@ public class DefaultCommand extends Command {
                 TextComponent textComponent2 = new TextComponent("[TELEPORT]");
                 textComponent2.setBold(true);
                 textComponent2.setColor(ChatColor.DARK_GREEN);
-                textComponent2.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, (new ComponentBuilder("Click to teleport this npc!"))
+                textComponent2.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, (new ComponentBuilder("Click to teleport this NPC!"))
 
                         .color(ChatColor.GREEN).create()));
                 textComponent2.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/znpcs teleport " + npcModel
@@ -126,7 +126,7 @@ public class DefaultCommand extends Command {
                 TextComponent textComponent3 = new TextComponent("[DELETE]");
                 textComponent3.setBold(true);
                 textComponent3.setColor(ChatColor.DARK_RED);
-                textComponent3.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, (new ComponentBuilder("Click to delete this npc!"))
+                textComponent3.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, (new ComponentBuilder("Click to delete this NPC!"))
 
                         .color(ChatColor.RED).create()));
                 textComponent3.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/znpcs delete " + npcModel
@@ -158,7 +158,7 @@ public class DefaultCommand extends Command {
         DO_APPLY_SKIN.apply(sender.getPlayer(), foundNPC, args.get("skin"));
     }
 
-    @CommandInformation(arguments = {"id", "slot"}, name = "equip", permission = "znpcs.cmd.equip", help = {" &f&l* &e/znpcs equip <npc_id> [HAND,OFFHAND,HELMET,CHESTPLATE,LEGGINGS,BOOTS]", "&8(You need to have the item in your hand.)"})
+    @CommandInformation(arguments = {"id", "slot"}, name = "equip", permission = "znpcs.cmd.equip", help = {" &f&l* &e/znpcs equip <npc_id> [HAND/OFFHAND/HELMET/CHESTPLATE/LEGGINGS/BOOTS]", "&8(You need to have the item in your hand)."})
     public void equip(CommandSender sender, Map<String, String> args) {
         if (args.size() < 2) {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INCORRECT_USAGE);
@@ -251,7 +251,7 @@ public class DefaultCommand extends Command {
         Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.SUCCESS);
     }
 
-    @CommandInformation(arguments = {"add", "remove", "cooldown", "list"}, name = "action", isMultiple = true, permission = "znpcs.cmd.action", help = {" &f&l* &e/znpcs action add <npc_id> SERVER skywars", " &f&l* &e/znpcs action add <npc_id> CMD spawn", " &f&l* &e/znpcs action remove <npc_id> <action_id>", " &f&l* &e/znpcs action cooldown <npc_id> <action_id> <delay_in_seconds>", " &f&l* &e/znpcs action list <npc_id>"})
+    @CommandInformation(arguments = {"add", "remove", "cooldown", "list"}, name = "action", isMultiple = true, permission = "znpcs.cmd.action", help = {" &f&l* &e/znpcs action add <npc_id> SERVER survival", " &f&l* &e/znpcs action add <npc_id> CMD spawn", " &f&l* &e/znpcs action remove <npc_id> <action_id>", " &f&l* &e/znpcs action cooldown <npc_id> <action_id> <delay_in_seconds>", " &f&l* &e/znpcs action list <npc_id>"})
     public void action(CommandSender sender, Map<String, String> args) {
         if (args.size() < 1) {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INCORRECT_USAGE);
@@ -445,7 +445,7 @@ public class DefaultCommand extends Command {
                 return;
             }
             if (znpcUser.isHasPath()) {
-                sender.getPlayer().sendMessage(ChatColor.RED + "You already have a path creator active, to remove it use /znpcs path exit.");
+                sender.getPlayer().sendMessage(ChatColor.RED + "You already have a path creator active! To remove it, type " + ChatColor.WHITE + "/znpcs path exit" + ChatColor.RED + ".");
                 return;
             }
             NPCPath.AbstractTypeWriter.forCreation(pathName, znpcUser, NPCPath.AbstractTypeWriter.TypeWriter.MOVEMENT);
@@ -481,7 +481,7 @@ public class DefaultCommand extends Command {
         sender.getPlayer().teleport(foundNPC.getLocation());
     }
 
-    @CommandInformation(arguments = {"id", "height"}, name = "height", permission = "znpcs.cmd.height", help = {" &f&l* &e/znpcs height <npc_id> 2", "&8Add more height to the hologram of the npc"})
+    @CommandInformation(arguments = {"id", "height"}, name = "height", permission = "znpcs.cmd.height", help = {" &f&l* &e/znpcs height <npc_id> 2", "&8Set a greater or lesser distance of a hologram from the NPC."})
     public void changeHologramHeight(CommandSender sender, Map<String, String> args) {
         if (args.size() < 2) {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INCORRECT_USAGE);
@@ -507,7 +507,7 @@ public class DefaultCommand extends Command {
         Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.SUCCESS);
     }
 
-    @CommandInformation(arguments = {"create", "remove", "gui", "set"}, name = "conversation", isMultiple = true, permission = "znpcs.cmd.conversation", help = {" &f&l* &e/znpcs conversation create first", " &f&l* &e/znpcs conversation remove first", " &f&l* &e/znpcs conversation set <npc_id> first [CLICK:RADIUS]", " &f&l* &e/znpcs conversation gui &8(&7Open a gui to manage the conversations&8)", "&8RADIUS: &7it is activated when the player is near the npc", "&8CLICK: &7it is activated when the player interacts with the npc"})
+    @CommandInformation(arguments = {"create", "remove", "gui", "set"}, name = "conversation", isMultiple = true, permission = "znpcs.cmd.conversation", help = {" &f&l* &e/znpcs conversation create first", " &f&l* &e/znpcs conversation remove first", " &f&l* &e/znpcs conversation set <npc_id> first [CLICK/RADIUS]", " &f&l* &e/znpcs conversation gui &8(&7Opens a GUI to manage conversations&8)", "&8RADIUS: &7Activates when the player is near the NPC", "&8CLICK: &7Activates when the player interacts with the NPC"})
     public void conversations(CommandSender sender, Map<String, String> args) {
         if (args.size() < 1) {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INCORRECT_USAGE);
