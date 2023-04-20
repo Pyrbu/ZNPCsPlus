@@ -22,6 +22,7 @@ import io.github.znetworkw.znpcservers.utility.location.ZLocation;
 import org.apache.commons.io.FileUtils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -70,30 +71,57 @@ public class ZNPCsPlus extends JavaPlugin {
         PATH_FOLDER = new File(PLUGIN_FOLDER, "paths");
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onEnable() {
+        Logger serverLogger = getServer().getLogger();
+        serverLogger.info(ChatColor.YELLOW + "  ___       __   __  __");
+        serverLogger.info(ChatColor.YELLOW + "   _/ |\\ | |__) |   (__` " + ChatColor.GOLD + "__|__   " + ChatColor.YELLOW + getDescription().getName() + " " + ChatColor.GOLD + "v" + getDescription().getVersion());
+        serverLogger.info(ChatColor.YELLOW + "  /__ | \\| |    |__ .__) " + ChatColor.GOLD + "  |     " + ChatColor.GRAY + "Maintained with " + ChatColor.RED + "\u2764 " + ChatColor.GRAY + " by Pyr#6969");
+        serverLogger.info("");
+
         if (Bukkit.getPluginManager().isPluginEnabled("ServersNPC")) {
-            LOGGER.severe("Detected old version of ZNPCs! Disabling the plugin...");
+            serverLogger.info(ChatColor.DARK_RED + " * Detected old version of ZNPCs! Disabling the plugin...");
+            serverLogger.info("");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
-        checkOldFolder();
+        long before = System.currentTimeMillis();
+
+        File oldFolder = new File(PLUGIN_FOLDER.getParent(), "ServersNPC");
+        if (!PLUGIN_FOLDER.exists() && oldFolder.exists()) {
+            serverLogger.info(ChatColor.WHITE + " * Converting old ZNPCs files...");
+            try {
+                FileUtils.moveDirectory(oldFolder, PLUGIN_FOLDER);
+            } catch (IOException e) {
+                serverLogger.info(ChatColor.RED + " * Failed to convert old ZNPCs files" + (e.getMessage() == null ? "" : " due to " + e.getMessage()));
+            }
+        }
+
         PLUGIN_FOLDER.mkdirs();
         PATH_FOLDER.mkdirs();
 
+        serverLogger.info(ChatColor.WHITE + " * Loading paths...");
         loadAllPaths();
+
+        serverLogger.info(ChatColor.WHITE + " * Registering components...");
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         new Metrics(this, PLUGIN_ID);
         new DefaultCommand();
         SCHEDULER = new SchedulerUtils(this);
         BUNGEE_UTILS = new BungeeUtils(this);
         Bukkit.getOnlinePlayers().forEach(ZUser::find);
+
+        serverLogger.info(ChatColor.WHITE + " * Starting tasks...");
         new NPCPositionTask(this);
         new NPCVisibilityTask(this);
         new NPCSaveTask(this, ConfigurationConstants.SAVE_DELAY);
         new PlayerListener(this);
         new InventoryListener(this);
+
         enabled = true;
+        serverLogger.info(ChatColor.WHITE + " * Loading complete! (" + (System.currentTimeMillis() - before) + "ms)");
+        serverLogger.info("");
     }
 
     @Override
@@ -110,19 +138,6 @@ public class ZNPCsPlus extends JavaPlugin {
             if (!file.getName().endsWith(".path")) continue;
             NPCPath.AbstractTypeWriter abstractTypeWriter = NPCPath.AbstractTypeWriter.forFile(file, NPCPath.AbstractTypeWriter.TypeWriter.MOVEMENT);
             abstractTypeWriter.load();
-        }
-    }
-
-    private void checkOldFolder() {
-        if (PLUGIN_FOLDER.exists()) return;
-        File oldFolder = new File(PLUGIN_FOLDER.getParent(), "ServersNPC");
-        if (!oldFolder.exists()) return;
-        LOGGER.info("Detected old ZNPCs files and no new ones present, converting...");
-        try {
-            FileUtils.moveDirectory(oldFolder, PLUGIN_FOLDER);
-        } catch (IOException e) {
-            LOGGER.severe("Failed to convert old ZNPCs files:");
-            e.printStackTrace();
         }
     }
 }

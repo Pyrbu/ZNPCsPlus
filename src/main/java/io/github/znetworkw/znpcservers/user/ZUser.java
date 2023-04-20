@@ -47,7 +47,7 @@ public class ZUser {
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new IllegalStateException("can't create user for player " + uuid.toString(), e.getCause());
         }
-        if (!tryRegisterChannel()) ZNPCsPlus.SCHEDULER.runTaskTimer(new ChannelRegistrationFallbackTask(this), 3);
+        if (tryRegisterChannel() != null) ZNPCsPlus.SCHEDULER.runTaskTimer(new ChannelRegistrationFallbackTask(this), 3);
     }
 
     private static class ChannelRegistrationFallbackTask extends BukkitRunnable {
@@ -62,7 +62,8 @@ public class ZUser {
 
         @Override
         public void run() {
-            if (!player.isOnline() || user.tryRegisterChannel()) {
+            Exception ex = user.tryRegisterChannel();
+            if (!player.isOnline() || ex == null) {
                 cancel();
                 return;
             }
@@ -72,19 +73,20 @@ public class ZUser {
                     .append(Component.text("Couldn't inject interaction detector to channel", NamedTextColor.WHITE)).appendNewline()
                     .append(Component.text("Please report this at https://github.com/Pyrbu/ZNPCsPlus", NamedTextColor.WHITE)));
             ZNPCsPlus.LOGGER.severe("Couldn't inject interaction detector to channel for player " + player.getName() + " (" + player.getUniqueId() + ")");
+            ex.printStackTrace();
         }
     }
 
-    private boolean tryRegisterChannel() {
+    private Exception tryRegisterChannel() {
         try {
             Channel channel = (Channel) ReflectionCache.CHANNEL_FIELD.get().get(ReflectionCache.NETWORK_MANAGER_FIELD.get().get(this.playerConnection));
             if (channel.pipeline().names().contains("npc_interact")) channel.pipeline().remove("npc_interact");
             channel.pipeline().addAfter("decoder", "npc_interact", new ZNPCSocketDecoder());
-            return true;
+            return null;
         } catch (IllegalAccessException e) {
             throw new RuntimeException("illegal access exception while trying to register npc_interact channel");
         } catch (NoSuchElementException e) {
-            return false;
+            return e;
         }
     }
 

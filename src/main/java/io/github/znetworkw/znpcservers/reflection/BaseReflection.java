@@ -23,6 +23,7 @@ public abstract class BaseReflection <T> {
         for (String classes : className) {
             try {
                 this.BUILDER_CLASS = Class.forName(classes);
+                break;
             } catch (ClassNotFoundException ignored) {
             }
         }
