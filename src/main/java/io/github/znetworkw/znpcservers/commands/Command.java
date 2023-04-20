@@ -2,6 +2,9 @@ package io.github.znetworkw.znpcservers.commands;
 
 import com.google.common.collect.Iterables;
 import io.github.znetworkw.znpcservers.cache.CacheRegistry;
+import io.github.znetworkw.znpcservers.commands.exception.CommandException;
+import io.github.znetworkw.znpcservers.commands.exception.CommandExecuteException;
+import io.github.znetworkw.znpcservers.commands.exception.CommandPermissionException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandMap;
@@ -80,6 +83,8 @@ public class Command extends BukkitCommand {
             e.printStackTrace();
         } catch (CommandPermissionException e) {
             sender.sendMessage(ChatColor.RED + "You do not have permission to execute this command.");
+        } catch (CommandException e) {
+            sender.sendMessage(ChatColor.RED + e.getMessage());
         }
         return true;
     }
