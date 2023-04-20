@@ -81,7 +81,7 @@ public class ZNPCsPlus extends JavaPlugin {
         serverLogger.info("");
 
         if (Bukkit.getPluginManager().isPluginEnabled("ServersNPC")) {
-            serverLogger.info(ChatColor.DARK_RED + " * Detected old version of ZNPCs! Disabling the plugin...");
+            serverLogger.info(ChatColor.DARK_RED + " * Detected old version of ZNPCs! Disabling the plugin.");
             serverLogger.info("");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
