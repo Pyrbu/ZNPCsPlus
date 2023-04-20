@@ -18,7 +18,7 @@ public class CommandInvoker {
             throw new CommandPermissionException("Only players may execute this command.");
         }
         if (this.permission.length() > 0 && !sender.getCommandSender().hasPermission(this.permission)) {
-            throw new CommandPermissionException("Insufficient permission.");
+            throw new CommandPermissionException("You cannot execute this command.");
         }
         try {
             this.commandMethod.invoke(this.command, sender, command);

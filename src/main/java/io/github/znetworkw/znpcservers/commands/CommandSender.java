@@ -51,7 +51,7 @@ public class CommandSender {
 
     public Player getPlayer() {
         if (this.type != SenderType.PLAYER)
-            throw new IllegalStateException("sender is not a player.");
+            throw new IllegalStateException("The following sender is not a player.");
         return (Player) getCommandSender();
     }
 

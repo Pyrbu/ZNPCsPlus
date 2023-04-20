@@ -34,7 +34,7 @@ public class Configuration {
     }
 
     private Configuration(String name, Path path) {
-        if (!path.getFileName().toString().endsWith(".json")) throw new IllegalStateException("invalid configuration format for: " + path.getFileName());
+        if (!path.getFileName().toString().endsWith(".json")) throw new IllegalStateException("Invalid configuration format for: " + path.getFileName());
         this.name = name;
         this.path = path;
         this.configurationValues = ConfigurationValue.VALUES_BY_NAME.get(name).stream().collect(Collectors.toMap((c) -> c, ConfigurationValue::getValue));
@@ -54,7 +54,7 @@ public class Configuration {
             }
         } catch (NoSuchFileException ignored) {
         } catch (IOException ex) {
-            throw new IllegalStateException("Failed to read config: " + this.name);
+            throw new IllegalStateException("Failed to read configuration: " + this.name);
         }
     }
 
@@ -62,7 +62,7 @@ public class Configuration {
         try (Writer writer = Files.newBufferedWriter(this.path, CHARSET)) {
             ZNPCsPlus.GSON.toJson(this.configurationValues.size() == 1 ? this.configurationValues.values().iterator().next() : this.configurationValues, writer);
         } catch (IOException ex) {
-            throw new IllegalStateException("Failed to save config: " + this.name);
+            throw new IllegalStateException("Failed to save configuration: " + this.name);
         }
     }
 
