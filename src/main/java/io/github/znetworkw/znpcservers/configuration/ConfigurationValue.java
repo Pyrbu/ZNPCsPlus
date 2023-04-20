@@ -47,7 +47,7 @@ public enum ConfigurationValue {
     NO_CONVERSATION_FOUND("messages", "&cThe conversation you have specified does not exist!", String.class),
     CONVERSATION_FOUND("messages", "&cThere is already a conversation with this name.", String.class),
     INVALID_SIZE("messages", "&cThe position you have specified cannot exceed the limit.", String.class),
-    FETCHING_SKIN("messages", "&aFetching skin for name: &f%s&a, please wait...", String.class),
+    FETCHING_SKIN("messages", "&aFetching skin for name: &f%s&a. Please wait...", String.class),
     CANT_GET_SKIN("messages", "&cCould not fetch skin for name: %s.", String.class),
     GET_SKIN("messages", "&aSkin successfully fetched!", String.class),
     CONVERSATION_LIST("Conversations", new ArrayList<>(), Conversation.class);
