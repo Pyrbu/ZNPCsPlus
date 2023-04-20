@@ -47,7 +47,7 @@ public class DefaultCommand extends Command {
     @CommandInformation(arguments = {}, name = "", permission = "")
     public void defaultCommand(CommandSender sender, Map<String, String> args) {
         sender.sendMessage("&6&m------------------------------------------");
-        sender.sendMessage("&b&lZNPCS &8\u00BB &7ZNetwork & Pyr");
+        sender.sendMessage("&b&lZNPCsPlus &8\u00BB &7ZNetwork & Pyr");
         sender.sendMessage("&6https://www.spigotmc.org/resources/znpcsplus.109380/");
         Objects.requireNonNull(sender);
         getCommands().forEach(sender::sendMessage);
