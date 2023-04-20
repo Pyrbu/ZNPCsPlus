@@ -34,76 +34,41 @@ public class Configuration {
     }
 
     private Configuration(String name, Path path) {
-        if (!path.getFileName().toString().endsWith(".json")) {
-            throw new IllegalStateException("invalid configuration format for: " + path.getFileName());
-        } else {
-            this.name = name;
-            this.path = path;
-            this.configurationValues = ConfigurationValue.VALUES_BY_NAME.get(name).stream().collect(Collectors.toMap((c) -> c, ConfigurationValue::getValue));
-            this.onLoad();
-        }
+        if (!path.getFileName().toString().endsWith(".json")) throw new IllegalStateException("invalid configuration format for: " + path.getFileName());
+        this.name = name;
+        this.path = path;
+        this.configurationValues = ConfigurationValue.VALUES_BY_NAME.get(name).stream().collect(Collectors.toMap((c) -> c, ConfigurationValue::getValue));
+        this.onLoad();
     }
 
     protected void onLoad() {
-        synchronized(this.path) {
-            try {
-                Reader reader = Files.newBufferedReader(this.path, CHARSET);
-
-                try {
-                    JsonElement data = JsonParser.parseReader(reader);
-                    if (data != null) {
-                        for(ConfigurationValue configValue : this.configurationValues.keySet()) {
-                            boolean single = this.configurationValues.size() == 1;
-                            JsonElement jsonElement = single ? data : (data.isJsonObject() ? data.getAsJsonObject().get(configValue.name()) : null);
-                            if (jsonElement != null && !jsonElement.isJsonNull()) {
-                                if (!single && configValue.getPrimitiveType().isEnum()) {
-                                    this.configurationValues.put(configValue, ZNPCsPlus.GSON.fromJson(jsonElement, configValue.getPrimitiveType()));
-                                } else {
-                                    this.configurationValues.put(configValue, ZNPCsPlus.GSON.fromJson(jsonElement, $Gson$Types.newParameterizedTypeWithOwner(null, configValue.getValue().getClass(), configValue.getPrimitiveType())));
-                                }
-                            }
-                        }
-
-                        reader.close();
-
-                        return;
-                    }
-
-                    reader.close();
-                } catch (Throwable var17) {
-                    try {
-                        reader.close();
-                    } catch (Throwable var16) {
-                        var17.addSuppressed(var16);
-                    }
-
-                    throw var17;
-                }
-            } catch (NoSuchFileException ignored) {
-            } catch (IOException var19) {
-                throw new IllegalStateException("Failed to read config: " + this.name);
-            } finally {
-                this.save();
+        try (Reader reader = Files.newBufferedReader(this.path, CHARSET)) {
+            JsonElement data = JsonParser.parseReader(reader);
+            if (data == null) return;
+            for(ConfigurationValue configValue : this.configurationValues.keySet()) {
+                boolean single = this.configurationValues.size() == 1;
+                JsonElement jsonElement = single ? data : (data.isJsonObject() ? data.getAsJsonObject().get(configValue.name()) : null);
+                if (jsonElement == null || jsonElement.isJsonNull()) continue;
+                if (!single && configValue.getPrimitiveType().isEnum()) this.configurationValues.put(configValue, ZNPCsPlus.GSON.fromJson(jsonElement, configValue.getPrimitiveType()));
+                else this.configurationValues.put(configValue, ZNPCsPlus.GSON.fromJson(jsonElement, $Gson$Types.newParameterizedTypeWithOwner(null, configValue.getValue().getClass(), configValue.getPrimitiveType())));
             }
-
+        } catch (NoSuchFileException ignored) {
+        } catch (IOException ex) {
+            throw new IllegalStateException("Failed to read config: " + this.name);
         }
     }
 
     public void save() {
-        synchronized(this.path) {
-            try (Writer writer = Files.newBufferedWriter(this.path, CHARSET)) {
-                ZNPCsPlus.GSON.toJson(this.configurationValues.size() == 1 ? this.configurationValues.values().iterator().next() : this.configurationValues, writer);
-            } catch (IOException ex) {
-                throw new IllegalStateException("Failed to save config: " + this.name);
-            }
+        try (Writer writer = Files.newBufferedWriter(this.path, CHARSET)) {
+            ZNPCsPlus.GSON.toJson(this.configurationValues.size() == 1 ? this.configurationValues.values().iterator().next() : this.configurationValues, writer);
+        } catch (IOException ex) {
+            throw new IllegalStateException("Failed to save config: " + this.name);
         }
     }
 
     @SuppressWarnings("unchecked")
     public <T> T getValue(ConfigurationValue configValue) {
-        synchronized(this.path) {
-            return (T)this.configurationValues.get(configValue);
-        }
+        return (T)this.configurationValues.get(configValue);
     }
 
     public void sendMessage(org.bukkit.command.CommandSender sender, ConfigurationValue configValue, Object... replaces) {
