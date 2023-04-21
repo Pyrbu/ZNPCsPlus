@@ -38,7 +38,9 @@ public class DefaultCommand extends Command {
     private static final SkinFunction DO_APPLY_SKIN = (sender, npc, skin) -> NPCSkin.forName(skin, (values, ex) -> {
         if (ex != null) {
             Configuration.MESSAGES.sendMessage(sender, ConfigurationValue.CANT_GET_SKIN, skin);
-            throw new RuntimeException(ex);
+            ZNPCsPlus.LOGGER.warning("Failed to fetch skin:");
+            ex.printStackTrace();
+            return;
         }
         npc.changeSkin(NPCSkin.forValues(values));
         Configuration.MESSAGES.sendMessage(sender, ConfigurationValue.GET_SKIN);
