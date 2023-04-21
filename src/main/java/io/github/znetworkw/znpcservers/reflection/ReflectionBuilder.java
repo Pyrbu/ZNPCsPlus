@@ -68,7 +68,7 @@ public class ReflectionBuilder {
         return ImmutableList.copyOf(this.parameterTypes);
     }
 
-    public ImmutableList<String> getClassName() {
+    public ImmutableList<String> getClassNames() {
         return ImmutableList.copyOf(this.className);
     }
 

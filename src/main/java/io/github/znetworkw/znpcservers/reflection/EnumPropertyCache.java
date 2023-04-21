@@ -4,7 +4,12 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class ClassCache {
+/**
+ * Gonalez decided to make every single enum we load be stored in this map
+ * to make NPC property application easier however this is terribly inefficient
+ * for memory. The entire NPC property system will most likely need a rewrite.
+ */
+public class EnumPropertyCache {
     protected static final ConcurrentMap<CacheKey, Object> CACHE = new ConcurrentHashMap<>();
 
     public static Object find(String name, Class<?> objectClass) {

@@ -5,7 +5,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import io.github.znetworkw.znpcservers.UnexpectedCallException;
-import io.github.znetworkw.znpcservers.reflection.ReflectionCache;
+import io.github.znetworkw.znpcservers.reflection.Reflections;
 import io.github.znetworkw.znpcservers.npc.conversation.ConversationModel;
 import io.github.znetworkw.znpcservers.npc.hologram.Hologram;
 import io.github.znetworkw.znpcservers.npc.packet.PacketCache;
@@ -137,8 +137,8 @@ public class NPC {
                 if (updateTime) this.lastMove = System.nanoTime();
                 this.npcPojo.setLocation(new ZLocation(location = new Location(location.getWorld(), location.getBlockX() + 0.5D, location.getY(), location.getBlockZ() + 0.5D, location.getYaw(), location.getPitch())));
             }
-            ReflectionCache.SET_LOCATION_METHOD.get().invoke(this.nmsEntity, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-            Object npcTeleportPacket = ReflectionCache.PACKET_PLAY_OUT_ENTITY_TELEPORT_CONSTRUCTOR.get().newInstance(this.nmsEntity);
+            Reflections.SET_LOCATION_METHOD.get().invoke(this.nmsEntity, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+            Object npcTeleportPacket = Reflections.PACKET_PLAY_OUT_ENTITY_TELEPORT_CONSTRUCTOR.get().newInstance(this.nmsEntity);
             this.viewers.forEach(player -> Utils.sendPackets(player, npcTeleportPacket));
             this.hologram.setLocation(location, this.npcPojo.getNpcType().getHoloHeight());
         } catch (ReflectiveOperationException operationException) {
@@ -157,13 +157,13 @@ public class NPC {
 
     public void setSecondLayerSkin() {
         try {
-            Object dataWatcherObject = ReflectionCache.GET_DATA_WATCHER_METHOD.get().invoke(this.nmsEntity);
+            Object dataWatcherObject = Reflections.GET_DATA_WATCHER_METHOD.get().invoke(this.nmsEntity);
             if (Utils.versionNewer(9)) {
-                ReflectionCache.SET_DATA_WATCHER_METHOD.get().invoke(dataWatcherObject,
-                        ReflectionCache.DATA_WATCHER_OBJECT_CONSTRUCTOR.get()
-                                .newInstance(this.npcSkin.getLayerIndex(), ReflectionCache.DATA_WATCHER_REGISTER_FIELD.get()), (byte) 127);
+                Reflections.SET_DATA_WATCHER_METHOD.get().invoke(dataWatcherObject,
+                        Reflections.DATA_WATCHER_OBJECT_CONSTRUCTOR.get()
+                                .newInstance(this.npcSkin.getLayerIndex(), Reflections.DATA_WATCHER_REGISTER_FIELD.get()), (byte) 127);
             } else {
-                ReflectionCache.WATCH_DATA_WATCHER_METHOD.get().invoke(dataWatcherObject, 10, (byte) 127);
+                Reflections.WATCH_DATA_WATCHER_METHOD.get().invoke(dataWatcherObject, 10, (byte) 127);
             }
         } catch (ReflectiveOperationException operationException) {
             throw new UnexpectedCallException(operationException);
@@ -173,24 +173,24 @@ public class NPC {
     public synchronized void changeType(NPCType npcType) {
         deleteViewers();
         try {
-            Object nmsWorld = ReflectionCache.GET_HANDLE_WORLD_METHOD.get().invoke(getLocation().getWorld());
+            Object nmsWorld = Reflections.GET_HANDLE_WORLD_METHOD.get().invoke(getLocation().getWorld());
             boolean isPlayer = (npcType == NPCType.PLAYER);
             this.nmsEntity = isPlayer ? this.packets.getProxyInstance().getPlayerPacket(nmsWorld, this.gameProfile) : (Utils.versionNewer(14) ? npcType.getConstructor().newInstance(npcType.getNmsEntityType(), nmsWorld) : npcType.getConstructor().newInstance(nmsWorld));
-            this.bukkitEntity = ReflectionCache.GET_BUKKIT_ENTITY_METHOD.get().invoke(this.nmsEntity);
-            this.uuid = (UUID) ReflectionCache.GET_UNIQUE_ID_METHOD.get().invoke(this.nmsEntity, new Object[0]);
+            this.bukkitEntity = Reflections.GET_BUKKIT_ENTITY_METHOD.get().invoke(this.nmsEntity);
+            this.uuid = (UUID) Reflections.GET_UNIQUE_ID_METHOD.get().invoke(this.nmsEntity, new Object[0]);
             if (isPlayer) {
                 try {
-                    this.tabConstructor = ReflectionCache.PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR.get().newInstance(ReflectionCache.ADD_PLAYER_FIELD.get(), Collections.singletonList(this.nmsEntity));
+                    this.tabConstructor = Reflections.PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR.get().newInstance(Reflections.ADD_PLAYER_FIELD.get(), Collections.singletonList(this.nmsEntity));
                 } catch (Throwable e) {
-                    this.tabConstructor = ReflectionCache.PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR.get().newInstance(ReflectionCache.ADD_PLAYER_FIELD.get(), this.nmsEntity);
-                    this.updateTabConstructor = ReflectionCache.PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR.get().newInstance(ReflectionCache.UPDATE_LISTED_FIELD.get(), this.nmsEntity);
+                    this.tabConstructor = Reflections.PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR.get().newInstance(Reflections.ADD_PLAYER_FIELD.get(), this.nmsEntity);
+                    this.updateTabConstructor = Reflections.PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR.get().newInstance(Reflections.UPDATE_LISTED_FIELD.get(), this.nmsEntity);
                 }
                 setSecondLayerSkin();
             }
             this.npcPojo.setNpcType(npcType);
             setLocation(getLocation(), false);
             this.packets.flushCache("spawnPacket", "removeTab");
-            this.entityID = (Integer) ReflectionCache.GET_ENTITY_ID.get().invoke(this.nmsEntity, new Object[0]);
+            this.entityID = (Integer) Reflections.GET_ENTITY_ID.get().invoke(this.nmsEntity, new Object[0]);
             FunctionFactory.findFunctionsForNpc(this).forEach(function -> function.resolve(this));
             getPackets().getProxyInstance().update(this.packets);
             this.hologram.createHologram();
@@ -248,8 +248,8 @@ public class NPC {
         if (this.lastMove > 1L && lastMoveNanos < 1000000000L) return;
         Location direction = rotation ? location : this.npcPojo.getLocation().bukkitLocation().clone().setDirection(location.clone().subtract(this.npcPojo.getLocation().bukkitLocation().clone()).toVector());
         try {
-            Object lookPacket = ReflectionCache.PACKET_PLAY_OUT_ENTITY_LOOK_CONSTRUCTOR.get().newInstance(this.entityID, (byte) (int) (direction.getYaw() * 256.0F / 360.0F), (byte) (int) (direction.getPitch() * 256.0F / 360.0F), true);
-            Object headRotationPacket = ReflectionCache.PACKET_PLAY_OUT_ENTITY_HEAD_ROTATION_CONSTRUCTOR.get().newInstance(this.nmsEntity, (byte) (int) (direction.getYaw() * 256.0F / 360.0F));
+            Object lookPacket = Reflections.PACKET_PLAY_OUT_ENTITY_LOOK_CONSTRUCTOR.get().newInstance(this.entityID, (byte) (int) (direction.getYaw() * 256.0F / 360.0F), (byte) (int) (direction.getPitch() * 256.0F / 360.0F), true);
+            Object headRotationPacket = Reflections.PACKET_PLAY_OUT_ENTITY_HEAD_ROTATION_CONSTRUCTOR.get().newInstance(this.nmsEntity, (byte) (int) (direction.getYaw() * 256.0F / 360.0F));
             if (player != null) Utils.sendPackets(player, lookPacket, headRotationPacket);
             else this.viewers.forEach(players -> Utils.sendPackets(players, headRotationPacket));
         } catch (ReflectiveOperationException operationException) {
@@ -275,7 +275,7 @@ public class NPC {
     public void updateProfile(PropertyMap propertyMap) {
         if (this.npcPojo.getNpcType() != NPCType.PLAYER) return;
         try {
-            Object gameProfileObj = ReflectionCache.GET_PROFILE_METHOD.get().invoke(this.nmsEntity);
+            Object gameProfileObj = Reflections.GET_PROFILE_METHOD.get().invoke(this.nmsEntity);
             Utils.setValue(gameProfileObj, "name", this.gameProfile.getName());
             Utils.setValue(gameProfileObj, "id", this.gameProfile.getId());
             Utils.setValue(gameProfileObj, "properties", propertyMap);

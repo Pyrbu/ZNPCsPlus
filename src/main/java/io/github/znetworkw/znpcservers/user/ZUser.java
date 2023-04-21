@@ -1,7 +1,7 @@
 package io.github.znetworkw.znpcservers.user;
 
 import com.mojang.authlib.GameProfile;
-import io.github.znetworkw.znpcservers.reflection.ReflectionCache;
+import io.github.znetworkw.znpcservers.reflection.Reflections;
 import io.github.znetworkw.znpcservers.npc.NPC;
 import io.github.znetworkw.znpcservers.npc.NPCAction;
 import io.github.znetworkw.znpcservers.npc.event.ClickType;
@@ -41,9 +41,9 @@ public class ZUser {
         this.lastClicked = new HashMap<>();
         this.eventServices = new ArrayList<>();
         try {
-            Object playerHandle = ReflectionCache.GET_HANDLE_PLAYER_METHOD.get().invoke(toPlayer());
-            this.gameProfile = (GameProfile) ReflectionCache.GET_PROFILE_METHOD.get().invoke(playerHandle, new Object[0]);
-            this.playerConnection = ReflectionCache.PLAYER_CONNECTION_FIELD.get().get(playerHandle);
+            Object playerHandle = Reflections.GET_HANDLE_PLAYER_METHOD.get().invoke(toPlayer());
+            this.gameProfile = (GameProfile) Reflections.GET_PROFILE_METHOD.get().invoke(playerHandle, new Object[0]);
+            this.playerConnection = Reflections.PLAYER_CONNECTION_FIELD.get().get(playerHandle);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new IllegalStateException("can't create user for player " + uuid.toString(), e.getCause());
         }
@@ -62,7 +62,11 @@ public class ZUser {
         public void run() {
             Exception ex = user.tryRegisterChannel();
             Player player = user.toPlayer();
-            if (player == null || !player.isOnline() || ex == null) {
+            if (player == null) {
+                tries--;
+                return;
+            }
+            else if (!player.isOnline() || ex == null) {
                 cancel();
                 return;
             }
@@ -78,7 +82,7 @@ public class ZUser {
 
     private Exception tryRegisterChannel() {
         try {
-            Channel channel = (Channel) ReflectionCache.CHANNEL_FIELD.get().get(ReflectionCache.NETWORK_MANAGER_FIELD.get().get(this.playerConnection));
+            Channel channel = (Channel) Reflections.CHANNEL_FIELD.get().get(Reflections.NETWORK_MANAGER_FIELD.get().get(this.playerConnection));
             if (channel.pipeline().names().contains("npc_interact")) channel.pipeline().remove("npc_interact");
             channel.pipeline().addAfter("decoder", "npc_interact", new ZNPCSocketDecoder());
             return null;
@@ -138,11 +142,11 @@ public class ZUser {
     class ZNPCSocketDecoder extends MessageToMessageDecoder<Object> {
         protected void decode(ChannelHandlerContext channelHandlerContext, Object packet, List<Object> out) throws Exception {
             out.add(packet);
-            if (packet.getClass() == ReflectionCache.PACKET_PLAY_IN_USE_ENTITY_CLASS) {
+            if (packet.getClass() == Reflections.PACKET_PLAY_IN_USE_ENTITY_CLASS) {
                 long lastInteractNanos = System.nanoTime() - ZUser.this.lastInteract;
                 if (ZUser.this.lastInteract != 0L && lastInteractNanos < 1000000000L)
                     return;
-                int entityId = ReflectionCache.PACKET_IN_USE_ENTITY_ID_FIELD.get().getInt(packet);
+                int entityId = Reflections.PACKET_IN_USE_ENTITY_ID_FIELD.get().getInt(packet);
                 NPC npc = NPC.all().stream().filter(npc1 -> (npc1.getEntityID() == entityId)).findFirst().orElse(null);
                 if (npc == null)
                     return;

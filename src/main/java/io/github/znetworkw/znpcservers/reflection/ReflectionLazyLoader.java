@@ -5,24 +5,24 @@ import lol.pyr.znpcsplus.ZNPCsPlus;
 
 import java.util.List;
 
-public abstract class BaseReflection <T> {
-    protected final List<String> className;
+public abstract class ReflectionLazyLoader<T> {
+    protected final List<String> possibleClassNames;
 
-    protected Class<?> BUILDER_CLASS;
+    protected Class<?> reflectionClass;
 
     private T cached;
 
     private boolean loaded = false;
 
-    protected BaseReflection(ReflectionBuilder builder) {
-        this(builder.getClassName());
+    protected ReflectionLazyLoader(ReflectionBuilder builder) {
+        this(builder.getClassNames());
     }
 
-    protected BaseReflection(List<String> className) {
-        this.className = className;
-        for (String classes : className) {
+    protected ReflectionLazyLoader(List<String> possibleClassNames) {
+        this.possibleClassNames = possibleClassNames;
+        for (String classes : possibleClassNames) {
             try {
-                this.BUILDER_CLASS = Class.forName(classes);
+                this.reflectionClass = Class.forName(classes);
                 break;
             } catch (ClassNotFoundException ignored) {
             }
@@ -36,13 +36,13 @@ public abstract class BaseReflection <T> {
     public T get(boolean missAllowed) {
         if (this.loaded) return this.cached;
         try {
-            if (this.BUILDER_CLASS == null) throw new ClassNotFoundException("No class found: " + className);
+            if (this.reflectionClass == null) throw new ClassNotFoundException("No class found: " + possibleClassNames);
             T eval = (this.cached != null) ? this.cached : (this.cached = load());
             if (eval == null) throw new NullPointerException();
         } catch (Throwable throwable) {
             if (!missAllowed) {
                 warn(getClass().getSimpleName() + " get failed!");
-                warn("Class Names: " + className);
+                warn("Class Names: " + possibleClassNames);
                 warn("Loader Type: " + getClass().getCanonicalName());
                 warn("Bukkit Version: " + Utils.BUKKIT_VERSION + " (" + Utils.getBukkitPackage() + ")");
                 warn("Exception:");

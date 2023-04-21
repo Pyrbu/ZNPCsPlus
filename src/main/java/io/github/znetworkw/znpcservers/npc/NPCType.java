@@ -1,7 +1,7 @@
 package io.github.znetworkw.znpcservers.npc;
 
 import io.github.znetworkw.znpcservers.UnexpectedCallException;
-import io.github.znetworkw.znpcservers.reflection.ClassCache;
+import io.github.znetworkw.znpcservers.reflection.EnumPropertyCache;
 import io.github.znetworkw.znpcservers.utility.Utils;
 import org.bukkit.entity.EntityType;
 
@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Optional;
 
-import static io.github.znetworkw.znpcservers.reflection.ReflectionCache.*;
+import static io.github.znetworkw.znpcservers.reflection.Reflections.*;
 
 @SuppressWarnings("unused")
 public enum NPCType {
@@ -112,12 +112,12 @@ public enum NPCType {
         return this.customizationLoader;
     }
 
-    public static Object[] arrayToPrimitive(String[] strings, Method method) {
+    public static Object[] collectArguments(String[] strings, Method method) {
         Class<?>[] methodParameterTypes = method.getParameterTypes();
         Object[] newArray = new Object[methodParameterTypes.length];
         for (int i = 0; i < methodParameterTypes.length; ++i) {
             TypeProperty typeProperty = TypeProperty.forType(methodParameterTypes[i]);
-            newArray[i] = typeProperty != null ? typeProperty.getFunction().apply(strings[i]) : ClassCache.find(strings[i], methodParameterTypes[i]);
+            newArray[i] = typeProperty != null ? typeProperty.getFunction().apply(strings[i]) : EnumPropertyCache.find(strings[i], methodParameterTypes[i]);
         }
         return newArray;
     }
@@ -128,7 +128,7 @@ public enum NPCType {
         }
         try {
             Method method = this.customizationLoader.getMethods().get(name);
-            method.invoke(npc.getBukkitEntity(), NPCType.arrayToPrimitive(values, method));
+            method.invoke(npc.getBukkitEntity(), NPCType.collectArguments(values, method));
             npc.updateMetadata(npc.getViewers());
         }
         catch (IllegalAccessException | InvocationTargetException e) {
