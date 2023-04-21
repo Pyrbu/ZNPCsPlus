@@ -9,31 +9,18 @@ import java.util.*;
 @SuppressWarnings("unused")
 public class NPCModel {
     private int id;
-
     private double hologramHeight;
-
     private String skin;
-
     private String signature = "";
-
     private String pathName;
-
     private String glowName;
-
     private ConversationModel conversation;
-
     private ZLocation location;
-
     private NPCType npcType;
-
     private List<String> hologramLines;
-
     private List<NPCAction> clickActions;
-
     private Map<ItemSlot, ItemStack> npcEquip;
-
     private Map<String, Boolean> npcFunctions;
-
     private Map<String, String[]> customizationMap;
 
     public NPCModel(int id) {

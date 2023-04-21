@@ -10,11 +10,8 @@ import org.bukkit.ChatColor;
 
 public class NPCAction {
     private final ActionType actionType;
-
     private final ClickType clickType;
-
     private final String action;
-
     private int delay;
 
     public NPCAction(ActionType actionType, ClickType clickType, String action, int delay) {
@@ -65,7 +62,6 @@ public class NPCAction {
                 .toString();
     }
 
-    @SuppressWarnings("deprecation")
     enum ActionType {
         CMD {
             public void run(ZUser user, String actionValue) {

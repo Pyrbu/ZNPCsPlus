@@ -10,13 +10,9 @@ import java.util.stream.StreamSupport;
 
 public class ConversationKey {
     private static final Splitter SPACE_SPLITTER = Splitter.on(" ");
-
     private final List<String> lines;
-
     private final List<NPCAction> actions;
-
     private int delay = 1;
-
     private String soundName;
 
     public ConversationKey(String line) {

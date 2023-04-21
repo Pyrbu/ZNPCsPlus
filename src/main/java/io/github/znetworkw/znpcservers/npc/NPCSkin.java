@@ -5,12 +5,8 @@ import io.github.znetworkw.znpcservers.skin.SkinFetcherResult;
 import io.github.znetworkw.znpcservers.utility.Utils;
 
 public class NPCSkin {
-    private static final String[] EMPTY_ARRAY = new String[0];
-
     private static final int LAYER_INDEX = SkinLayerValues.findLayerByVersion();
-
     private final String texture;
-
     private final String signature;
 
     protected NPCSkin(String... values) {
@@ -21,7 +17,7 @@ public class NPCSkin {
     }
 
     public static NPCSkin forValues(String... values) {
-        return new NPCSkin((values.length > 0) ? values : EMPTY_ARRAY);
+        return new NPCSkin((values.length > 0) ? values : new String[0]);
     }
 
     public static void forName(String skin, SkinFetcherResult skinFetcherResult) {

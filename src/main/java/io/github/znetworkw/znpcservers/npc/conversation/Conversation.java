@@ -7,11 +7,8 @@ import java.util.List;
 
 public class Conversation {
     private final String name;
-
     private final List<ConversationKey> texts;
-
     private int radius = 5;
-
     private int delay = 10;
 
     public Conversation(String name) {

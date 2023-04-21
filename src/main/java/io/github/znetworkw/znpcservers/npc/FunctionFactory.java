@@ -7,19 +7,9 @@ import io.github.znetworkw.znpcservers.utility.GuavaCollectors;
 
 public final class FunctionFactory {
     public static ImmutableList<NPCFunction> WITHOUT_FUNCTION = ImmutableList.of(new NPCFunction.WithoutFunction("look"), new NPCFunction.WithoutFunctionSelfUpdate("holo"), new NPCFunction.WithoutFunctionSelfUpdate("mirror"));
-
     public static ImmutableList<NPCFunction> WITH_FUNCTION = ImmutableList.of(new GlowFunction());
-
-    public static ImmutableList<NPCFunction> ALL = new ImmutableList.Builder<NPCFunction>()
-            .addAll(WITHOUT_FUNCTION)
-            .addAll(WITH_FUNCTION)
-            .build();
-
-    public static ImmutableMap<String, NPCFunction> BY_NAME;
-
-    static {
-        BY_NAME = ALL.stream().collect(GuavaCollectors.toImmutableMap(NPCFunction::getName, function -> function));
-    }
+    public static ImmutableList<NPCFunction> ALL = new ImmutableList.Builder<NPCFunction>().addAll(WITHOUT_FUNCTION).addAll(WITH_FUNCTION).build();
+    public static ImmutableMap<String, NPCFunction> BY_NAME = ALL.stream().collect(GuavaCollectors.toImmutableMap(NPCFunction::getName, function -> function));
 
     public static NPCFunction findFunctionForName(String name) {
         return BY_NAME.get(name);

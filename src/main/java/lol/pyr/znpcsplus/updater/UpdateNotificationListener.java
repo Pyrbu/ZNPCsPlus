@@ -9,7 +9,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-@SuppressWarnings("deprecation")
 public class UpdateNotificationListener implements Listener {
     private final ZNPCsPlus plugin;
     private final UpdateChecker updateChecker;
@@ -26,7 +25,8 @@ public class UpdateNotificationListener implements Listener {
         if (updateChecker.getStatus() != UpdateChecker.Status.UPDATE_NEEDED) return;
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (!event.getPlayer().isOnline()) return;
-            event.getPlayer().sendMessage(Component.text(plugin.getDescription().getName() + " v" + updateChecker.getLatestVersion() + " is available now!", NamedTextColor.GOLD).appendNewline()
+            ZNPCsPlus.ADVENTURE.player(event.getPlayer())
+                    .sendMessage(Component.text(plugin.getDescription().getName() + " v" + updateChecker.getLatestVersion() + " is available now!", NamedTextColor.GOLD).appendNewline()
                     .append(Component.text("Click this message to open the Spigot page (CLICK)", NamedTextColor.YELLOW)).clickEvent(ClickEvent.openUrl(UpdateChecker.DOWNLOAD_LINK)));
         }, 100L);
     }

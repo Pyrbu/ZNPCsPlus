@@ -1,5 +1,6 @@
 package io.github.znetworkw.znpcservers.utility.location;
 
+import com.google.common.base.Preconditions;
 import com.google.gson.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -9,19 +10,12 @@ import java.lang.reflect.Type;
 
 public class ZLocation {
     public static final ZLocationSerializer SERIALIZER = new ZLocationSerializer();
-
     private final String worldName;
-
     private final double x;
-
     private final double y;
-
     private final double z;
-
     private final float yaw;
-
     private final float pitch;
-
     private Location bukkitLocation;
 
     public ZLocation(String worldName, double x, double y, double z, float yaw, float pitch) {
@@ -34,7 +28,7 @@ public class ZLocation {
     }
 
     public ZLocation(Location location) {
-        this(location.getWorld().getName(), location
+        this(Preconditions.checkNotNull(location.getWorld()).getName(), location
                 .getX(), location
                 .getY(), location
                 .getZ(), location

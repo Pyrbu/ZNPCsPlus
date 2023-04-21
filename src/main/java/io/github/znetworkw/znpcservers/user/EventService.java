@@ -35,9 +35,7 @@ public class EventService<T extends Event> {
     }
 
     public static <T extends Event> EventService<T> addService(ZUser user, Class<T> eventClass) {
-        if (EventService.hasService(user, eventClass)) {
-            throw new IllegalStateException(eventClass.getSimpleName() + " is already register for " + user.getUUID().toString());
-        }
+        if (EventService.hasService(user, eventClass)) throw new IllegalStateException(eventClass.getSimpleName() + " is already register for " + user.getUUID().toString());
         EventService<T> service = new EventService<>(eventClass, new ArrayList<>());
         user.getEventServices().add(service);
         user.toPlayer().closeInventory();

@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@SuppressWarnings("deprecation")
 public class ItemStackBuilder {
     private final ItemStack itemStack;
 
@@ -21,8 +20,7 @@ public class ItemStackBuilder {
     }
 
     public static ItemStackBuilder forMaterial(Material material) {
-        if (material == null || material == Material.AIR)
-            throw new IllegalStateException("can't create builder for a NULL material.");
+        if (material == null || material == Material.AIR) throw new IllegalStateException("can't create builder for a NULL material.");
         return new ItemStackBuilder(new ItemStack(material, 1));
     }
 
@@ -32,19 +30,13 @@ public class ItemStackBuilder {
     }
 
     public ItemStackBuilder setLore(Iterable<String> lore) {
-        this.itemMeta.setLore(StreamSupport.stream(lore.spliterator(), false)
-                .map(Utils::toColor).collect(Collectors.toList()));
+        this.itemMeta.setLore(StreamSupport.stream(lore.spliterator(), false).map(Utils::toColor).collect(Collectors.toList()));
         this.itemStack.setItemMeta(this.itemMeta);
         return this;
     }
 
     public ItemStackBuilder setLore(String... lore) {
         return setLore(Arrays.asList(lore));
-    }
-
-    public ItemStackBuilder setAmount(int amount) {
-        this.itemStack.setAmount(amount);
-        return this;
     }
 
     public ItemStack build() {

@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 import java.lang.reflect.Field;
 import java.util.concurrent.ThreadLocalRandom;
 
-@SuppressWarnings("deprecation")
 public final class Utils {
     public static final int BUKKIT_VERSION;
     public static boolean PLACEHOLDER_SUPPORT = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
@@ -50,7 +49,7 @@ public final class Utils {
     }
 
     public static void sendTitle(Player player, String title, String subTitle) {
-        player.sendTitle(toColor(title), toColor(subTitle));
+        player.sendTitle(toColor(title), toColor(subTitle), 1, 3, 1);
     }
 
     public static void setValue(Object fieldInstance, String fieldName, Object value) throws NoSuchFieldException, IllegalAccessException {

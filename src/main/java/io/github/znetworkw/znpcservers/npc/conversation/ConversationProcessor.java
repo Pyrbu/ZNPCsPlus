@@ -16,15 +16,10 @@ import java.util.UUID;
 
 public class ConversationProcessor {
     private static final Map<UUID, String> RUNNING_CONVERSATIONS = new HashMap<>();
-
     private final NPC npc;
-
     private final ConversationModel conversationModel;
-
     private final Player player;
-
     private int conversationIndex = 0;
-
     private long conversationIndexDelay = System.nanoTime();
 
     public ConversationProcessor(NPC npc, ConversationModel conversationModel, Player player) {

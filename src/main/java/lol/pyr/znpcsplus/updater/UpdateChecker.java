@@ -7,7 +7,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.concurrent.TimeUnit;
 
-@SuppressWarnings("deprecation")
 public class UpdateChecker extends BukkitRunnable {
     private final static SpigotResourcesAPI api = new SpigotResourcesAPI(1, TimeUnit.MINUTES);
     public final static int RESOURCE_ID = 109380;

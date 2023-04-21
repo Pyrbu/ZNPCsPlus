@@ -20,11 +20,8 @@ import java.util.concurrent.ConcurrentMap;
 @SuppressWarnings("ALL")
 public interface NPCPath {
     void initialize(DataInputStream paramDataInputStream) throws IOException;
-
     void write(DataOutputStream paramDataOutputStream) throws IOException;
-
     void start();
-
     PathInitializer getPath(NPC paramNPC);
 
     interface PathInitializer {
@@ -88,13 +85,9 @@ public interface NPCPath {
 
     abstract class AbstractTypeWriter implements NPCPath {
         private static final ConcurrentMap<String, AbstractTypeWriter> PATH_TYPES = new ConcurrentHashMap<>();
-
         private static final int PATH_DELAY = 1;
-
         private final TypeWriter typeWriter;
-
         private final File file;
-
         private final List<ZLocation> locationList;
 
         public AbstractTypeWriter(TypeWriter typeWriter, File file) {

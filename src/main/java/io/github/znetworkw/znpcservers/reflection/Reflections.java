@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import io.github.znetworkw.znpcservers.reflection.types.*;
 import io.github.znetworkw.znpcservers.utility.Utils;
 import io.netty.channel.Channel;
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Constructor;
@@ -538,22 +539,26 @@ public final class Reflections {
     public static final ReflectionLazyLoader<Object> ADD_PLAYER_FIELD = new FieldReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
             .withClassName("PacketPlayOutPlayerInfo$EnumPlayerInfoAction")
             .withClassName("ClientboundPlayerInfoUpdatePacket$a")
-            .withFieldName((Utils.BUKKIT_VERSION > 16) ? "a" : "ADD_PLAYER")).asValueField();
+            .withFieldName((Utils.BUKKIT_VERSION > 16) ? "a" : "ADD_PLAYER")).staticValueLoader();
 
     public static final ReflectionLazyLoader<Object> UPDATE_LISTED_FIELD = new FieldReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
             .withClassName("ClientboundPlayerInfoUpdatePacket$a")
-            .withFieldName("d")).asValueField();
+            .withFieldName("d")).staticValueLoader();
 
     public static final ReflectionLazyLoader<Object> REMOVE_PLAYER_FIELD = new FieldReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
             .withClassName("PacketPlayOutPlayerInfo$EnumPlayerInfoAction")
             .withClassName("ClientboundPlayerInfoUpdatePacket$a")
-            .withFieldName((Utils.BUKKIT_VERSION > 16) ? "e" : "REMOVE_PLAYER")).asValueField();
+            .withFieldName((Utils.BUKKIT_VERSION > 16) ? "e" : "REMOVE_PLAYER")).staticValueLoader();
 
     public static final ReflectionLazyLoader<Object> DATA_WATCHER_REGISTER_FIELD = new FieldReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
             .withClassName(DATA_WATCHER_REGISTRY)
-            .withFieldName("a")).asValueField();
+            .withFieldName("a")).staticValueLoader();
 
     public static final ReflectionLazyLoader<Object> ENUM_TAG_VISIBILITY_NEVER_FIELD = new FieldReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
             .withClassName(ENUM_TAG_VISIBILITY)
-            .withFieldName("b")).asValueField();
+            .withFieldName("b")).staticValueLoader();
+
+    public static final ReflectionLazyLoader<Object> COMMAND_MAP_FIELD = new FieldReflection(new ReflectionBuilder(ReflectionPackage.BUKKIT)
+            .withClassName("CraftServer")
+            .withFieldName("commandMap")).valueLoader(Bukkit.getServer());
 }

@@ -4,15 +4,15 @@ import com.google.common.collect.Iterables;
 import io.github.znetworkw.znpcservers.commands.exception.CommandException;
 import io.github.znetworkw.znpcservers.commands.exception.CommandExecuteException;
 import io.github.znetworkw.znpcservers.commands.exception.CommandPermissionException;
-import org.bukkit.Bukkit;
+import io.github.znetworkw.znpcservers.reflection.Reflections;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 
 import java.lang.reflect.Method;
 import java.util.*;
 
-@SuppressWarnings("deprecation")
 public class Command extends BukkitCommand {
     private final Map<CommandInformation, CommandInvoker> subCommands;
 
@@ -23,7 +23,7 @@ public class Command extends BukkitCommand {
     }
 
     private void load() {
-        Bukkit.getCommandMap().register(getName(), this);
+        ((CommandMap) Reflections.COMMAND_MAP_FIELD.get()).register(getName(), this);
         for (Method method : getClass().getMethods()) {
             if (method.isAnnotationPresent(CommandInformation.class)) {
                 CommandInformation cmdInfo = method.getAnnotation(CommandInformation.class);

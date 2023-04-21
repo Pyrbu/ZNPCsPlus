@@ -16,7 +16,6 @@ import java.util.concurrent.Executors;
 
 public class SkinFetcher {
     private static final ExecutorService SKIN_EXECUTOR_SERVICE = Executors.newCachedThreadPool();
-
     private final SkinFetcherBuilder builder;
 
     public SkinFetcher(SkinFetcherBuilder builder) {
@@ -31,32 +30,12 @@ public class SkinFetcher {
                 connection.setRequestMethod(this.builder.getAPIServer().getMethod());
                 if (this.builder.isUrlType()) {
                     connection.setDoOutput(true);
-                    DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-                    try {
+                    try (DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream())) {
                         outputStream.writeBytes("url=" + URLEncoder.encode(this.builder.getData(), StandardCharsets.UTF_8));
-                        outputStream.close();
-                    } catch (Throwable throwable) {
-                        try {
-                            outputStream.close();
-                        } catch (Throwable throwable1) {
-                            throwable.addSuppressed(throwable1);
-                        }
-                        throw throwable;
                     }
                 }
-                try {
-                    Reader reader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8);
-                    try {
-                        completableFuture.complete(JsonParser.parseReader(reader).getAsJsonObject());
-                        reader.close();
-                    } catch (Throwable throwable) {
-                        try {
-                            reader.close();
-                        } catch (Throwable throwable1) {
-                            throwable.addSuppressed(throwable1);
-                        }
-                        throw throwable;
-                    }
+                try (Reader reader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {
+                    completableFuture.complete(JsonParser.parseReader(reader).getAsJsonObject());
                 } finally {
                     connection.disconnect();
                 }

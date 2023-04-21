@@ -4,11 +4,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class ZInventoryItem {
     private final ItemStack itemStack;
-
     private final int slot;
-
     private final boolean isDefault;
-
     private final ZInventoryCallback clickCallback;
 
     public ZInventoryItem(ItemStack itemStack, int slot, boolean isDefault, ZInventoryCallback zInventoryCallback) {

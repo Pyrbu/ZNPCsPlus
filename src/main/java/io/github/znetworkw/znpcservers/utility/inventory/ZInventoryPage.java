@@ -9,14 +9,10 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("deprecation")
 public abstract class ZInventoryPage {
     private final ZInventory zInventory;
-
     private final String pageName;
-
     private final int rows;
-
     private final List<ZInventoryItem> inventoryItems;
 
     public ZInventoryPage(ZInventory zInventory, String inventoryName, int rows) {

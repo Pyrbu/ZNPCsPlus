@@ -18,20 +18,13 @@ public enum TypeProperty {
     }
 
     public static TypeProperty forType(Class<?> primitiveType) {
-        if (primitiveType == String.class)
-            return STRING;
-        if (primitiveType == boolean.class)
-            return BOOLEAN;
-        if (primitiveType == int.class)
-            return INT;
-        if (primitiveType == double.class)
-            return DOUBLE;
-        if (primitiveType == float.class)
-            return FLOAT;
-        if (primitiveType == short.class)
-            return SHORT;
-        if (primitiveType == long.class)
-            return LONG;
+        if (primitiveType == String.class) return STRING;
+        if (primitiveType == boolean.class) return BOOLEAN;
+        if (primitiveType == int.class) return INT;
+        if (primitiveType == double.class) return DOUBLE;
+        if (primitiveType == float.class) return FLOAT;
+        if (primitiveType == short.class) return SHORT;
+        if (primitiveType == long.class) return LONG;
         return null;
     }
 

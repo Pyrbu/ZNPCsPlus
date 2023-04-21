@@ -7,9 +7,7 @@ import org.bukkit.inventory.Inventory;
 
 public class ZInventory {
     private final Player player;
-
     private ZInventoryPage page;
-
     private Inventory inventory;
 
     public ZInventory(Player player) {
@@ -32,12 +30,9 @@ public class ZInventory {
         this.page = page;
     }
 
-    @SuppressWarnings("deprecation")
     public Inventory build(ZInventoryPage page) {
-        if (page == null)
-            throw new IllegalStateException("page is null");
-        if (page.getRows() / 9 > 6)
-            throw new IllegalArgumentException(String.format("Unexpected rows size. Has %d, max %d", page.getRows(), 6));
+        if (page == null) throw new IllegalStateException("page is null");
+        if (page.getRows() / 9 > 6) throw new IllegalArgumentException(String.format("Unexpected rows size. Has %d, max %d", page.getRows(), 6));
         setCurrentPage(page);
         page.getInventoryItems().removeIf(zInventoryItem -> !zInventoryItem.isDefault());
         page.update();

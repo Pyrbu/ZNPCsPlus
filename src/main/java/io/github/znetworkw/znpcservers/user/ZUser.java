@@ -1,18 +1,17 @@
 package io.github.znetworkw.znpcservers.user;
 
 import com.mojang.authlib.GameProfile;
-import io.github.znetworkw.znpcservers.reflection.Reflections;
 import io.github.znetworkw.znpcservers.npc.NPC;
 import io.github.znetworkw.znpcservers.npc.NPCAction;
 import io.github.znetworkw.znpcservers.npc.event.ClickType;
 import io.github.znetworkw.znpcservers.npc.event.NPCInteractEvent;
+import io.github.znetworkw.znpcservers.reflection.Reflections;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
 import lol.pyr.znpcsplus.ZNPCsPlus;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -72,9 +71,9 @@ public class ZUser {
             }
             if (tries-- > 0) return;
             cancel();
-            player.kick(Component.text("[ZNPCsPlus]", NamedTextColor.RED).appendNewline()
-                    .append(Component.text("Couldn't inject interaction detector to channel", NamedTextColor.WHITE)).appendNewline()
-                    .append(Component.text("Please report this at https://github.com/Pyrbu/ZNPCsPlus", NamedTextColor.WHITE)));
+            player.kickPlayer(ChatColor.RED + "[ZNPCsPlus]\n" +
+                    ChatColor.WHITE + "Couldn't inject interaction detector to channel\n" +
+                    ChatColor.WHITE + "Please report this at https://github.com/Pyrbu/ZNPCsPlus");
             ZNPCsPlus.LOGGER.severe("Couldn't inject interaction detector to channel for player " + player.getName() + " (" + player.getUniqueId() + ")");
             ex.printStackTrace();
         }

@@ -6,7 +6,6 @@ import net.md_5.bungee.api.ChatColor;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-@SuppressWarnings("deprecation")
 public class RGBLine implements LineReplacer {
     public String make(String string) {
         String rgbString = string;

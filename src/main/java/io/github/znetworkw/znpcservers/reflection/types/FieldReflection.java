@@ -29,21 +29,27 @@ public class FieldReflection extends ReflectionLazyLoader<Field> {
         return field;
     }
 
-    public AsValueField asValueField() {
-        return new AsValueField(this, possibleClassNames);
+    public FieldValueReflection staticValueLoader() {
+        return new FieldValueReflection(this, possibleClassNames, null);
     }
 
-    private static class AsValueField extends ReflectionLazyLoader<Object> {
+    public FieldValueReflection valueLoader(Object obj) {
+        return new FieldValueReflection(this, possibleClassNames, obj);
+    }
+
+    private static class FieldValueReflection extends ReflectionLazyLoader<Object> {
+        private final Object obj;
         private final FieldReflection fieldReflection;
 
-        public AsValueField(FieldReflection fieldReflection, List<String> className) {
+        public FieldValueReflection(FieldReflection fieldReflection, List<String> className, Object obj) {
             super(className);
+            this.obj = obj;
             this.fieldReflection = fieldReflection;
         }
 
         protected Object load() throws IllegalAccessException, NoSuchFieldException {
-            Field field = this.fieldReflection.load();
-            return field.get(null);
+            Field field = this.fieldReflection.get();
+            return field.get(obj);
         }
     }
 }

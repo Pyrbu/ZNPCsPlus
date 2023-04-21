@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+@SuppressWarnings("unused")
 public class NPCInteractEvent extends Event {
     private static final HandlerList handlerList = new HandlerList();
     private final Player player;
