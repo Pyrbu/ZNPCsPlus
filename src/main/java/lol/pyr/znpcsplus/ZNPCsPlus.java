@@ -19,6 +19,8 @@ import io.github.znetworkw.znpcservers.utility.BungeeUtils;
 import io.github.znetworkw.znpcservers.utility.SchedulerUtils;
 import io.github.znetworkw.znpcservers.utility.itemstack.ItemStackSerializer;
 import io.github.znetworkw.znpcservers.utility.location.ZLocation;
+import lol.pyr.znpcsplus.updater.UpdateChecker;
+import lol.pyr.znpcsplus.updater.UpdateNotificationListener;
 import org.apache.commons.io.FileUtils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -118,6 +120,7 @@ public class ZNPCsPlus extends JavaPlugin {
         new NPCSaveTask(this, ConfigurationConstants.SAVE_DELAY);
         new PlayerListener(this);
         new InventoryListener(this);
+        if (ConfigurationConstants.CHECK_FOR_UPDATES) new UpdateNotificationListener(this, new UpdateChecker(this));
 
         enabled = true;
         serverLogger.info(ChatColor.WHITE + " * Loading complete! (" + (System.currentTimeMillis() - before) + "ms)");

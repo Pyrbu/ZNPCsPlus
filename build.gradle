@@ -12,6 +12,9 @@ repositories {
     maven {
         url "https://repo.extendedclip.com/content/repositories/placeholderapi/"
     }
+    maven {
+        url "https://jitpack.io/"
+    }
 }
 
 dependencies {
@@ -27,10 +30,11 @@ dependencies {
     implementation "commons-io:commons-io:2.11.0"
     implementation "com.google.code.gson:gson:2.10.1"
     implementation "org.bstats:bstats-bukkit:3.0.2"
+    implementation "com.github.robertlit:SpigotResourcesAPI:2.0"
 }
 
 group "lol.pyr"
-version "1.0.3"
+version "1.0.4"
 
 compileJava {
     options.release.set(17)
@@ -41,6 +45,7 @@ shadowJar {
     relocate "org.bstats", "lol.pyr.znpcsplus.lib.bstats"
     relocate "org.apache.commons", "lol.pyr.znpcsplus.lib.commons"
     relocate "com.google.gson", "lol.pyr.znpcsplus.lib.gson"
+    relocate "me.robertlit.spigotresources", "lol.pyr.znpcsplus.lib.spigotapi"
     minimize()
 }
 

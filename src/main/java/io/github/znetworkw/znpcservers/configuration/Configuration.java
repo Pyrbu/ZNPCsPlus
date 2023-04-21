@@ -39,6 +39,7 @@ public class Configuration {
         this.path = path;
         this.configurationValues = ConfigurationValue.VALUES_BY_NAME.get(name).stream().collect(Collectors.toMap((c) -> c, ConfigurationValue::getValue));
         this.onLoad();
+        this.save();
     }
 
     protected void onLoad() {
