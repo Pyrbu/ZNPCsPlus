@@ -16,7 +16,7 @@ Open an issue in the GitHub [issue tracker](https://github.com/Pyrbu/ZNPCsPlus/i
 ## BStats
 [![](https://bstats.org/signatures/bukkit/znpcsplus.svg)](https://bstats.org/plugin/bukkit/ZNPCsPlus/18244/)
 
-#### Like what you see? Want me to continue improving the project? Consider starring the project & leaving a positive review on [Spigot](https://www.spigotmc.org/resources/znpcsplus.109380/)!
+#### Like what you see? Want the project to continue improving? Consider starring the repository & leaving a positive review on [Spigot](https://www.spigotmc.org/resources/znpcsplus.109380/)!
 
 ## License
 Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
