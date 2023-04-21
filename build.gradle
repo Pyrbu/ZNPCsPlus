@@ -48,8 +48,11 @@ shadowJar {
     archiveClassifier.set ""
     relocate "org.bstats", "lol.pyr.znpcsplus.lib.bstats"
     relocate "org.apache.commons", "lol.pyr.znpcsplus.lib.commons"
-    relocate "com.google.gson", "lol.pyr.znpcsplus.lib.gson"
-    relocate "me.robertlit.spigotresources", "lol.pyr.znpcsplus.lib.spigotapi"
+    relocate "me.robertlit.spigotresources", "lol.pyr.znpcsplus.lib.spigotresources"
+    relocate "net.kyori", "lol.pyr.znpcsplus.lib.kyori"
+    relocate "org.checkerframework", "lol.pyr.znpcsplus.lib.checkerframework"
+    relocate "javax.annotation", "lol.pyr.znpcsplus.lib.javaxannotation"
+    relocate "com.google", "lol.pyr.znpcsplus.lib.google"
     minimize()
 }
 
