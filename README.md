@@ -4,6 +4,13 @@ gonalez/ZNetwork. This fork was made because the original maintainer of the plug
 [dropping support for the plugin](https://media.discordapp.net/attachments/1093914615873806477/1098409384855474237/znpc.png) 
 in the original project's [official discord server](https://discord.com/invite/RhNMH4T).
 
+### Dependencies
+- Java 17
+- Spigot 1.8 - 1.19.4
+- PlaceholderAPI (OPTIONAL)
+
+If you're using a minecraft version that rejects Java 17 use the `-DPaper.IgnoreJavaVersion=true` flag
+
 ## Why is it better?
 This fork makes several improvements over the original including:
 - More performance-conscious code
