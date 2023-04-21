@@ -52,6 +52,7 @@ public class NPCModel {
     }
 
     public UUID getUuid() {
+        if (this.uuid == null) this.uuid = UUID.randomUUID();
         return this.uuid;
     }
 
