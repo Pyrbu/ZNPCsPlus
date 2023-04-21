@@ -9,9 +9,10 @@ import java.util.*;
 @SuppressWarnings("unused")
 public class NPCModel {
     private int id;
+    private UUID uuid;
     private double hologramHeight;
     private String skin;
-    private String signature = "";
+    private String signature;
     private String pathName;
     private String glowName;
     private ConversationModel conversation;
@@ -24,14 +25,11 @@ public class NPCModel {
     private Map<String, String[]> customizationMap;
 
     public NPCModel(int id) {
-        this();
         this.id = id;
+        this.uuid = UUID.randomUUID();
         this.skin = "";
         this.signature = "";
         this.npcType = NPCType.PLAYER;
-    }
-
-    private NPCModel() {
         this.hologramLines = Collections.singletonList("/znpcs lines");
         this.clickActions = new ArrayList<>();
         this.npcEquip = new HashMap<>();
@@ -51,6 +49,14 @@ public class NPCModel {
     public NPCModel withId(int id) {
         setId(id);
         return this;
+    }
+
+    public UUID getUuid() {
+        return this.uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
     public double getHologramHeight() {

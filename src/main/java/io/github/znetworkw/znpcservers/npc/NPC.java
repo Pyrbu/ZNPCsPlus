@@ -44,6 +44,7 @@ public class NPC {
         this.hologram = new Hologram(this);
         this.npcName = NamingType.DEFAULT.resolve(this);
         this.npcSkin = NPCSkin.forValues(npcModel.getSkin(), npcModel.getSignature());
+        this.uuid = npcModel.getUuid();
         if (load)
             onLoad();
     }
@@ -70,7 +71,7 @@ public class NPC {
 
     public void onLoad() {
         if (NPC_MAP.containsKey(getNpcPojo().getId())) throw new IllegalStateException("npc with id " + getNpcPojo().getId() + " already exists.");
-        this.gameProfile = new GameProfile(UUID.randomUUID(), "[ZNPC] " + this.npcName);
+        this.gameProfile = new GameProfile(this.uuid, "[ZNPC] " + this.npcName);
         this.gameProfile.getProperties().put("textures", new Property("textures", this.npcPojo.getSkin(), this.npcPojo.getSignature()));
         changeType(this.npcPojo.getNpcType());
         updateProfile(this.gameProfile.getProperties());
@@ -200,7 +201,9 @@ public class NPC {
     }
 
     public synchronized void spawn(ZUser user) {
-        if (this.viewers.contains(user)) throw new IllegalStateException(user.getUUID().toString() + " is already a viewer.");
+        if (this.viewers.contains(user)) {
+            return;
+        }
         try {
             this.viewers.add(user);
             boolean npcIsPlayer = (this.npcPojo.getNpcType() == NPCType.PLAYER);
