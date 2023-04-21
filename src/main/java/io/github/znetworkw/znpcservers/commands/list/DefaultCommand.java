@@ -36,8 +36,12 @@ public class DefaultCommand extends Command {
     private static final Joiner SPACE_JOINER = Joiner.on(" ");
 
     private static final SkinFunction DO_APPLY_SKIN = (sender, npc, skin) -> NPCSkin.forName(skin, (values, ex) -> {
-        if (ex != null) throw new RuntimeException(ex);
+        if (ex != null) {
+            Configuration.MESSAGES.sendMessage(sender, ConfigurationValue.CANT_GET_SKIN, skin);
+            throw new RuntimeException(ex);
+        }
         npc.changeSkin(NPCSkin.forValues(values));
+        Configuration.MESSAGES.sendMessage(sender, ConfigurationValue.GET_SKIN);
     });
 
     public DefaultCommand() {

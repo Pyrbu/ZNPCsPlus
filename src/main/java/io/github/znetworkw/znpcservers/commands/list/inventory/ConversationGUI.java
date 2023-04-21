@@ -36,15 +36,47 @@ public class ConversationGUI extends ZInventory {
 
     @SuppressWarnings({"UnstableApiUsage", "deprecation"})
     static class MainPage extends ZInventoryPage {
+
+        int pageID = 1;
+
         public MainPage(ZInventory inventory) {
-            super(inventory, "Conversations", 5);
+            super(inventory, "Conversations", 6);
         }
 
         @Override
         public void update() {
-            for (int i = 0; i < ConfigurationConstants.NPC_CONVERSATIONS.size(); ++i) {
+
+            int size = ConfigurationConstants.NPC_CONVERSATIONS.size();
+
+            addItem(ItemStackBuilder.forMaterial(Material.BARRIER).setName(ChatColor.RED + "Close").build(), getRows() - 5, clickEvent -> this.getPlayer().closeInventory());
+
+            if (pageID > 1) {
+                addItem(ItemStackBuilder.forMaterial(Material.ARROW)
+                                .setName(ChatColor.GRAY + "Previous page")
+                                .build(),
+                        getRows() - 6,
+                        clickEvent -> {
+                            pageID -= 1;
+                            openInventory();
+                        });
+            }
+
+            if (size > 45 * pageID) {
+                addItem(ItemStackBuilder.forMaterial(Material.ARROW)
+                                .setName(ChatColor.GRAY + "Next page")
+                                .build(),
+                        getRows() - 4,
+                        clickEvent -> {
+                            pageID += 1;
+                            openInventory();
+                        });
+            }
+            int slots = (getRows() - 9) * pageID;
+            int min = Math.min(slots, size);
+
+            for (int i = slots - (getRows() - 9); i < min; ++i) {
                 Conversation conversation = ConfigurationConstants.NPC_CONVERSATIONS.get(i);
-                this.addItem(ItemStackBuilder.forMaterial(Material.PAPER).setName(ChatColor.GREEN + conversation.getName()).setLore("&7this conversation has &b" + conversation.getTexts().size() + " &7texts,", "&7it will activate when a player is on a &b" + conversation.getRadius() + "x" + conversation.getRadius() + " &7radius,", "&7or when a player interacts with an npc.", "&7when the conversation is finish, there is a &b" + conversation.getDelay() + "s &7delay to start again.", "&f&lUSES", " &bLeft-click &7to manage texts.", " &bRight-click &7to add a new text.", " &bQ &7to change the radius.", " &bMiddle-click &7to change the cooldown.").build(), i, clickEvent -> {
+                this.addItem(ItemStackBuilder.forMaterial(Material.PAPER).setName(ChatColor.GREEN + conversation.getName()).setLore("&7this conversation has &b" + conversation.getTexts().size() + " &7texts,", "&7it will activate when a player is on a &b" + conversation.getRadius() + "x" + conversation.getRadius() + " &7radius,", "&7or when a player interacts with an npc.", "&7when the conversation is finish, there is a &b" + conversation.getDelay() + "s &7delay to start again.", "&f&lUSES", " &bLeft-click &7to manage texts.", " &bRight-click &7to add a new text.", " &bQ &7to change the radius.", " &bMiddle-click &7to change the cooldown.").build(), i - ((getRows() - 9) * (pageID - 1)), clickEvent -> {
                     if (clickEvent.getClick() == ClickType.DROP) {
                         Utils.sendTitle(this.getPlayer(), "&b&lCHANGE RADIUS", "&7Type the new radius...");
                         EventService.addService(ZUser.find(this.getPlayer()), AsyncPlayerChatEvent.class).addConsumer(event -> {
@@ -96,21 +128,51 @@ public class ConversationGUI extends ZInventory {
             }
         }
 
+        @Override
+        public String getPageName() {
+            return super.getPageName() + " - " + pageID + "/" + (int) (Math.ceil((double) ConfigurationConstants.NPC_CONVERSATIONS.size() / (double) 45));
+        }
+
         static class ActionManagementPage extends ZInventoryPage {
             private final Conversation conversation;
             private final ConversationKey conversationKey;
 
+            int pageID = 1;
+
             public ActionManagementPage(ZInventory inventory, Conversation conversation, ConversationKey conversationKey) {
-                super(inventory, "Editing " + conversationKey.getTextFormatted(), 5);
+                super(inventory, "Editing " + conversationKey.getTextFormatted(), 6);
                 this.conversation = conversation;
                 this.conversationKey = conversationKey;
             }
 
             @Override
             public void update() {
-                for (int i = 0; i < this.conversationKey.getActions().size(); ++i) {
+                if (pageID > 1) {
+                    addItem(ItemStackBuilder.forMaterial(Material.ARROW)
+                                    .setName(ChatColor.GRAY + "Previous page")
+                                    .build(),
+                            getRows() - 6,
+                            clickEvent -> {
+                                pageID -= 1;
+                                openInventory();
+                            });
+                }
+                if (conversationKey.getActions().size() > 45 *pageID) {
+                    addItem(ItemStackBuilder.forMaterial(Material.ARROW)
+                                    .setName(ChatColor.GRAY + "Next page")
+                                    .build(),
+                            getRows() - 4,
+                            clickEvent -> {
+                                pageID += 1;
+                                openInventory();
+                            });
+                }
+                int slots = (getRows() - 9) * pageID;
+                int min = Math.min(slots, conversationKey.getActions().size());
+
+                for (int i = slots - (getRows() - 9); i < min; i++) {
                     NPCAction znpcAction = this.conversationKey.getActions().get(i);
-                    this.addItem(ItemStackBuilder.forMaterial(Material.ANVIL).setName(ChatColor.AQUA + znpcAction.getAction().substring(0, Math.min(znpcAction.getAction().length(), 24)) + "....").setLore("&7this action type is &b" + znpcAction.getActionType(), "&f&lUSES", " &bRight-click &7to remove text.").build(), i, clickEvent -> {
+                    this.addItem(ItemStackBuilder.forMaterial(Material.ANVIL).setName(ChatColor.AQUA + znpcAction.getAction().substring(0, Math.min(znpcAction.getAction().length(), 24)) + "....").setLore("&7this action type is &b" + znpcAction.getActionType(), "&f&lUSES", " &bRight-click &7to remove text.").build(), i - ((getRows() - 9) * (pageID - 1)), clickEvent -> {
                         if (clickEvent.isRightClick()) {
                             this.conversationKey.getActions().remove(znpcAction);
                             Configuration.MESSAGES.sendMessage(this.getPlayer(), ConfigurationValue.SUCCESS);
@@ -141,14 +203,39 @@ public class ConversationGUI extends ZInventory {
         static class EditConversationPage extends ZInventoryPage {
             private final Conversation conversation;
 
+            int pageID = 1;
+
             public EditConversationPage(ZInventory inventory, Conversation conversation) {
-                super(inventory, "Editing conversation " + conversation.getName(), 5);
+                super(inventory, "Editing conversation " + conversation.getName(), 6);
                 this.conversation = conversation;
             }
 
             @Override
             public void update() {
-                for (int i = 0; i < this.conversation.getTexts().size(); ++i) {
+                if (pageID > 1) {
+                    addItem(ItemStackBuilder.forMaterial(Material.ARROW)
+                                    .setName(ChatColor.GRAY + "Previous page")
+                                    .build(),
+                            getRows() - 6,
+                            clickEvent -> {
+                                pageID -= 1;
+                                openInventory();
+                            });
+                }
+                if (conversation.getTexts().size() > 45 * pageID) {
+                    addItem(ItemStackBuilder.forMaterial(Material.ARROW)
+                                    .setName(ChatColor.GRAY + "Next page")
+                                    .build(),
+                            getRows() - 4,
+                            clickEvent -> {
+                                pageID += 1;
+                                openInventory();
+                            });
+                }
+                int slots = (getRows() - 9) * pageID;
+                int min = Math.min(slots, conversation.getTexts().size());
+
+                for (int i = slots - (getRows() - 9); i < min; i++) {
                     ConversationKey conversationKey = this.conversation.getTexts().get(i);
                     this.addItem(ItemStackBuilder.forMaterial(Material.NAME_TAG).setName(ChatColor.AQUA + conversationKey.getTextFormatted() + "....").setLore("&7this conversation text has a delay of &b" + conversationKey.getDelay() + "s &7to be executed,", "&7the sound for the text is &b" + (conversationKey.getSoundName() == null ? "NONE" : conversationKey.getSoundName()) + "&7,", "&7before sending the text there is a delay of &b" + conversationKey.getDelay() + "s", "&7the index for the text is &b" + i + "&7,", "&7and the conversation has currently &b" + conversationKey.getActions().size() + " actions&7.", "&f&lUSES", " &bLeft-click &7to change the position.", " &bRight-click &7to remove text.", " &bLeft-Shift-click &7to change the sound.", " &bMiddle-click &7to change the delay.", " &bRight-Shift-click &7to edit the text.", " &bQ &7to manage actions.").build(), i, clickEvent -> {
                         if (clickEvent.getClick() == ClickType.SHIFT_LEFT) {
@@ -216,6 +303,11 @@ public class ConversationGUI extends ZInventory {
                         }
                     });
                 }
+            }
+
+            @Override
+            public String getPageName() {
+                return super.getPageName() + " - " + pageID + "/" + (int) (Math.ceil((double) conversation.getTexts().size() / (double) 45));
             }
         }
     }
