@@ -52,18 +52,17 @@ public class ZUser {
 
     private static class ChannelRegistrationFallbackTask extends BukkitRunnable {
         private final ZUser user;
-        private final Player player;
         private int tries = 5;
 
         private ChannelRegistrationFallbackTask(ZUser user) {
             this.user = user;
-            this.player = user.toPlayer();
         }
 
         @Override
         public void run() {
             Exception ex = user.tryRegisterChannel();
-            if (!player.isOnline() || ex == null) {
+            Player player = user.toPlayer();
+            if (player == null || !player.isOnline() || ex == null) {
                 cancel();
                 return;
             }
