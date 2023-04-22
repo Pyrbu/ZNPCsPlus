@@ -76,6 +76,7 @@ public class ZNPCsPlus extends JavaPlugin {
     public void onLoad() {
         PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
         PacketEvents.getAPI().getSettings().checkForUpdates(false);
+        PacketEvents.getAPI().load();
         LOGGER = getLogger();
         PLUGIN_FOLDER = getDataFolder();
         PATH_FOLDER = new File(PLUGIN_FOLDER, "paths");
