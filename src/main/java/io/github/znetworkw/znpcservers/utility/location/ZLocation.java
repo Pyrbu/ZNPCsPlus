@@ -4,6 +4,8 @@ import com.google.common.base.Preconditions;
 import com.google.gson.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 
 import java.lang.reflect.Type;
@@ -16,7 +18,6 @@ public class ZLocation {
     private final double z;
     private final float yaw;
     private final float pitch;
-    private Location bukkitLocation;
 
     public ZLocation(String worldName, double x, double y, double z, float yaw, float pitch) {
         this.worldName = worldName;
@@ -40,6 +41,10 @@ public class ZLocation {
         return this.worldName;
     }
 
+    public World getWorld() {
+        return Bukkit.getWorld(this.worldName);
+    }
+
     public double getX() {
         return this.x;
     }
@@ -60,15 +65,46 @@ public class ZLocation {
         return this.pitch;
     }
 
-    public Location bukkitLocation() {
-        if (this.bukkitLocation != null)
-            return this.bukkitLocation;
-        return this
-                .bukkitLocation = new Location(Bukkit.getWorld(this.worldName), this.x, this.y, this.z, this.yaw, this.pitch);
+    public Location toBukkitLocation() {
+        return new Location(getWorld(), this.x, this.y, this.z, this.yaw, this.pitch);
     }
 
     public Vector toVector() {
-        return bukkitLocation().toVector();
+        return new Vector(x, y, z);
+    }
+
+    private static final double _2PI = 2 * Math.PI;
+
+    public Location pointingTo(Location loc) {
+        return pointingTo(new ZLocation(loc)).toBukkitLocation();
+    }
+
+    public ZLocation pointingTo(ZLocation loc) {
+        /*
+         * Sin = Opp / Hyp
+         * Cos = Adj / Hyp
+         * Tan = Opp / Adj
+         *
+         * x = -Opp
+         * z = Adj
+         */
+        final double x = loc.getX() - this.x;
+        final double z = loc.getZ() - this.z;
+        final double y = loc.getY() - this.y;
+
+        if (x == 0 && z == 0) {
+            return new ZLocation(worldName, this.x, this.y, this.z, this.yaw, y > 0 ? -90 : 90);
+        }
+
+        double x2 = NumberConversions.square(x);
+        double z2 = NumberConversions.square(z);
+        double xz = Math.sqrt(x2 + z2);
+
+        double theta = Math.atan2(-x, z);
+        float yaw = (float) Math.toDegrees((theta + _2PI) % _2PI);
+        float pitch = (float) Math.toDegrees(Math.atan(-y / xz));
+
+        return new ZLocation(worldName, this.x, this.y, this.z, yaw, pitch);
     }
 
     static class ZLocationSerializer implements JsonSerializer<ZLocation>, JsonDeserializer<ZLocation> {

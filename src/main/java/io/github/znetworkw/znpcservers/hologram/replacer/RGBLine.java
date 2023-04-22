@@ -1,4 +1,4 @@
-package io.github.znetworkw.znpcservers.npc.hologram.replacer;
+package io.github.znetworkw.znpcservers.hologram.replacer;
 
 import io.github.znetworkw.znpcservers.configuration.ConfigurationConstants;
 import io.github.znetworkw.znpcservers.utility.Utils;

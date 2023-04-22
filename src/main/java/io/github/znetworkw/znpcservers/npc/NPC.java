@@ -5,10 +5,10 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import io.github.znetworkw.znpcservers.UnexpectedCallException;
-import io.github.znetworkw.znpcservers.reflection.Reflections;
+import io.github.znetworkw.znpcservers.hologram.Hologram;
+import io.github.znetworkw.znpcservers.nms.PacketCache;
 import io.github.znetworkw.znpcservers.npc.conversation.ConversationModel;
-import io.github.znetworkw.znpcservers.npc.hologram.Hologram;
-import io.github.znetworkw.znpcservers.npc.nms.PacketCache;
+import io.github.znetworkw.znpcservers.reflection.Reflections;
 import io.github.znetworkw.znpcservers.user.ZUser;
 import io.github.znetworkw.znpcservers.utility.Utils;
 import io.github.znetworkw.znpcservers.utility.location.ZLocation;
@@ -75,7 +75,7 @@ public class NPC {
         this.gameProfile.getProperties().put("textures", new Property("textures", this.npcPojo.getSkin(), this.npcPojo.getSignature()));
         changeType(this.npcPojo.getNpcType());
         updateProfile(this.gameProfile.getProperties());
-        setLocation(getNpcPojo().getLocation().bukkitLocation(), false);
+        setLocation(getNpcPojo().getLocation().toBukkitLocation(), false);
         this.hologram.createHologram();
         if (this.npcPojo.getPathName() != null)
             setPath(NPCPath.AbstractTypeWriter.find(this.npcPojo.getPathName()));
@@ -249,7 +249,7 @@ public class NPC {
     public void lookAt(ZUser player, Location location, boolean rotation) {
         long lastMoveNanos = System.nanoTime() - this.lastMove;
         if (this.lastMove > 1L && lastMoveNanos < 1000000000L) return;
-        Location direction = rotation ? location : this.npcPojo.getLocation().bukkitLocation().clone().setDirection(location.clone().subtract(this.npcPojo.getLocation().bukkitLocation().clone()).toVector());
+        Location direction = rotation ? location : this.npcPojo.getLocation().pointingTo(location);
         try {
             Object lookPacket = Reflections.PACKET_PLAY_OUT_ENTITY_LOOK_CONSTRUCTOR.get().newInstance(this.entityID, (byte) (int) (direction.getYaw() * 256.0F / 360.0F), (byte) (int) (direction.getPitch() * 256.0F / 360.0F), true);
             Object headRotationPacket = Reflections.PACKET_PLAY_OUT_ENTITY_HEAD_ROTATION_CONSTRUCTOR.get().newInstance(this.nmsEntity, (byte) (int) (direction.getYaw() * 256.0F / 360.0F));
@@ -314,7 +314,7 @@ public class NPC {
     }
 
     public Location getLocation() {
-        if (this.npcPath != null && this.npcPath.getLocation() != null) return this.npcPath.getLocation().bukkitLocation();
-        return this.npcPojo.getLocation().bukkitLocation();
+        if (this.npcPath != null && this.npcPath.getLocation() != null) return this.npcPath.getLocation().toBukkitLocation();
+        return this.npcPojo.getLocation().toBukkitLocation();
     }
 }

@@ -252,7 +252,7 @@ public interface NPCPath {
                     setLocation(location);
                     ZLocation next = getPath().getLocationList().get(getNextLocation());
                     Vector vector = next.toVector().add(new Vector(0.0D, location.getY() - next.getY(), 0.0D));
-                    Location direction = next.bukkitLocation().clone().setDirection(location.toVector().subtract(vector)
+                    Location direction = next.toBukkitLocation().clone().setDirection(location.toVector().subtract(vector)
                             .multiply(new Vector(-1, 0, -1)));
                     getNpc().setLocation(direction, false);
                     getNpc().lookAt(null, direction, true);

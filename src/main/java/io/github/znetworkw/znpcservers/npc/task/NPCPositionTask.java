@@ -19,6 +19,7 @@ public class NPCPositionTask extends BukkitRunnable {
                 npc.getNpcPath().handle();
             }
             else if (FunctionFactory.isTrue(npc, "look")) for (Player player : Bukkit.getOnlinePlayers()) {
+                if (!player.getWorld().equals(npc.getLocation().getWorld())) continue;
                 ZUser user = ZUser.find(player);
                 if (npc.getViewers().contains(user)) npc.lookAt(user, player.getLocation(), false);
             }

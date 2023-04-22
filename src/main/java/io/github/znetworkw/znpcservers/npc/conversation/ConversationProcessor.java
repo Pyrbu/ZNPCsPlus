@@ -3,7 +3,7 @@ package io.github.znetworkw.znpcservers.npc.conversation;
 import lol.pyr.znpcsplus.ZNPCsPlus;
 import io.github.znetworkw.znpcservers.configuration.ConfigurationConstants;
 import io.github.znetworkw.znpcservers.npc.NPC;
-import io.github.znetworkw.znpcservers.npc.hologram.replacer.LineReplacer;
+import io.github.znetworkw.znpcservers.hologram.replacer.LineReplacer;
 import io.github.znetworkw.znpcservers.user.ZUser;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;

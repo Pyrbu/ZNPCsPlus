@@ -1,4 +1,4 @@
-package io.github.znetworkw.znpcservers.npc.hologram;
+package io.github.znetworkw.znpcservers.hologram;
 
 import io.github.znetworkw.znpcservers.UnexpectedCallException;
 import io.github.znetworkw.znpcservers.reflection.Reflections;
@@ -6,7 +6,7 @@ import io.github.znetworkw.znpcservers.configuration.Configuration;
 import io.github.znetworkw.znpcservers.configuration.ConfigurationConstants;
 import io.github.znetworkw.znpcservers.configuration.ConfigurationValue;
 import io.github.znetworkw.znpcservers.npc.NPC;
-import io.github.znetworkw.znpcservers.npc.hologram.replacer.LineReplacer;
+import io.github.znetworkw.znpcservers.hologram.replacer.LineReplacer;
 import io.github.znetworkw.znpcservers.user.ZUser;
 import io.github.znetworkw.znpcservers.utility.Utils;
 import org.bukkit.Location;

@@ -1,4 +1,4 @@
-package io.github.znetworkw.znpcservers.npc.nms;
+package io.github.znetworkw.znpcservers.nms;
 
 import io.github.znetworkw.znpcservers.reflection.Reflections;
 import io.github.znetworkw.znpcservers.npc.NPC;

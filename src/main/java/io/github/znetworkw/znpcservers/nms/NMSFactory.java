@@ -1,4 +1,4 @@
-package io.github.znetworkw.znpcservers.npc.nms;
+package io.github.znetworkw.znpcservers.nms;
 
 import com.google.common.collect.ImmutableSet;
 import io.github.znetworkw.znpcservers.utility.Utils;

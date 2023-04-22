@@ -1,4 +1,4 @@
-package io.github.znetworkw.znpcservers.npc.nms;
+package io.github.znetworkw.znpcservers.nms;
 
 import com.mojang.authlib.GameProfile;
 import io.github.znetworkw.znpcservers.reflection.Reflections;

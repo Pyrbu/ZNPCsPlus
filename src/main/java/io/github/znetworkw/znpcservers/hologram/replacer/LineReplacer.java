@@ -1,4 +1,4 @@
-package io.github.znetworkw.znpcservers.npc.hologram.replacer;
+package io.github.znetworkw.znpcservers.hologram.replacer;
 
 import com.google.common.collect.ImmutableList;
 import io.github.znetworkw.znpcservers.user.ZUser;
