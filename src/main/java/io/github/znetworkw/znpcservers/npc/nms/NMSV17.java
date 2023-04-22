@@ -1,4 +1,4 @@
-package io.github.znetworkw.znpcservers.npc.packet;
+package io.github.znetworkw.znpcservers.npc.nms;
 
 import com.mojang.authlib.GameProfile;
 import io.github.znetworkw.znpcservers.reflection.Reflections;
@@ -6,7 +6,7 @@ import io.github.znetworkw.znpcservers.npc.NPC;
 import io.github.znetworkw.znpcservers.utility.Utils;
 import org.bukkit.Bukkit;
 
-public class PacketV17 extends PacketV16 {
+public class NMSV17 extends NMSV16 {
     public int version() {
         return 17;
     }

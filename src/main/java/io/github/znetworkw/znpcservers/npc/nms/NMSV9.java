@@ -1,4 +1,4 @@
-package io.github.znetworkw.znpcservers.npc.packet;
+package io.github.znetworkw.znpcservers.npc.nms;
 
 import com.google.common.collect.ImmutableList;
 import io.github.znetworkw.znpcservers.reflection.Reflections;
@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
 
-public class PacketV9 extends PacketV8 {
+public class NMSV9 extends NMSV8 {
     public int version() {
         return 9;
     }

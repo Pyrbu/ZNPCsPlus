@@ -1,4 +1,4 @@
-package io.github.znetworkw.znpcservers.npc.packet;
+package io.github.znetworkw.znpcservers.npc.nms;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.authlib.GameProfile;
@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Collection;
 import java.util.Collections;
 
-public interface Packet {
+public interface NMS {
     int version();
 
     @PacketValue(keyName = "playerPacket")

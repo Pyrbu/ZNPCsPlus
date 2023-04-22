@@ -1,4 +1,4 @@
-package io.github.znetworkw.znpcservers.npc.packet;
+package io.github.znetworkw.znpcservers.npc.nms;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -16,7 +16,7 @@ public class PacketCache {
 
     static {
         ImmutableMap.Builder<Method, PacketValue> methodPacketValueBuilder = ImmutableMap.builder();
-        for (Method method : Packet.class.getMethods()) {
+        for (Method method : NMS.class.getMethods()) {
             if (method.isAnnotationPresent(PacketValue.class))
                 methodPacketValueBuilder.put(method, method.getAnnotation(PacketValue.class));
         }
@@ -25,26 +25,26 @@ public class PacketCache {
 
     private final Map<String, Object> packetResultCache = new ConcurrentHashMap<>();
 
-    private final Packet proxyInstance;
+    private final NMS nms;
 
-    public PacketCache(Packet packet) {
-        this.proxyInstance = newProxyInstance(packet);
+    public PacketCache(NMS NMS) {
+        this.nms = newNMSInstance(NMS);
     }
 
     public PacketCache() {
-        this(PacketFactory.PACKET_FOR_CURRENT_VERSION);
+        this(NMSFactory.NMS_FOR_CURRENT_VERSION);
     }
 
-    public Packet getProxyInstance() {
-        return this.proxyInstance;
+    public NMS getNms() {
+        return this.nms;
     }
 
-    protected Packet newProxyInstance(Packet packet) {
-        return (Packet) Proxy.newProxyInstance(packet
-                .getClass().getClassLoader(), new Class[]{Packet.class}, new PacketHandler(this, packet));
+    protected NMS newNMSInstance(NMS NMS) {
+        return (NMS) Proxy.newProxyInstance(NMS
+                .getClass().getClassLoader(), new Class[]{NMS.class}, new PacketHandler(this, NMS));
     }
 
-    private Object getOrCache(Packet instance, Method method, Object[] args) {
+    private Object getOrCache(NMS instance, Method method, Object[] args) {
         if (!VALUE_LOOKUP_BY_NAME.containsKey(method))
             throw new IllegalStateException("value not found for method: " + method.getName());
         PacketValue packetValue = VALUE_LOOKUP_BY_NAME.get(method);
@@ -73,9 +73,9 @@ public class PacketCache {
     private static class PacketHandler implements InvocationHandler {
         private final PacketCache packetCache;
 
-        private final Packet packets;
+        private final NMS packets;
 
-        public PacketHandler(PacketCache packetCache, Packet packets) {
+        public PacketHandler(PacketCache packetCache, NMS packets) {
             this.packetCache = packetCache;
             this.packets = packets;
         }

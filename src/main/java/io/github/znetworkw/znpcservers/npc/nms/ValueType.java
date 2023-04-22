@@ -1,4 +1,4 @@
-package io.github.znetworkw.znpcservers.npc.packet;
+package io.github.znetworkw.znpcservers.npc.nms;
 
 import java.util.Arrays;
 

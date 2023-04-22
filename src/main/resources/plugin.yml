@@ -3,5 +3,13 @@ main: lol.pyr.znpcsplus.ZNPCsPlus
 load: POSTWORLD
 version: ${version}
 api-version: 1.13
-softdepend: [PlaceholderAPI, ServersNPC]
+softdepend:
+  - PlaceholderAPI
+  - ServersNPC
+  - ProtocolLib
+  - ProtocolSupport
+  - ViaVersion
+  - ViaBackwards
+  - ViaRewind
+  - Geyser-Spigot
 authors: [Gonzalez (g0b#3830), Pyr (Pyr#6969)]

@@ -8,7 +8,7 @@ import io.github.znetworkw.znpcservers.UnexpectedCallException;
 import io.github.znetworkw.znpcservers.reflection.Reflections;
 import io.github.znetworkw.znpcservers.npc.conversation.ConversationModel;
 import io.github.znetworkw.znpcservers.npc.hologram.Hologram;
-import io.github.znetworkw.znpcservers.npc.packet.PacketCache;
+import io.github.znetworkw.znpcservers.npc.nms.PacketCache;
 import io.github.znetworkw.znpcservers.user.ZUser;
 import io.github.znetworkw.znpcservers.utility.Utils;
 import io.github.znetworkw.znpcservers.utility.location.ZLocation;
@@ -176,7 +176,7 @@ public class NPC {
         try {
             Object nmsWorld = Reflections.GET_HANDLE_WORLD_METHOD.get().invoke(getLocation().getWorld());
             boolean isPlayer = (npcType == NPCType.PLAYER);
-            this.nmsEntity = isPlayer ? this.packets.getProxyInstance().getPlayerPacket(nmsWorld, this.gameProfile) : (Utils.versionNewer(14) ? npcType.getConstructor().newInstance(npcType.getNmsEntityType(), nmsWorld) : npcType.getConstructor().newInstance(nmsWorld));
+            this.nmsEntity = isPlayer ? this.packets.getNms().getPlayerPacket(nmsWorld, this.gameProfile) : (Utils.versionNewer(14) ? npcType.getConstructor().newInstance(npcType.getNmsEntityType(), nmsWorld) : npcType.getConstructor().newInstance(nmsWorld));
             this.bukkitEntity = Reflections.GET_BUKKIT_ENTITY_METHOD.get().invoke(this.nmsEntity);
             this.uuid = (UUID) Reflections.GET_UNIQUE_ID_METHOD.get().invoke(this.nmsEntity, new Object[0]);
             if (isPlayer) {
@@ -193,7 +193,7 @@ public class NPC {
             this.packets.flushCache("spawnPacket", "removeTab");
             this.entityID = (Integer) Reflections.GET_ENTITY_ID.get().invoke(this.nmsEntity, new Object[0]);
             FunctionFactory.findFunctionsForNpc(this).forEach(function -> function.resolve(this));
-            getPackets().getProxyInstance().update(this.packets);
+            getPackets().getNms().update(this.packets);
             this.hologram.createHologram();
         } catch (ReflectiveOperationException operationException) {
             throw new UnexpectedCallException(operationException);
@@ -208,20 +208,20 @@ public class NPC {
             this.viewers.add(user);
             boolean npcIsPlayer = (this.npcPojo.getNpcType() == NPCType.PLAYER);
             if (FunctionFactory.isTrue(this, "glow") || npcIsPlayer) {
-                ImmutableList<Object> scoreboardPackets = this.packets.getProxyInstance().updateScoreboard(this);
+                ImmutableList<Object> scoreboardPackets = this.packets.getNms().updateScoreboard(this);
                 scoreboardPackets.forEach(p -> Utils.sendPackets(user, p));
             }
             if (npcIsPlayer) {
                 if (FunctionFactory.isTrue(this, "mirror")) updateProfile(user.getGameProfile().getProperties());
                 Utils.sendPackets(user, this.tabConstructor, this.updateTabConstructor);
             }
-            Utils.sendPackets(user, this.packets.getProxyInstance().getSpawnPacket(this.nmsEntity, npcIsPlayer));
+            Utils.sendPackets(user, this.packets.getNms().getSpawnPacket(this.nmsEntity, npcIsPlayer));
             if (FunctionFactory.isTrue(this, "holo")) this.hologram.spawn(user);
             updateMetadata(Collections.singleton(user));
             sendEquipPackets(user);
             lookAt(user, getLocation(), true);
             if (npcIsPlayer) {
-                Object removeTabPacket = this.packets.getProxyInstance().getTabRemovePacket(this.nmsEntity);
+                Object removeTabPacket = this.packets.getNms().getTabRemovePacket(this.nmsEntity);
                 ZNPCsPlus.SCHEDULER.scheduleSyncDelayedTask(() -> Utils.sendPackets(user, removeTabPacket, this.updateTabConstructor), 60);
             }
         } catch (ReflectiveOperationException operationException) {
@@ -238,9 +238,9 @@ public class NPC {
 
     private void handleDelete(ZUser user) {
         try {
-            if (this.npcPojo.getNpcType() == NPCType.PLAYER) this.packets.getProxyInstance().getTabRemovePacket(this.nmsEntity);
+            if (this.npcPojo.getNpcType() == NPCType.PLAYER) this.packets.getNms().getTabRemovePacket(this.nmsEntity);
             this.hologram.delete(user);
-            Utils.sendPackets(user, this.packets.getProxyInstance().getDestroyPacket(this.entityID));
+            Utils.sendPackets(user, this.packets.getNms().getDestroyPacket(this.entityID));
         } catch (ReflectiveOperationException operationException) {
             throw new UnexpectedCallException(operationException);
         }
@@ -267,7 +267,7 @@ public class NPC {
 
     protected void updateMetadata(Iterable<ZUser> users) {
         try {
-            Object metaData = this.packets.getProxyInstance().getMetadataPacket(this.entityID, this.nmsEntity);
+            Object metaData = this.packets.getNms().getMetadataPacket(this.entityID, this.nmsEntity);
             for (ZUser user : users) Utils.sendPackets(user, metaData);
         } catch (ReflectiveOperationException operationException) {
             operationException.getCause().printStackTrace();
@@ -290,7 +290,7 @@ public class NPC {
     public void sendEquipPackets(ZUser zUser) {
         if (this.npcPojo.getNpcEquip().isEmpty()) return;
         try {
-            ImmutableList<Object> equipPackets = this.packets.getProxyInstance().getEquipPackets(this);
+            ImmutableList<Object> equipPackets = this.packets.getNms().getEquipPackets(this);
             equipPackets.forEach(o -> Utils.sendPackets(zUser, o));
         } catch (ReflectiveOperationException operationException) {
             throw new UnexpectedCallException(operationException.getCause());
@@ -314,7 +314,7 @@ public class NPC {
     }
 
     public Location getLocation() {
-        if (this.npcPath != null && this.npcPath.getLocation() != null) return  this.npcPath.getLocation().bukkitLocation();
+        if (this.npcPath != null && this.npcPath.getLocation() != null) return this.npcPath.getLocation().bukkitLocation();
         return this.npcPojo.getLocation().bukkitLocation();
     }
 }

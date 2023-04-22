@@ -16,6 +16,9 @@ repositories {
         url "https://repo.extendedclip.com/content/repositories/placeholderapi/"
     }
     maven {
+        url "https://repo.codemc.io/repository/maven-snapshots/"
+    }
+    maven {
         url "https://jitpack.io/"
     }
 }
@@ -24,8 +27,6 @@ dependencies {
     compileOnly "org.spigotmc:spigot-api:1.19.4-R0.1-SNAPSHOT"
     compileOnly "me.clip:placeholderapi:2.11.1"
 
-    //noinspection GradlePackageUpdate
-    compileOnly "io.netty:netty-all:4.1.87.Final"
     compileOnly "com.mojang:authlib:3.4.40"
     compileOnly "com.mojang:datafixerupper:6.0.8"
 
@@ -35,6 +36,7 @@ dependencies {
     implementation "org.bstats:bstats-bukkit:3.0.2"
     implementation "com.github.robertlit:SpigotResourcesAPI:2.0"
     implementation "net.kyori:adventure-platform-bukkit:4.3.0"
+    implementation "com.github.retrooper.packetevents:spigot:2.0.0-SNAPSHOT"
 }
 
 group "lol.pyr"
@@ -53,6 +55,7 @@ shadowJar {
     relocate "org.checkerframework", "lol.pyr.znpcsplus.lib.checkerframework"
     relocate "javax.annotation", "lol.pyr.znpcsplus.lib.javaxannotation"
     relocate "com.google", "lol.pyr.znpcsplus.lib.google"
+    relocate "com.github.retrooper.packetevents", "lol.pyr.znpcsplus.lib.packetevents"
     minimize()
 }
 

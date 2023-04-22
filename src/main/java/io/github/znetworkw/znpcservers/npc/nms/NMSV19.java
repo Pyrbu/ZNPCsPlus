@@ -1,10 +1,10 @@
-package io.github.znetworkw.znpcservers.npc.packet;
+package io.github.znetworkw.znpcservers.npc.nms;
 
 import com.mojang.authlib.GameProfile;
 import io.github.znetworkw.znpcservers.reflection.Reflections;
 import org.bukkit.Bukkit;
 
-public class PacketV19 extends PacketV18 {
+public class NMSV19 extends NMSV18 {
     public int version() {
         return 19;
     }

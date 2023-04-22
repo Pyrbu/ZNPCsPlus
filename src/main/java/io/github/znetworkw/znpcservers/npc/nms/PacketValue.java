@@ -1,4 +1,4 @@
-package io.github.znetworkw.znpcservers.npc.packet;
+package io.github.znetworkw.znpcservers.npc.nms;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
