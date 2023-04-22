@@ -39,8 +39,13 @@ public final class Reflections {
     public static final Class<?> ENTITY_LIVING = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withClassName("EntityLiving")).get();
 
-    public static final Class<?> ENTITY_PLAYER_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.SERVER_LEVEL)
-            .withClassName("EntityPlayer")).get();
+    public static final Class<?> ENTITY_ALLAY_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("animal.allay")
+            .withClassName("Allay")).get();
+
+    public static final Class<?> ENTITY_AXOLOTL_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("animal.axolotl")
+            .withClassName("Axolotl")).get();
 
     public static final Class<?> ENTITY_ARMOR_STAND_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("decoration")
@@ -50,9 +55,17 @@ public final class Reflections {
             .withSubClass("ambient")
             .withClassName("EntityBat")).get();
 
+    public static final Class<?> ENTITY_BEE_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("animal")
+            .withClassName("EntityBee")).get();
+
     public static final Class<?> ENTITY_BLAZE_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("monster")
             .withClassName("EntityBlaze")).get();
+
+    public static final Class<?> ENTITY_CAT_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("animal")
+            .withClassName("EntityCat")).get();
 
     public static final Class<?> ENTITY_CAVE_SPIDER_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("monster")
@@ -62,6 +75,10 @@ public final class Reflections {
             .withSubClass("animal")
             .withClassName("EntityChicken")).get();
 
+    public static final Class<?> ENTITY_COD_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("animal")
+            .withClassName("EntityCod")).get();
+
     public static final Class<?> ENTITY_COW_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("animal")
             .withClassName("EntityCow")).get();
@@ -69,6 +86,22 @@ public final class Reflections {
     public static final Class<?> ENTITY_CREEPER_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("monster")
             .withClassName("EntityCreeper")).get();
+
+    public static final Class<?> ENTITY_DOLPHIN_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("animal")
+            .withClassName("EntityDolphin")).get();
+
+    public static final Class<?> ENTITY_DONKEY_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("animal.horse")
+            .withClassName("EntityHorseDonkey")).get();
+
+    public static final Class<?> ENTITY_DROWNED_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("monster")
+            .withClassName("EntityDrowned")).get();
+
+    public static final Class<?> ENTITY_ELDER_GUARDIAN_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("monster")
+            .withClassName("EntityGuardianElder")).get();
 
     public static final Class<?> ENTITY_ENDER_DRAGON_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("boss.enderdragon")
@@ -78,25 +111,36 @@ public final class Reflections {
             .withSubClass("monster")
             .withClassName("EntityEnderman")).get();
 
-    public static final Class<?> ENTITY_HUMAN_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
-            .withSubClass("player")
-            .withClassName("EntityHuman")).get();
-
     public static final Class<?> ENTITY_ENDERMITE_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("monster")
             .withClassName("EntityEndermite")).get();
+
+    public static final Class<?> ENTITY_EVOKER_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("monster")
+            .withClassName("EntityEvoker")).get();
+
+    public static final Class<?> ENTITY_FOX_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("animal")
+            .withClassName("EntityFox")).get();
+
+    public static final Class<?> ENTITY_FROG_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("animal.frog")
+            .withClassName("Frog")).get();
 
     public static final Class<?> ENTITY_GHAST_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("monster")
             .withClassName("EntityGhast")).get();
 
-    public static final Class<?> ENTITY_IRON_GOLEM_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
-            .withSubClass("animal")
-            .withClassName("EntityIronGolem")).get();
-
     public static final Class<?> ENTITY_GIANT_ZOMBIE_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("monster")
             .withClassName("EntityGiantZombie")).get();
+
+    public static final Class<?> ENTITY_GLOW_SQUID_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withClassName("GlowSquid")).get();
+
+    public static final Class<?> ENTITY_GOAT_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("animal.goat")
+            .withClassName("Goat")).get();
 
     public static final Class<?> ENTITY_GUARDIAN_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("monster")
@@ -106,10 +150,25 @@ public final class Reflections {
             .withSubClass("animal.horse")
             .withClassName("EntityHorse")).get();
 
+    public static final Class<?> ENTITY_HOGLIN_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("monster.hoglin")
+            .withClassName("EntityHoglin")).get();
+
+    public static final Class<?> ENTITY_HUSK_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("monster")
+            .withClassName("EntityZombieHusk")).get();
+
+    public static final Class<?> ENTITY_ILLUSIONER_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("monster")
+            .withClassName("EntityIllagerIllusioner")).get();
+
+    public static final Class<?> ENTITY_IRON_GOLEM_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("animal")
+            .withClassName("EntityIronGolem")).get();
+
     public static final Class<?> ENTITY_LLAMA_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("animal.horse")
-            .withClassName("EntityLlama")
-            .setStrict(Utils.versionNewer(11))).get();
+            .withClassName("EntityLlama")).get();
 
     public static final Class<?> ENTITY_MAGMA_CUBE_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("monster")
@@ -119,61 +178,72 @@ public final class Reflections {
             .withSubClass("animal")
             .withClassName("EntityMushroomCow")).get();
 
+    public static final Class<?> ENTITY_MULE_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("animal.horse")
+            .withClassName("EntityHorseMule")).get();
+
     public static final Class<?> ENTITY_OCELOT_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("animal")
             .withClassName("EntityOcelot")).get();
 
-    public static final Class<?> ENTITY_TURTLE = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+    public static final Class<?> ENTITY_PANDA_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("animal")
-            .withClassName("EntityTurtle")
-            .setStrict(Utils.versionNewer(13))).get();
-
-    public static final Class<?> ENTITY_WARDEN = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
-            .withSubClass("monster.warden")
-            .withClassName("EntityWarden")
-            .withClassName("Warden")
-            .setStrict(Utils.versionNewer(19))).get();
-
-    public static final Class<?> ENTITY_BEE_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
-            .withSubClass("animal")
-            .withClassName("EntityBee")
-            .setStrict(Utils.versionNewer(15))).get();
+            .withClassName("EntityPanda")).get();
 
     public static final Class<?> ENTITY_PARROT_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("animal")
-            .withClassName("EntityParrot")
-            .setStrict(Utils.versionNewer(12))).get();
+            .withClassName("EntityParrot")).get();
+
+    public static final Class<?> ENTITY_PHANTOM_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("monster")
+            .withClassName("EntityPhantom")).get();
 
     public static final Class<?> ENTITY_PIG_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("animal")
             .withClassName("EntityPig")).get();
 
+    public static final Class<?> ENTITY_PIGLIN_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("monster.piglin")
+            .withClassName("EntityPiglin")).get();
+
+    public static final Class<?> ENTITY_PIGLIN_BRUTE_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("monster.piglin")
+            .withClassName("EntityPiglinBrute")).get();
+
+    public static final Class<?> ENTITY_PILLAGER_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("monster")
+            .withClassName("EntityPillager")).get();
+
+    public static final Class<?> ENTITY_PLAYER_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.SERVER_LEVEL)
+            .withClassName("EntityPlayer")).get();
+
+    public static final Class<?> ENTITY_POLAR_BEAR_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("animal")
+            .withClassName("EntityPolarBear")).get();
+
+    public static final Class<?> ENTITY_PUFFERFISH_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("animal")
+            .withClassName("EntityPufferFish")).get();
+
     public static final Class<?> ENTITY_RABBIT_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("animal")
             .withClassName("EntityRabbit")).get();
 
-    public static final Class<?> ENTITY_POLAR_BEAR_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
-            .withSubClass("animal")
-            .withClassName("EntityPolarBear")
-            .setStrict(Utils.versionNewer(10))).get();
+    public static final Class<?> ENTITY_RAVAGER_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("monster")
+            .withClassName("EntityRavager")).get();
 
-    public static final Class<?> ENTITY_PANDA_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+    public static final Class<?> ENTITY_SALMON_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("animal")
-            .withClassName("EntityPanda")
-            .setStrict(Utils.versionNewer(14))).get();
+            .withClassName("EntitySalmon")).get();
 
     public static final Class<?> ENTITY_SHEEP_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("animal")
             .withClassName("EntitySheep")).get();
 
-    public static final Class<?> ENTITY_SNOWMAN_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
-            .withSubClass("animal")
-            .withClassName("EntitySnowman")).get();
-
     public static final Class<?> ENTITY_SHULKER_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("monster")
-            .withClassName("EntityShulker")
-            .setStrict(Utils.versionNewer(9))).get();
+            .withClassName("EntityShulker")).get();
 
     public static final Class<?> ENTITY_SILVERFISH_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("monster")
@@ -183,9 +253,18 @@ public final class Reflections {
             .withSubClass("monster")
             .withClassName("EntitySkeleton")).get();
 
+    public static final Class<?> ENTITY_SKELETON_HORSE_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("animal.horse")
+            .withClassName("EntityHorseSkeleton")).get();
+
     public static final Class<?> ENTITY_SLIME_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("monster")
             .withClassName("EntitySlime")).get();
+
+    public static final Class<?> ENTITY_SNOWMAN_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("animal")
+            .withClassName("EntitySnowman")).get();
+
 
     public static final Class<?> ENTITY_SPIDER_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("monster")
@@ -195,9 +274,50 @@ public final class Reflections {
             .withSubClass("animal")
             .withClassName("EntitySquid")).get();
 
+    public static final Class<?> ENTITY_STRAY_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("monster")
+            .withClassName("EntitySkeletonStray")).get();
+
+    public static final Class<?> ENTITY_STRIDER_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("monster")
+            .withClassName("EntityStrider")).get();
+
+    public static final Class<?> ENTITY_TADPOLE_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("animal.frog")
+            .withClassName("Tadpole")).get();
+
+    public static final Class<?> ENTITY_TRADER_LLAMA_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("animal.horse")
+            .withClassName("EntityLlamaTrader")).get();
+
+    public static final Class<?> ENTITY_TROPICAL_FISH_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("animal")
+            .withClassName("EntityTropicalFish")).get();
+
+    public static final Class<?> ENTITY_TURTLE = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("animal")
+            .withClassName("EntityTurtle")).get();
+
+    public static final Class<?> ENTITY_VEX_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("monster")
+            .withClassName("EntityVex")).get();
+
     public static final Class<?> ENTITY_VILLAGER_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("npc")
             .withClassName("EntityVillager")).get();
+
+    public static final Class<?> ENTITY_VINDICATOR_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("monster")
+            .withClassName("EntityVindicator")).get();
+
+    public static final Class<?> ENTITY_WANDERING_TRADER_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("npc")
+            .withClassName("EntityVillagerTrader")).get();
+
+    public static final Class<?> ENTITY_WARDEN = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("monster.warden")
+            .withClassName("EntityWarden")
+            .withClassName("Warden")).get();
 
     public static final Class<?> ENTITY_WITCH_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("monster")
@@ -207,31 +327,40 @@ public final class Reflections {
             .withSubClass("boss.wither")
             .withClassName("EntityWither")).get();
 
-    public static final Class<?> ENTITY_ZOMBIE_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+    public static final Class<?> ENTITY_WITHER_SKELETON_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("monster")
-            .withClassName("EntityZombie")).get();
+            .withClassName("EntitySkeletonWither")).get();
 
     public static final Class<?> ENTITY_WOLF_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("animal")
             .withClassName("EntityWolf")).get();
 
-    public static final Class<?> ENTITY_AXOLOTL_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
-            .withSubClass("animal.axolotl")
-            .withClassName("Axolotl")
-            .setStrict(Utils.versionNewer(17))).get();
+    public static final Class<?> ENTITY_ZOGLIN_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("monster")
+            .withClassName("EntityZoglin")).get();
 
-    public static final Class<?> ENTITY_GOAT_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
-            .withSubClass("animal.goat")
-            .withClassName("Goat")
-            .setStrict(Utils.versionNewer(17))).get();
+    public static final Class<?> ENTITY_ZOMBIE_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("monster")
+            .withClassName("EntityZombie")).get();
 
-    public static final Class<?> ENTITY_FOX_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
-            .withSubClass("animal")
-            .withClassName("EntityFox")
-            .setStrict(Utils.versionNewer(14))).get();
+    public static final Class<?> ENTITY_ZOMBIE_HORSE_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("animal.horse")
+            .withClassName("EntityHorseZombie")).get();
+
+    public static final Class<?> ENTITY_ZOMBIE_VILLAGER_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("monster")
+            .withClassName("EntityZombieVillager")).get();
+
+    public static final Class<?> ENTITY_ZOMBIFIED_PIGLIN_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("monster")
+            .withClassName("EntityPigZombie")).get();
 
     public static final Class<?> ENTITY_TYPES_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withClassName("EntityTypes")).get();
+
+    public static final Class<?> ENTITY_HUMAN_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withSubClass("player")
+            .withClassName("EntityHuman")).get();
 
     public static final Class<?> ENUM_CHAT_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.MINECRAFT)
             .withClassName("EnumChatFormat")).get();
