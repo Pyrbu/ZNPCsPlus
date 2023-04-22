@@ -1,4 +1,4 @@
-package io.github.znetworkw.znpcservers.commands.exception;
+package io.github.znetworkw.znpcservers.exception;
 
 public class CommandExecuteException extends CommandException {
     public CommandExecuteException(String message, Throwable cause) {

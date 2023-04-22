@@ -1,6 +1,7 @@
 package io.github.znetworkw.znpcservers.user;
 
 import com.mojang.authlib.GameProfile;
+import io.github.znetworkw.znpcservers.exception.ChannelRegistrationException;
 import io.github.znetworkw.znpcservers.npc.NPC;
 import io.github.znetworkw.znpcservers.npc.NPCAction;
 import io.github.znetworkw.znpcservers.npc.event.ClickType;
@@ -59,7 +60,7 @@ public class ZUser {
 
         @Override
         public void run() {
-            Exception ex = user.tryRegisterChannel();
+            ChannelRegistrationException ex = user.tryRegisterChannel();
             Player player = user.toPlayer();
             if (player == null) {
                 tries--;
@@ -75,20 +76,22 @@ public class ZUser {
                     ChatColor.WHITE + "Couldn't inject interaction detector to channel\n" +
                     ChatColor.WHITE + "Please report this at https://github.com/Pyrbu/ZNPCsPlus");
             ZNPCsPlus.LOGGER.severe("Couldn't inject interaction detector to channel for player " + player.getName() + " (" + player.getUniqueId() + ")");
+            ZNPCsPlus.LOGGER.severe("Channel names: " + ex.getChannelNames());
             ex.printStackTrace();
         }
     }
 
-    private Exception tryRegisterChannel() {
+    private ChannelRegistrationException tryRegisterChannel() {
+        Channel channel = null;
         try {
-            Channel channel = (Channel) Reflections.CHANNEL_FIELD.get().get(Reflections.NETWORK_MANAGER_FIELD.get().get(this.playerConnection));
+            channel = (Channel) Reflections.CHANNEL_FIELD.get().get(Reflections.NETWORK_MANAGER_FIELD.get().get(this.playerConnection));
             if (channel.pipeline().names().contains("npc_interact")) channel.pipeline().remove("npc_interact");
             channel.pipeline().addAfter("decoder", "npc_interact", new ZNPCSocketDecoder());
             return null;
         } catch (IllegalAccessException e) {
             throw new RuntimeException("illegal access exception while trying to register npc_interact channel");
         } catch (NoSuchElementException e) {
-            return e;
+            return new ChannelRegistrationException(e, channel == null ? List.of() : channel.pipeline().names());
         }
     }
 

@@ -1,4 +1,4 @@
-package io.github.znetworkw.znpcservers.commands.exception;
+package io.github.znetworkw.znpcservers.exception;
 
 public class CommandPermissionException extends CommandException {
     public CommandPermissionException(String message) {

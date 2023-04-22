@@ -1,8 +1,8 @@
 package io.github.znetworkw.znpcservers.commands;
 
-import io.github.znetworkw.znpcservers.commands.exception.CommandException;
-import io.github.znetworkw.znpcservers.commands.exception.CommandExecuteException;
-import io.github.znetworkw.znpcservers.commands.exception.CommandPermissionException;
+import io.github.znetworkw.znpcservers.exception.CommandException;
+import io.github.znetworkw.znpcservers.exception.CommandExecuteException;
+import io.github.znetworkw.znpcservers.exception.CommandPermissionException;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Method;
