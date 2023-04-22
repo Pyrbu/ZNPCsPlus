@@ -17,7 +17,6 @@ import io.github.znetworkw.znpcservers.npc.task.NPCVisibilityTask;
 import io.github.znetworkw.znpcservers.user.ZUser;
 import io.github.znetworkw.znpcservers.utility.BungeeUtils;
 import io.github.znetworkw.znpcservers.utility.SchedulerUtils;
-import io.github.znetworkw.znpcservers.utility.Utils;
 import io.github.znetworkw.znpcservers.utility.itemstack.ItemStackSerializer;
 import io.github.znetworkw.znpcservers.utility.location.ZLocation;
 import lol.pyr.znpcsplus.updater.UpdateChecker;
@@ -76,21 +75,20 @@ public class ZNPCsPlus extends JavaPlugin {
         PATH_FOLDER = new File(PLUGIN_FOLDER, "paths");
     }
 
-    private void log(Logger logger, String str) {
-        logger.info(Utils.versionNewer(12) ? str : ChatColor.stripColor(str).replace("\u2764 ", "<3"));
+    private void log(String str) {
+        Bukkit.getConsoleSender().sendMessage(str);
     }
 
     @Override
     public void onEnable() {
-        Logger serverLogger = getServer().getLogger();
-        log(serverLogger, ChatColor.YELLOW + "  ___       __   __  __");
-        log(serverLogger, ChatColor.YELLOW + "   _/ |\\ | |__) |   (__` " + ChatColor.GOLD + "__|__   " + ChatColor.YELLOW + getDescription().getName() + " " + ChatColor.GOLD + "v" + getDescription().getVersion());
-        log(serverLogger, ChatColor.YELLOW + "  /__ | \\| |    |__ .__) " + ChatColor.GOLD + "  |     " + ChatColor.GRAY + "Maintained with " + ChatColor.RED + "\u2764 " + ChatColor.GRAY + " by Pyr#6969");
-        log(serverLogger, "");
+        log(ChatColor.YELLOW + "  ___       __   __  __");
+        log(ChatColor.YELLOW + "   _/ |\\ | |__) |   (__` " + ChatColor.GOLD + "__|__   " + ChatColor.YELLOW + getDescription().getName() + " " + ChatColor.GOLD + "v" + getDescription().getVersion());
+        log(ChatColor.YELLOW + "  /__ | \\| |    |__ .__) " + ChatColor.GOLD + "  |     " + ChatColor.GRAY + "Maintained with " + ChatColor.RED + "\u2764 " + ChatColor.GRAY + " by Pyr#6969");
+        log("");
 
         if (Bukkit.getPluginManager().isPluginEnabled("ServersNPC")) {
-            log(serverLogger, ChatColor.DARK_RED + " * Detected old version of ZNPCs! Disabling the plugin.");
-            log(serverLogger, "");
+            log(ChatColor.DARK_RED + " * Detected old version of ZNPCs! Disabling the plugin.");
+            log("");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
@@ -98,24 +96,24 @@ public class ZNPCsPlus extends JavaPlugin {
 
         File oldFolder = new File(PLUGIN_FOLDER.getParent(), "ServersNPC");
         if (!PLUGIN_FOLDER.exists() && oldFolder.exists()) {
-            log(serverLogger, ChatColor.WHITE + " * Converting old ZNPCs files...");
+            log(ChatColor.WHITE + " * Converting old ZNPCs files...");
             try {
                 FileUtils.moveDirectory(oldFolder, PLUGIN_FOLDER);
             } catch (IOException e) {
-                log(serverLogger, ChatColor.RED + " * Failed to convert old ZNPCs files" + (e.getMessage() == null ? "" : " due to " + e.getMessage()));
+                log(ChatColor.RED + " * Failed to convert old ZNPCs files" + (e.getMessage() == null ? "" : " due to " + e.getMessage()));
             }
         }
 
-        log(serverLogger, ChatColor.WHITE + " * Initializing adventure...");
+        log(ChatColor.WHITE + " * Initializing adventure...");
         ADVENTURE = BukkitAudiences.create(this);
 
         PLUGIN_FOLDER.mkdirs();
         PATH_FOLDER.mkdirs();
 
-        log(serverLogger, ChatColor.WHITE + " * Loading paths...");
+        log(ChatColor.WHITE + " * Loading paths...");
         loadAllPaths();
 
-        log(serverLogger, ChatColor.WHITE + " * Registering components...");
+        log(ChatColor.WHITE + " * Registering components...");
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         new Metrics(this, PLUGIN_ID);
         new DefaultCommand();
@@ -123,7 +121,7 @@ public class ZNPCsPlus extends JavaPlugin {
         BUNGEE_UTILS = new BungeeUtils(this);
         Bukkit.getOnlinePlayers().forEach(ZUser::find);
 
-        log(serverLogger, ChatColor.WHITE + " * Starting tasks...");
+        log(ChatColor.WHITE + " * Starting tasks...");
         new NPCPositionTask(this);
         new NPCVisibilityTask(this);
         new NPCSaveTask(this, ConfigurationConstants.SAVE_DELAY);
@@ -132,8 +130,8 @@ public class ZNPCsPlus extends JavaPlugin {
         if (ConfigurationConstants.CHECK_FOR_UPDATES) new UpdateNotificationListener(this, new UpdateChecker(this));
 
         enabled = true;
-        log(serverLogger, ChatColor.WHITE + " * Loading complete! (" + (System.currentTimeMillis() - before) + "ms)");
-        log(serverLogger, "");
+        log(ChatColor.WHITE + " * Loading complete! (" + (System.currentTimeMillis() - before) + "ms)");
+        log("");
     }
 
     @Override
