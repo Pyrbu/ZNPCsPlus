@@ -26,7 +26,7 @@ public class GlowFunction extends NPCFunction {
                     .get().invoke(npc.getNmsEntity()), Reflections.DATA_WATCHER_OBJECT_CONSTRUCTOR
                     .get().newInstance(0, Reflections.DATA_WATCHER_REGISTER_FIELD
                     .get()), (byte) (!FunctionFactory.isTrue(npc, this) ? 64 : 0));
-            npc.getPackets().getProxyInstance().update(npc.getPackets());
+            npc.getPackets().getNms().update(npc.getPackets());
             npc.deleteViewers();
             return NPCFunction.ResultType.SUCCESS;
         } catch (ReflectiveOperationException operationException) {
@@ -35,7 +35,7 @@ public class GlowFunction extends NPCFunction {
     }
 
     protected boolean allow(NPC npc) {
-        return npc.getPackets().getProxyInstance().allowGlowColor();
+        return npc.getPackets().getNms().allowGlowColor();
     }
 
     public NPCFunction.ResultType resolve(NPC npc) {

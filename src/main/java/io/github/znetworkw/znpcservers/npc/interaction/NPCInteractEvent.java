@@ -1,4 +1,4 @@
-package io.github.znetworkw.znpcservers.npc.event;
+package io.github.znetworkw.znpcservers.npc.interaction;
 
 import io.github.znetworkw.znpcservers.npc.NPC;
 import org.bukkit.entity.Player;

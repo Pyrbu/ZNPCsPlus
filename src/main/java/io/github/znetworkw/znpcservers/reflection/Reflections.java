@@ -6,7 +6,6 @@ import io.github.znetworkw.znpcservers.reflection.types.ConstructorReflection;
 import io.github.znetworkw.znpcservers.reflection.types.FieldReflection;
 import io.github.znetworkw.znpcservers.reflection.types.MethodReflection;
 import io.github.znetworkw.znpcservers.utility.Utils;
-import io.netty.channel.Channel;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.inventory.ItemStack;
@@ -23,9 +22,6 @@ import java.util.UUID;
  * inaccessible things from the server jar like packets, raw entity classes, etc.
  */
 public final class Reflections {
-    public static final Class<?> PACKET_PLAY_IN_USE_ENTITY_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
-            .withClassName("PacketPlayInUseEntity")).get();
-
     public static final Class<?> ENUM_PLAYER_INFO_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
             .withClassName("PacketPlayOutPlayerInfo$EnumPlayerInfoAction")
             .withClassName("ClientboundPlayerInfoUpdatePacket$a")).get();
@@ -279,9 +275,6 @@ public final class Reflections {
 
     public static final Class<?> PLAYER_CONNECTION_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.SERVER_NETWORK)
             .withClassName("PlayerConnection")).get();
-
-    public static final Class<?> NETWORK_MANAGER_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.NETWORK)
-            .withClassName("NetworkManager")).get();
 
     public static final Class<?> PACKET_PLAY_OUT_PLAYER_INFO_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
             .withClassName("PacketPlayOutPlayerInfo")
@@ -544,19 +537,6 @@ public final class Reflections {
     public static final ReflectionLazyLoader<Field> PLAYER_CONNECTION_FIELD = new FieldReflection(new ReflectionBuilder(ReflectionPackage.SERVER_LEVEL)
             .withClassName(ENTITY_PLAYER_CLASS)
             .withFieldName((Utils.BUKKIT_VERSION > 16) ? "b" : "playerConnection"));
-
-    public static final ReflectionLazyLoader<Field> NETWORK_MANAGER_FIELD = new FieldReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
-            .withClassName(PLAYER_CONNECTION_CLASS)
-            .withFieldName((Utils.BUKKIT_VERSION > 16) ? "a" : "networkManager")
-            .withExpectResult(NETWORK_MANAGER_CLASS));
-
-    public static final ReflectionLazyLoader<Field> CHANNEL_FIELD = new FieldReflection(new ReflectionBuilder(ReflectionPackage.SERVER_NETWORK)
-            .withClassName(NETWORK_MANAGER_CLASS)
-            .withExpectResult(Channel.class));
-
-    public static final ReflectionLazyLoader<Field> PACKET_IN_USE_ENTITY_ID_FIELD = new FieldReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
-            .withClassName("PacketPlayInUseEntity")
-            .withFieldName("a"));
 
     public static final ReflectionLazyLoader<Object> ADD_PLAYER_FIELD = new FieldReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
             .withClassName("PacketPlayOutPlayerInfo$EnumPlayerInfoAction")
