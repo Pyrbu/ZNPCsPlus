@@ -1,11 +1,12 @@
 package io.github.znetworkw.znpcservers.reflection.types;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import io.github.znetworkw.znpcservers.reflection.ReflectionLazyLoader;
 import io.github.znetworkw.znpcservers.reflection.ReflectionBuilder;
+import io.github.znetworkw.znpcservers.reflection.ReflectionLazyLoader;
 
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
+import java.util.function.Consumer;
 
 public class ConstructorReflection extends ReflectionLazyLoader<Constructor<?>> {
     private final ImmutableList<Class<?>[]> parameterTypes;
@@ -16,13 +17,28 @@ public class ConstructorReflection extends ReflectionLazyLoader<Constructor<?>> 
     }
 
     protected Constructor<?> load() throws NoSuchMethodException {
-        Constructor<?> constructor = null;
-        if (Iterables.size(parameterTypes) > 1) {
-            for (Class<?>[] keyParameters : parameterTypes) try {
-                constructor = this.reflectionClass.getDeclaredConstructor(keyParameters);
-            } catch (NoSuchMethodException ignored) {}
-        } else constructor = (Iterables.size(parameterTypes) > 0) ? this.reflectionClass.getDeclaredConstructor(Iterables.get(parameterTypes, 0)) : this.reflectionClass.getDeclaredConstructor();
-        if (constructor != null) constructor.setAccessible(true);
-        return constructor;
+        for (Class<?> clazz : this.reflectionClasses) {
+            Constructor<?> constructor = load(clazz);
+            if (constructor != null) return constructor;
+        }
+        return null;
+    }
+
+    private Constructor<?> load(Class<?> clazz) {
+        if (parameterTypes != null && parameterTypes.size() > 0) for (Class<?>[] possibleConstructor : parameterTypes) try {
+            Constructor<?> constructor = clazz.getDeclaredConstructor(possibleConstructor);
+            constructor.setAccessible(true);
+            return constructor;
+        } catch (NoSuchMethodException ignored) {}
+        else try {
+            return clazz.getDeclaredConstructor();
+        } catch (NoSuchMethodException ignored) {}
+        return null;
+    }
+
+    @Override
+    protected void printDebugInfo(Consumer<String> logger) {
+        logger.accept("Possible Parameter Type Combinations:");
+        for (Class<?>[] possible : parameterTypes) logger.accept(Arrays.toString(possible));
     }
 }

@@ -5,6 +5,7 @@ import io.github.znetworkw.znpcservers.reflection.ReflectionBuilder;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class FieldReflection extends ReflectionLazyLoader<Field> {
     private final String fieldName;
@@ -17,39 +18,64 @@ public class FieldReflection extends ReflectionLazyLoader<Field> {
     }
 
     protected Field load() throws NoSuchFieldException {
-        if (expectType != null)
-            for (Field field1 : this.reflectionClass.getDeclaredFields()) {
-                if (field1.getType() == expectType) {
-                    field1.setAccessible(true);
-                    return field1;
-                }
-            }
-        Field field = this.reflectionClass.getDeclaredField(fieldName);
-        field.setAccessible(true);
-        return field;
+        for (Class<?> clazz : this.reflectionClasses) {
+            Field field = load(clazz);
+            if (field != null) return field;
+        }
+        return null;
     }
 
-    public FieldValueReflection staticValueLoader() {
-        return new FieldValueReflection(this, possibleClassNames, null);
+    private Field load(Class<?> clazz) {
+        if (expectType != null) for (Field field : clazz.getDeclaredFields()) if (field.getType() == expectType) {
+            field.setAccessible(true);
+            return field;
+        }
+        try {
+            Field field = clazz.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            return field;
+        } catch (NoSuchFieldException ignored) {}
+        return null;
     }
 
-    public FieldValueReflection valueLoader(Object obj) {
-        return new FieldValueReflection(this, possibleClassNames, obj);
+    @Override
+    protected void printDebugInfo(Consumer<String> logger) {
+        logger.accept("Field Name: " + fieldName);
+        logger.accept("Field Type: " + expectType);
     }
 
-    private static class FieldValueReflection extends ReflectionLazyLoader<Object> {
+    public FieldValueReflection<Object> staticValueLoader() {
+        return staticValueLoader(Object.class);
+    }
+
+    @SuppressWarnings("unused")
+    public <T> FieldValueReflection<T> staticValueLoader(Class<T> valueType) {
+        return new FieldValueReflection<>(this, possibleClassNames, null, strict);
+    }
+
+    @SuppressWarnings("unused")
+    public <T> FieldValueReflection<T> valueLoader(Object obj, Class<T> valueType) {
+        return new FieldValueReflection<>(this, possibleClassNames, obj, strict);
+    }
+
+    private static class FieldValueReflection<T> extends ReflectionLazyLoader<T> {
         private final Object obj;
         private final FieldReflection fieldReflection;
 
-        public FieldValueReflection(FieldReflection fieldReflection, List<String> className, Object obj) {
-            super(className);
+        public FieldValueReflection(FieldReflection fieldReflection, List<String> className, Object obj, boolean strict) {
+            super(className, strict);
             this.obj = obj;
             this.fieldReflection = fieldReflection;
         }
 
-        protected Object load() throws IllegalAccessException, NoSuchFieldException {
-            Field field = this.fieldReflection.get();
-            return field.get(obj);
+        @SuppressWarnings("unchecked")
+        protected T load() throws IllegalAccessException, NoSuchFieldException, ClassCastException {
+            return (T) this.fieldReflection.get().get(obj);
+        }
+
+        @Override
+        protected void printDebugInfo(Consumer<String> logger) {
+            fieldReflection.printDebugInfo(logger);
         }
     }
 }

@@ -13,6 +13,7 @@ public class ReflectionBuilder {
     private final ArrayList<String> methods = new ArrayList<>();
     private final ArrayList<Class<?>[]> parameterTypes = new ArrayList<>();
     private Class<?> expectType;
+    private boolean strict = true;
 
     public ReflectionBuilder(String reflectionPackage) {
         this(reflectionPackage, "", "", null);
@@ -58,6 +59,15 @@ public class ReflectionBuilder {
     public ReflectionBuilder withExpectResult(Class<?> expectType) {
         this.expectType = expectType;
         return this;
+    }
+
+    public ReflectionBuilder setStrict(boolean strict) {
+        this.strict = strict;
+        return this;
+    }
+
+    public boolean isStrict() {
+        return strict;
     }
 
     public Class<?> getExpectType() {

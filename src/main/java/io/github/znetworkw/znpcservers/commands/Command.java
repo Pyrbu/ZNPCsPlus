@@ -6,7 +6,6 @@ import io.github.znetworkw.znpcservers.commands.exception.CommandExecuteExceptio
 import io.github.znetworkw.znpcservers.commands.exception.CommandPermissionException;
 import io.github.znetworkw.znpcservers.reflection.Reflections;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 
@@ -23,7 +22,7 @@ public class Command extends BukkitCommand {
     }
 
     private void load() {
-        ((CommandMap) Reflections.COMMAND_MAP_FIELD.get()).register(getName(), this);
+        Reflections.COMMAND_MAP_FIELD.get().register(getName(), this);
         for (Method method : getClass().getMethods()) {
             if (method.isAnnotationPresent(CommandInformation.class)) {
                 CommandInformation cmdInfo = method.getAnnotation(CommandInformation.class);

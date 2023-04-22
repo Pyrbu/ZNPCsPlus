@@ -39,7 +39,7 @@ public class PacketV8 implements Packet {
     public Object getMetadataPacket(int entityId, Object nmsEntity) throws ReflectiveOperationException {
         Object dataWatcher = Reflections.GET_DATA_WATCHER_METHOD.get().invoke(nmsEntity);
         try {
-            return Reflections.PACKET_PLAY_OUT_ENTITY_META_DATA_CONSTRUCTOR.get(true).newInstance(entityId, dataWatcher, true);
+            return Reflections.PACKET_PLAY_OUT_ENTITY_META_DATA_CONSTRUCTOR.get().newInstance(entityId, dataWatcher, true);
         } catch (Exception e2) {
             return Reflections.PACKET_PLAY_OUT_ENTITY_META_DATA_CONSTRUCTOR_V1.get().newInstance(entityId, Reflections.GET_DATAWATCHER_B_LIST.get().invoke(dataWatcher));
         }

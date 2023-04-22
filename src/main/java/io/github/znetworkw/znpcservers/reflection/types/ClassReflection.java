@@ -1,7 +1,7 @@
 package io.github.znetworkw.znpcservers.reflection.types;
 
-import io.github.znetworkw.znpcservers.reflection.ReflectionLazyLoader;
 import io.github.znetworkw.znpcservers.reflection.ReflectionBuilder;
+import io.github.znetworkw.znpcservers.reflection.ReflectionLazyLoader;
 
 public class ClassReflection extends ReflectionLazyLoader<Class<?>> {
     public ClassReflection(ReflectionBuilder reflectionBuilder) {
@@ -9,6 +9,6 @@ public class ClassReflection extends ReflectionLazyLoader<Class<?>> {
     }
 
     protected Class<?> load() {
-        return this.reflectionClass;
+        return this.reflectionClasses.size() > 0 ? this.reflectionClasses.get(0) : null;
     }
 }

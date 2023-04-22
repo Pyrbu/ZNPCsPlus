@@ -3,50 +3,46 @@ package io.github.znetworkw.znpcservers.reflection;
 import io.github.znetworkw.znpcservers.utility.Utils;
 import lol.pyr.znpcsplus.ZNPCsPlus;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public abstract class ReflectionLazyLoader<T> {
     protected final List<String> possibleClassNames;
-
-    protected Class<?> reflectionClass;
-
+    protected List<Class<?>> reflectionClasses = new ArrayList<>();
+    protected final boolean strict;
     private T cached;
-
     private boolean loaded = false;
 
     protected ReflectionLazyLoader(ReflectionBuilder builder) {
-        this(builder.getClassNames());
+        this(builder.getClassNames(), builder.isStrict());
     }
 
-    protected ReflectionLazyLoader(List<String> possibleClassNames) {
+    protected ReflectionLazyLoader(List<String> possibleClassNames, boolean strict) {
         this.possibleClassNames = possibleClassNames;
-        for (String classes : possibleClassNames) {
-            try {
-                this.reflectionClass = Class.forName(classes);
-                break;
-            } catch (ClassNotFoundException ignored) {
-            }
-        }
+        this.strict = strict;
+        for (String name : possibleClassNames) try {
+            reflectionClasses.add(Class.forName(name));
+        } catch (ClassNotFoundException ignored) {}
     }
 
     public T get() {
-        return get(false);
-    }
-
-    public T get(boolean missAllowed) {
         if (this.loaded) return this.cached;
         try {
-            if (this.reflectionClass == null) throw new ClassNotFoundException("No class found: " + possibleClassNames);
+            if (this.reflectionClasses.size() == 0) throw new ClassNotFoundException("No class found: " + possibleClassNames);
             T eval = (this.cached != null) ? this.cached : (this.cached = load());
-            if (eval == null) throw new NullPointerException();
+            if (eval == null) throw new RuntimeException("Returned value is null");
         } catch (Throwable throwable) {
-            if (!missAllowed) {
-                warn(getClass().getSimpleName() + " get failed!");
+            if (strict) {
+                warn(" ----- REFLECTION FAILURE DEBUG INFORMATION, REPORT THIS ON OUR GITHUB ----- ");
+                warn(getClass().getSimpleName() + " failed!");
                 warn("Class Names: " + possibleClassNames);
-                warn("Loader Type: " + getClass().getCanonicalName());
+                warn("Reflection Type: " + getClass().getCanonicalName());
                 warn("Bukkit Version: " + Utils.BUKKIT_VERSION + " (" + Utils.getBukkitPackage() + ")");
+                printDebugInfo(this::warn);
                 warn("Exception:");
                 throwable.printStackTrace();
+                warn(" ----- REFLECTION FAILURE DEBUG INFORMATION, REPORT THIS ON OUR GITHUB ----- ");
             }
         }
         this.loaded = true;
@@ -58,4 +54,5 @@ public abstract class ReflectionLazyLoader<T> {
     }
 
     protected abstract T load() throws Exception;
+    protected void printDebugInfo(Consumer<String> logger) {}
 }

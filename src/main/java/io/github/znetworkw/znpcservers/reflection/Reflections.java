@@ -1,10 +1,14 @@
 package io.github.znetworkw.znpcservers.reflection;
 
 import com.mojang.authlib.GameProfile;
-import io.github.znetworkw.znpcservers.reflection.types.*;
+import io.github.znetworkw.znpcservers.reflection.types.ClassReflection;
+import io.github.znetworkw.znpcservers.reflection.types.ConstructorReflection;
+import io.github.znetworkw.znpcservers.reflection.types.FieldReflection;
+import io.github.znetworkw.znpcservers.reflection.types.MethodReflection;
 import io.github.znetworkw.znpcservers.utility.Utils;
 import io.netty.channel.Channel;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandMap;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Constructor;
@@ -104,7 +108,8 @@ public final class Reflections {
 
     public static final Class<?> ENTITY_LLAMA_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("animal.horse")
-            .withClassName("EntityLlama")).get(!Utils.versionNewer(11));
+            .withClassName("EntityLlama")
+            .setStrict(Utils.versionNewer(11))).get();
 
     public static final Class<?> ENTITY_MAGMA_CUBE_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("monster")
@@ -120,20 +125,24 @@ public final class Reflections {
 
     public static final Class<?> ENTITY_TURTLE = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("animal")
-            .withClassName("EntityTurtle")).get(!Utils.versionNewer(13));
+            .withClassName("EntityTurtle")
+            .setStrict(Utils.versionNewer(13))).get();
 
     public static final Class<?> ENTITY_WARDEN = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("monster.warden")
             .withClassName("EntityWarden")
-            .withClassName("Warden")).get(!Utils.versionNewer(19));
+            .withClassName("Warden")
+            .setStrict(Utils.versionNewer(19))).get();
 
     public static final Class<?> ENTITY_BEE_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("animal")
-            .withClassName("EntityBee")).get(!Utils.versionNewer(15));
+            .withClassName("EntityBee")
+            .setStrict(Utils.versionNewer(15))).get();
 
     public static final Class<?> ENTITY_PARROT_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("animal")
-            .withClassName("EntityParrot")).get(!Utils.versionNewer(12));
+            .withClassName("EntityParrot")
+            .setStrict(Utils.versionNewer(12))).get();
 
     public static final Class<?> ENTITY_PIG_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("animal")
@@ -145,11 +154,13 @@ public final class Reflections {
 
     public static final Class<?> ENTITY_POLAR_BEAR_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("animal")
-            .withClassName("EntityPolarBear")).get(!Utils.versionNewer(10));
+            .withClassName("EntityPolarBear")
+            .setStrict(Utils.versionNewer(10))).get();
 
     public static final Class<?> ENTITY_PANDA_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("animal")
-            .withClassName("EntityPanda")).get(!Utils.versionNewer(14));
+            .withClassName("EntityPanda")
+            .setStrict(Utils.versionNewer(14))).get();
 
     public static final Class<?> ENTITY_SHEEP_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("animal")
@@ -161,7 +172,8 @@ public final class Reflections {
 
     public static final Class<?> ENTITY_SHULKER_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("monster")
-            .withClassName("EntityShulker")).get(!Utils.versionNewer(9));
+            .withClassName("EntityShulker")
+            .setStrict(Utils.versionNewer(9))).get();
 
     public static final Class<?> ENTITY_SILVERFISH_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("monster")
@@ -205,15 +217,18 @@ public final class Reflections {
 
     public static final Class<?> ENTITY_AXOLOTL_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("animal.axolotl")
-            .withClassName("Axolotl")).get(!Utils.versionNewer(17));
+            .withClassName("Axolotl")
+            .setStrict(Utils.versionNewer(17))).get();
 
     public static final Class<?> ENTITY_GOAT_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("animal.goat")
-            .withClassName("Goat")).get(!Utils.versionNewer(17));
+            .withClassName("Goat")
+            .setStrict(Utils.versionNewer(17))).get();
 
     public static final Class<?> ENTITY_FOX_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withSubClass("animal")
-            .withClassName("EntityFox")).get(!Utils.versionNewer(14));
+            .withClassName("EntityFox")
+            .setStrict(Utils.versionNewer(14))).get();
 
     public static final Class<?> ENTITY_TYPES_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withClassName("EntityTypes")).get();
@@ -222,7 +237,8 @@ public final class Reflections {
             .withClassName("EnumChatFormat")).get();
 
     public static final Class<?> ENUM_ITEM_SLOT = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
-            .withClassName("EnumItemSlot")).get(!Utils.versionNewer(9));
+            .withClassName("EnumItemSlot")
+            .setStrict(Utils.versionNewer(9))).get();
 
     public static final Class<?> I_CHAT_BASE_COMPONENT = new ClassReflection(new ReflectionBuilder(ReflectionPackage.CHAT)
             .withClassName("IChatBaseComponent")).get();
@@ -231,16 +247,20 @@ public final class Reflections {
             .withClassName("ItemStack")).get();
 
     public static final Class<?> DATA_WATCHER_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.SYNCHER)
-            .withClassName("DataWatcher")).get(!Utils.versionNewer(9));
+            .withClassName("DataWatcher")
+            .setStrict(Utils.versionNewer(9))).get();
 
     public static final Class<?> DATA_WATCHER_OBJECT = new ClassReflection(new ReflectionBuilder(ReflectionPackage.SYNCHER)
-            .withClassName("DataWatcherObject")).get(!Utils.versionNewer(9));
+            .withClassName("DataWatcherObject")
+            .setStrict(Utils.versionNewer(9))).get();
 
     public static final Class<?> DATA_WATCHER_REGISTRY = new ClassReflection(new ReflectionBuilder(ReflectionPackage.SYNCHER)
-            .withClassName("DataWatcherRegistry")).get(!Utils.versionNewer(9));
+            .withClassName("DataWatcherRegistry")
+            .setStrict(Utils.versionNewer(9))).get();
 
     public static final Class<?> DATA_WATCHER_SERIALIZER = new ClassReflection(new ReflectionBuilder(ReflectionPackage.SYNCHER)
-            .withClassName("DataWatcherSerializer")).get(!Utils.versionNewer(9));
+            .withClassName("DataWatcherSerializer")
+            .setStrict(Utils.versionNewer(9))).get();
 
     public static final Class<?> WORLD_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.WORLD_LEVEL)
             .withClassName("World")).get();
@@ -265,12 +285,11 @@ public final class Reflections {
 
     public static final Class<?> PACKET_PLAY_OUT_PLAYER_INFO_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
             .withClassName("PacketPlayOutPlayerInfo")
-            .withClassName("ClientboundPlayerInfoUpdatePacket"))
-            .get();
+            .withClassName("ClientboundPlayerInfoUpdatePacket")).get();
 
     public static final Class<?> PACKET_PLAY_OUT_PLAYER_INFO_REMOVE_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
-            .withClassName("ClientboundPlayerInfoRemovePacket"))
-            .get(true);
+            .withClassName("ClientboundPlayerInfoRemovePacket")
+            .setStrict(false)).get();
 
     public static final Class<?> PACKET_PLAY_OUT_SCOREBOARD_TEAM_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
             .withClassName("PacketPlayOutScoreboardTeam")).get();
@@ -291,7 +310,8 @@ public final class Reflections {
             .withClassName("util.CraftChatMessage")).get();
 
     public static final Class<?> PROFILE_PUBLIC_KEY_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.WORLD_ENTITY_PLAYER)
-            .withClassName("ProfilePublicKey")).get(!Utils.versionNewer(19));
+            .withClassName("ProfilePublicKey")
+            .setStrict(Utils.versionNewer(19))).get();
 
     public static final ReflectionLazyLoader<Constructor<?>> SCOREBOARD_TEAM_CONSTRUCTOR = new ConstructorReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
             .withClassName(SCOREBOARD_TEAM_CLASS)
@@ -307,7 +327,8 @@ public final class Reflections {
 
     public static final ReflectionLazyLoader<Constructor<?>> PLAYER_CONSTRUCTOR_NEW_1 = new ConstructorReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
             .withClassName(ENTITY_PLAYER_CLASS)
-            .withParameterTypes(MINECRAFT_SERVER_CLASS, WORLD_SERVER_CLASS, GameProfile.class, PROFILE_PUBLIC_KEY_CLASS));
+            .withParameterTypes(MINECRAFT_SERVER_CLASS, WORLD_SERVER_CLASS, GameProfile.class, PROFILE_PUBLIC_KEY_CLASS)
+            .setStrict(false));
 
     public static final ReflectionLazyLoader<Constructor<?>> PLAYER_CONSTRUCTOR_NEW_2 = new ConstructorReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
             .withClassName(ENTITY_PLAYER_CLASS)
@@ -335,7 +356,8 @@ public final class Reflections {
 
     public static final ReflectionLazyLoader<Constructor<?>> PACKET_PLAY_OUT_ENTITY_META_DATA_CONSTRUCTOR = new ConstructorReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
             .withClassName("PacketPlayOutEntityMetadata")
-            .withParameterTypes(int.class, DATA_WATCHER_CLASS, boolean.class));
+            .withParameterTypes(int.class, DATA_WATCHER_CLASS, boolean.class)
+            .setStrict(false));
 
     public static final ReflectionLazyLoader<Constructor<?>> PACKET_PLAY_OUT_ENTITY_META_DATA_CONSTRUCTOR_V1 = new ConstructorReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
             .withClassName("PacketPlayOutEntityMetadata")
@@ -558,7 +580,7 @@ public final class Reflections {
             .withClassName(ENUM_TAG_VISIBILITY)
             .withFieldName("b")).staticValueLoader();
 
-    public static final ReflectionLazyLoader<Object> COMMAND_MAP_FIELD = new FieldReflection(new ReflectionBuilder(ReflectionPackage.BUKKIT)
+    public static final ReflectionLazyLoader<CommandMap> COMMAND_MAP_FIELD = new FieldReflection(new ReflectionBuilder(ReflectionPackage.BUKKIT)
             .withClassName("CraftServer")
-            .withFieldName("commandMap")).valueLoader(Bukkit.getServer());
+            .withFieldName("commandMap")).valueLoader(Bukkit.getServer(), CommandMap.class);
 }
