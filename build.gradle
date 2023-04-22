@@ -55,7 +55,9 @@ shadowJar {
     relocate "org.checkerframework", "lol.pyr.znpcsplus.lib.checkerframework"
     relocate "javax.annotation", "lol.pyr.znpcsplus.lib.javaxannotation"
     relocate "com.google", "lol.pyr.znpcsplus.lib.google"
-    relocate "com.github.retrooper.packetevents", "lol.pyr.znpcsplus.lib.packetevents"
+    relocate "com.github.retrooper.packetevents", "lol.pyr.znpcsplus.lib.packetevents.api"
+    relocate "io.github.retrooper.packetevents", "lol.pyr.znpcsplus.lib.packetevents.impl"
+    relocate "assets.mappings", "lol.pyr.znpcsplus.lib.mappings"
     minimize()
 }
 
