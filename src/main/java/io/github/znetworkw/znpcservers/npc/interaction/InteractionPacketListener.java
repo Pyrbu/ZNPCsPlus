@@ -9,6 +9,7 @@ import io.github.znetworkw.znpcservers.npc.NPCAction;
 import io.github.znetworkw.znpcservers.user.ZUser;
 import lol.pyr.znpcsplus.ZNPCsPlus;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -16,9 +17,10 @@ public class InteractionPacketListener implements PacketListener {
     @Override
     public void onPacketReceive(PacketReceiveEvent event) {
         if (event.getPacketType() != PacketType.Play.Client.INTERACT_ENTITY) return;
+        Player player = (Player) event.getPlayer();
 
         WrapperPlayClientInteractEntity packet = new WrapperPlayClientInteractEntity(event);
-        ZUser user = ZUser.find(event.getUser().getUUID());
+        ZUser user = ZUser.find(player);
 
         long lastInteract = System.nanoTime() - user.getLastInteract();
         if (user.getLastInteract() != 0L && lastInteract < 1000000000L) return;
@@ -29,7 +31,7 @@ public class InteractionPacketListener implements PacketListener {
         ClickType clickType = ClickType.forName(packet.getAction().name());
         user.updateLastInteract();
         ZNPCsPlus.SCHEDULER.runTask(() -> {
-            Bukkit.getServer().getPluginManager().callEvent(new NPCInteractEvent(user.toPlayer(), clickType, npc));
+            Bukkit.getServer().getPluginManager().callEvent(new NPCInteractEvent(player, clickType, npc));
             List<NPCAction> actions = npc.getNpcPojo().getClickActions();
             if (actions == null) return;
             for (NPCAction action : actions) {
