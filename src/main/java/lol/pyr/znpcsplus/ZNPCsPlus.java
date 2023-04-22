@@ -60,7 +60,7 @@ public class ZNPCsPlus extends JavaPlugin {
         NPC find = NPC.find(id);
         if (find != null)
             return find;
-        NPCModel pojo = (new NPCModel(id)).withHologramLines(Collections.singletonList(name)).withLocation(new ZLocation(location)).withNpcType(npcType);
+        NPCModel pojo = (new NPCModel(id)).withHologramLines(Collections.singletonList(name)).withHologramHeight(npcType.getHoloHeight()).withLocation(new ZLocation(location)).withNpcType(npcType);
         ConfigurationConstants.NPC_LIST.add(pojo);
         return new NPC(pojo, true);
     }
