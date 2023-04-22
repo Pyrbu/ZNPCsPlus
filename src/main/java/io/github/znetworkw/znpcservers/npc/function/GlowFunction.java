@@ -35,7 +35,7 @@ public class GlowFunction extends NPCFunction {
     }
 
     protected boolean allow(NPC npc) {
-        return npc.getPackets().getNms().allowGlowColor();
+        return npc.getPackets().getNms().allowsGlowColor();
     }
 
     public NPCFunction.ResultType resolve(NPC npc) {

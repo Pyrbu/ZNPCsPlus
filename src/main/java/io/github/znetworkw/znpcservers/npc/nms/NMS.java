@@ -18,23 +18,21 @@ public interface NMS {
     int version();
 
     @PacketValue(keyName = "playerPacket")
-    Object getPlayerPacket(Object paramObject, GameProfile paramGameProfile) throws ReflectiveOperationException;
+    Object createPlayer(Object paramObject, GameProfile paramGameProfile) throws ReflectiveOperationException;
 
     @PacketValue(keyName = "spawnPacket")
-    Object getSpawnPacket(Object paramObject, boolean paramBoolean) throws ReflectiveOperationException;
+    Object createSpawnPacket(Object paramObject, boolean paramBoolean) throws ReflectiveOperationException;
 
-    Object convertItemStack(int paramInt, ItemSlot paramItemSlot, ItemStack paramItemStack) throws ReflectiveOperationException;
+    Object createEntityEquipmentPacket(int paramInt, ItemSlot paramItemSlot, ItemStack paramItemStack) throws ReflectiveOperationException;
 
-    Object getClickType(Object paramObject) throws ReflectiveOperationException;
-
-    Object getMetadataPacket(int paramInt, Object paramObject) throws ReflectiveOperationException;
+    Object createMetadataPacket(int paramInt, Object paramObject) throws ReflectiveOperationException;
 
     @PacketValue(keyName = "hologramSpawnPacket", valueType = ValueType.ARGUMENTS)
-    Object getHologramSpawnPacket(Object paramObject) throws ReflectiveOperationException;
+    Object createArmorStandSpawnPacket(Object paramObject) throws ReflectiveOperationException;
 
     @SuppressWarnings("SuspiciousTernaryOperatorInVarargsCall")
     @PacketValue(keyName = "destroyPacket", valueType = ValueType.ARGUMENTS)
-    default Object getDestroyPacket(int entityId) throws ReflectiveOperationException {
+    default Object createEntityDestroyPacket(int entityId) throws ReflectiveOperationException {
         return Reflections.PACKET_PLAY_OUT_ENTITY_DESTROY_CONSTRUCTOR.get().newInstance(Reflections.PACKET_PLAY_OUT_ENTITY_DESTROY_CONSTRUCTOR.get().getParameterTypes()[0].isArray() ? new int[] {entityId} : entityId);
     }
 
@@ -44,7 +42,7 @@ public interface NMS {
     }
 
     @PacketValue(keyName = "removeTab")
-    default Object getTabRemovePacket(Object nmsEntity) throws ReflectiveOperationException {
+    default Object createTabRemovePacket(Object nmsEntity) throws ReflectiveOperationException {
         try {
             return Reflections.PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR.get().newInstance(Reflections.REMOVE_PLAYER_FIELD.get(), Collections.singletonList(nmsEntity));
         } catch (Throwable throwable) {
@@ -55,7 +53,7 @@ public interface NMS {
     }
 
     @PacketValue(keyName = "equipPackets")
-    ImmutableList<Object> getEquipPackets(NPC paramNPC) throws ReflectiveOperationException;
+    ImmutableList<Object> createEquipmentPacket(NPC paramNPC) throws ReflectiveOperationException;
 
     @SuppressWarnings("unchecked")
     @PacketValue(keyName = "scoreboardPackets")
@@ -91,15 +89,15 @@ public interface NMS {
         } else {
             collection.add(npc.getUUID().toString());
         }
-        if (allowGlowColor() && FunctionFactory.isTrue(npc, "glow"))
-            updateGlowPacket(npc, scoreboardTeamPacket);
+        if (allowsGlowColor() && FunctionFactory.isTrue(npc, "glow"))
+            updateGlow(npc, scoreboardTeamPacket);
         builder.add(isVersion17 ? Reflections.PACKET_PLAY_OUT_SCOREBOARD_TEAM_CREATE.get().invoke(null, scoreboardTeamPacket, Boolean.TRUE) : scoreboardTeamPacket);
         return builder.build();
     }
 
-    void updateGlowPacket(NPC paramNPC, Object paramObject) throws ReflectiveOperationException;
+    void updateGlow(NPC paramNPC, Object paramObject) throws ReflectiveOperationException;
 
-    boolean allowGlowColor();
+    boolean allowsGlowColor();
 
     default void update(PacketCache packetCache) throws ReflectiveOperationException {
         packetCache.flushCache("scoreboardPackets");

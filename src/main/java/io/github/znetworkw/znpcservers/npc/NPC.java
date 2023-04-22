@@ -176,7 +176,7 @@ public class NPC {
         try {
             Object nmsWorld = Reflections.GET_HANDLE_WORLD_METHOD.get().invoke(getLocation().getWorld());
             boolean isPlayer = (npcType == NPCType.PLAYER);
-            this.nmsEntity = isPlayer ? this.packets.getNms().getPlayerPacket(nmsWorld, this.gameProfile) : (Utils.versionNewer(14) ? npcType.getConstructor().newInstance(npcType.getNmsEntityType(), nmsWorld) : npcType.getConstructor().newInstance(nmsWorld));
+            this.nmsEntity = isPlayer ? this.packets.getNms().createPlayer(nmsWorld, this.gameProfile) : (Utils.versionNewer(14) ? npcType.getConstructor().newInstance(npcType.getNmsEntityType(), nmsWorld) : npcType.getConstructor().newInstance(nmsWorld));
             this.bukkitEntity = Reflections.GET_BUKKIT_ENTITY_METHOD.get().invoke(this.nmsEntity);
             this.uuid = (UUID) Reflections.GET_UNIQUE_ID_METHOD.get().invoke(this.nmsEntity, new Object[0]);
             if (isPlayer) {
@@ -215,13 +215,13 @@ public class NPC {
                 if (FunctionFactory.isTrue(this, "mirror")) updateProfile(user.getGameProfile().getProperties());
                 Utils.sendPackets(user, this.tabConstructor, this.updateTabConstructor);
             }
-            Utils.sendPackets(user, this.packets.getNms().getSpawnPacket(this.nmsEntity, npcIsPlayer));
+            Utils.sendPackets(user, this.packets.getNms().createSpawnPacket(this.nmsEntity, npcIsPlayer));
             if (FunctionFactory.isTrue(this, "holo")) this.hologram.spawn(user);
             updateMetadata(Collections.singleton(user));
             sendEquipPackets(user);
             lookAt(user, getLocation(), true);
             if (npcIsPlayer) {
-                Object removeTabPacket = this.packets.getNms().getTabRemovePacket(this.nmsEntity);
+                Object removeTabPacket = this.packets.getNms().createTabRemovePacket(this.nmsEntity);
                 ZNPCsPlus.SCHEDULER.scheduleSyncDelayedTask(() -> Utils.sendPackets(user, removeTabPacket, this.updateTabConstructor), 60);
             }
         } catch (ReflectiveOperationException operationException) {
@@ -238,9 +238,9 @@ public class NPC {
 
     private void handleDelete(ZUser user) {
         try {
-            if (this.npcPojo.getNpcType() == NPCType.PLAYER) this.packets.getNms().getTabRemovePacket(this.nmsEntity);
+            if (this.npcPojo.getNpcType() == NPCType.PLAYER) this.packets.getNms().createTabRemovePacket(this.nmsEntity);
             this.hologram.delete(user);
-            Utils.sendPackets(user, this.packets.getNms().getDestroyPacket(this.entityID));
+            Utils.sendPackets(user, this.packets.getNms().createEntityDestroyPacket(this.entityID));
         } catch (ReflectiveOperationException operationException) {
             throw new UnexpectedCallException(operationException);
         }
@@ -267,7 +267,7 @@ public class NPC {
 
     protected void updateMetadata(Iterable<ZUser> users) {
         try {
-            Object metaData = this.packets.getNms().getMetadataPacket(this.entityID, this.nmsEntity);
+            Object metaData = this.packets.getNms().createMetadataPacket(this.entityID, this.nmsEntity);
             for (ZUser user : users) Utils.sendPackets(user, metaData);
         } catch (ReflectiveOperationException operationException) {
             operationException.getCause().printStackTrace();
@@ -290,7 +290,7 @@ public class NPC {
     public void sendEquipPackets(ZUser zUser) {
         if (this.npcPojo.getNpcEquip().isEmpty()) return;
         try {
-            ImmutableList<Object> equipPackets = this.packets.getNms().getEquipPackets(this);
+            ImmutableList<Object> equipPackets = this.packets.getNms().createEquipmentPacket(this);
             equipPackets.forEach(o -> Utils.sendPackets(zUser, o));
         } catch (ReflectiveOperationException operationException) {
             throw new UnexpectedCallException(operationException.getCause());

@@ -16,12 +16,12 @@ public class NMSV16 extends NMSV9 {
         return 16;
     }
 
-    public ImmutableList<Object> getEquipPackets(NPC npc) throws ReflectiveOperationException {
+    public ImmutableList<Object> createEquipmentPacket(NPC npc) throws ReflectiveOperationException {
         List<Pair<?, ?>> pairs = Lists.newArrayListWithCapacity((ItemSlot.values()).length);
         for (Map.Entry<ItemSlot, ItemStack> entry : npc.getNpcPojo().getNpcEquip().entrySet())
             pairs.add(new Pair<>(getItemSlot(entry
                     .getKey().getSlot()),
-                    convertItemStack(npc.getEntityID(), entry.getKey(), entry.getValue())));
+                    createEntityEquipmentPacket(npc.getEntityID(), entry.getKey(), entry.getValue())));
         return ImmutableList.of(Reflections.PACKET_PLAY_OUT_ENTITY_EQUIPMENT_CONSTRUCTOR_V1.get().newInstance(npc.getEntityID(), pairs));
     }
 }

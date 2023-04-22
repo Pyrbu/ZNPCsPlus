@@ -9,7 +9,7 @@ public class NMSV19 extends NMSV18 {
         return 19;
     }
 
-    public Object getPlayerPacket(Object nmsWorld, GameProfile gameProfile) throws ReflectiveOperationException {
+    public Object createPlayer(Object nmsWorld, GameProfile gameProfile) throws ReflectiveOperationException {
         try {
             return Reflections.PLAYER_CONSTRUCTOR_NEW_1.get().newInstance(Reflections.GET_SERVER_METHOD.get().invoke(Bukkit.getServer()), nmsWorld, gameProfile, null);
         } catch (Throwable e) {

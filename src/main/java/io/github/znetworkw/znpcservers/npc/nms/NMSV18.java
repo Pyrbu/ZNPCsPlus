@@ -9,7 +9,7 @@ public class NMSV18 extends NMSV17 {
         return 18;
     }
 
-    public void updateGlowPacket(NPC npc, Object packet) throws ReflectiveOperationException {
+    public void updateGlow(NPC npc, Object packet) throws ReflectiveOperationException {
         Utils.setValue(packet, "m", Reflections.ENUM_CHAT_FORMAT_FIND.get().invoke(null, npc.getNpcPojo().getGlowName()));
     }
 }

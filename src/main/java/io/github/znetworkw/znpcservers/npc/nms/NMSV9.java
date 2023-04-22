@@ -14,21 +14,21 @@ public class NMSV9 extends NMSV8 {
         return 9;
     }
 
-    public Object convertItemStack(int entityId, ItemSlot itemSlot, ItemStack itemStack) throws ReflectiveOperationException {
+    public Object createEntityEquipmentPacket(int entityId, ItemSlot itemSlot, ItemStack itemStack) throws ReflectiveOperationException {
         return Reflections.AS_NMS_COPY_METHOD.get().invoke(Reflections.CRAFT_ITEM_STACK_CLASS, itemStack);
     }
 
-    public ImmutableList<Object> getEquipPackets(NPC npc) throws ReflectiveOperationException {
+    public ImmutableList<Object> createEquipmentPacket(NPC npc) throws ReflectiveOperationException {
         ImmutableList.Builder<Object> builder = ImmutableList.builder();
         for (Map.Entry<ItemSlot, ItemStack> stackEntry : npc.getNpcPojo().getNpcEquip().entrySet()) {
             builder.add(Reflections.PACKET_PLAY_OUT_ENTITY_EQUIPMENT_CONSTRUCTOR_NEWEST_OLD.get().newInstance(npc.getEntityID(),
                     getItemSlot(stackEntry.getKey().getSlot()),
-                    convertItemStack(npc.getEntityID(), stackEntry.getKey(), stackEntry.getValue())));
+                    createEntityEquipmentPacket(npc.getEntityID(), stackEntry.getKey(), stackEntry.getValue())));
         }
         return builder.build();
     }
 
-    public void updateGlowPacket(NPC npc, Object packet) throws ReflectiveOperationException {
+    public void updateGlow(NPC npc, Object packet) throws ReflectiveOperationException {
         Object enumChatString = Reflections.ENUM_CHAT_TO_STRING_METHOD.get().invoke(npc.getGlowColor());
         if (Utils.BUKKIT_VERSION > 12) {
             Utils.setValue(packet, npc.getGlowColor(), Reflections.ENUM_CHAT_CLASS);
@@ -39,7 +39,7 @@ public class NMSV9 extends NMSV8 {
         }
     }
 
-    public boolean allowGlowColor() {
+    public boolean allowsGlowColor() {
         return true;
     }
 }
