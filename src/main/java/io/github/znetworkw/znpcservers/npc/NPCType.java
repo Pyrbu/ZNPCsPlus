@@ -75,7 +75,7 @@ public enum NPCType {
     SPIDER(ENTITY_SPIDER_CLASS, -0.915),
     SQUID(ENTITY_SQUID_CLASS, -1.015),
     STRAY(ENTITY_STRAY_CLASS, 0.175),
-    STRIDER(ENTITY_STRIDER_CLASS, -0.115, "setSaddled", "setShivering"),
+    STRIDER(ENTITY_STRIDER_CLASS, -0.115, "setSaddled", "setShivering", "setBaby"),
     TADPOLE(ENTITY_TADPOLE_CLASS, -1.515, "setAge"),
     TRADER_LLAMA(ENTITY_TRADER_LLAMA_CLASS, 0.055, "setAge", "setColor"),
     TROPICAL_FISH(ENTITY_TROPICAL_FISH_CLASS, -1.415, "setPattern", "setBodyColor", "setPatternColor"),
