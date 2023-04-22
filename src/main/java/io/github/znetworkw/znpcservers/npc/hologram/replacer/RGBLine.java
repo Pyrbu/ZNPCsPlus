@@ -21,14 +21,11 @@ public class RGBLine implements LineReplacer {
                         break;
                     }
                     char hexCode = rgbString.charAt(i2);
-                    hexCodeStringBuilder.append((ConfigurationConstants.RGB_ANIMATION && hexCode != '#') ?
-                            Integer.toHexString(ThreadLocalRandom.current().nextInt(16)) : Character.valueOf(hexCode));
+                    hexCodeStringBuilder.append((ConfigurationConstants.RGB_ANIMATION && hexCode != '#') ? Integer.toHexString(ThreadLocalRandom.current().nextInt(16)) : Character.valueOf(hexCode));
                 }
-                if (success)
-                    try {
-                        rgbString = rgbString.substring(0, i) + ChatColor.of(hexCodeStringBuilder.toString()) + rgbString.substring(endIndex);
-                    } catch (Exception ignored) {
-                    }
+                if (success) try {
+                    rgbString = rgbString.substring(0, i) + ChatColor.of(hexCodeStringBuilder.toString()) + rgbString.substring(endIndex);
+                } catch (Exception ignored) {}
             }
         }
         return rgbString;

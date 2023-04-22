@@ -22,6 +22,7 @@ public class ConversationModel {
         }
     }
 
+    @SuppressWarnings("unused")
     private ConversationModel() {
     }
 
@@ -38,14 +39,11 @@ public class ConversationModel {
     }
 
     public void startConversation(NPC npc, Player player) {
-        if (!Conversation.exists(this.conversationName))
-            throw new IllegalStateException("can't find conversation " + this.conversationName);
-        if (ConversationProcessor.isPlayerConversing(player.getUniqueId()))
-            return;
+        if (!Conversation.exists(this.conversationName)) throw new IllegalStateException("can't find conversation " + this.conversationName);
+        if (ConversationProcessor.isPlayerConversing(player.getUniqueId())) return;
         if (this.lastStarted.containsKey(player.getUniqueId())) {
             long lastConversationNanos = System.nanoTime() - this.lastStarted.get(player.getUniqueId());
-            if (lastConversationNanos < 1000000000L * getConversation().getDelay())
-                return;
+            if (lastConversationNanos < 1000000000L * getConversation().getDelay()) return;
         }
         this.lastStarted.remove(player.getUniqueId());
         if (this.conversationType.canStart(npc, getConversation(), player)) {
@@ -61,8 +59,7 @@ public class ConversationModel {
     public enum ConversationType {
         RADIUS {
             public boolean canStart(NPC npc, Conversation conversation, Player player) {
-                return (player.getWorld() == npc.getLocation().getWorld() && player
-                        .getLocation().distance(npc.getLocation()) <= conversation.getRadius());
+                return (player.getWorld() == npc.getLocation().getWorld() && player.getLocation().distance(npc.getLocation()) <= conversation.getRadius());
             }
         },
         CLICK {

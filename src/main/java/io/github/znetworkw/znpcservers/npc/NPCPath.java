@@ -31,9 +31,7 @@ public interface NPCPath {
 
         abstract class AbstractPath implements PathInitializer {
             private final NPC npc;
-
             private final NPCPath.AbstractTypeWriter typeWriter;
-
             private ZLocation location;
 
             public AbstractPath(NPC npc, NPCPath.AbstractTypeWriter typeWriter) {
@@ -85,7 +83,6 @@ public interface NPCPath {
 
     abstract class AbstractTypeWriter implements NPCPath {
         private static final ConcurrentMap<String, AbstractTypeWriter> PATH_TYPES = new ConcurrentHashMap<>();
-        private static final int PATH_DELAY = 1;
         private final TypeWriter typeWriter;
         private final File file;
         private final List<ZLocation> locationList;
@@ -101,14 +98,12 @@ public interface NPCPath {
         }
 
         public static AbstractTypeWriter forCreation(String pathName, ZUser user, TypeWriter typeWriter) {
-            if (typeWriter == TypeWriter.MOVEMENT)
-                return new TypeMovement(pathName, user);
+            if (typeWriter == TypeWriter.MOVEMENT) return new TypeMovement(pathName, user);
             throw new IllegalStateException("can't find type writer for: " + typeWriter.name());
         }
 
         public static AbstractTypeWriter forFile(File file, TypeWriter typeWriter) {
-            if (typeWriter == TypeWriter.MOVEMENT)
-                return new TypeMovement(file);
+            if (typeWriter == TypeWriter.MOVEMENT) return new TypeMovement(file);
             throw new IllegalStateException("can't find type writer for: " + typeWriter.name());
         }
 
@@ -125,22 +120,9 @@ public interface NPCPath {
         }
 
         public void load() {
-            try {
-                DataInputStream reader = NPCPath.ZNPCPathDelegator.forFile(this.file).getInputStream();
-                try {
-                    initialize(reader);
-                    register(this);
-                    if (reader != null)
-                        reader.close();
-                } catch (Throwable throwable) {
-                    if (reader != null)
-                        try {
-                            reader.close();
-                        } catch (Throwable throwable1) {
-                            throwable.addSuppressed(throwable1);
-                        }
-                    throw throwable;
-                }
+            try (DataInputStream reader = NPCPath.ZNPCPathDelegator.forFile(this.file).getInputStream()) {
+                initialize(reader);
+                register(this);
             } catch (IOException e) {
                 ZNPCsPlus.LOGGER.warning("[AbstractTypeWriter] " + String.format("The path %s could not be loaded", this.file.getName()));
                 e.printStackTrace();
@@ -148,21 +130,9 @@ public interface NPCPath {
         }
 
         public void write() {
-            try {
-                DataOutputStream writer = NPCPath.ZNPCPathDelegator.forFile(getFile()).getOutputStream();
-                try {
-                    write(writer);
-                    if (writer != null)
-                        writer.close();
-                } catch (Throwable throwable) {
-                    if (writer != null)
-                        try {
-                            writer.close();
-                        } catch (Throwable throwable1) {
-                            throwable.addSuppressed(throwable1);
-                        }
-                    throw throwable;
-                }
+            try (DataOutputStream writer = NPCPath.ZNPCPathDelegator.forFile(getFile()).getOutputStream()) {
+                write(writer);
+                if (writer != null) writer.close();
             } catch (IOException e) {
                 ZNPCsPlus.LOGGER.warning("[AbstractTypeWriter] " + String.format("Path %s could not be created", getName()));
                 e.printStackTrace();
@@ -187,9 +157,7 @@ public interface NPCPath {
 
         private static class TypeMovement extends AbstractTypeWriter {
             private static final int MAX_LOCATIONS = ((Integer) Configuration.CONFIGURATION.getValue(ConfigurationValue.MAX_PATH_LOCATIONS)).intValue();
-
             private ZUser npcUser;
-
             private BukkitTask bukkitTask;
 
             public TypeMovement(File file) {
@@ -215,8 +183,7 @@ public interface NPCPath {
             }
 
             public void write(DataOutputStream dataOutputStream) throws IOException {
-                if (getLocationList().isEmpty())
-                    return;
+                if (getLocationList().isEmpty()) return;
                 Iterator<ZLocation> locationIterator = getLocationList().iterator();
                 while (locationIterator.hasNext()) {
                     ZLocation location = locationIterator.next();
@@ -226,8 +193,7 @@ public interface NPCPath {
                     dataOutputStream.writeDouble(location.getZ());
                     dataOutputStream.writeFloat(location.getYaw());
                     dataOutputStream.writeFloat(location.getPitch());
-                    if (!locationIterator.hasNext())
-                        register(this);
+                    if (!locationIterator.hasNext()) register(this);
                 }
             }
 
@@ -262,7 +228,6 @@ public interface NPCPath {
 
             protected static class MovementPath extends NPCPath.PathInitializer.AbstractPath {
                 private int currentEntryPath = 0;
-
                 private boolean pathReverse = false;
 
                 public MovementPath(NPC npc, NPCPath.AbstractTypeWriter.TypeMovement path) {

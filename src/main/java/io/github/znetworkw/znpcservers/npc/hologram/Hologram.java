@@ -18,11 +18,8 @@ import java.util.List;
 
 public class Hologram {
     private static final boolean NEW_METHOD = (Utils.BUKKIT_VERSION > 12);
-
     private static final double LINE_SPACING = Configuration.CONFIGURATION.getValue(ConfigurationValue.LINE_SPACING);
-
     private final List<HologramLine> hologramLines = new ArrayList<>();
-
     private final NPC npc;
 
     public Hologram(NPC npc) {

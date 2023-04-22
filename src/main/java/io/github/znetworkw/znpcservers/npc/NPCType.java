@@ -116,8 +116,8 @@ public enum NPCType {
         Class<?>[] methodParameterTypes = method.getParameterTypes();
         Object[] newArray = new Object[methodParameterTypes.length];
         for (int i = 0; i < methodParameterTypes.length; ++i) {
-            TypeProperty typeProperty = TypeProperty.forType(methodParameterTypes[i]);
-            newArray[i] = typeProperty != null ? typeProperty.getFunction().apply(strings[i]) : EnumPropertyCache.find(strings[i], methodParameterTypes[i]);
+            PrimitivePropertyType primitivePropertyType = PrimitivePropertyType.forType(methodParameterTypes[i]);
+            newArray[i] = primitivePropertyType != null ? primitivePropertyType.getFunction().apply(strings[i]) : EnumPropertyCache.find(strings[i], methodParameterTypes[i]);
         }
         return newArray;
     }

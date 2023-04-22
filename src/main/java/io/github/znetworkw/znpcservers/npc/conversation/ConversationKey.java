@@ -20,8 +20,7 @@ public class ConversationKey {
     }
 
     public ConversationKey(Iterable<String> line) {
-        this
-                .lines = StreamSupport.stream(line.spliterator(), false).map(String::toString).collect(Collectors.toList());
+        this.lines = StreamSupport.stream(line.spliterator(), false).map(String::toString).collect(Collectors.toList());
         this.actions = new ArrayList<>();
     }
 
@@ -50,8 +49,7 @@ public class ConversationKey {
     }
 
     public String getTextFormatted() {
-        if (this.lines.isEmpty())
-            return "";
+        if (this.lines.isEmpty()) return "";
         String text = this.lines.iterator().next();
         int fixedLength = Math.min(text.length(), 28);
         return text.substring(0, fixedLength);

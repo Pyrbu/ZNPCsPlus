@@ -12,9 +12,7 @@ public interface LineReplacer {
             if (!lineReplacer.isSupported()) continue;
             string = lineReplacer.make(string);
         }
-        return Utils.toColor((Utils.PLACEHOLDER_SUPPORT && user != null) ?
-                Utils.getWithPlaceholders(string, user.toPlayer()) :
-                string);
+        return Utils.toColor((Utils.PLACEHOLDER_SUPPORT && user != null) ? Utils.getWithPlaceholders(string, user.toPlayer()) : string);
     }
 
     String make(String paramString);

@@ -10,8 +10,7 @@ public class NPCSkin {
     private final String signature;
 
     protected NPCSkin(String... values) {
-        if (values.length < 1)
-            throw new IllegalArgumentException("Length cannot be zero or negative.");
+        if (values.length < 1) throw new IllegalArgumentException("Invalid arguments for NPC skin constructor");
         this.texture = values[0];
         this.signature = values[1];
     }

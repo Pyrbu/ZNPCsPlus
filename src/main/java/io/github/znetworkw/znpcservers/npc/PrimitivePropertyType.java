@@ -2,7 +2,7 @@ package io.github.znetworkw.znpcservers.npc;
 
 import java.util.function.Function;
 
-public enum TypeProperty {
+public enum PrimitivePropertyType {
     STRING(String::toString),
     BOOLEAN(Boolean::parseBoolean),
     INT(Integer::parseInt),
@@ -13,11 +13,11 @@ public enum TypeProperty {
 
     private final Function<String, ?> function;
 
-    TypeProperty(Function<String, ?> function) {
+    PrimitivePropertyType(Function<String, ?> function) {
         this.function = function;
     }
 
-    public static TypeProperty forType(Class<?> primitiveType) {
+    public static PrimitivePropertyType forType(Class<?> primitiveType) {
         if (primitiveType == String.class) return STRING;
         if (primitiveType == boolean.class) return BOOLEAN;
         if (primitiveType == int.class) return INT;
