@@ -56,7 +56,7 @@ public class Hologram {
     public void spawn(ZUser user) {
         this.hologramLines.forEach(hologramLine -> {
             try {
-                Object entityPlayerPacketSpawn = this.npc.getPackets().getProxyInstance().getHologramSpawnPacket(hologramLine.armorStand);
+                Object entityPlayerPacketSpawn = this.npc.getPackets().getNms().getHologramSpawnPacket(hologramLine.armorStand);
                 Utils.sendPackets(user, entityPlayerPacketSpawn);
             } catch (ReflectiveOperationException operationException) {
                 delete(user);
@@ -67,7 +67,7 @@ public class Hologram {
     public void delete(ZUser user) {
         this.hologramLines.forEach(hologramLine -> {
             try {
-                Utils.sendPackets(user, this.npc.getPackets().getProxyInstance().getDestroyPacket(hologramLine.id));
+                Utils.sendPackets(user, this.npc.getPackets().getNms().getDestroyPacket(hologramLine.id));
             } catch (ReflectiveOperationException operationException) {
                 throw new UnexpectedCallException(operationException);
             }
@@ -78,7 +78,7 @@ public class Hologram {
         for (HologramLine hologramLine : this.hologramLines) {
             try {
                 updateLine(hologramLine.line, hologramLine.armorStand, user);
-                Object metaData = this.npc.getPackets().getProxyInstance().getMetadataPacket(hologramLine.id, hologramLine.armorStand);
+                Object metaData = this.npc.getPackets().getNms().getMetadataPacket(hologramLine.id, hologramLine.armorStand);
                 Utils.sendPackets(user, metaData);
             } catch (ReflectiveOperationException operationException) {
                 throw new UnexpectedCallException(operationException);

@@ -49,7 +49,7 @@ public final class Utils {
     }
 
     public static void sendTitle(Player player, String title, String subTitle) {
-        player.sendTitle(toColor(title), toColor(subTitle), 1, 3, 1);
+        player.sendTitle(toColor(title), toColor(subTitle), 20, 60, 20);
     }
 
     public static void setValue(Object fieldInstance, String fieldName, Object value) throws NoSuchFieldException, IllegalAccessException {

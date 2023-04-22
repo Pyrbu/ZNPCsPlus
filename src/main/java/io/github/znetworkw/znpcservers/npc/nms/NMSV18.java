@@ -1,10 +1,10 @@
-package io.github.znetworkw.znpcservers.npc.packet;
+package io.github.znetworkw.znpcservers.npc.nms;
 
 import io.github.znetworkw.znpcservers.reflection.Reflections;
 import io.github.znetworkw.znpcservers.npc.NPC;
 import io.github.znetworkw.znpcservers.utility.Utils;
 
-public class PacketV18 extends PacketV17 {
+public class NMSV18 extends NMSV17 {
     public int version() {
         return 18;
     }

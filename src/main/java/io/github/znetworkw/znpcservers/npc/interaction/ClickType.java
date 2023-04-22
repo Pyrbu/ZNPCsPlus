@@ -1,4 +1,4 @@
-package io.github.znetworkw.znpcservers.npc.event;
+package io.github.znetworkw.znpcservers.npc.interaction;
 
 public enum ClickType {
     RIGHT, LEFT, DEFAULT;

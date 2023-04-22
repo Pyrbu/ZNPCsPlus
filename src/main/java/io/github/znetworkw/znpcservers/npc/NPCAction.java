@@ -2,7 +2,7 @@ package io.github.znetworkw.znpcservers.npc;
 
 import com.google.common.base.MoreObjects;
 import lol.pyr.znpcsplus.ZNPCsPlus;
-import io.github.znetworkw.znpcservers.npc.event.ClickType;
+import io.github.znetworkw.znpcservers.npc.interaction.ClickType;
 import io.github.znetworkw.znpcservers.user.ZUser;
 import io.github.znetworkw.znpcservers.utility.Utils;
 import org.bukkit.Bukkit;

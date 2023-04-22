@@ -1,7 +1,10 @@
 package lol.pyr.znpcsplus;
 
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import io.github.znetworkw.znpcservers.commands.list.DefaultCommand;
 import io.github.znetworkw.znpcservers.configuration.Configuration;
 import io.github.znetworkw.znpcservers.configuration.ConfigurationConstants;
@@ -11,6 +14,7 @@ import io.github.znetworkw.znpcservers.npc.NPC;
 import io.github.znetworkw.znpcservers.npc.NPCModel;
 import io.github.znetworkw.znpcservers.npc.NPCPath;
 import io.github.znetworkw.znpcservers.npc.NPCType;
+import io.github.znetworkw.znpcservers.npc.interaction.InteractionPacketListener;
 import io.github.znetworkw.znpcservers.npc.task.NPCPositionTask;
 import io.github.znetworkw.znpcservers.npc.task.NPCSaveTask;
 import io.github.znetworkw.znpcservers.npc.task.NPCVisibilityTask;
@@ -70,6 +74,8 @@ public class ZNPCsPlus extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
+        PacketEvents.getAPI().getSettings().checkForUpdates(false);
         LOGGER = getLogger();
         PLUGIN_FOLDER = getDataFolder();
         PATH_FOLDER = new File(PLUGIN_FOLDER, "paths");
@@ -104,8 +110,12 @@ public class ZNPCsPlus extends JavaPlugin {
             }
         }
 
-        log(ChatColor.WHITE + " * Initializing adventure...");
+        log(ChatColor.WHITE + " * Initializing Adventure...");
         ADVENTURE = BukkitAudiences.create(this);
+
+        log(ChatColor.WHITE + " * Initializing PacketEvents...");
+        PacketEvents.getAPI().getEventManager().registerListener(new InteractionPacketListener(), PacketListenerPriority.MONITOR);
+        PacketEvents.getAPI().init();
 
         PLUGIN_FOLDER.mkdirs();
         PATH_FOLDER.mkdirs();

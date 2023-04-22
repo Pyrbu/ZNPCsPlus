@@ -1,4 +1,4 @@
-package io.github.znetworkw.znpcservers.npc.packet;
+package io.github.znetworkw.znpcservers.npc.nms;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.authlib.GameProfile;
@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import java.lang.reflect.Constructor;
 import java.util.Map;
 
-public class PacketV8 implements Packet {
+public class NMSV8 implements NMS {
     public int version() {
         return 8;
     }

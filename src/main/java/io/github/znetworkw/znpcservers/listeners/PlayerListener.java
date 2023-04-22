@@ -1,7 +1,7 @@
 package io.github.znetworkw.znpcservers.listeners;
 
 import io.github.znetworkw.znpcservers.npc.conversation.ConversationModel;
-import io.github.znetworkw.znpcservers.npc.event.NPCInteractEvent;
+import io.github.znetworkw.znpcservers.npc.interaction.NPCInteractEvent;
 import io.github.znetworkw.znpcservers.user.EventService;
 import io.github.znetworkw.znpcservers.user.ZUser;
 import org.bukkit.event.EventHandler;
@@ -12,7 +12,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 
-@SuppressWarnings("deprecation")
 public class PlayerListener implements Listener {
     public PlayerListener(Plugin serversNPC) {
         serversNPC.getServer().getPluginManager().registerEvents(this, serversNPC);

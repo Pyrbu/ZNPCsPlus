@@ -1,4 +1,4 @@
-package io.github.znetworkw.znpcservers.npc.packet;
+package io.github.znetworkw.znpcservers.npc.nms;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 import java.util.Map;
 
-public class PacketV16 extends PacketV9 {
+public class NMSV16 extends NMSV9 {
     public int version() {
         return 16;
     }
