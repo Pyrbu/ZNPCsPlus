@@ -1,10 +1,9 @@
 package io.github.znetworkw.znpcservers.utility;
 
-import io.github.znetworkw.znpcservers.reflection.Reflections;
 import io.github.znetworkw.znpcservers.configuration.ConfigurationConstants;
+import io.github.znetworkw.znpcservers.reflection.Reflections;
 import io.github.znetworkw.znpcservers.user.ZUser;
 import me.clip.placeholderapi.PlaceholderAPI;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -17,7 +16,11 @@ public final class Utils {
     public static boolean PLACEHOLDER_SUPPORT = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
 
     static {
-        BUKKIT_VERSION = NumberUtils.toInt(getFormattedBukkitPackage());
+        int version = 0;
+        try {
+            version = Integer.parseInt(getFormattedBukkitPackage());
+        } catch (NumberFormatException ignored) {}
+        BUKKIT_VERSION = version;
     }
 
     public static boolean versionNewer(int version) {

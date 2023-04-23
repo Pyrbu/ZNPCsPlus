@@ -30,7 +30,6 @@ dependencies {
     compileOnly "com.mojang:authlib:3.4.40"
     compileOnly "com.mojang:datafixerupper:6.0.8"
 
-    implementation "org.apache.commons:commons-lang3:3.12.0"
     implementation "commons-io:commons-io:2.11.0"
     implementation "com.google.code.gson:gson:2.10.1"
     implementation "org.bstats:bstats-bukkit:3.0.2"
@@ -57,7 +56,6 @@ shadowJar {
     relocate "com.google", "lol.pyr.znpcsplus.lib.google"
     relocate "com.github.retrooper.packetevents", "lol.pyr.znpcsplus.lib.packetevents.api"
     relocate "io.github.retrooper.packetevents", "lol.pyr.znpcsplus.lib.packetevents.impl"
-    relocate "assets.mappings", "lol.pyr.znpcsplus.lib.mappings"
     minimize()
 }
 
