@@ -1,5 +1,6 @@
 package io.github.znetworkw.znpcservers.utility.location;
 
+import com.github.retrooper.packetevents.util.Vector3d;
 import com.google.common.base.Preconditions;
 import com.google.gson.*;
 import org.bukkit.Bukkit;
@@ -71,6 +72,10 @@ public class ZLocation {
 
     public Vector toVector() {
         return new Vector(x, y, z);
+    }
+
+    public Vector3d toVector3d() {
+        return new Vector3d(x, y, z);
     }
 
     private static final double _2PI = 2 * Math.PI;

@@ -2,17 +2,14 @@ package io.github.znetworkw.znpcservers.nms;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.authlib.GameProfile;
-import io.github.znetworkw.znpcservers.reflection.Reflections;
 import io.github.znetworkw.znpcservers.npc.FunctionFactory;
-import io.github.znetworkw.znpcservers.npc.ItemSlot;
 import io.github.znetworkw.znpcservers.npc.NPC;
 import io.github.znetworkw.znpcservers.npc.NPCType;
+import io.github.znetworkw.znpcservers.reflection.Reflections;
 import io.github.znetworkw.znpcservers.utility.ReflectionUtils;
 import io.github.znetworkw.znpcservers.utility.Utils;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
-import java.util.Collections;
 
 public interface NMS {
     int version();
@@ -20,40 +17,10 @@ public interface NMS {
     @PacketValue(keyName = "playerPacket")
     Object createPlayer(Object paramObject, GameProfile paramGameProfile) throws ReflectiveOperationException;
 
-    @PacketValue(keyName = "spawnPacket")
-    Object createSpawnPacket(Object paramObject, boolean paramBoolean) throws ReflectiveOperationException;
-
-    Object createEntityEquipmentPacket(int paramInt, ItemSlot paramItemSlot, ItemStack paramItemStack) throws ReflectiveOperationException;
-
     Object createMetadataPacket(int paramInt, Object paramObject) throws ReflectiveOperationException;
 
     @PacketValue(keyName = "hologramSpawnPacket", valueType = ValueType.ARGUMENTS)
     Object createArmorStandSpawnPacket(Object paramObject) throws ReflectiveOperationException;
-
-    @SuppressWarnings("SuspiciousTernaryOperatorInVarargsCall")
-    @PacketValue(keyName = "destroyPacket", valueType = ValueType.ARGUMENTS)
-    default Object createEntityDestroyPacket(int entityId) throws ReflectiveOperationException {
-        return Reflections.PACKET_PLAY_OUT_ENTITY_DESTROY_CONSTRUCTOR.get().newInstance(Reflections.PACKET_PLAY_OUT_ENTITY_DESTROY_CONSTRUCTOR.get().getParameterTypes()[0].isArray() ? new int[] {entityId} : entityId);
-    }
-
-    @PacketValue(keyName = "enumSlot", valueType = ValueType.ARGUMENTS)
-    default Object getItemSlot(int slot) {
-        return Reflections.ENUM_ITEM_SLOT.getEnumConstants()[slot];
-    }
-
-    @PacketValue(keyName = "removeTab")
-    default Object createTabRemovePacket(Object nmsEntity) throws ReflectiveOperationException {
-        try {
-            return Reflections.PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR.get().newInstance(Reflections.REMOVE_PLAYER_FIELD.get(), Collections.singletonList(nmsEntity));
-        } catch (Throwable throwable) {
-            boolean useOldMethod = (Reflections.PACKET_PLAY_OUT_PLAYER_INFO_REMOVE_CLASS != null);
-            if (useOldMethod) return Reflections.PACKET_PLAY_OUT_PLAYER_INFO_REMOVE_CONSTRUCTOR.get().newInstance(Collections.singletonList(Reflections.GET_UNIQUE_ID_METHOD.get().invoke(nmsEntity)));
-            return Reflections.PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR.get().newInstance(Reflections.REMOVE_PLAYER_FIELD.get(), nmsEntity);
-        }
-    }
-
-    @PacketValue(keyName = "equipPackets")
-    ImmutableList<Object> createEquipmentPacket(NPC paramNPC) throws ReflectiveOperationException;
 
     @SuppressWarnings("unchecked")
     @PacketValue(keyName = "scoreboardPackets")

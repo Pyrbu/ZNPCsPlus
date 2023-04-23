@@ -1,5 +1,6 @@
 package io.github.znetworkw.znpcservers.npc;
 
+import com.github.retrooper.packetevents.protocol.player.EquipmentSlot;
 import io.github.znetworkw.znpcservers.npc.conversation.ConversationModel;
 import io.github.znetworkw.znpcservers.utility.location.ZLocation;
 import org.bukkit.inventory.ItemStack;
@@ -20,7 +21,7 @@ public class NPCModel {
     private NPCType npcType;
     private List<String> hologramLines;
     private List<NPCAction> clickActions;
-    private Map<ItemSlot, ItemStack> npcEquip;
+    private Map<EquipmentSlot, ItemStack> npcEquip;
     private Map<String, Boolean> npcFunctions;
     private Map<String, String[]> customizationMap;
 
@@ -190,15 +191,15 @@ public class NPCModel {
         return this;
     }
 
-    public Map<ItemSlot, ItemStack> getNpcEquip() {
+    public Map<EquipmentSlot, ItemStack> getNpcEquip() {
         return this.npcEquip;
     }
 
-    public void setNpcEquip(Map<ItemSlot, ItemStack> npcEquip) {
+    public void setNpcEquip(Map<EquipmentSlot, ItemStack> npcEquip) {
         this.npcEquip = npcEquip;
     }
 
-    public NPCModel withNpcEquip(Map<ItemSlot, ItemStack> npcEquip) {
+    public NPCModel withNpcEquip(Map<EquipmentSlot, ItemStack> npcEquip) {
         setNpcEquip(npcEquip);
         return this;
     }

@@ -6,7 +6,7 @@ import io.github.znetworkw.znpcservers.npc.NPC;
 import io.github.znetworkw.znpcservers.utility.Utils;
 import org.bukkit.Bukkit;
 
-public class NMSV17 extends NMSV16 {
+public class NMSV17 extends NMSV9 {
     public int version() {
         return 17;
     }

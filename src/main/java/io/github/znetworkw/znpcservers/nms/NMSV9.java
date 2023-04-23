@@ -1,31 +1,12 @@
 package io.github.znetworkw.znpcservers.nms;
 
-import com.google.common.collect.ImmutableList;
-import io.github.znetworkw.znpcservers.reflection.Reflections;
-import io.github.znetworkw.znpcservers.npc.ItemSlot;
 import io.github.znetworkw.znpcservers.npc.NPC;
+import io.github.znetworkw.znpcservers.reflection.Reflections;
 import io.github.znetworkw.znpcservers.utility.Utils;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.Map;
 
 public class NMSV9 extends NMSV8 {
     public int version() {
         return 9;
-    }
-
-    public Object createEntityEquipmentPacket(int entityId, ItemSlot itemSlot, ItemStack itemStack) throws ReflectiveOperationException {
-        return Reflections.AS_NMS_COPY_METHOD.get().invoke(Reflections.CRAFT_ITEM_STACK_CLASS, itemStack);
-    }
-
-    public ImmutableList<Object> createEquipmentPacket(NPC npc) throws ReflectiveOperationException {
-        ImmutableList.Builder<Object> builder = ImmutableList.builder();
-        for (Map.Entry<ItemSlot, ItemStack> stackEntry : npc.getNpcPojo().getNpcEquip().entrySet()) {
-            builder.add(Reflections.PACKET_PLAY_OUT_ENTITY_EQUIPMENT_CONSTRUCTOR_NEWEST_OLD.get().newInstance(npc.getEntityID(),
-                    getItemSlot(stackEntry.getKey().getSlot()),
-                    createEntityEquipmentPacket(npc.getEntityID(), stackEntry.getKey(), stackEntry.getValue())));
-        }
-        return builder.build();
     }
 
     public void updateGlow(NPC npc, Object packet) throws ReflectiveOperationException {

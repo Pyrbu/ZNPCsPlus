@@ -1,5 +1,7 @@
 package io.github.znetworkw.znpcservers.hologram;
 
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerDestroyEntities;
 import io.github.znetworkw.znpcservers.UnexpectedCallException;
 import io.github.znetworkw.znpcservers.reflection.Reflections;
 import io.github.znetworkw.znpcservers.configuration.Configuration;
@@ -65,13 +67,7 @@ public class Hologram {
     }
 
     public void delete(ZUser user) {
-        this.hologramLines.forEach(hologramLine -> {
-            try {
-                Utils.sendPackets(user, this.npc.getPackets().getNms().createEntityDestroyPacket(hologramLine.id));
-            } catch (ReflectiveOperationException operationException) {
-                throw new UnexpectedCallException(operationException);
-            }
-        });
+        this.hologramLines.forEach(hologramLine -> PacketEvents.getAPI().getPlayerManager().sendPacket(user.toPlayer(), new WrapperPlayServerDestroyEntities(hologramLine.id)));
     }
 
     public void updateNames(ZUser user) {

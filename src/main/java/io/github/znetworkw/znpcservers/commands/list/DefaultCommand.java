@@ -1,5 +1,6 @@
 package io.github.znetworkw.znpcservers.commands.list;
 
+import com.github.retrooper.packetevents.protocol.player.EquipmentSlot;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
@@ -180,9 +181,7 @@ public class DefaultCommand extends Command {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.NPC_NOT_FOUND);
             return;
         }
-        foundNPC.getNpcPojo().getNpcEquip().put(
-                ItemSlot.valueOf(args.get("slot").toUpperCase()), sender
-                        .getPlayer().getInventory().getItemInHand());
+        foundNPC.getNpcPojo().getNpcEquip().put(EquipmentSlot.valueOf(args.get("slot").toUpperCase()), sender.getPlayer().getInventory().getItemInHand());
         foundNPC.getPackets().flushCache("equipPackets");
         Objects.requireNonNull(foundNPC);
         Objects.requireNonNull(foundNPC);

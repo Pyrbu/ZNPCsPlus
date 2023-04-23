@@ -1,9 +1,13 @@
 package io.github.znetworkw.znpcservers.npc;
 
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.protocol.player.Equipment;
+import com.github.retrooper.packetevents.wrapper.play.server.*;
 import com.google.common.collect.ImmutableList;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
+import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import io.github.znetworkw.znpcservers.UnexpectedCallException;
 import io.github.znetworkw.znpcservers.hologram.Hologram;
 import io.github.znetworkw.znpcservers.nms.PacketCache;
@@ -14,6 +18,7 @@ import io.github.znetworkw.znpcservers.utility.Utils;
 import io.github.znetworkw.znpcservers.utility.location.ZLocation;
 import lol.pyr.znpcsplus.ZNPCsPlus;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -211,19 +216,31 @@ public class NPC {
                 ImmutableList<Object> scoreboardPackets = this.packets.getNms().updateScoreboard(this);
                 scoreboardPackets.forEach(p -> Utils.sendPackets(user, p));
             }
+
+            ZLocation location = npcPojo.getLocation();
+            Player player = user.toPlayer();
             if (npcIsPlayer) {
                 if (FunctionFactory.isTrue(this, "mirror")) updateProfile(user.getGameProfile().getProperties());
                 Utils.sendPackets(user, this.tabConstructor, this.updateTabConstructor);
+                ZNPCsPlus.SCHEDULER.runTask(() -> {
+                    PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerSpawnPlayer(entityID,
+                            this.gameProfile.getId(), SpigotConversionUtil.fromBukkitLocation(location.toBukkitLocation())));
+                    PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerEntityHeadLook(entityID, location.getYaw()));
+                });
             }
-            Utils.sendPackets(user, this.packets.getNms().createSpawnPacket(this.nmsEntity, npcIsPlayer));
+            else PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerSpawnEntity(entityID,
+                    Optional.of(uuid), SpigotConversionUtil.fromBukkitEntityType(((Entity) bukkitEntity).getType()),
+                    location.toVector3d(), location.getPitch(), location.getYaw(), location.getYaw(), 0, Optional.empty()));
+
+
             if (FunctionFactory.isTrue(this, "holo")) this.hologram.spawn(user);
             updateMetadata(Collections.singleton(user));
             sendEquipPackets(user);
             lookAt(user, getLocation(), true);
-            if (npcIsPlayer) {
-                Object removeTabPacket = this.packets.getNms().createTabRemovePacket(this.nmsEntity);
-                ZNPCsPlus.SCHEDULER.scheduleSyncDelayedTask(() -> Utils.sendPackets(user, removeTabPacket, this.updateTabConstructor), 60);
-            }
+            if (npcIsPlayer) ZNPCsPlus.SCHEDULER.scheduleSyncDelayedTask(() -> {
+                PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerPlayerInfoRemove(gameProfile.getId()));
+                Utils.sendPackets(user, this.updateTabConstructor);
+            }, 60);
         } catch (ReflectiveOperationException operationException) {
             delete(user);
             throw new UnexpectedCallException(operationException);
@@ -237,13 +254,10 @@ public class NPC {
     }
 
     private void handleDelete(ZUser user) {
-        try {
-            if (this.npcPojo.getNpcType() == NPCType.PLAYER) this.packets.getNms().createTabRemovePacket(this.nmsEntity);
-            this.hologram.delete(user);
-            Utils.sendPackets(user, this.packets.getNms().createEntityDestroyPacket(this.entityID));
-        } catch (ReflectiveOperationException operationException) {
-            throw new UnexpectedCallException(operationException);
-        }
+        Player player = user.toPlayer();
+        this.hologram.delete(user);
+        if (this.npcPojo.getNpcType() == NPCType.PLAYER) PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerPlayerInfoRemove(gameProfile.getId()));
+        PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerDestroyEntities(this.entityID));
     }
 
     public void lookAt(ZUser player, Location location, boolean rotation) {
@@ -289,12 +303,12 @@ public class NPC {
 
     public void sendEquipPackets(ZUser zUser) {
         if (this.npcPojo.getNpcEquip().isEmpty()) return;
-        try {
-            ImmutableList<Object> equipPackets = this.packets.getNms().createEquipmentPacket(this);
-            equipPackets.forEach(o -> Utils.sendPackets(zUser, o));
-        } catch (ReflectiveOperationException operationException) {
-            throw new UnexpectedCallException(operationException.getCause());
-        }
+        List<Equipment> equipment = npcPojo.getNpcEquip().entrySet().stream()
+                .map(entry -> new Equipment(entry.getKey(), SpigotConversionUtil.fromBukkitItemStack(entry.getValue())))
+                .toList();
+
+        if (Utils.versionNewer(16)) PacketEvents.getAPI().getPlayerManager().sendPacket(zUser.toPlayer(), new WrapperPlayServerEntityEquipment(entityID, equipment));
+        else for (Equipment e : equipment) PacketEvents.getAPI().getPlayerManager().sendPacket(zUser.toPlayer(), new WrapperPlayServerEntityEquipment(entityID, List.of(e)));
     }
 
     public void setPath(NPCPath.AbstractTypeWriter typeWriter) {
