@@ -4,9 +4,9 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import io.github.znetworkw.znpcservers.utility.Utils;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
+import lol.pyr.znpcsplus.ZNPCsPlus;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
@@ -40,13 +40,11 @@ public class CommandSender {
     }
 
     public void sendMessage(String message, Iterable<String> hover) {
-        TextComponent textComponent = new TextComponent(TextComponent.fromLegacyText(Utils.toColor(message)));
+        TextComponent textComponent = Component.text(Utils.toColor(message));
         if (hover != null)
-            textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, (new ComponentBuilder(
-                    Utils.toColor(LINE_SEPARATOR_JOINER
-                            .join(Iterables.concat(HELP_PREFIX, hover)))))
-                    .create()));
-        getPlayer().spigot().sendMessage(textComponent);
+            textComponent = textComponent.hoverEvent(Component.text(Utils.toColor(LINE_SEPARATOR_JOINER
+                    .join(Iterables.concat(HELP_PREFIX, hover)))));
+        ZNPCsPlus.ADVENTURE.player(getPlayer()).sendMessage(textComponent);
     }
 
     public Player getPlayer() {

@@ -13,7 +13,6 @@ import com.mojang.authlib.properties.PropertyMap;
 import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import io.github.znetworkw.znpcservers.UnexpectedCallException;
 import io.github.znetworkw.znpcservers.configuration.ConfigurationConstants;
-import io.github.znetworkw.znpcservers.configuration.ConfigurationValue;
 import io.github.znetworkw.znpcservers.hologram.Hologram;
 import io.github.znetworkw.znpcservers.nms.PacketCache;
 import io.github.znetworkw.znpcservers.npc.conversation.ConversationModel;
