@@ -84,6 +84,10 @@ public class DefaultCommand extends Command {
             return;
         }
         NPCType npcType = NPCType.valueOf(args.get("type").toUpperCase());
+        if (npcType.getConstructor() == null && !npcType.equals(NPCType.PLAYER)) {
+            Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.NOT_SUPPORTED_NPC_TYPE);
+            return;
+        }
         ZNPCsPlus.createNPC(id, npcType, sender.getPlayer().getLocation(), name);
         Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.SUCCESS);
     }
@@ -116,7 +120,13 @@ public class DefaultCommand extends Command {
             sender.sendMessage(ChatColor.DARK_GREEN + "NPC list:");
             for (NPCModel npcModel : ConfigurationConstants.NPC_LIST) {
                 List<BaseComponent> parts = new ArrayList<>();
-                String message = "- " + npcModel.getId() + " " + npcModel.getHologramLines().toString() + " (" + npcModel.getLocation().getWorldName() + " " + (int) npcModel.getLocation().getX() + " " + (int) npcModel.getLocation().getY() + " " + (int) npcModel.getLocation().getZ() + ") ";
+                TextComponent component1 = new TextComponent("-");
+                component1.setColor(ChatColor.GREEN);
+                parts.add(component1);
+                TextComponent idComponent = new TextComponent(" " + npcModel.getId());
+                idComponent.setColor(npcModel.getShouldSpawn() ? ChatColor.GREEN : ChatColor.RED);
+                parts.add(idComponent);
+                String message = " " + npcModel.getHologramLines().toString() + " (" + npcModel.getLocation().getWorldName() + " " + (int) npcModel.getLocation().getX() + " " + (int) npcModel.getLocation().getY() + " " + (int) npcModel.getLocation().getZ() + ") ";
                 TextComponent textComponent = new TextComponent(message);
                 textComponent.setColor(ChatColor.GREEN);
                 parts.add(textComponent);
