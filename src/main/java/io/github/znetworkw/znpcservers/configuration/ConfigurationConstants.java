@@ -7,6 +7,7 @@ import java.util.List;
 
 public final class ConfigurationConstants {
     public static final String SPACE_SYMBOL = Configuration.CONFIGURATION.getValue(ConfigurationValue.REPLACE_SYMBOL);
+    public static final boolean DEBUG_ENABLED = Configuration.CONFIGURATION.getValue(ConfigurationValue.DEBUG_ENABLED);
     public static final int VIEW_DISTANCE = Configuration.CONFIGURATION.<Integer>getValue(ConfigurationValue.VIEW_DISTANCE);
     public static final int SAVE_DELAY = Configuration.CONFIGURATION.<Integer>getValue(ConfigurationValue.SAVE_NPCS_DELAY_SECONDS);
     public static final boolean RGB_ANIMATION = Configuration.CONFIGURATION.<Boolean>getValue(ConfigurationValue.ANIMATION_RGB);

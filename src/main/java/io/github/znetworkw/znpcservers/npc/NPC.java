@@ -12,6 +12,8 @@ import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import io.github.znetworkw.znpcservers.UnexpectedCallException;
+import io.github.znetworkw.znpcservers.configuration.ConfigurationConstants;
+import io.github.znetworkw.znpcservers.configuration.ConfigurationValue;
 import io.github.znetworkw.znpcservers.hologram.Hologram;
 import io.github.znetworkw.znpcservers.nms.PacketCache;
 import io.github.znetworkw.znpcservers.npc.conversation.ConversationModel;
@@ -81,13 +83,21 @@ public class NPC {
         if (NPC_MAP.containsKey(getNpcPojo().getId())) throw new IllegalStateException("npc with id " + getNpcPojo().getId() + " already exists.");
         this.gameProfile = new GameProfile(this.uuid, "[ZNPC] " + this.npcName);
         this.gameProfile.getProperties().put("textures", new Property("textures", this.npcPojo.getSkin(), this.npcPojo.getSignature()));
-        changeType(this.npcPojo.getNpcType());
-        updateProfile(this.gameProfile.getProperties());
-        setLocation(getNpcPojo().getLocation().toBukkitLocation(), false);
-        this.hologram.createHologram();
-        if (this.npcPojo.getPathName() != null)
-            setPath(NPCPath.AbstractTypeWriter.find(this.npcPojo.getPathName()));
-        this.npcPojo.getCustomizationMap().forEach((key, value) -> this.npcPojo.getNpcType().updateCustomization(this, key, value));
+        if (this.npcPojo.getNpcType().getConstructor() == null && !this.npcPojo.getNpcType().equals(NPCType.PLAYER)) {
+            this.npcPojo.setShouldSpawn(false);
+            if (ConfigurationConstants.DEBUG_ENABLED) {
+                ZNPCsPlus.LOGGER.warning("The NPC Type " + npcPojo.getNpcType().name() + " does not exist or is not supported in this version.");
+            }
+        } else {
+            this.npcPojo.setShouldSpawn(true);
+            changeType(this.npcPojo.getNpcType());
+            updateProfile(this.gameProfile.getProperties());
+            setLocation(getNpcPojo().getLocation().toBukkitLocation(), false);
+            this.hologram.createHologram();
+            if (this.npcPojo.getPathName() != null)
+                setPath(NPCPath.AbstractTypeWriter.find(this.npcPojo.getPathName()));
+            this.npcPojo.getCustomizationMap().forEach((key, value) -> this.npcPojo.getNpcType().updateCustomization(this, key, value));
+        }
         NPC_MAP.put(getNpcPojo().getId(), this);
     }
 
@@ -210,6 +220,9 @@ public class NPC {
 
     public synchronized void spawn(ZUser user) {
         if (this.viewers.contains(user)) {
+            return;
+        }
+        if (!getNpcPojo().getShouldSpawn()) {
             return;
         }
         try {
