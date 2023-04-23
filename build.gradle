@@ -1,5 +1,6 @@
 plugins {
     id "java"
+    id "maven-publish"
     id "com.github.johnrengelman.shadow" version "8.1.1"
     id "xyz.jpenilla.run-paper" version "2.0.1"
 }
@@ -69,3 +70,26 @@ runServer {
 
 tasks.assemble.dependsOn shadowJar
 tasks.compileJava.dependsOn clean
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            pom {
+                name.set("znpcsplus")
+                description.set("A fork of the ZNPCs plugin")
+                url.set("https://github.com/Pyrbu/ZNPCsPlus")
+            }
+        }
+    }
+    repositories {
+        maven {
+            credentials {
+                username DIST_USERNAME
+                password DIST_PASSWORD
+            }
+            url = uri("https://repo.pyr.lol/releases/")
+        }
+    }
+}
