@@ -7,7 +7,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Ints;
-import lol.pyr.znpcsplus.ZNPCsPlus;
 import io.github.znetworkw.znpcservers.commands.Command;
 import io.github.znetworkw.znpcservers.commands.CommandInformation;
 import io.github.znetworkw.znpcservers.commands.CommandSender;
@@ -20,12 +19,17 @@ import io.github.znetworkw.znpcservers.npc.conversation.Conversation;
 import io.github.znetworkw.znpcservers.npc.conversation.ConversationModel;
 import io.github.znetworkw.znpcservers.user.ZUser;
 import io.github.znetworkw.znpcservers.utility.location.ZLocation;
+import lol.pyr.znpcsplus.ZNPCsPlus;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.*;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -119,37 +123,23 @@ public class DefaultCommand extends Command {
         } else {
             sender.sendMessage(ChatColor.DARK_GREEN + "NPC list:");
             for (NPCModel npcModel : ConfigurationConstants.NPC_LIST) {
-                List<BaseComponent> parts = new ArrayList<>();
-                TextComponent component1 = new TextComponent("-");
-                component1.setColor(ChatColor.GREEN);
-                parts.add(component1);
-                TextComponent idComponent = new TextComponent(" " + npcModel.getId());
-                idComponent.setColor(npcModel.getShouldSpawn() ? ChatColor.GREEN : ChatColor.RED);
-                parts.add(idComponent);
-                String message = " " + npcModel.getHologramLines().toString() + " (" + npcModel.getLocation().getWorldName() + " " + (int) npcModel.getLocation().getX() + " " + (int) npcModel.getLocation().getY() + " " + (int) npcModel.getLocation().getZ() + ") ";
-                TextComponent textComponent = new TextComponent(message);
-                textComponent.setColor(ChatColor.GREEN);
-                parts.add(textComponent);
-                TextComponent textComponent2 = new TextComponent("[TELEPORT]");
-                textComponent2.setBold(true);
-                textComponent2.setColor(ChatColor.DARK_GREEN);
-                textComponent2.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, (new ComponentBuilder("Click to teleport this NPC!"))
-
-                        .color(ChatColor.GREEN).create()));
-                textComponent2.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/znpcs teleport " + npcModel
-                        .getId()));
-                parts.add(textComponent2);
-                parts.add(new TextComponent(" "));
-                TextComponent textComponent3 = new TextComponent("[DELETE]");
-                textComponent3.setBold(true);
-                textComponent3.setColor(ChatColor.DARK_RED);
-                textComponent3.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, (new ComponentBuilder("Click to delete this NPC!"))
-
-                        .color(ChatColor.RED).create()));
-                textComponent3.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/znpcs delete " + npcModel
-                        .getId()));
-                parts.add(textComponent3);
-                sender.getPlayer().spigot().sendMessage(parts.toArray(new BaseComponent[0]));
+                TextComponent component = Component.text("-")
+                        .color(NamedTextColor.GREEN)
+                        .append(Component.text(" " + npcModel.getId())
+                                .color(npcModel.getShouldSpawn() ? NamedTextColor.GREEN : NamedTextColor.RED))
+                        .append(Component.text(" " + npcModel.getHologramLines().toString() + " (" + npcModel.getLocation().getWorldName() + " " + (int) npcModel.getLocation().getX() + " " + (int) npcModel.getLocation().getY() + " " + (int) npcModel.getLocation().getZ() + ") ")
+                                .color(NamedTextColor.GREEN))
+                        .append(Component.text("[TELEPORT]")
+                                .color(NamedTextColor.GREEN)
+                                .decorate(TextDecoration.BOLD)
+                                .clickEvent(ClickEvent.runCommand("/znpcs teleport " + npcModel.getId()))
+                                .hoverEvent(HoverEvent.showText(Component.text("Click to teleport to this NPC."))))
+                        .append(Component.text(" [DELETE]")
+                                .color(NamedTextColor.RED)
+                                .decorate(TextDecoration.BOLD)
+                                .clickEvent(ClickEvent.runCommand("/znpcs delete " + npcModel.getId()))
+                                .hoverEvent(HoverEvent.showText(Component.text("Click to delete this NPC."))));
+                ZNPCsPlus.ADVENTURE.player(sender.getPlayer()).sendMessage(component);
             }
         }
     }
