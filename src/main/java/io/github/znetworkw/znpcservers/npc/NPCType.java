@@ -93,7 +93,8 @@ public enum NPCType {
     ZOMBIE(ENTITY_ZOMBIE_CLASS, 0.135, "setBaby"),
     ZOMBIE_HORSE(ENTITY_ZOMBIE_HORSE_CLASS, -0.215, "setBaby"),
     ZOMBIE_VILLAGER(ENTITY_ZOMBIE_VILLAGER_CLASS, 0.135, "setVillagerType", "setVillagerProfession", "setBaby"),
-    ZOMBIFIED_PIGLIN(ENTITY_ZOMBIFIED_PIGLIN_CLASS, 0.135, "setBaby");
+    ZOMBIFIED_PIGLIN(Utils.versionNewer(16) ? ENTITY_ZOMBIFIED_PIGLIN_CLASS : null, 0.135, "setBaby"),
+    PIG_ZOMBIE(Utils.versionNewer(16) ? null : ENTITY_ZOMBIFIED_PIGLIN_CLASS, 0.135);
 
     private final double holoHeight;
     private final CustomizationLoader customizationLoader;

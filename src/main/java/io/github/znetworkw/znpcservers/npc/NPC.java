@@ -1,7 +1,10 @@
 package io.github.znetworkw.znpcservers.npc;
 
 import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.player.Equipment;
+import com.github.retrooper.packetevents.protocol.player.UserProfile;
+import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.*;
 import com.google.common.collect.ImmutableList;
 import com.mojang.authlib.GameProfile;
@@ -238,13 +241,20 @@ public class NPC {
             sendEquipPackets(user);
             lookAt(user, getLocation(), true);
             if (npcIsPlayer) ZNPCsPlus.SCHEDULER.scheduleSyncDelayedTask(() -> {
-                PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerPlayerInfoRemove(gameProfile.getId()));
+                removeFromTab(player);
                 Utils.sendPackets(user, this.updateTabConstructor);
             }, 60);
         } catch (ReflectiveOperationException operationException) {
             delete(user);
             throw new UnexpectedCallException(operationException);
         }
+    }
+
+    private void removeFromTab(Player player) {
+        PacketWrapper<?> packet;
+        if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_19_3)) packet = new WrapperPlayServerPlayerInfoRemove(gameProfile.getId());
+        else packet = new WrapperPlayServerPlayerInfo(WrapperPlayServerPlayerInfo.Action.REMOVE_PLAYER, new WrapperPlayServerPlayerInfo.PlayerData(null, new UserProfile(gameProfile.getId(), gameProfile.getName()), null, 1));
+        PacketEvents.getAPI().getPlayerManager().sendPacket(player, packet);
     }
 
     public synchronized void delete(ZUser user) {
@@ -256,7 +266,7 @@ public class NPC {
     private void handleDelete(ZUser user) {
         Player player = user.toPlayer();
         this.hologram.delete(user);
-        if (this.npcPojo.getNpcType() == NPCType.PLAYER) PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerPlayerInfoRemove(gameProfile.getId()));
+        if (this.npcPojo.getNpcType() == NPCType.PLAYER) removeFromTab(player);
         PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerDestroyEntities(this.entityID));
     }
 
