@@ -21,7 +21,6 @@ import io.github.znetworkw.znpcservers.user.ZUser;
 import io.github.znetworkw.znpcservers.utility.location.ZLocation;
 import lol.pyr.znpcsplus.ZNPCsPlus;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -122,25 +121,18 @@ public class DefaultCommand extends Command {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.NO_NPC_FOUND);
         } else {
             sender.sendMessage(ChatColor.DARK_GREEN + "NPC list:");
-            for (NPCModel npcModel : ConfigurationConstants.NPC_LIST) {
-                TextComponent component = Component.text("-")
-                        .color(NamedTextColor.GREEN)
-                        .append(Component.text(" " + npcModel.getId())
-                                .color(npcModel.getShouldSpawn() ? NamedTextColor.GREEN : NamedTextColor.RED))
-                        .append(Component.text(" " + npcModel.getHologramLines().toString() + " (" + npcModel.getLocation().getWorldName() + " " + (int) npcModel.getLocation().getX() + " " + (int) npcModel.getLocation().getY() + " " + (int) npcModel.getLocation().getZ() + ") ")
-                                .color(NamedTextColor.GREEN))
-                        .append(Component.text("[TELEPORT]")
-                                .color(NamedTextColor.GREEN)
-                                .decorate(TextDecoration.BOLD)
+            for (NPCModel npcModel : ConfigurationConstants.NPC_LIST)
+                ZNPCsPlus.ADVENTURE.player(sender.getPlayer()).sendMessage(Component.text("-", NamedTextColor.GREEN)
+                        .append(Component.text(" " + npcModel.getId(), npcModel.getShouldSpawn() ? NamedTextColor.GREEN : NamedTextColor.RED))
+                        .append(Component.text(" " + npcModel.getHologramLines().toString() +
+                                " (" + npcModel.getLocation().getWorldName() + " " + (int) npcModel.getLocation().getX() + " " +
+                                (int) npcModel.getLocation().getY() + " " + (int) npcModel.getLocation().getZ() + ") ", NamedTextColor.GREEN))
+                        .append(Component.text("[TELEPORT]", NamedTextColor.GREEN, TextDecoration.BOLD)
                                 .clickEvent(ClickEvent.runCommand("/znpcs teleport " + npcModel.getId()))
                                 .hoverEvent(HoverEvent.showText(Component.text("Click to teleport to this NPC."))))
-                        .append(Component.text(" [DELETE]")
-                                .color(NamedTextColor.RED)
-                                .decorate(TextDecoration.BOLD)
+                        .append(Component.text(" [DELETE]", NamedTextColor.RED, TextDecoration.BOLD)
                                 .clickEvent(ClickEvent.runCommand("/znpcs delete " + npcModel.getId()))
-                                .hoverEvent(HoverEvent.showText(Component.text("Click to delete this NPC."))));
-                ZNPCsPlus.ADVENTURE.player(sender.getPlayer()).sendMessage(component);
-            }
+                                .hoverEvent(HoverEvent.showText(Component.text("Click to delete this NPC.")))));
         }
     }
 
@@ -183,7 +175,6 @@ public class DefaultCommand extends Command {
         }
         foundNPC.getNpcPojo().getNpcEquip().put(EquipmentSlot.valueOf(args.get("slot").toUpperCase()), sender.getPlayer().getInventory().getItemInHand());
         foundNPC.getPackets().flushCache("equipPackets");
-        Objects.requireNonNull(foundNPC);
         Objects.requireNonNull(foundNPC);
         foundNPC.getViewers().forEach(foundNPC::sendEquipPackets);
         Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.SUCCESS);
