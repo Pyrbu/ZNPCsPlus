@@ -238,7 +238,7 @@ public class NPC {
                     PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerSpawnPlayer(entityID,
                             this.gameProfile.getId(), SpigotConversionUtil.fromBukkitLocation(location.toBukkitLocation())));
                     PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerEntityMetadata(entityID,
-                            List.of(new EntityData(17, EntityDataTypes.BYTE, Byte.MAX_VALUE)))); // 17 only works on ~1.19, this will need to be fixed in the entity rewrite
+                            List.of(new EntityData(NPCSkin.SkinLayerValues.findLayerByVersion(), EntityDataTypes.BYTE, Byte.MAX_VALUE))));
                     PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerEntityHeadLook(entityID, location.getYaw()));
                 });
             }
