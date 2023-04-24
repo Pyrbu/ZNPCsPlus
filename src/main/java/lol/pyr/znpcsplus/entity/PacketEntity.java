@@ -6,18 +6,14 @@ import lol.pyr.znpcsplus.packets.PacketFactory;
 import org.bukkit.entity.Player;
 
 import java.util.Set;
-import java.util.UUID;
 
 public class PacketEntity {
     private final int entityId;
-    private final UUID uuid;
-
     private final EntityType type;
     private PacketLocation location;
 
     public PacketEntity(EntityType type, PacketLocation location) {
         this.entityId = EntityIDProvider.reserve();
-        this.uuid = UUID.randomUUID();
         this.type = type;
         this.location = location;
     }
@@ -28,10 +24,6 @@ public class PacketEntity {
 
     public PacketLocation getLocation() {
         return location;
-    }
-
-    public UUID getUuid() {
-        return uuid;
     }
 
     public EntityType getType() {
