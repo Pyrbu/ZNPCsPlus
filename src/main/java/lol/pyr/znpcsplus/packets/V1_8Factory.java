@@ -35,6 +35,9 @@ public class V1_8Factory implements PacketFactory {
         sendPacket(player, new WrapperPlayServerSpawnPlayer(entity.getEntityId(),
                 entity.getUuid(), location.toVector3d(), location.getYaw(), location.getPitch(), List.of()));
         if (owner.getProperty(NPCProperty.SKIN_LAYERS)) sendMetadata(player, entity, MetadataFactory.get().skinLayers());
+        boolean glow = owner.hasProperty(NPCProperty.GLOW);
+        boolean fire = owner.getProperty(NPCProperty.FIRE);
+        if (glow || fire) sendMetadata(player, entity, MetadataFactory.get().effects(fire, glow));
         ZNPCsPlus.SCHEDULER.scheduleSyncDelayedTask(() -> removeTabPlayer(player, entity), 60);
     }
 
@@ -81,11 +84,12 @@ public class V1_8Factory implements PacketFactory {
 
     @Override
     public void createTeam(Player player, PacketEntity entity) {
+        NPC owner = entity.getOwner();
         sendPacket(player, new WrapperPlayServerTeams("npc_team_" + entity.getEntityId(), WrapperPlayServerTeams.TeamMode.CREATE, new WrapperPlayServerTeams.ScoreBoardTeamInfo(
                 Component.empty(), Component.empty(), Component.empty(),
                 WrapperPlayServerTeams.NameTagVisibility.NEVER,
                 WrapperPlayServerTeams.CollisionRule.NEVER,
-                NamedTextColor.WHITE,
+                owner.hasProperty(NPCProperty.GLOW) ? owner.getProperty(NPCProperty.GLOW) : NamedTextColor.WHITE,
                 WrapperPlayServerTeams.OptionData.NONE
         )));
         sendPacket(player, new WrapperPlayServerTeams("npc_team_" + entity.getEntityId(), WrapperPlayServerTeams.TeamMode.ADD_ENTITIES, (WrapperPlayServerTeams.ScoreBoardTeamInfo) null, Integer.toString(entity.getEntityId())));
