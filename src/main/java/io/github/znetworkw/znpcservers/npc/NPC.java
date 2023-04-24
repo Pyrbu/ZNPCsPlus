@@ -2,8 +2,10 @@ package io.github.znetworkw.znpcservers.npc;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.player.Equipment;
 import com.github.retrooper.packetevents.protocol.player.UserProfile;
+import com.github.retrooper.packetevents.util.Vector3d;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.*;
 import com.google.common.collect.ImmutableList;
@@ -243,10 +245,16 @@ public class NPC {
                     PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerEntityHeadLook(entityID, location.getYaw()));
                 });
             }
-            else PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerSpawnEntity(entityID,
-                    Optional.of(uuid), SpigotConversionUtil.fromBukkitEntityType(((Entity) bukkitEntity).getType()),
-                    location.toVector3d(), location.getPitch(), location.getYaw(), location.getYaw(), 0, Optional.empty()));
-
+            else {
+                ServerVersion version = PacketEvents.getAPI().getServerManager().getVersion();
+                EntityType type = SpigotConversionUtil.fromBukkitEntityType(((Entity) bukkitEntity).getType());
+                if (version.isNewerThanOrEquals(ServerVersion.V_1_14)) PacketEvents.getAPI().getPlayerManager().sendPacket(
+                        player, new WrapperPlayServerSpawnEntity(entityID, Optional.of(uuid), type, location.toVector3d(),
+                                location.getPitch(), location.getYaw(), location.getYaw(), 0, Optional.empty()));
+                else PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerSpawnLivingEntity(
+                        entityID, uuid, type, location.toVector3d(), location.getYaw(), location.getPitch(),
+                        location.getPitch(), new Vector3d(), List.of()));
+            }
 
             if (FunctionFactory.isTrue(this, "holo")) this.hologram.spawn(user);
             updateMetadata(Collections.singleton(user));
