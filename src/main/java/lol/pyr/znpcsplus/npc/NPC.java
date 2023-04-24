@@ -1,9 +1,9 @@
 package lol.pyr.znpcsplus.npc;
 
+import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.entity.PacketLocation;
-import lol.pyr.znpcsplus.properties.NPCProperty;
-import lol.pyr.znpcsplus.properties.NPCPropertyKey;
+import lol.pyr.znpcsplus.entity.PacketPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -20,24 +20,28 @@ public class NPC {
     private PacketLocation location;
     private NPCType type;
 
-    private final Map<NPCPropertyKey, NPCProperty> propertyMap = new HashMap<>();
+    private final Map<NPCPropertyKey<?>, Object> propertyMap = new HashMap<>();
 
     public NPC(World world, NPCType type, PacketLocation location) {
         this.worldName = world.getName();
         this.type = type;
         this.location = location;
-        entity = new PacketEntity(type.getType(), location); // TODO: Entity ID Provider
+        entity = new PacketEntity(type.getType(), location);
     }
 
     public void setType(NPCType type) {
         _hideAll();
         this.type = type;
-        entity = new PacketEntity(type.getType(), entity.getLocation());
+        entity = type.getType() == EntityTypes.PLAYER ? new PacketPlayer(entity.getLocation()) : new PacketEntity(type.getType(), entity.getLocation());
         _showAll();
     }
 
     public NPCType getType() {
         return type;
+    }
+
+    public PacketEntity getEntity() {
+        return entity;
     }
 
     public PacketLocation getLocation() {
@@ -58,20 +62,29 @@ public class NPC {
         viewers.clear();
     }
 
+    public void respawn() {
+        _hideAll();
+        _showAll();
+    }
+
     public void show(Player player) {
         if (viewers.contains(player)) return;
         _show(player);
         viewers.add(player);
     }
 
-    private void _show(Player player) {
-        entity.spawn(player);
-    }
-
     public void hide(Player player) {
         if (!viewers.contains(player)) return;
         _hide(player);
         viewers.remove(player);
+    }
+
+    public boolean isShown(Player player) {
+        return viewers.contains(player);
+    }
+
+    private void _show(Player player) {
+        entity.spawn(player);
     }
 
     private void _hide(Player player) {
@@ -86,15 +99,21 @@ public class NPC {
         for (Player viewer : viewers) _show(viewer);
     }
 
-    public boolean isShown(Player player) {
-        return viewers.contains(player);
+    @SuppressWarnings("unchecked")
+    public <T> T getProperty(NPCPropertyKey<T> key) {
+        return (T) propertyMap.get(key);
     }
 
-    public NPCProperty getProperty(NPCPropertyKey key) {
-        return propertyMap.get(key);
-    }
-
-    public boolean hasProperty(NPCPropertyKey key) {
+    public boolean hasProperty(NPCPropertyKey<?> key) {
         return propertyMap.containsKey(key);
+    }
+
+    public <T> void setProperty(NPCPropertyKey<T> key, T value) {
+        propertyMap.put(key, value);
+        key.update(this, value);
+    }
+
+    public void removeProperty(NPCPropertyKey<?> key) {
+        propertyMap.remove(key);
     }
 }
