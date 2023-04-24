@@ -2,6 +2,8 @@ package io.github.znetworkw.znpcservers.npc;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
+import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.player.Equipment;
 import com.github.retrooper.packetevents.protocol.player.UserProfile;
@@ -179,8 +181,7 @@ public class NPC {
         try {
             Object dataWatcherObject = Reflections.GET_DATA_WATCHER_METHOD.get().invoke(this.nmsEntity);
             if (Utils.versionNewer(9)) {
-                Reflections.SET_DATA_WATCHER_METHOD.get().invoke(dataWatcherObject,
-                        Reflections.DATA_WATCHER_OBJECT_CONSTRUCTOR.get()
+                Reflections.SET_DATA_WATCHER_METHOD.get().invoke(dataWatcherObject, Reflections.DATA_WATCHER_OBJECT_CONSTRUCTOR.get()
                                 .newInstance(this.npcSkin.getLayerIndex(), Reflections.DATA_WATCHER_REGISTER_FIELD.get()), (byte) 127);
             } else {
                 Reflections.WATCH_DATA_WATCHER_METHOD.get().invoke(dataWatcherObject, 10, (byte) 127);
@@ -242,6 +243,8 @@ public class NPC {
                 ZNPCsPlus.SCHEDULER.runTask(() -> {
                     PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerSpawnPlayer(entityID,
                             this.gameProfile.getId(), SpigotConversionUtil.fromBukkitLocation(location.toBukkitLocation())));
+                    PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerEntityMetadata(entityID,
+                            List.of(new EntityData(17, EntityDataTypes.BYTE, Byte.MAX_VALUE))));
                     PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerEntityHeadLook(entityID, location.getYaw()));
                 });
             }

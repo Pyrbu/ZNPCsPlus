@@ -127,7 +127,7 @@ public class DefaultCommand extends Command {
                         .append(Component.text(" " + npcModel.getHologramLines().toString() +
                                 " (" + npcModel.getLocation().getWorldName() + " " + (int) npcModel.getLocation().getX() + " " +
                                 (int) npcModel.getLocation().getY() + " " + (int) npcModel.getLocation().getZ() + ") ", NamedTextColor.GREEN))
-                        .append(Component.text("[TELEPORT]", NamedTextColor.GREEN, TextDecoration.BOLD)
+                        .append(Component.text("[TELEPORT]", NamedTextColor.DARK_GREEN, TextDecoration.BOLD)
                                 .clickEvent(ClickEvent.runCommand("/znpcs teleport " + npcModel.getId()))
                                 .hoverEvent(HoverEvent.showText(Component.text("Click to teleport to this NPC."))))
                         .append(Component.text(" [DELETE]", NamedTextColor.RED, TextDecoration.BOLD)

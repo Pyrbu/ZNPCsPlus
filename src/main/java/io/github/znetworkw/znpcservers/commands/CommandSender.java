@@ -3,16 +3,14 @@ package io.github.znetworkw.znpcservers.commands;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import io.github.znetworkw.znpcservers.utility.Utils;
 import lol.pyr.znpcsplus.ZNPCsPlus;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("deprecation")
 public class CommandSender {
     static final Joiner LINE_SEPARATOR_JOINER = Joiner.on("\n");
 
@@ -40,10 +38,10 @@ public class CommandSender {
     }
 
     public void sendMessage(String message, Iterable<String> hover) {
-        TextComponent textComponent = Component.text(Utils.toColor(message));
-        if (hover != null)
-            textComponent = textComponent.hoverEvent(Component.text(Utils.toColor(LINE_SEPARATOR_JOINER
-                    .join(Iterables.concat(HELP_PREFIX, hover)))));
+        message = message.replace(LegacyComponentSerializer.SECTION_CHAR, LegacyComponentSerializer.AMPERSAND_CHAR);
+        LegacyComponentSerializer serializer = LegacyComponentSerializer.legacyAmpersand();
+        TextComponent textComponent = serializer.deserialize(message);
+        if (hover != null) textComponent = textComponent.hoverEvent(serializer.deserialize(LINE_SEPARATOR_JOINER.join(Iterables.concat(HELP_PREFIX, hover))));
         ZNPCsPlus.ADVENTURE.player(getPlayer()).sendMessage(textComponent);
     }
 
