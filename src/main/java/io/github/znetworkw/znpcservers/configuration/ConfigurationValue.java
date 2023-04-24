@@ -52,6 +52,7 @@ public enum ConfigurationValue {
     CANT_GET_SKIN("messages", "&cCould not fetch skin for name: %s.", String.class),
     GET_SKIN("messages", "&aSkin successfully fetched!", String.class),
     NOT_SUPPORTED_NPC_TYPE("messages", "&cThis NPC type doesn't exists or is not supported in your current server version.", String.class),
+    INVALID_CUSTOMIZE_ARGUMENTS("messages", "&cThe argument(s) you have specified is/are invalid. Type &f/znpcs&c or view our documentation for a list/examples of existing arguments.", String.class),
     CONVERSATION_LIST("conversations" /* Leave this lowercase or it will break */, new ArrayList<>(), Conversation.class);
 
     public static final Map<String, ImmutableSet<ConfigurationValue>> VALUES_BY_NAME;

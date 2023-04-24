@@ -359,7 +359,7 @@ public class DefaultCommand extends Command {
         }
         NPCFunction npcFunction = FunctionFactory.findFunctionForName(args.get("type"));
         if (npcFunction.getName().equalsIgnoreCase("glow")) {
-            npcFunction.doRunFunction(foundNPC, new FunctionContext.ContextWithValue(foundNPC, args.get("value")));
+            npcFunction.doRunFunction(foundNPC, new FunctionContext.ContextWithValue(foundNPC, args.get("value") != null ? args.get("value").toUpperCase() : "WHITE"));
         } else {
             npcFunction.doRunFunction(foundNPC, new FunctionContext.DefaultContext(foundNPC));
         }
@@ -368,10 +368,6 @@ public class DefaultCommand extends Command {
 
     @CommandInformation(arguments = {"id", "customizeValues"}, name = "customize", permission = "znpcs.cmd.customize", help = {" &f&l* &e/znpcs customize <npc_id> <customization>"})
     public void customize(CommandSender sender, Map<String, String> args) {
-        if (args.size() < 2) {
-            Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INCORRECT_USAGE);
-            return;
-        }
         Integer id = Ints.tryParse(args.get("id"));
         if (id == null) {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INVALID_NUMBER);
@@ -383,6 +379,12 @@ public class DefaultCommand extends Command {
             return;
         }
         NPCType npcType = foundNPC.getNpcPojo().getNpcType();
+        if (args.get("customizeValues") == null) {
+            Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INCORRECT_USAGE);
+            for (Map.Entry<String, Method> method : npcType.getCustomizationLoader().getMethods().entrySet())
+                sender.sendMessage(ChatColor.YELLOW + method.getKey() + " " + SPACE_JOINER.join(method.getValue().getParameterTypes()));
+            return;
+        }
         List<String> customizeOptions = SPACE_SPLITTER.splitToList(args.get("customizeValues"));
         String methodName = customizeOptions.get(0);
         if (npcType.getCustomizationLoader().contains(methodName)) {
@@ -392,10 +394,18 @@ public class DefaultCommand extends Command {
                 Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.TOO_FEW_ARGUMENTS);
                 return;
             }
+            split = Iterables.transform(split, String::toUpperCase);
             String[] values = Iterables.toArray(split, String.class);
-            npcType.updateCustomization(foundNPC, methodName, values);
-            foundNPC.getNpcPojo().getCustomizationMap().put(methodName, values);
-            Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.SUCCESS);
+            try {
+                npcType.updateCustomization(foundNPC, methodName, values);
+                foundNPC.getNpcPojo().getCustomizationMap().put(methodName, values);
+                Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.SUCCESS);
+            }catch (Exception e) {
+                Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.INVALID_CUSTOMIZE_ARGUMENTS);
+                if (ConfigurationConstants.DEBUG_ENABLED) {
+                    e.printStackTrace();
+                }
+            }
         } else {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.METHOD_NOT_FOUND);
             for (Map.Entry<String, Method> method : npcType.getCustomizationLoader().getMethods().entrySet())
