@@ -19,6 +19,7 @@ public interface PacketFactory {
     void removeTabPlayer(Player player, PacketEntity entity);
     void createTeam(Player player, PacketEntity entity);
     void removeTeam(Player player, PacketEntity entity);
+    void sendAllMetadata(Player player, PacketEntity entity);
     void sendMetadata(Player player, PacketEntity entity, EntityData... data);
 
     PacketFactory factory = get();
@@ -39,6 +40,7 @@ public interface PacketFactory {
     private static Map<ServerVersion, LazyLoader<? extends PacketFactory>> buildFactoryMap() {
         HashMap<ServerVersion, LazyLoader<? extends PacketFactory>> map = new HashMap<>();
         map.put(ServerVersion.V_1_8, LazyLoader.of(V1_8Factory::new));
+        map.put(ServerVersion.V_1_9, LazyLoader.of(V1_9Factory::new));
         map.put(ServerVersion.V_1_14, LazyLoader.of(V1_14Factory::new));
         map.put(ServerVersion.V_1_19, LazyLoader.of(V1_19Factory::new));
         return map;

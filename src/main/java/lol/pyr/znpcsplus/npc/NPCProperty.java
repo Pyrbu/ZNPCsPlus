@@ -20,7 +20,7 @@ public class NPCProperty<T> {
         BY_NAME.put(this.name, this);
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 

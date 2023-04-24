@@ -141,10 +141,10 @@ public class ZNPCsPlus extends JavaPlugin {
             for (NPCType type : NPCType.values()) {
                 NPC npc = new NPC(world, type, new PacketLocation(x * 3, 200, z * 3, 0, 0));
                 if (type.getType() == EntityTypes.PLAYER) {
-                    npc.setProperty(NPCProperty.GLOW, NamedTextColor.RED);
-                    npc.setProperty(NPCProperty.FIRE, true);
                     NPCSkin.forName("Notch", (skin, ex) -> npc.setProperty(NPCProperty.SKIN, skin));
                 }
+                npc.setProperty(NPCProperty.GLOW, NamedTextColor.RED);
+                npc.setProperty(NPCProperty.FIRE, true);
                 NPCRegistry.register("debug_npc" + (z * wrap + x), npc);
                 if (x++ > wrap) {
                     x = 0;
