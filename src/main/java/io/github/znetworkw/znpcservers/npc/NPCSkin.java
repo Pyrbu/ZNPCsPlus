@@ -9,14 +9,13 @@ public class NPCSkin {
     private final String texture;
     private final String signature;
 
-    protected NPCSkin(String... values) {
-        if (values.length < 1) throw new IllegalArgumentException("Invalid arguments for NPC skin constructor");
-        this.texture = values[0];
-        this.signature = values[1];
+    protected NPCSkin(String texture, String signature) {
+        this.texture = texture;
+        this.signature = signature;
     }
 
     public static NPCSkin forValues(String... values) {
-        return new NPCSkin((values.length > 0) ? values : new String[0]);
+        return new NPCSkin(values[0], (values.length > 1) ? values[1] : null);
     }
 
     public static void forName(String skin, SkinFetcherResult skinFetcherResult) {

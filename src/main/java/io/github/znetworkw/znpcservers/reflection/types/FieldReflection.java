@@ -18,23 +18,32 @@ public class FieldReflection extends ReflectionLazyLoader<Field> {
     }
 
     protected Field load() throws NoSuchFieldException {
-        for (Class<?> clazz : this.reflectionClasses) {
-            Field field = load(clazz);
+        if (fieldName != null && fieldName.length() > 0) for (Class<?> clazz : this.reflectionClasses) {
+            Field field = loadByName(clazz);
+            if (field != null) return field;
+        }
+        if (expectType != null) for (Class<?> clazz : this.reflectionClasses) {
+            Field field = loadByType(clazz);
             if (field != null) return field;
         }
         return null;
     }
 
-    private Field load(Class<?> clazz) {
-        if (expectType != null) for (Field field : clazz.getDeclaredFields()) if (field.getType() == expectType) {
-            field.setAccessible(true);
-            return field;
-        }
+    private Field loadByName(Class<?> clazz) {
         try {
             Field field = clazz.getDeclaredField(fieldName);
+            if (expectType != null && !field.getType().equals(expectType)) return null;
             field.setAccessible(true);
             return field;
         } catch (NoSuchFieldException ignored) {}
+        return null;
+    }
+
+    private Field loadByType(Class<?> clazz) {
+        for (Field field : clazz.getDeclaredFields()) if (field.getType() == expectType) {
+            field.setAccessible(true);
+            return field;
+        }
         return null;
     }
 

@@ -46,11 +46,11 @@ public class SkinFetcher {
         });
         completableFuture.whenComplete((response, throwable) -> {
             if (completableFuture.isCompletedExceptionally()) {
-                skinFetcherResult.onDone(null, throwable);
+                skinFetcherResult.onDone(null, null, throwable);
             } else {
                 JsonObject jsonObject = response.getAsJsonObject(this.builder.getAPIServer().getValueKey());
                 JsonObject properties = jsonObject.getAsJsonObject(this.builder.getAPIServer().getSignatureKey());
-                skinFetcherResult.onDone(new String[]{properties.get("value").getAsString(), properties.get("signature").getAsString()}, null);
+                skinFetcherResult.onDone(properties.get("value").getAsString(), properties.get("signature").getAsString(), null);
             }
         });
         return completableFuture;
