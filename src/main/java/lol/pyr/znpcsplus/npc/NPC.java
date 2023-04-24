@@ -2,11 +2,15 @@ package lol.pyr.znpcsplus.npc;
 
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.entity.PacketLocation;
+import lol.pyr.znpcsplus.properties.NPCProperty;
+import lol.pyr.znpcsplus.properties.NPCPropertyKey;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class NPC {
@@ -15,6 +19,8 @@ public class NPC {
     private PacketEntity entity;
     private PacketLocation location;
     private NPCType type;
+
+    private final Map<NPCPropertyKey, NPCProperty> propertyMap = new HashMap<>();
 
     public NPC(World world, NPCType type, PacketLocation location) {
         this.worldName = world.getName();
@@ -82,5 +88,13 @@ public class NPC {
 
     public boolean isShown(Player player) {
         return viewers.contains(player);
+    }
+
+    public NPCProperty getProperty(NPCPropertyKey key) {
+        return propertyMap.get(key);
+    }
+
+    public boolean hasProperty(NPCPropertyKey key) {
+        return propertyMap.containsKey(key);
     }
 }

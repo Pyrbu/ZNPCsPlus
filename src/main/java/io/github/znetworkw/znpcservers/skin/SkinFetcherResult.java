@@ -1,5 +1,5 @@
 package io.github.znetworkw.znpcservers.skin;
 
 public interface SkinFetcherResult {
-    void onDone(String[] paramArrayOfString, Throwable paramThrowable);
+    void onDone(String value, String signature, Throwable paramThrowable);
 }

@@ -667,5 +667,8 @@ public final class Reflections {
     public static final ReflectionLazyLoader<AtomicInteger> ATOMIC_ENTITY_ID_FIELD = new FieldReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withClassName(ENTITY_CLASS)
             .withFieldName("entityCount")
+            .withFieldName("d")
+            .withFieldName("c")
+            .withExpectResult(AtomicInteger.class)
             .setStrict(Utils.versionNewer(14))).staticValueLoader(AtomicInteger.class);
 }

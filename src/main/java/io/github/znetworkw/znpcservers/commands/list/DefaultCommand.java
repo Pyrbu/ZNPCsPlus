@@ -39,14 +39,14 @@ public class DefaultCommand extends Command {
 
     private static final Joiner SPACE_JOINER = Joiner.on(" ");
 
-    private static final SkinFunction DO_APPLY_SKIN = (sender, npc, skin) -> NPCSkin.forName(skin, (values, ex) -> {
+    private static final SkinFunction DO_APPLY_SKIN = (sender, npc, skin) -> NPCSkin.forName(skin, (value, signature, ex) -> {
         if (ex != null) {
             Configuration.MESSAGES.sendMessage(sender, ConfigurationValue.CANT_GET_SKIN, skin);
             ZNPCsPlus.LOGGER.warning("Failed to fetch skin:");
             ex.printStackTrace();
             return;
         }
-        npc.changeSkin(NPCSkin.forValues(values));
+        npc.changeSkin(NPCSkin.forValues(value, signature));
         Configuration.MESSAGES.sendMessage(sender, ConfigurationValue.GET_SKIN);
     });
 
