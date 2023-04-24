@@ -85,9 +85,11 @@ publishing {
     }
     repositories {
         maven {
-            credentials {
-                username DIST_USERNAME
-                password DIST_PASSWORD
+            if (DIST_USERNAME != null && DIST_PASSWORD != null) {
+                credentials {
+                    username DIST_USERNAME
+                    password DIST_PASSWORD
+                }
             }
             url = uri("https://repo.pyr.lol/releases/")
         }
