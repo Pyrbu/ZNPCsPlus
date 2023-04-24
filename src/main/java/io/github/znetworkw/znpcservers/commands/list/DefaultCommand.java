@@ -359,7 +359,7 @@ public class DefaultCommand extends Command {
         }
         NPCFunction npcFunction = FunctionFactory.findFunctionForName(args.get("type"));
         if (npcFunction.getName().equalsIgnoreCase("glow")) {
-            npcFunction.doRunFunction(foundNPC, new FunctionContext.ContextWithValue(foundNPC, args.get("value")));
+            npcFunction.doRunFunction(foundNPC, new FunctionContext.ContextWithValue(foundNPC, args.get("value") != null ? args.get("value").toUpperCase() : "WHITE"));
         } else {
             npcFunction.doRunFunction(foundNPC, new FunctionContext.DefaultContext(foundNPC));
         }
