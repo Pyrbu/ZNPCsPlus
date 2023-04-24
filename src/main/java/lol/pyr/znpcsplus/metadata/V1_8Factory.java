@@ -11,7 +11,7 @@ public class V1_8Factory implements MetadataFactory {
 
     @Override
     public EntityData effects(boolean onFire, boolean glowing) {
-        return new EntityData(0, EntityDataTypes.BYTE, (byte) ((onFire ? 0x01 : 0) | (glowing ? 0x40 : 0)));
+        return new EntityData(0, EntityDataTypes.BYTE, onFire ? 0x01 : 0);
     }
 
     protected EntityData createSkinLayers(int index) {

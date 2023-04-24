@@ -28,16 +28,12 @@ import java.util.Optional;
 public class V1_8Factory implements PacketFactory {
     @Override
     public void spawnPlayer(Player player, PacketEntity entity) {
-        NPC owner = entity.getOwner();
         addTabPlayer(player, entity);
         createTeam(player, entity);
         PacketLocation location = entity.getLocation();
         sendPacket(player, new WrapperPlayServerSpawnPlayer(entity.getEntityId(),
                 entity.getUuid(), location.toVector3d(), location.getYaw(), location.getPitch(), List.of()));
-        if (owner.getProperty(NPCProperty.SKIN_LAYERS)) sendMetadata(player, entity, MetadataFactory.get().skinLayers());
-        boolean glow = owner.hasProperty(NPCProperty.GLOW);
-        boolean fire = owner.getProperty(NPCProperty.FIRE);
-        if (glow || fire) sendMetadata(player, entity, MetadataFactory.get().effects(fire, glow));
+        sendAllMetadata(player, entity);
         ZNPCsPlus.SCHEDULER.scheduleSyncDelayedTask(() -> removeTabPlayer(player, entity), 60);
     }
 
@@ -51,6 +47,7 @@ public class V1_8Factory implements PacketFactory {
                         location.getYaw(), location.getPitch(), location.getPitch(), new Vector3d(), List.of()) :
                 new WrapperPlayServerSpawnEntity(entity.getEntityId(), Optional.of(entity.getUuid()), entity.getType(), location.toVector3d(),
                         location.getPitch(), location.getYaw(), location.getYaw(), 0, Optional.empty()));
+        sendAllMetadata(player, entity);
     }
 
     @Override
@@ -92,12 +89,20 @@ public class V1_8Factory implements PacketFactory {
                 owner.hasProperty(NPCProperty.GLOW) ? owner.getProperty(NPCProperty.GLOW) : NamedTextColor.WHITE,
                 WrapperPlayServerTeams.OptionData.NONE
         )));
-        sendPacket(player, new WrapperPlayServerTeams("npc_team_" + entity.getEntityId(), WrapperPlayServerTeams.TeamMode.ADD_ENTITIES, (WrapperPlayServerTeams.ScoreBoardTeamInfo) null, Integer.toString(entity.getEntityId())));
+        sendPacket(player, new WrapperPlayServerTeams("npc_team_" + entity.getEntityId(), WrapperPlayServerTeams.TeamMode.ADD_ENTITIES, (WrapperPlayServerTeams.ScoreBoardTeamInfo) null,
+                entity.getType() == EntityTypes.PLAYER ? Integer.toString(entity.getEntityId()) : entity.getUuid().toString()));
     }
 
     @Override
     public void removeTeam(Player player, PacketEntity entity) {
         sendPacket(player, new WrapperPlayServerTeams("npc_team_" + entity.getEntityId(), WrapperPlayServerTeams.TeamMode.REMOVE, (WrapperPlayServerTeams.ScoreBoardTeamInfo) null));
+    }
+
+    @Override
+    public void sendAllMetadata(Player player, PacketEntity entity) {
+        NPC owner = entity.getOwner();
+        if (entity.getType() == EntityTypes.PLAYER && owner.getProperty(NPCProperty.SKIN_LAYERS)) sendMetadata(player, entity, MetadataFactory.get().skinLayers());
+        if (owner.getProperty(NPCProperty.FIRE)) sendMetadata(player, entity, MetadataFactory.get().effects(true, false));
     }
 
     @Override

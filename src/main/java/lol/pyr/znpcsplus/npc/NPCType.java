@@ -33,10 +33,10 @@ public class NPCType {
     static {
         ImmutableList.Builder<NPCType> builder = new ImmutableList.Builder<>();
 
-        builder.add(new NPCType(EntityTypes.PLAYER, NPCProperty.SKIN));
-        builder.add(new NPCType(EntityTypes.CREEPER));
-        builder.add(new NPCType(EntityTypes.ZOMBIE));
-        builder.add(new NPCType(EntityTypes.SKELETON));
+        builder.add(new NPCType(EntityTypes.PLAYER, NPCProperty.GLOW, NPCProperty.FIRE, NPCProperty.SKIN, NPCProperty.SKIN_LAYERS));
+        builder.add(new NPCType(EntityTypes.CREEPER, NPCProperty.GLOW, NPCProperty.FIRE));
+        builder.add(new NPCType(EntityTypes.ZOMBIE, NPCProperty.GLOW, NPCProperty.FIRE));
+        builder.add(new NPCType(EntityTypes.SKELETON, NPCProperty.GLOW, NPCProperty.FIRE));
 
         npcTypes = builder.build();
     }
