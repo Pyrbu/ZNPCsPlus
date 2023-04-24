@@ -91,7 +91,7 @@ public class DefaultCommand extends Command {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.NOT_SUPPORTED_NPC_TYPE);
             return;
         }
-        ZNPCsPlus.createNPC(id, npcType, sender.getPlayer().getLocation(), name);
+        // ZNPCsPlus.createNPC(id, npcType, sender.getPlayer().getLocation(), name);
         Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.SUCCESS);
     }
 
@@ -111,7 +111,7 @@ public class DefaultCommand extends Command {
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.NPC_NOT_FOUND);
             return;
         }
-        ZNPCsPlus.deleteNPC(id);
+        // ZNPCsPlus.deleteNPC(id);
         Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.SUCCESS);
     }
 

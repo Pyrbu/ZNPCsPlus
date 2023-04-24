@@ -44,25 +44,35 @@ public class FieldReflection extends ReflectionLazyLoader<Field> {
         logger.accept("Field Type: " + expectType);
     }
 
-    public FieldValueReflection<Object> staticValueLoader() {
+    public ValueReflection<Object> staticValueLoader() {
         return staticValueLoader(Object.class);
     }
 
     @SuppressWarnings("unused")
-    public <T> FieldValueReflection<T> staticValueLoader(Class<T> valueType) {
-        return new FieldValueReflection<>(this, possibleClassNames, null, strict);
+    public <T> ValueReflection<T> staticValueLoader(Class<T> valueType) {
+        return new ValueReflection<>(this, possibleClassNames, null, strict);
     }
 
     @SuppressWarnings("unused")
-    public <T> FieldValueReflection<T> valueLoader(Object obj, Class<T> valueType) {
-        return new FieldValueReflection<>(this, possibleClassNames, obj, strict);
+    public <T> ValueReflection<T> valueLoader(Object obj, Class<T> valueType) {
+        return new ValueReflection<>(this, possibleClassNames, obj, strict);
     }
 
-    private static class FieldValueReflection<T> extends ReflectionLazyLoader<T> {
-        private final Object obj;
-        private final FieldReflection fieldReflection;
+    @SuppressWarnings("unused")
+    public <T> ValueModifier<T> staticValueModifier(Class<T> valueType) {
+        return new ValueModifier<>(this, possibleClassNames, null, strict);
+    }
 
-        public FieldValueReflection(FieldReflection fieldReflection, List<String> className, Object obj, boolean strict) {
+    @SuppressWarnings("unused")
+    public <T> ValueModifier<T> valueModifier(Object obj, Class<T> valueType) {
+        return new ValueModifier<>(this, possibleClassNames, obj, strict);
+    }
+
+    public static class ValueReflection<T> extends ReflectionLazyLoader<T> {
+        protected final Object obj;
+        protected final FieldReflection fieldReflection;
+
+        private ValueReflection(FieldReflection fieldReflection, List<String> className, Object obj, boolean strict) {
             super(className, strict);
             this.obj = obj;
             this.fieldReflection = fieldReflection;
@@ -76,6 +86,29 @@ public class FieldReflection extends ReflectionLazyLoader<Field> {
         @Override
         protected void printDebugInfo(Consumer<String> logger) {
             fieldReflection.printDebugInfo(logger);
+        }
+    }
+
+    public static class ValueModifier<T> extends ValueReflection<T> {
+        private ValueModifier(FieldReflection fieldReflection, List<String> className, Object obj, boolean strict) {
+            super(fieldReflection, className, obj, strict);
+        }
+
+        @Override
+        public T get() {
+            try {
+                return load();
+            } catch (IllegalAccessException | NoSuchFieldException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        public void set(T value) {
+            try {
+                fieldReflection.get().set(obj, value);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

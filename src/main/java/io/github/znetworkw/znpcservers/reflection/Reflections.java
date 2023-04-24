@@ -15,6 +15,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Class containing all of the lazy-loaded reflections that the plugin uses to access
@@ -657,4 +658,14 @@ public final class Reflections {
     public static final ReflectionLazyLoader<CommandMap> COMMAND_MAP_FIELD = new FieldReflection(new ReflectionBuilder(ReflectionPackage.BUKKIT)
             .withClassName("CraftServer")
             .withFieldName("commandMap")).valueLoader(Bukkit.getServer(), CommandMap.class);
+
+    public static final FieldReflection.ValueModifier<Integer> ENTITY_ID_MODIFIER = new FieldReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withClassName(ENTITY_CLASS)
+            .withFieldName("entityCount")
+            .setStrict(!Utils.versionNewer(14))).staticValueModifier(int.class);
+
+    public static final ReflectionLazyLoader<AtomicInteger> ATOMIC_ENTITY_ID_FIELD = new FieldReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withClassName(ENTITY_CLASS)
+            .withFieldName("entityCount")
+            .setStrict(Utils.versionNewer(14))).staticValueLoader(AtomicInteger.class);
 }
