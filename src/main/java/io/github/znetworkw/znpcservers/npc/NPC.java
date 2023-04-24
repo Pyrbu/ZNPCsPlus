@@ -244,7 +244,7 @@ public class NPC {
                     PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerSpawnPlayer(entityID,
                             this.gameProfile.getId(), SpigotConversionUtil.fromBukkitLocation(location.toBukkitLocation())));
                     PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerEntityMetadata(entityID,
-                            List.of(new EntityData(17, EntityDataTypes.BYTE, Byte.MAX_VALUE))));
+                            List.of(new EntityData(17, EntityDataTypes.BYTE, Byte.MAX_VALUE)))); // 17 only works on ~1.19, this will need to be fixed in the entity rewrite
                     PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerEntityHeadLook(entityID, location.getYaw()));
                 });
             }
@@ -337,6 +337,8 @@ public class NPC {
     public void sendEquipPackets(ZUser zUser) {
         if (this.npcPojo.getNpcEquip().isEmpty()) return;
         List<Equipment> equipment = npcPojo.getNpcEquip().entrySet().stream()
+                .filter(entry -> Objects.nonNull(entry.getKey()))
+                .filter(entry -> Objects.nonNull(entry.getValue()))
                 .map(entry -> new Equipment(entry.getKey(), SpigotConversionUtil.fromBukkitItemStack(entry.getValue())))
                 .toList();
 
