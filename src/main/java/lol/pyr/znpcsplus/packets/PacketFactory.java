@@ -2,8 +2,8 @@ package lol.pyr.znpcsplus.packets;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import lol.pyr.znpcsplus.entity.PacketEntity;
-import lol.pyr.znpcsplus.entity.PacketPlayer;
 import lol.pyr.znpcsplus.util.LazyLoader;
 import org.bukkit.entity.Player;
 
@@ -11,14 +11,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public interface PacketFactory {
-    void spawnPlayer(Player player, PacketPlayer entity);
+    void spawnPlayer(Player player, PacketEntity entity);
     void spawnEntity(Player player, PacketEntity entity);
     void destroyEntity(Player player, PacketEntity entity);
     void teleportEntity(Player player, PacketEntity entity);
-    void addTabPlayer(Player player, PacketPlayer entity);
-    void removeTabPlayer(Player player, PacketPlayer entity);
-    void createTeam(Player player, PacketPlayer entity);
-    void removeTeam(Player player, PacketPlayer entity);
+    void addTabPlayer(Player player, PacketEntity entity);
+    void removeTabPlayer(Player player, PacketEntity entity);
+    void createTeam(Player player, PacketEntity entity);
+    void removeTeam(Player player, PacketEntity entity);
+    void sendMetadata(Player player, PacketEntity entity, EntityData... data);
 
     PacketFactory factory = get();
 

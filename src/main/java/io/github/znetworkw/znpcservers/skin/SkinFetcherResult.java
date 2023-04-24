@@ -1,5 +1,7 @@
 package io.github.znetworkw.znpcservers.skin;
 
+import io.github.znetworkw.znpcservers.npc.NPCSkin;
+
 public interface SkinFetcherResult {
-    void onDone(String value, String signature, Throwable paramThrowable);
+    void onDone(NPCSkin npcSkin, Throwable paramThrowable);
 }

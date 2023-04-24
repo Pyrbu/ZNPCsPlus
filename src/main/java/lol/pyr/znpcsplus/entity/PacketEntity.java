@@ -4,6 +4,7 @@ import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import io.github.znetworkw.znpcservers.reflection.Reflections;
 import io.github.znetworkw.znpcservers.utility.Utils;
+import lol.pyr.znpcsplus.npc.NPC;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import org.bukkit.entity.Player;
 
@@ -11,14 +12,15 @@ import java.util.Set;
 import java.util.UUID;
 
 public class PacketEntity {
+    private final NPC owner;
     private final int entityId;
     private final UUID uuid;
 
     private final EntityType type;
     private PacketLocation location;
 
-    public PacketEntity(EntityType type, PacketLocation location) {
-        if (type == EntityTypes.PLAYER) throw new RuntimeException("Wrong class used for player");
+    public PacketEntity(NPC owner, EntityType type, PacketLocation location) {
+        this.owner = owner;
         this.entityId = reserveEntityID();
         this.uuid = UUID.randomUUID();
         this.type = type;
@@ -41,13 +43,18 @@ public class PacketEntity {
         return type;
     }
 
+    public NPC getOwner() {
+        return owner;
+    }
+
     public void setLocation(PacketLocation location, Set<Player> viewers) {
         this.location = location;
         for (Player viewer : viewers) PacketFactory.get().teleportEntity(viewer, this);
     }
 
     public void spawn(Player player) {
-        PacketFactory.get().spawnEntity(player, this);
+        if (type == EntityTypes.PLAYER) PacketFactory.get().spawnPlayer(player, this);
+        else PacketFactory.get().spawnEntity(player, this);
     }
 
     public void despawn(Player player) {
