@@ -9,7 +9,7 @@ public class NPCSkin {
     private final String texture;
     private final String signature;
 
-    protected NPCSkin(String texture, String signature) {
+    public NPCSkin(String texture, String signature) {
         this.texture = texture;
         this.signature = signature;
     }

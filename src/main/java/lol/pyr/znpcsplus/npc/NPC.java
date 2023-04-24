@@ -1,9 +1,7 @@
 package lol.pyr.znpcsplus.npc;
 
-import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.entity.PacketLocation;
-import lol.pyr.znpcsplus.entity.PacketPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -20,19 +18,19 @@ public class NPC {
     private PacketLocation location;
     private NPCType type;
 
-    private final Map<NPCPropertyKey<?>, Object> propertyMap = new HashMap<>();
+    private final Map<NPCProperty<?>, Object> propertyMap = new HashMap<>();
 
     public NPC(World world, NPCType type, PacketLocation location) {
         this.worldName = world.getName();
         this.type = type;
         this.location = location;
-        entity = new PacketEntity(type.getType(), location);
+        entity = new PacketEntity(this, type.getType(), location);
     }
 
     public void setType(NPCType type) {
         _hideAll();
         this.type = type;
-        entity = type.getType() == EntityTypes.PLAYER ? new PacketPlayer(entity.getLocation()) : new PacketEntity(type.getType(), entity.getLocation());
+        entity = new PacketEntity(this, type.getType(), entity.getLocation());
         _showAll();
     }
 
@@ -100,20 +98,20 @@ public class NPC {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T getProperty(NPCPropertyKey<T> key) {
-        return (T) propertyMap.get(key);
+    public <T> T getProperty(NPCProperty<T> key) {
+        return hasProperty(key) ? (T) propertyMap.get(key) : key.getDefaultValue();
     }
 
-    public boolean hasProperty(NPCPropertyKey<?> key) {
+    public boolean hasProperty(NPCProperty<?> key) {
         return propertyMap.containsKey(key);
     }
 
-    public <T> void setProperty(NPCPropertyKey<T> key, T value) {
-        propertyMap.put(key, value);
-        key.update(this, value);
+    public <T> void setProperty(NPCProperty<T> key, T value) {
+        if (value.equals(key.getDefaultValue())) removeProperty(key);
+        else propertyMap.put(key, value);
     }
 
-    public void removeProperty(NPCPropertyKey<?> key) {
+    public void removeProperty(NPCProperty<?> key) {
         propertyMap.remove(key);
     }
 }

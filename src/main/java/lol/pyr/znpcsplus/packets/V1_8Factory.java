@@ -1,17 +1,23 @@
 package lol.pyr.znpcsplus.packets;
 
 import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.protocol.player.GameMode;
+import com.github.retrooper.packetevents.protocol.player.TextureProperty;
+import com.github.retrooper.packetevents.protocol.player.UserProfile;
 import com.github.retrooper.packetevents.util.Vector3d;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.*;
+import io.github.znetworkw.znpcservers.npc.NPCSkin;
 import lol.pyr.znpcsplus.ZNPCsPlus;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.entity.PacketLocation;
-import lol.pyr.znpcsplus.entity.PacketPlayer;
+import lol.pyr.znpcsplus.metadata.MetadataFactory;
+import lol.pyr.znpcsplus.npc.NPC;
+import lol.pyr.znpcsplus.npc.NPCProperty;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
@@ -21,12 +27,14 @@ import java.util.Optional;
 
 public class V1_8Factory implements PacketFactory {
     @Override
-    public void spawnPlayer(Player player, PacketPlayer entity) {
+    public void spawnPlayer(Player player, PacketEntity entity) {
+        NPC owner = entity.getOwner();
         addTabPlayer(player, entity);
         createTeam(player, entity);
         PacketLocation location = entity.getLocation();
         sendPacket(player, new WrapperPlayServerSpawnPlayer(entity.getEntityId(),
                 entity.getUuid(), location.toVector3d(), location.getYaw(), location.getPitch(), List.of()));
+        if (owner.getProperty(NPCProperty.SKIN_LAYERS)) sendMetadata(player, entity, MetadataFactory.get().skinLayers());
         ZNPCsPlus.SCHEDULER.scheduleSyncDelayedTask(() -> removeTabPlayer(player, entity), 60);
     }
 
@@ -45,7 +53,7 @@ public class V1_8Factory implements PacketFactory {
     @Override
     public void destroyEntity(Player player, PacketEntity entity) {
         sendPacket(player, new WrapperPlayServerDestroyEntities(entity.getEntityId()));
-        if (entity.getType() == EntityTypes.PLAYER) removeTeam(player, (PacketPlayer) entity);
+        if (entity.getType() == EntityTypes.PLAYER) removeTeam(player, entity);
     }
 
     @Override
@@ -56,22 +64,23 @@ public class V1_8Factory implements PacketFactory {
     }
 
     @Override
-    public void addTabPlayer(Player player, PacketPlayer entity) {
+    public void addTabPlayer(Player player, PacketEntity entity) {
         if (entity.getType() != EntityTypes.PLAYER) return;
         sendPacket(player, new WrapperPlayServerPlayerInfo(
-                WrapperPlayServerPlayerInfo.Action.ADD_PLAYER, new WrapperPlayServerPlayerInfo.PlayerData(Component.text(""), entity.getGameProfile(), GameMode.CREATIVE, 1)));
+                WrapperPlayServerPlayerInfo.Action.ADD_PLAYER, new WrapperPlayServerPlayerInfo.PlayerData(Component.text(""),
+                skinned(entity, new UserProfile(entity.getUuid(), Integer.toString(entity.getEntityId()))), GameMode.CREATIVE, 1)));
     }
 
     @Override
-    public void removeTabPlayer(Player player, PacketPlayer entity) {
+    public void removeTabPlayer(Player player, PacketEntity entity) {
         if (entity.getType() != EntityTypes.PLAYER) return;
         sendPacket(player, new WrapperPlayServerPlayerInfo(
                 WrapperPlayServerPlayerInfo.Action.REMOVE_PLAYER, new WrapperPlayServerPlayerInfo.PlayerData(null,
-                entity.getGameProfile(), null, -1)));
+                new UserProfile(entity.getUuid(), null), null, -1)));
     }
 
     @Override
-    public void createTeam(Player player, PacketPlayer entity) {
+    public void createTeam(Player player, PacketEntity entity) {
         sendPacket(player, new WrapperPlayServerTeams("npc_team_" + entity.getEntityId(), WrapperPlayServerTeams.TeamMode.CREATE, new WrapperPlayServerTeams.ScoreBoardTeamInfo(
                 Component.empty(), Component.empty(), Component.empty(),
                 WrapperPlayServerTeams.NameTagVisibility.NEVER,
@@ -83,11 +92,24 @@ public class V1_8Factory implements PacketFactory {
     }
 
     @Override
-    public void removeTeam(Player player, PacketPlayer entity) {
+    public void removeTeam(Player player, PacketEntity entity) {
         sendPacket(player, new WrapperPlayServerTeams("npc_team_" + entity.getEntityId(), WrapperPlayServerTeams.TeamMode.REMOVE, (WrapperPlayServerTeams.ScoreBoardTeamInfo) null));
+    }
+
+    @Override
+    public void sendMetadata(Player player, PacketEntity entity, EntityData... data) {
+        PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerEntityMetadata(entity.getEntityId(), List.of(data)));
     }
 
     protected void sendPacket(Player player, PacketWrapper<?> packet) {
         PacketEvents.getAPI().getPlayerManager().sendPacket(player, packet);
+    }
+
+    protected UserProfile skinned(PacketEntity entity, UserProfile profile) {
+        NPC owner = entity.getOwner();
+        if (!owner.hasProperty(NPCProperty.SKIN)) return profile;
+        NPCSkin skin = owner.getProperty(NPCProperty.SKIN);
+        profile.setTextureProperties(List.of(new TextureProperty("textures", skin.getTexture(), skin.getSignature())));
+        return profile;
     }
 }

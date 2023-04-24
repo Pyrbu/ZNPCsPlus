@@ -2,6 +2,7 @@ package lol.pyr.znpcsplus;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
+import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
@@ -11,6 +12,7 @@ import io.github.znetworkw.znpcservers.configuration.ConfigurationConstants;
 import io.github.znetworkw.znpcservers.listeners.InventoryListener;
 import io.github.znetworkw.znpcservers.listeners.PlayerListener;
 import io.github.znetworkw.znpcservers.npc.NPCPath;
+import io.github.znetworkw.znpcservers.npc.NPCSkin;
 import io.github.znetworkw.znpcservers.npc.interaction.InteractionPacketListener;
 import io.github.znetworkw.znpcservers.npc.task.NPCPositionTask;
 import io.github.znetworkw.znpcservers.npc.task.NPCSaveTask;
@@ -21,6 +23,7 @@ import io.github.znetworkw.znpcservers.utility.itemstack.ItemStackSerializer;
 import io.github.znetworkw.znpcservers.utility.location.ZLocation;
 import lol.pyr.znpcsplus.entity.PacketLocation;
 import lol.pyr.znpcsplus.npc.NPC;
+import lol.pyr.znpcsplus.npc.NPCProperty;
 import lol.pyr.znpcsplus.npc.NPCRegistry;
 import lol.pyr.znpcsplus.npc.NPCType;
 import lol.pyr.znpcsplus.tasks.NPCVisibilityTask;
@@ -135,7 +138,9 @@ public class ZNPCsPlus extends JavaPlugin {
             World world = Bukkit.getWorld("world");
             if (world == null) world = Bukkit.getWorlds().get(0);
             for (NPCType type : NPCType.values()) {
-                NPCRegistry.register("debug_npc" + (z * wrap + x), new NPC(world, type, new PacketLocation(x * 3, 200, z * 3, 0, 0)));
+                NPC npc = new NPC(world, type, new PacketLocation(x * 3, 200, z * 3, 0, 0));
+                if (type.getType() == EntityTypes.PLAYER) NPCSkin.forName("Pyrbu", (skin, ex) -> npc.setProperty(NPCProperty.SKIN, skin));
+                NPCRegistry.register("debug_npc" + (z * wrap + x), npc);
                 if (x++ > wrap) {
                     x = 0;
                     z++;

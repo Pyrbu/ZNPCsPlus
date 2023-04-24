@@ -2,6 +2,7 @@ package io.github.znetworkw.znpcservers.skin;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import io.github.znetworkw.znpcservers.npc.NPCSkin;
 
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
@@ -46,11 +47,11 @@ public class SkinFetcher {
         });
         completableFuture.whenComplete((response, throwable) -> {
             if (completableFuture.isCompletedExceptionally()) {
-                skinFetcherResult.onDone(null, null, throwable);
+                skinFetcherResult.onDone(null, throwable);
             } else {
                 JsonObject jsonObject = response.getAsJsonObject(this.builder.getAPIServer().getValueKey());
                 JsonObject properties = jsonObject.getAsJsonObject(this.builder.getAPIServer().getSignatureKey());
-                skinFetcherResult.onDone(properties.get("value").getAsString(), properties.get("signature").getAsString(), null);
+                skinFetcherResult.onDone(new NPCSkin(properties.get("value").getAsString(), properties.get("signature").getAsString()), null);
             }
         });
         return completableFuture;
