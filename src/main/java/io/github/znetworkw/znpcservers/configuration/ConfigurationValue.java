@@ -18,7 +18,7 @@ public enum ConfigurationValue {
     SAVE_NPCS_DELAY_SECONDS("config", 600, Integer.class),
     MAX_PATH_LOCATIONS("config", 500, Integer.class),
     NAMING_METHOD("config", NamingType.DEFAULT, NamingType.class),
-    DEBUG_ENABLED("config", true, Boolean.class),
+    DEBUG_ENABLED("config", false, Boolean.class),
     LINE_SPACING("config", 0.3D, Double.class),
     ANIMATION_RGB("config", false, Boolean.class),
     CHECK_FOR_UPDATES("config", true, Boolean.class),

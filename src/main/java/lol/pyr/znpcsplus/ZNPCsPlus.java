@@ -10,19 +10,20 @@ import io.github.znetworkw.znpcservers.configuration.Configuration;
 import io.github.znetworkw.znpcservers.configuration.ConfigurationConstants;
 import io.github.znetworkw.znpcservers.listeners.InventoryListener;
 import io.github.znetworkw.znpcservers.listeners.PlayerListener;
-import io.github.znetworkw.znpcservers.npc.NPC;
-import io.github.znetworkw.znpcservers.npc.NPCModel;
 import io.github.znetworkw.znpcservers.npc.NPCPath;
-import io.github.znetworkw.znpcservers.npc.NPCType;
 import io.github.znetworkw.znpcservers.npc.interaction.InteractionPacketListener;
 import io.github.znetworkw.znpcservers.npc.task.NPCPositionTask;
 import io.github.znetworkw.znpcservers.npc.task.NPCSaveTask;
-import io.github.znetworkw.znpcservers.npc.task.NPCVisibilityTask;
 import io.github.znetworkw.znpcservers.user.ZUser;
 import io.github.znetworkw.znpcservers.utility.BungeeUtils;
 import io.github.znetworkw.znpcservers.utility.SchedulerUtils;
 import io.github.znetworkw.znpcservers.utility.itemstack.ItemStackSerializer;
 import io.github.znetworkw.znpcservers.utility.location.ZLocation;
+import lol.pyr.znpcsplus.entity.PacketLocation;
+import lol.pyr.znpcsplus.npc.NPC;
+import lol.pyr.znpcsplus.npc.NPCRegistry;
+import lol.pyr.znpcsplus.npc.NPCType;
+import lol.pyr.znpcsplus.tasks.NPCVisibilityTask;
 import lol.pyr.znpcsplus.updater.UpdateChecker;
 import lol.pyr.znpcsplus.updater.UpdateNotificationListener;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
@@ -30,13 +31,12 @@ import org.apache.commons.io.FileUtils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.logging.Logger;
 
 public class ZNPCsPlus extends JavaPlugin {
@@ -55,25 +55,6 @@ public class ZNPCsPlus extends JavaPlugin {
     public static BukkitAudiences ADVENTURE;
 
     private boolean enabled = false;
-
-    public static NPC createNPC(int id, NPCType npcType, Location location, String name) {
-        NPC find = NPC.find(id);
-        if (find != null)
-            return find;
-        NPCModel pojo = new NPCModel(id).withHologramLines(Collections.singletonList(name))
-                .withHologramHeight(npcType.getHoloHeight())
-                .withLocation(new ZLocation(location))
-                .withNpcType(npcType);
-        ConfigurationConstants.NPC_LIST.add(pojo);
-        return new NPC(pojo, true);
-    }
-
-    public static void deleteNPC(int npcID) {
-        NPC npc = NPC.find(npcID);
-        if (npc == null) throw new IllegalStateException("can't find npc:  " + npcID);
-        NPC.unregister(npcID);
-        ConfigurationConstants.NPC_LIST.remove(npc.getNpcPojo());
-    }
 
     @Override
     public void onLoad() {
@@ -146,6 +127,21 @@ public class ZNPCsPlus extends JavaPlugin {
         enabled = true;
         log(ChatColor.WHITE + " * Loading complete! (" + (System.currentTimeMillis() - before) + "ms)");
         log("");
+
+        if (ConfigurationConstants.DEBUG_ENABLED) {
+            int wrap = 20;
+            int x = 0;
+            int z = 0;
+            World world = Bukkit.getWorld("world");
+            if (world == null) world = Bukkit.getWorlds().get(0);
+            for (NPCType type : NPCType.values()) {
+                NPCRegistry.register("debug_npc" + (z * wrap + x), new NPC(world, type, new PacketLocation(x * 3, 200, z * 3, 0, 0)));
+                if (x++ > wrap) {
+                    x = 0;
+                    z++;
+                }
+            }
+        }
     }
 
     @Override
