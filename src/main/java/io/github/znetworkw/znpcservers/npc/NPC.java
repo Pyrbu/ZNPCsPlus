@@ -58,8 +58,7 @@ public class NPC {
         this.npcName = NamingType.DEFAULT.resolve(this);
         this.npcSkin = NPCSkin.forValues(npcModel.getSkin(), npcModel.getSignature());
         this.uuid = npcModel.getUuid();
-        if (load)
-            onLoad();
+        if (load) onLoad();
     }
 
     public NPC(NPCModel npcModel) {
@@ -72,8 +71,7 @@ public class NPC {
 
     public static void unregister(int id) {
         NPC npc = find(id);
-        if (npc == null)
-            throw new IllegalStateException("can't find npc with id " + id);
+        if (npc == null) throw new IllegalStateException("can't find npc with id " + id);
         NPC_MAP.remove(id);
         npc.deleteViewers();
     }
@@ -97,8 +95,7 @@ public class NPC {
             updateProfile(this.gameProfile.getProperties());
             setLocation(getNpcPojo().getLocation().toBukkitLocation(), false);
             this.hologram.createHologram();
-            if (this.npcPojo.getPathName() != null)
-                setPath(NPCPath.AbstractTypeWriter.find(this.npcPojo.getPathName()));
+            if (this.npcPojo.getPathName() != null) setPath(NPCPath.AbstractTypeWriter.find(this.npcPojo.getPathName()));
             this.npcPojo.getCustomizationMap().forEach((key, value) -> this.npcPojo.getNpcType().updateCustomization(this, key, value));
         }
         NPC_MAP.put(getNpcPojo().getId(), this);
@@ -180,12 +177,9 @@ public class NPC {
     public void setSecondLayerSkin() {
         try {
             Object dataWatcherObject = Reflections.GET_DATA_WATCHER_METHOD.get().invoke(this.nmsEntity);
-            if (Utils.versionNewer(9)) {
-                Reflections.SET_DATA_WATCHER_METHOD.get().invoke(dataWatcherObject, Reflections.DATA_WATCHER_OBJECT_CONSTRUCTOR.get()
+            if (Utils.versionNewer(9)) Reflections.SET_DATA_WATCHER_METHOD.get().invoke(dataWatcherObject, Reflections.DATA_WATCHER_OBJECT_CONSTRUCTOR.get()
                                 .newInstance(this.npcSkin.getLayerIndex(), Reflections.DATA_WATCHER_REGISTER_FIELD.get()), (byte) 127);
-            } else {
-                Reflections.WATCH_DATA_WATCHER_METHOD.get().invoke(dataWatcherObject, 10, (byte) 127);
-            }
+            else Reflections.WATCH_DATA_WATCHER_METHOD.get().invoke(dataWatcherObject, 10, (byte) 127);
         } catch (ReflectiveOperationException operationException) {
             throw new UnexpectedCallException(operationException);
         }
@@ -325,10 +319,10 @@ public class NPC {
     public void updateProfile(PropertyMap propertyMap) {
         if (this.npcPojo.getNpcType() != NPCType.PLAYER) return;
         try {
-            Object gameProfileObj = Reflections.GET_PROFILE_METHOD.get().invoke(this.nmsEntity);
-            Utils.setValue(gameProfileObj, "name", this.gameProfile.getName());
-            Utils.setValue(gameProfileObj, "id", this.gameProfile.getId());
-            Utils.setValue(gameProfileObj, "properties", propertyMap);
+            Object gameProfile = Reflections.GET_PROFILE_METHOD.get().invoke(this.nmsEntity);
+            Utils.setValue(gameProfile, "name", this.gameProfile.getName());
+            Utils.setValue(gameProfile, "id", this.gameProfile.getId());
+            Utils.setValue(gameProfile, "properties", propertyMap);
         } catch (ReflectiveOperationException operationException) {
             throw new UnexpectedCallException(operationException);
         }
