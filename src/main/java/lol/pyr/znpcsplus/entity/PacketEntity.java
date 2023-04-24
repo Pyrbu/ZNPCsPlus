@@ -2,6 +2,8 @@ package lol.pyr.znpcsplus.entity;
 
 import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
+import io.github.znetworkw.znpcservers.reflection.Reflections;
+import io.github.znetworkw.znpcservers.utility.Utils;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import org.bukkit.entity.Player;
 
@@ -16,7 +18,8 @@ public class PacketEntity {
     private PacketLocation location;
 
     public PacketEntity(EntityType type, PacketLocation location) {
-        this.entityId = EntityIDProvider.reserve();
+        if (type == EntityTypes.PLAYER) throw new RuntimeException("Wrong class used for player");
+        this.entityId = reserveEntityID();
         this.uuid = UUID.randomUUID();
         this.type = type;
         this.location = location;
@@ -44,11 +47,19 @@ public class PacketEntity {
     }
 
     public void spawn(Player player) {
-        if (type == EntityTypes.PLAYER) PacketFactory.get().spawnPlayer(player, this);
-        else PacketFactory.get().spawnEntity(player, this);
+        PacketFactory.get().spawnEntity(player, this);
     }
 
     public void despawn(Player player) {
         PacketFactory.get().destroyEntity(player, this);
+    }
+
+    private static int reserveEntityID() {
+        if (Utils.versionNewer(14)) return Reflections.ATOMIC_ENTITY_ID_FIELD.get().incrementAndGet();
+        else {
+            int id = Reflections.ENTITY_ID_MODIFIER.get();
+            Reflections.ENTITY_ID_MODIFIER.set(id + 1);
+            return id;
+        }
     }
 }

@@ -5,13 +5,13 @@ import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.protocol.player.GameMode;
-import com.github.retrooper.packetevents.protocol.player.UserProfile;
 import com.github.retrooper.packetevents.util.Vector3d;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.*;
 import lol.pyr.znpcsplus.ZNPCsPlus;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.entity.PacketLocation;
+import lol.pyr.znpcsplus.entity.PacketPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
@@ -21,7 +21,7 @@ import java.util.Optional;
 
 public class V1_8Factory implements PacketFactory {
     @Override
-    public void spawnPlayer(Player player, PacketEntity entity) {
+    public void spawnPlayer(Player player, PacketPlayer entity) {
         addTabPlayer(player, entity);
         createTeam(player, entity);
         PacketLocation location = entity.getLocation();
@@ -45,7 +45,7 @@ public class V1_8Factory implements PacketFactory {
     @Override
     public void destroyEntity(Player player, PacketEntity entity) {
         sendPacket(player, new WrapperPlayServerDestroyEntities(entity.getEntityId()));
-        if (entity.getType() == EntityTypes.PLAYER) removeTeam(player, entity);
+        if (entity.getType() == EntityTypes.PLAYER) removeTeam(player, (PacketPlayer) entity);
     }
 
     @Override
@@ -56,27 +56,24 @@ public class V1_8Factory implements PacketFactory {
     }
 
     @Override
-    public void addTabPlayer(Player player, PacketEntity entity) {
+    public void addTabPlayer(Player player, PacketPlayer entity) {
         if (entity.getType() != EntityTypes.PLAYER) return;
         sendPacket(player, new WrapperPlayServerPlayerInfo(
-                WrapperPlayServerPlayerInfo.Action.ADD_PLAYER, new WrapperPlayServerPlayerInfo.PlayerData(Component.text(""),
-                new UserProfile(entity.getUuid(), Integer.toString(entity.getEntityId())), GameMode.CREATIVE, 1)));
+                WrapperPlayServerPlayerInfo.Action.ADD_PLAYER, new WrapperPlayServerPlayerInfo.PlayerData(Component.text(""), entity.getGameProfile(), GameMode.CREATIVE, 1)));
     }
 
     @Override
-    public void removeTabPlayer(Player player, PacketEntity entity) {
+    public void removeTabPlayer(Player player, PacketPlayer entity) {
         if (entity.getType() != EntityTypes.PLAYER) return;
         sendPacket(player, new WrapperPlayServerPlayerInfo(
                 WrapperPlayServerPlayerInfo.Action.REMOVE_PLAYER, new WrapperPlayServerPlayerInfo.PlayerData(null,
-                new UserProfile(entity.getUuid(), null), null, -1)));
+                entity.getGameProfile(), null, -1)));
     }
 
     @Override
-    public void createTeam(Player player, PacketEntity entity) {
+    public void createTeam(Player player, PacketPlayer entity) {
         sendPacket(player, new WrapperPlayServerTeams("npc_team_" + entity.getEntityId(), WrapperPlayServerTeams.TeamMode.CREATE, new WrapperPlayServerTeams.ScoreBoardTeamInfo(
-                Component.empty(),
-                Component.empty(),
-                Component.empty(),
+                Component.empty(), Component.empty(), Component.empty(),
                 WrapperPlayServerTeams.NameTagVisibility.NEVER,
                 WrapperPlayServerTeams.CollisionRule.NEVER,
                 NamedTextColor.WHITE,
@@ -86,7 +83,7 @@ public class V1_8Factory implements PacketFactory {
     }
 
     @Override
-    public void removeTeam(Player player, PacketEntity entity) {
+    public void removeTeam(Player player, PacketPlayer entity) {
         sendPacket(player, new WrapperPlayServerTeams("npc_team_" + entity.getEntityId(), WrapperPlayServerTeams.TeamMode.REMOVE, (WrapperPlayServerTeams.ScoreBoardTeamInfo) null));
     }
 
