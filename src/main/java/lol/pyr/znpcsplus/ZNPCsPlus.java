@@ -30,6 +30,7 @@ import lol.pyr.znpcsplus.tasks.NPCVisibilityTask;
 import lol.pyr.znpcsplus.updater.UpdateChecker;
 import lol.pyr.znpcsplus.updater.UpdateNotificationListener;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.apache.commons.io.FileUtils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -139,7 +140,11 @@ public class ZNPCsPlus extends JavaPlugin {
             if (world == null) world = Bukkit.getWorlds().get(0);
             for (NPCType type : NPCType.values()) {
                 NPC npc = new NPC(world, type, new PacketLocation(x * 3, 200, z * 3, 0, 0));
-                if (type.getType() == EntityTypes.PLAYER) NPCSkin.forName("Pyrbu", (skin, ex) -> npc.setProperty(NPCProperty.SKIN, skin));
+                if (type.getType() == EntityTypes.PLAYER) {
+                    npc.setProperty(NPCProperty.GLOW, NamedTextColor.RED);
+                    npc.setProperty(NPCProperty.FIRE, true);
+                    NPCSkin.forName("Notch", (skin, ex) -> npc.setProperty(NPCProperty.SKIN, skin));
+                }
                 NPCRegistry.register("debug_npc" + (z * wrap + x), npc);
                 if (x++ > wrap) {
                     x = 0;

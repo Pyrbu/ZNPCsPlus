@@ -1,6 +1,7 @@
 package lol.pyr.znpcsplus.npc;
 
 import io.github.znetworkw.znpcservers.npc.NPCSkin;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,4 +36,6 @@ public class NPCProperty<T> {
 
     public static NPCProperty<Boolean> SKIN_LAYERS = new NPCProperty<>("skin_layers", true);
     public static NPCProperty<NPCSkin> SKIN = new NPCProperty<>("skin");
+    public static NPCProperty<NamedTextColor> GLOW = new NPCProperty<>("glow");
+    public static NPCProperty<Boolean> FIRE = new NPCProperty<>("fire", false);
 }
