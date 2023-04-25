@@ -8,11 +8,7 @@ import lol.pyr.znpcsplus.ZNPCsPlus;
 import lol.pyr.znpcsplus.npc.NPC;
 import lol.pyr.znpcsplus.npc.NPCRegistry;
 import lol.pyr.znpcsplus.user.User;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-
-import java.util.List;
 
 public class InteractionPacketListener implements PacketListener {
     @Override
@@ -28,17 +24,9 @@ public class InteractionPacketListener implements PacketListener {
         if (npc == null) return;
 
         ZNPCsPlus.SCHEDULER.runNextTick(() -> {
-            Bukkit.getServer().getPluginManager().callEvent(new NPCInteractEvent(player, clickType, npc));
-            List<NPCAction> actions = npc.getNpcPojo().getClickActions();
-            if (actions == null) return;
-            for (NPCAction action : actions) {
-                if (action.getClickType() != ClickType.DEFAULT && action.getClickType() != clickType) continue;
-                if (action.getDelay() > 0) {
-                    int actionId = npc.getNpcPojo().getClickActions().indexOf(action);
-                    if (user.getLastClicked().containsKey(actionId) && System.nanoTime() - user.getLastClicked().get(actionId) < action.getFixedDelay()) continue;
-                    user.getLastClicked().put(actionId, System.nanoTime());
-                }
-                action.run(user, action.getAction());
+            for (NPCAction action : npc.getActions()) {
+                if (action.getCooldown() > 0 && !user.actionCooldownCheck(action)) continue;
+                action.run(player);
             }
         });
     }

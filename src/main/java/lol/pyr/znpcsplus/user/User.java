@@ -1,6 +1,7 @@
 package lol.pyr.znpcsplus.user;
 
 import io.github.znetworkw.znpcservers.user.EventService;
+import lol.pyr.znpcsplus.interaction.NPCAction;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -27,6 +28,7 @@ public class User {
 
     private final UUID uuid;
     private long lastNPCInteraction;
+    private final Map<UUID, Long> actionCooldownMap = new HashMap<>();
     private final List<EventService<?>> eventServices = new ArrayList<>();
 
     public User(UUID uuid) {
@@ -38,7 +40,7 @@ public class User {
     }
 
     public boolean canInteract() {
-        if (System.currentTimeMillis() - lastNPCInteraction > 1000L) {
+        if (System.currentTimeMillis() - lastNPCInteraction > 100L) {
             lastNPCInteraction = System.currentTimeMillis();
             return true;
         }
@@ -51,5 +53,14 @@ public class User {
 
     public UUID getUuid() {
         return uuid;
+    }
+
+    public boolean actionCooldownCheck(NPCAction action) {
+        UUID id = action.getUuid();
+        if (System.currentTimeMillis() - actionCooldownMap.getOrDefault(id, 0L) >= action.getCooldown()) {
+            actionCooldownMap.put(id, System.currentTimeMillis());
+            return true;
+        }
+        return false;
     }
 }

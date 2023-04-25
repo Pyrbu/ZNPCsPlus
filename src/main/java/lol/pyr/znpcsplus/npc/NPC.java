@@ -2,14 +2,12 @@ package lol.pyr.znpcsplus.npc;
 
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.entity.PacketLocation;
+import lol.pyr.znpcsplus.interaction.NPCAction;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class NPC {
     protected static final Set<NPC> _ALL_NPCS = new HashSet<>();
@@ -21,6 +19,7 @@ public class NPC {
     private NPCType type;
 
     private final Map<NPCProperty<?>, Object> propertyMap = new HashMap<>();
+    private final Set<NPCAction> actions = new HashSet<>();
 
     public NPC(World world, NPCType type, PacketLocation location) {
         this.worldName = world.getName();
@@ -123,5 +122,13 @@ public class NPC {
 
     public void removeProperty(NPCProperty<?> key) {
         propertyMap.remove(key);
+    }
+
+    public Collection<NPCAction> getActions() {
+        return Collections.unmodifiableSet(actions);
+    }
+
+    public void addAction(NPCAction action) {
+        actions.add(action);
     }
 }
