@@ -108,7 +108,9 @@ public class V1_8Factory implements PacketFactory {
     public void sendAllMetadata(Player player, PacketEntity entity) {
         NPC owner = entity.getOwner();
         if (entity.getType() == EntityTypes.PLAYER && owner.getProperty(NPCProperty.SKIN_LAYERS)) sendMetadata(player, entity, MetadataFactory.get().skinLayers());
-        if (owner.getProperty(NPCProperty.FIRE)) sendMetadata(player, entity, MetadataFactory.get().effects(true, false));
+        boolean fire = owner.getProperty(NPCProperty.FIRE);
+        boolean invisible = owner.getProperty(NPCProperty.INVISIBLE);
+        if (fire || invisible) sendMetadata(player, entity, MetadataFactory.get().effects(fire, false, invisible));
     }
 
     @Override
@@ -130,7 +132,7 @@ public class V1_8Factory implements PacketFactory {
         }
         CompletableFuture<UserProfile> future = new CompletableFuture<>();
         descriptor.fetch(player).thenAccept(skin -> {
-            skin.apply(profile);
+            if (skin != null) skin.apply(profile);
             future.complete(profile);
         });
         return future;

@@ -14,7 +14,8 @@ public class V1_9Factory extends V1_8Factory {
         if (entity.getType() == EntityTypes.PLAYER && owner.getProperty(NPCProperty.SKIN_LAYERS)) sendMetadata(player, entity, MetadataFactory.get().skinLayers());
         boolean glow = owner.hasProperty(NPCProperty.GLOW);
         boolean fire = owner.getProperty(NPCProperty.FIRE);
-        if (glow || fire) sendMetadata(player, entity, MetadataFactory.get().effects(fire, glow));
+        boolean invisible = owner.getProperty(NPCProperty.INVISIBLE);
+        if (glow || fire) sendMetadata(player, entity, MetadataFactory.get().effects(fire, glow, invisible));
     }
 
     @Override

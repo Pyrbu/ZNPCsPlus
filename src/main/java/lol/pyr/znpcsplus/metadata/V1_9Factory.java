@@ -10,7 +10,7 @@ public class V1_9Factory extends V1_8Factory {
     }
 
     @Override
-    public EntityData effects(boolean onFire, boolean glowing) {
-        return new EntityData(0, EntityDataTypes.BYTE, (byte) ((onFire ? 0x01 : 0) | (glowing ? 0x40 : 0)));
+    public EntityData effects(boolean onFire, boolean glowing, boolean invisible) {
+        return new EntityData(0, EntityDataTypes.BYTE, (byte) ((onFire ? 0x01 : 0) | (invisible ? 0x20 : 0) | (glowing ? 0x40 : 0)));
     }
 }
