@@ -71,8 +71,6 @@ runServer {
 tasks.assemble.dependsOn shadowJar
 tasks.compileJava.dependsOn clean
 
-System.out.println()
-
 publishing {
     publications {
         mavenJava(MavenPublication) {
