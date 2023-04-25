@@ -4,24 +4,26 @@ import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import lol.pyr.znpcsplus.entity.PacketEntity;
+import lol.pyr.znpcsplus.entity.PropertyHolder;
 import lol.pyr.znpcsplus.util.LazyLoader;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public interface PacketFactory {
-    void spawnPlayer(Player player, PacketEntity entity);
-    void spawnEntity(Player player, PacketEntity entity);
-    void destroyEntity(Player player, PacketEntity entity);
+    void spawnPlayer(Player player, PacketEntity entity, PropertyHolder properties);
+    void spawnEntity(Player player, PacketEntity entity, PropertyHolder properties);
+    void destroyEntity(Player player, PacketEntity entity, PropertyHolder properties);
     void teleportEntity(Player player, PacketEntity entity);
-    CompletableFuture<Void> addTabPlayer(Player player, PacketEntity entity);
+    CompletableFuture<Void> addTabPlayer(Player player, PacketEntity entity, PropertyHolder properties);
     void removeTabPlayer(Player player, PacketEntity entity);
-    void createTeam(Player player, PacketEntity entity);
+    void createTeam(Player player, PacketEntity entity, PropertyHolder properties);
     void removeTeam(Player player, PacketEntity entity);
-    void sendAllMetadata(Player player, PacketEntity entity);
-    void sendMetadata(Player player, PacketEntity entity, EntityData... data);
+    void sendAllMetadata(Player player, PacketEntity entity, PropertyHolder properties);
+    void sendMetadata(Player player, PacketEntity entity, List<EntityData> data);
 
     PacketFactory factory = get();
 

@@ -6,16 +6,15 @@ import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
-import io.github.znetworkw.znpcservers.configuration.Configuration;
 import io.github.znetworkw.znpcservers.configuration.ConfigurationConstants;
 import io.github.znetworkw.znpcservers.listeners.InventoryListener;
 import io.github.znetworkw.znpcservers.utility.BungeeUtils;
 import io.github.znetworkw.znpcservers.utility.SchedulerUtils;
 import io.github.znetworkw.znpcservers.utility.itemstack.ItemStackSerializer;
+import lol.pyr.znpcsplus.entity.EntityProperty;
 import lol.pyr.znpcsplus.entity.PacketLocation;
 import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
 import lol.pyr.znpcsplus.npc.NPC;
-import lol.pyr.znpcsplus.npc.NPCProperty;
 import lol.pyr.znpcsplus.npc.NPCRegistry;
 import lol.pyr.znpcsplus.npc.NPCType;
 import lol.pyr.znpcsplus.skin.cache.SkinCache;
@@ -138,11 +137,11 @@ public class ZNPCsPlus extends JavaPlugin {
             for (NPCType type : NPCType.values()) {
                 NPC npc = new NPC(world, type, new PacketLocation(x * 3, 200, z * 3, 0, 0));
                 if (type.getType() == EntityTypes.PLAYER) {
-                    SkinCache.fetchByName("Notch").thenAccept(skin -> npc.setProperty(NPCProperty.SKIN, new PrefetchedDescriptor(skin)));
-                    npc.setProperty(NPCProperty.INVISIBLE, true);
+                    SkinCache.fetchByName("Notch").thenAccept(skin -> npc.setProperty(EntityProperty.SKIN, new PrefetchedDescriptor(skin)));
+                    npc.setProperty(EntityProperty.INVISIBLE, true);
                 }
-                npc.setProperty(NPCProperty.GLOW, NamedTextColor.RED);
-                npc.setProperty(NPCProperty.FIRE, true);
+                npc.setProperty(EntityProperty.GLOW, NamedTextColor.RED);
+                npc.setProperty(EntityProperty.FIRE, true);
                 NPCRegistry.register("debug_npc" + (z * wrap + x), npc);
                 if (x++ > wrap) {
                     x = 0;
@@ -150,11 +149,11 @@ public class ZNPCsPlus extends JavaPlugin {
                 }
             }
             NPC npc = new NPC(world, NPCType.byName("player"), new PacketLocation(x * 3, 200, z * 3, 0, 0));
-            npc.setProperty(NPCProperty.SKIN, new FetchingDescriptor("jeb_"));
+            npc.setProperty(EntityProperty.SKIN, new FetchingDescriptor("jeb_"));
             NPCRegistry.register("debug_npc" + (z * wrap + x), npc);
             x++;
             npc = new NPC(world, NPCType.byName("player"), new PacketLocation(x * 3, 200, z * 3, 0, 0));
-            npc.setProperty(NPCProperty.SKIN, new MirrorDescriptor());
+            npc.setProperty(EntityProperty.SKIN, new MirrorDescriptor());
             NPCRegistry.register("debug_npc" + (z * wrap + x), npc);
         }
     }
@@ -162,10 +161,8 @@ public class ZNPCsPlus extends JavaPlugin {
     @Override
     public void onDisable() {
         if (!enabled) return;
-        Configuration.SAVE_CONFIGURATIONS.forEach(Configuration::save);
         Bukkit.getOnlinePlayers().forEach(User::remove);
         ADVENTURE.close();
         ADVENTURE = null;
     }
-
 }

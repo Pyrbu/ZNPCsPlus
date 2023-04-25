@@ -4,23 +4,22 @@ import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import io.github.znetworkw.znpcservers.reflection.Reflections;
 import io.github.znetworkw.znpcservers.utility.Utils;
-import lol.pyr.znpcsplus.npc.NPC;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import org.bukkit.entity.Player;
 
-import java.util.Set;
+import java.util.Collection;
 import java.util.UUID;
 
 public class PacketEntity {
-    private final NPC owner;
+    private final PropertyHolder properties;
     private final int entityId;
     private final UUID uuid;
 
     private final EntityType type;
     private PacketLocation location;
 
-    public PacketEntity(NPC owner, EntityType type, PacketLocation location) {
-        this.owner = owner;
+    public PacketEntity(PropertyHolder properties, EntityType type, PacketLocation location) {
+        this.properties = properties;
         this.entityId = reserveEntityID();
         this.uuid = UUID.randomUUID();
         this.type = type;
@@ -43,22 +42,22 @@ public class PacketEntity {
         return type;
     }
 
-    public NPC getOwner() {
-        return owner;
-    }
-
-    public void setLocation(PacketLocation location, Set<Player> viewers) {
+    public void setLocation(PacketLocation location, Collection<Player> viewers) {
         this.location = location;
         for (Player viewer : viewers) PacketFactory.get().teleportEntity(viewer, this);
     }
 
     public void spawn(Player player) {
-        if (type == EntityTypes.PLAYER) PacketFactory.get().spawnPlayer(player, this);
-        else PacketFactory.get().spawnEntity(player, this);
+        if (type == EntityTypes.PLAYER) PacketFactory.get().spawnPlayer(player, this, properties);
+        else PacketFactory.get().spawnEntity(player, this, properties);
     }
 
     public void despawn(Player player) {
-        PacketFactory.get().destroyEntity(player, this);
+        PacketFactory.get().destroyEntity(player, this, properties);
+    }
+
+    public void refreshMeta(Player player) {
+        PacketFactory.get().sendAllMetadata(player, this, properties);
     }
 
     private static int reserveEntityID() {

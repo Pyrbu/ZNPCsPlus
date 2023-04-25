@@ -4,6 +4,7 @@ import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
+import lol.pyr.znpcsplus.entity.EntityProperty;
 
 import java.util.*;
 
@@ -19,10 +20,10 @@ public class NPCType {
     }
 
     private final EntityType type;
-    private final Set<NPCProperty<?>> allowedProperties;
+    private final Set<EntityProperty<?>> allowedProperties;
     private final String name;
 
-    private NPCType(String name, EntityType type, Set<NPCProperty<?>> allowedProperties) {
+    private NPCType(String name, EntityType type, Set<EntityProperty<?>> allowedProperties) {
         this.name = name.toUpperCase();
         this.type = type;
         this.allowedProperties = allowedProperties;
@@ -36,7 +37,7 @@ public class NPCType {
         return type;
     }
 
-    public Set<NPCProperty<?>> getAllowedProperties() {
+    public Set<EntityProperty<?>> getAllowedProperties() {
         return allowedProperties;
     }
 
@@ -51,7 +52,7 @@ public class NPCType {
 
     static {
         register(new Builder("player", EntityTypes.PLAYER)
-                .addProperties(NPCProperty.SKIN, NPCProperty.SKIN_LAYERS));
+                .addProperties(EntityProperty.SKIN, EntityProperty.SKIN_LAYERS));
         register(new Builder("creeper", EntityTypes.CREEPER));
         register(new Builder("zombie", EntityTypes.ZOMBIE));
         register(new Builder("skeleton", EntityTypes.SKELETON));
@@ -60,7 +61,7 @@ public class NPCType {
     private static final class Builder {
         private final String name;
         private final EntityType type;
-        private final List<NPCProperty<?>> allowedProperties = new ArrayList<>();
+        private final List<EntityProperty<?>> allowedProperties = new ArrayList<>();
         private boolean globalProperties = true;
 
         private Builder(String name, EntityType type) {
@@ -68,7 +69,7 @@ public class NPCType {
             this.type = type;
         }
 
-        public Builder addProperties(NPCProperty<?>... properties) {
+        public Builder addProperties(EntityProperty<?>... properties) {
             allowedProperties.addAll(List.of(properties));
             return this;
         }
@@ -80,10 +81,11 @@ public class NPCType {
 
         public NPCType build() {
             if (globalProperties) {
-                allowedProperties.add(NPCProperty.FIRE);
-                allowedProperties.add(NPCProperty.INVISIBLE);
+                allowedProperties.add(EntityProperty.FIRE);
+                allowedProperties.add(EntityProperty.INVISIBLE);
+                allowedProperties.add(EntityProperty.SILENT);
                 if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9))
-                    allowedProperties.add(NPCProperty.GLOW);
+                    allowedProperties.add(EntityProperty.GLOW);
             }
             return new NPCType(name, type, Set.copyOf(allowedProperties));
         }
