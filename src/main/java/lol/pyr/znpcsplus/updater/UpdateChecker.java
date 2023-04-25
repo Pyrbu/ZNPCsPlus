@@ -23,6 +23,7 @@ public class UpdateChecker extends BukkitRunnable {
 
     public void run() {
         Resource resource = api.getResource(RESOURCE_ID).join();
+        if (resource == null) return;
         newestVersion = resource.getVersion();
 
         int current = versionToNumber(plugin.getDescription().getVersion());
