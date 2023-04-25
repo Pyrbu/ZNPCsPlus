@@ -117,11 +117,15 @@ public class NPC {
 
     public <T> void setProperty(NPCProperty<T> key, T value) {
         if (value.equals(key.getDefaultValue())) removeProperty(key);
-        else propertyMap.put(key, value);
+        else {
+            propertyMap.put(key, value);
+            respawn();
+        }
     }
 
     public void removeProperty(NPCProperty<?> key) {
         propertyMap.remove(key);
+        respawn();
     }
 
     public Collection<NPCAction> getActions() {
