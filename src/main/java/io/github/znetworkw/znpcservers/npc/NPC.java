@@ -234,7 +234,7 @@ public class NPC {
             if (npcIsPlayer) {
                 if (FunctionFactory.isTrue(this, "mirror")) updateProfile(user.getGameProfile().getProperties());
                 Utils.sendPackets(user, this.tabConstructor, this.updateTabConstructor);
-                ZNPCsPlus.SCHEDULER.runTask(() -> {
+                ZNPCsPlus.SCHEDULER.runNextTick(() -> {
                     PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerSpawnPlayer(entityID,
                             this.gameProfile.getId(), SpigotConversionUtil.fromBukkitLocation(location.toBukkitLocation())));
                     PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerEntityMetadata(entityID,
@@ -257,7 +257,7 @@ public class NPC {
             updateMetadata(Collections.singleton(user));
             sendEquipPackets(user);
             lookAt(user, getLocation(), true);
-            if (npcIsPlayer) ZNPCsPlus.SCHEDULER.scheduleSyncDelayedTask(() -> {
+            if (npcIsPlayer) ZNPCsPlus.SCHEDULER.runTaskLaterSync(() -> {
                 removeFromTab(player);
                 Utils.sendPackets(user, this.updateTabConstructor);
             }, 60);

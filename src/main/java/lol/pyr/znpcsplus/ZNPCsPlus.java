@@ -12,10 +12,7 @@ import io.github.znetworkw.znpcservers.configuration.ConfigurationConstants;
 import io.github.znetworkw.znpcservers.listeners.InventoryListener;
 import io.github.znetworkw.znpcservers.listeners.PlayerListener;
 import io.github.znetworkw.znpcservers.npc.NPCPath;
-import io.github.znetworkw.znpcservers.npc.NPCSkin;
 import io.github.znetworkw.znpcservers.npc.interaction.InteractionPacketListener;
-import io.github.znetworkw.znpcservers.npc.task.NPCPositionTask;
-import io.github.znetworkw.znpcservers.npc.task.NPCSaveTask;
 import io.github.znetworkw.znpcservers.user.ZUser;
 import io.github.znetworkw.znpcservers.utility.BungeeUtils;
 import io.github.znetworkw.znpcservers.utility.SchedulerUtils;
@@ -26,6 +23,11 @@ import lol.pyr.znpcsplus.npc.NPC;
 import lol.pyr.znpcsplus.npc.NPCProperty;
 import lol.pyr.znpcsplus.npc.NPCRegistry;
 import lol.pyr.znpcsplus.npc.NPCType;
+import lol.pyr.znpcsplus.skin.cache.SkinCache;
+import lol.pyr.znpcsplus.skin.cache.SkinCacheCleanTask;
+import lol.pyr.znpcsplus.skin.descriptor.FetchingDescriptor;
+import lol.pyr.znpcsplus.skin.descriptor.MirrorDescriptor;
+import lol.pyr.znpcsplus.skin.descriptor.PrefetchedDescriptor;
 import lol.pyr.znpcsplus.tasks.NPCVisibilityTask;
 import lol.pyr.znpcsplus.updater.UpdateChecker;
 import lol.pyr.znpcsplus.updater.UpdateNotificationListener;
@@ -57,6 +59,7 @@ public class ZNPCsPlus extends JavaPlugin {
     public static SchedulerUtils SCHEDULER;
     public static BungeeUtils BUNGEE_UTILS;
     public static BukkitAudiences ADVENTURE;
+    public static boolean PLACEHOLDERS_SUPPORTED;
 
     private boolean enabled = false;
 
@@ -106,6 +109,9 @@ public class ZNPCsPlus extends JavaPlugin {
         PacketEvents.getAPI().getEventManager().registerListener(new InteractionPacketListener(), PacketListenerPriority.MONITOR);
         PacketEvents.getAPI().init();
 
+        PLACEHOLDERS_SUPPORTED = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
+        if (PLACEHOLDERS_SUPPORTED) log(ChatColor.WHITE + " * Enabling PlaceholderAPI Support...");
+
         PLUGIN_FOLDER.mkdirs();
         PATH_FOLDER.mkdirs();
 
@@ -121,11 +127,10 @@ public class ZNPCsPlus extends JavaPlugin {
         Bukkit.getOnlinePlayers().forEach(ZUser::find);
 
         log(ChatColor.WHITE + " * Starting tasks...");
-        new NPCPositionTask(this);
         new NPCVisibilityTask(this);
-        new NPCSaveTask(this, ConfigurationConstants.SAVE_DELAY);
         new PlayerListener(this);
         new InventoryListener(this);
+        new SkinCacheCleanTask(this);
         if (ConfigurationConstants.CHECK_FOR_UPDATES) new UpdateNotificationListener(this, new UpdateChecker(this));
 
         enabled = true;
@@ -141,7 +146,7 @@ public class ZNPCsPlus extends JavaPlugin {
             for (NPCType type : NPCType.values()) {
                 NPC npc = new NPC(world, type, new PacketLocation(x * 3, 200, z * 3, 0, 0));
                 if (type.getType() == EntityTypes.PLAYER) {
-                    NPCSkin.forName("Notch", (skin, ex) -> npc.setProperty(NPCProperty.SKIN, skin));
+                    SkinCache.fetchByName("Notch").thenAccept(skin -> npc.setProperty(NPCProperty.SKIN, new PrefetchedDescriptor(skin)));
                 }
                 npc.setProperty(NPCProperty.GLOW, NamedTextColor.RED);
                 npc.setProperty(NPCProperty.FIRE, true);
@@ -151,6 +156,13 @@ public class ZNPCsPlus extends JavaPlugin {
                     z++;
                 }
             }
+            NPC npc = new NPC(world, NPCType.byName("player"), new PacketLocation(x * 3, 200, z * 3, 0, 0));
+            npc.setProperty(NPCProperty.SKIN, new FetchingDescriptor("jeb_"));
+            NPCRegistry.register("debug_npc" + (z * wrap + x), npc);
+            x++;
+            npc = new NPC(world, NPCType.byName("player"), new PacketLocation(x * 3, 200, z * 3, 0, 0));
+            npc.setProperty(NPCProperty.SKIN, new MirrorDescriptor());
+            NPCRegistry.register("debug_npc" + (z * wrap + x), npc);
         }
     }
 

@@ -24,11 +24,15 @@ public class SchedulerUtils {
         return Bukkit.getScheduler().runTaskTimerAsynchronously(this.plugin, runnable, delay, continuousDelay);
     }
 
-    public void scheduleSyncDelayedTask(Runnable runnable, int delay) {
+    public void runTaskLaterSync(Runnable runnable, int delay) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, runnable, delay);
     }
 
-    public BukkitTask runTask(Runnable runnable) {
+    public BukkitTask runNextTick(Runnable runnable) {
         return Bukkit.getScheduler().runTask(this.plugin, runnable);
+    }
+
+    public void runAsync(Runnable runnable) {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, runnable);
     }
 }
