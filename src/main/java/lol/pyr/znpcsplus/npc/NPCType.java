@@ -22,14 +22,10 @@ public class NPCType {
     private final Set<NPCProperty<?>> allowedProperties;
     private final String name;
 
-    private NPCType(String name, EntityType type, NPCProperty<?>... allowedProperties) {
+    private NPCType(String name, EntityType type, Set<NPCProperty<?>> allowedProperties) {
         this.name = name.toUpperCase();
         this.type = type;
-        ArrayList<NPCProperty<?>> list = new ArrayList<>(List.of(allowedProperties));
-        list.add(NPCProperty.FIRE);
-        list.add(NPCProperty.INVISIBLE);
-        if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9)) list.add(NPCProperty.GLOW);
-        this.allowedProperties = Set.copyOf(list);
+        this.allowedProperties = allowedProperties;
     }
 
     public String getName() {
@@ -44,15 +40,52 @@ public class NPCType {
         return allowedProperties;
     }
 
+    private static void register(Builder builder) {
+        register(builder.build());
+    }
+
     private static void register(NPCType type) {
         BY_NAME.put(type.getName(), type);
 
     }
 
     static {
-        register(new NPCType("player", EntityTypes.PLAYER, NPCProperty.SKIN, NPCProperty.SKIN_LAYERS));
-        register(new NPCType("creeper", EntityTypes.CREEPER));
-        register(new NPCType("zombie", EntityTypes.ZOMBIE));
-        register(new NPCType("skeleton", EntityTypes.SKELETON));
+        register(new Builder("player", EntityTypes.PLAYER)
+                .addProperties(NPCProperty.SKIN, NPCProperty.SKIN_LAYERS));
+        register(new Builder("creeper", EntityTypes.CREEPER));
+        register(new Builder("zombie", EntityTypes.ZOMBIE));
+        register(new Builder("skeleton", EntityTypes.SKELETON));
+    }
+
+    private static final class Builder {
+        private final String name;
+        private final EntityType type;
+        private final List<NPCProperty<?>> allowedProperties = new ArrayList<>();
+        private boolean globalProperties = true;
+
+        private Builder(String name, EntityType type) {
+            this.name = name;
+            this.type = type;
+        }
+
+        public Builder addProperties(NPCProperty<?>... properties) {
+            allowedProperties.addAll(List.of(properties));
+            return this;
+        }
+
+        public Builder setEnableGlobalProperties(boolean enabled) {
+            globalProperties = enabled;
+            return this;
+        }
+
+        public NPCType build() {
+            if (globalProperties) {
+                allowedProperties.add(NPCProperty.FIRE);
+                allowedProperties.add(NPCProperty.INVISIBLE);
+                if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9))
+                    allowedProperties.add(NPCProperty.GLOW);
+            }
+            return new NPCType(name, type, Set.copyOf(allowedProperties));
+        }
     }
 }
