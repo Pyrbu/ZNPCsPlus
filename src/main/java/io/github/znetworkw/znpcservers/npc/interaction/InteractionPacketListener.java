@@ -30,7 +30,7 @@ public class InteractionPacketListener implements PacketListener {
 
         ClickType clickType = ClickType.forName(packet.getAction().name());
         user.updateLastInteract();
-        ZNPCsPlus.SCHEDULER.runTask(() -> {
+        ZNPCsPlus.SCHEDULER.runNextTick(() -> {
             Bukkit.getServer().getPluginManager().callEvent(new NPCInteractEvent(player, clickType, npc));
             List<NPCAction> actions = npc.getNpcPojo().getClickActions();
             if (actions == null) return;

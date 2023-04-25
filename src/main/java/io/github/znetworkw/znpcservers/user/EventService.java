@@ -31,7 +31,7 @@ public class EventService<T extends Event> {
     }
 
     public void runAll(T event) {
-        ZNPCsPlus.SCHEDULER.runTask(() -> this.eventConsumers.forEach(consumer -> consumer.accept(event)));
+        ZNPCsPlus.SCHEDULER.runNextTick(() -> this.eventConsumers.forEach(consumer -> consumer.accept(event)));
     }
 
     public static <T extends Event> EventService<T> addService(ZUser user, Class<T> eventClass) {

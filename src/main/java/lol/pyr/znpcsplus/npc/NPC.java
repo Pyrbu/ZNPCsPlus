@@ -65,6 +65,11 @@ public class NPC {
         _showAll();
     }
 
+    public void respawn(Player player) {
+        _hide(player);
+        _show(player);
+    }
+
     public void show(Player player) {
         if (viewers.contains(player)) return;
         _show(player);

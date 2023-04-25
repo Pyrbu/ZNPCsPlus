@@ -6,35 +6,36 @@ import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.protocol.player.GameMode;
-import com.github.retrooper.packetevents.protocol.player.TextureProperty;
 import com.github.retrooper.packetevents.protocol.player.UserProfile;
 import com.github.retrooper.packetevents.util.Vector3d;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.*;
-import io.github.znetworkw.znpcservers.npc.NPCSkin;
 import lol.pyr.znpcsplus.ZNPCsPlus;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.entity.PacketLocation;
 import lol.pyr.znpcsplus.metadata.MetadataFactory;
 import lol.pyr.znpcsplus.npc.NPC;
 import lol.pyr.znpcsplus.npc.NPCProperty;
+import lol.pyr.znpcsplus.skin.SkinDescriptor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 public class V1_8Factory implements PacketFactory {
     @Override
     public void spawnPlayer(Player player, PacketEntity entity) {
-        addTabPlayer(player, entity);
-        createTeam(player, entity);
-        PacketLocation location = entity.getLocation();
-        sendPacket(player, new WrapperPlayServerSpawnPlayer(entity.getEntityId(),
-                entity.getUuid(), location.toVector3d(), location.getYaw(), location.getPitch(), List.of()));
-        sendAllMetadata(player, entity);
-        ZNPCsPlus.SCHEDULER.scheduleSyncDelayedTask(() -> removeTabPlayer(player, entity), 60);
+        addTabPlayer(player, entity).thenAccept(ignored -> {
+            createTeam(player, entity);
+            PacketLocation location = entity.getLocation();
+            sendPacket(player, new WrapperPlayServerSpawnPlayer(entity.getEntityId(),
+                    entity.getUuid(), location.toVector3d(), location.getYaw(), location.getPitch(), List.of()));
+            sendAllMetadata(player, entity);
+            ZNPCsPlus.SCHEDULER.runTaskLaterSync(() -> removeTabPlayer(player, entity), 60);
+        });
     }
 
     @Override
@@ -64,11 +65,16 @@ public class V1_8Factory implements PacketFactory {
     }
 
     @Override
-    public void addTabPlayer(Player player, PacketEntity entity) {
-        if (entity.getType() != EntityTypes.PLAYER) return;
-        sendPacket(player, new WrapperPlayServerPlayerInfo(
-                WrapperPlayServerPlayerInfo.Action.ADD_PLAYER, new WrapperPlayServerPlayerInfo.PlayerData(Component.text(""),
-                skinned(entity, new UserProfile(entity.getUuid(), Integer.toString(entity.getEntityId()))), GameMode.CREATIVE, 1)));
+    public CompletableFuture<Void> addTabPlayer(Player player, PacketEntity entity) {
+        if (entity.getType() != EntityTypes.PLAYER) return CompletableFuture.completedFuture(null);
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        skinned(player, entity, new UserProfile(entity.getUuid(), Integer.toString(entity.getEntityId()))).thenAccept(profile -> {
+            sendPacket(player, new WrapperPlayServerPlayerInfo(
+                    WrapperPlayServerPlayerInfo.Action.ADD_PLAYER, new WrapperPlayServerPlayerInfo.PlayerData(Component.text(""),
+                    profile, GameMode.CREATIVE, 1)));
+            future.complete(null);
+        });
+        return future;
     }
 
     @Override
@@ -114,11 +120,19 @@ public class V1_8Factory implements PacketFactory {
         PacketEvents.getAPI().getPlayerManager().sendPacket(player, packet);
     }
 
-    protected UserProfile skinned(PacketEntity entity, UserProfile profile) {
+    protected CompletableFuture<UserProfile> skinned(Player player, PacketEntity entity, UserProfile profile) {
         NPC owner = entity.getOwner();
-        if (!owner.hasProperty(NPCProperty.SKIN)) return profile;
-        NPCSkin skin = owner.getProperty(NPCProperty.SKIN);
-        profile.setTextureProperties(List.of(new TextureProperty("textures", skin.getTexture(), skin.getSignature())));
-        return profile;
+        if (!owner.hasProperty(NPCProperty.SKIN)) return CompletableFuture.completedFuture(profile);
+        SkinDescriptor descriptor = owner.getProperty(NPCProperty.SKIN);
+        if (descriptor.supportsInstant(player)) {
+            descriptor.fetchInstant(player).apply(profile);
+            return CompletableFuture.completedFuture(profile);
+        }
+        CompletableFuture<UserProfile> future = new CompletableFuture<>();
+        descriptor.fetch(player).thenAccept(skin -> {
+            skin.apply(profile);
+            future.complete(profile);
+        });
+        return future;
     }
 }
