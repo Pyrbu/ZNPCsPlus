@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public interface MetadataFactory {
     EntityData skinLayers();
-    EntityData effects(boolean onFire, boolean glowing);
+    EntityData effects(boolean onFire, boolean glowing, boolean invisible);
 
     MetadataFactory factory = get();
 

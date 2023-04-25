@@ -38,4 +38,5 @@ public class NPCProperty<T> {
     public static NPCProperty<SkinDescriptor> SKIN = new NPCProperty<>("skin");
     public static NPCProperty<NamedTextColor> GLOW = new NPCProperty<>("glow");
     public static NPCProperty<Boolean> FIRE = new NPCProperty<>("fire", false);
+    public static NPCProperty<Boolean> INVISIBLE = new NPCProperty<>("invisible", false);
 }

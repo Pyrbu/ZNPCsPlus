@@ -147,6 +147,7 @@ public class ZNPCsPlus extends JavaPlugin {
                 NPC npc = new NPC(world, type, new PacketLocation(x * 3, 200, z * 3, 0, 0));
                 if (type.getType() == EntityTypes.PLAYER) {
                     SkinCache.fetchByName("Notch").thenAccept(skin -> npc.setProperty(NPCProperty.SKIN, new PrefetchedDescriptor(skin)));
+                    npc.setProperty(NPCProperty.INVISIBLE, true);
                 }
                 npc.setProperty(NPCProperty.GLOW, NamedTextColor.RED);
                 npc.setProperty(NPCProperty.FIRE, true);

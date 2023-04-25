@@ -27,6 +27,7 @@ public class NPCType {
         this.type = type;
         ArrayList<NPCProperty<?>> list = new ArrayList<>(List.of(allowedProperties));
         list.add(NPCProperty.FIRE);
+        list.add(NPCProperty.INVISIBLE);
         if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9)) list.add(NPCProperty.GLOW);
         this.allowedProperties = Set.copyOf(list);
     }
