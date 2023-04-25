@@ -12,7 +12,15 @@ public class NPCRegistry {
     }
 
     public static Collection<NPC> all() {
-        return npcMap.values();
+        return NPC._ALL_NPCS;
+    }
+
+    public static NPC getByEntityId(int id) {
+        return all().stream().filter(npc -> npc.getEntity().getEntityId() == id).findFirst().orElse(null);
+    }
+
+    public static Collection<String> ids() {
+        return npcMap.keySet();
     }
 
     public static void register(String id, NPC npc) {

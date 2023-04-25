@@ -1,18 +1,12 @@
 package io.github.znetworkw.znpcservers.npc;
 
-import io.github.znetworkw.znpcservers.UnexpectedCallException;
-import io.github.znetworkw.znpcservers.reflection.EnumPropertyCache;
 import io.github.znetworkw.znpcservers.utility.Utils;
-import org.bukkit.entity.EntityType;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Optional;
 
 import static io.github.znetworkw.znpcservers.reflection.Reflections.*;
 
+/**
+ * Delete after information transferred
+ */
 @SuppressWarnings("unused")
 public enum NPCType {
     ALLAY(ENTITY_ALLAY_CLASS, -1.14),
@@ -96,79 +90,9 @@ public enum NPCType {
     ZOMBIFIED_PIGLIN(Utils.versionNewer(16) ? ENTITY_ZOMBIFIED_PIGLIN_CLASS : null, 0.135, "setBaby"),
     PIG_ZOMBIE(Utils.versionNewer(16) ? null : ENTITY_ZOMBIFIED_PIGLIN_CLASS, 0.135);
 
-    private final double holoHeight;
-    private final CustomizationLoader customizationLoader;
-    private final Constructor<?> constructor;
-    private EntityType bukkitEntityType;
-    private Object nmsEntityType;
-
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     NPCType(Class<?> entityClass, String newName, double holoHeight, String ... methods) {
-        this.holoHeight = holoHeight;
-        if (entityClass == null) {
-            customizationLoader = null;
-        } else {
-            this.bukkitEntityType = EntityType.valueOf(newName.length() > 0 ? newName : this.name());
-            customizationLoader = new CustomizationLoader(this.bukkitEntityType, Arrays.asList(methods));
-        }
-        if (entityClass == null || entityClass.isAssignableFrom(ENTITY_PLAYER_CLASS)) {
-            this.constructor = null;
-            return;
-        }
-        try {
-            if (Utils.versionNewer(14)) {
-                this.nmsEntityType = ((Optional<?>) ENTITY_TYPES_A_METHOD.get().invoke(null, this.bukkitEntityType.getKey().getKey().toLowerCase())).get();
-                this.constructor = entityClass.getConstructor(ENTITY_TYPES_CLASS, WORLD_CLASS);
-            } else {
-                this.constructor = entityClass.getConstructor(WORLD_CLASS);
-            }
-        }
-        catch (ReflectiveOperationException operationException) {
-            throw new UnexpectedCallException(operationException);
-        }
     }
 
     NPCType(Class<?> entityClass, double holoHeight, String ... customization) {
-        this(entityClass, "", holoHeight, customization);
-    }
-
-    public double getHoloHeight() {
-        return this.holoHeight;
-    }
-
-    public Constructor<?> getConstructor() {
-        return this.constructor;
-    }
-
-    public Object getNmsEntityType() {
-        return this.nmsEntityType;
-    }
-
-    public CustomizationLoader getCustomizationLoader() {
-        return this.customizationLoader;
-    }
-
-    public static Object[] collectArguments(String[] strings, Method method) {
-        Class<?>[] methodParameterTypes = method.getParameterTypes();
-        Object[] newArray = new Object[methodParameterTypes.length];
-        for (int i = 0; i < methodParameterTypes.length; ++i) {
-            PrimitivePropertyType primitivePropertyType = PrimitivePropertyType.forType(methodParameterTypes[i]);
-            newArray[i] = primitivePropertyType != null ? primitivePropertyType.getFunction().apply(strings[i]) : EnumPropertyCache.find(strings[i], methodParameterTypes[i]);
-        }
-        return newArray;
-    }
-
-    public void updateCustomization(NPC npc, String name, String[] values) {
-        if (!this.customizationLoader.contains(name)) {
-            return;
-        }
-        try {
-            Method method = this.customizationLoader.getMethods().get(name);
-            method.invoke(npc.getBukkitEntity(), NPCType.collectArguments(values, method));
-            npc.updateMetadata(npc.getViewers());
-        }
-        catch (IllegalAccessException | InvocationTargetException e) {
-            throw new IllegalStateException("can't invoke method: " + name, e);
-        }
     }
 }

@@ -2,28 +2,9 @@ package io.github.znetworkw.znpcservers.commands.list.inventory;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
-import com.google.common.collect.Iterables;
-import com.google.common.primitives.Ints;
-import io.github.znetworkw.znpcservers.configuration.Configuration;
-import io.github.znetworkw.znpcservers.configuration.ConfigurationConstants;
-import io.github.znetworkw.znpcservers.configuration.ConfigurationValue;
-import io.github.znetworkw.znpcservers.npc.NPCAction;
-import io.github.znetworkw.znpcservers.npc.conversation.Conversation;
-import io.github.znetworkw.znpcservers.npc.conversation.ConversationKey;
-import io.github.znetworkw.znpcservers.user.EventService;
-import io.github.znetworkw.znpcservers.user.ZUser;
-import io.github.znetworkw.znpcservers.utility.Utils;
 import io.github.znetworkw.znpcservers.utility.inventory.ZInventory;
 import io.github.znetworkw.znpcservers.utility.inventory.ZInventoryPage;
-import io.github.znetworkw.znpcservers.utility.itemstack.ItemStackBuilder;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-
-import java.util.Collections;
-import java.util.List;
 
 public class ConversationGUI extends ZInventory {
     private static final Splitter SPACE_SPLITTER = Splitter.on(" ");
@@ -34,8 +15,16 @@ public class ConversationGUI extends ZInventory {
         this.setCurrentPage(new MainPage(this));
     }
 
-    @SuppressWarnings({"UnstableApiUsage", "deprecation"})
     static class MainPage extends ZInventoryPage {
+        public MainPage(ZInventory inventory) {
+            super(inventory, "Conversations", 6);
+        }
+
+        @Override
+        public void update() {
+
+        }
+        /*
 
         int pageID = 1;
 
@@ -79,7 +68,7 @@ public class ConversationGUI extends ZInventory {
                 this.addItem(ItemStackBuilder.forMaterial(Material.PAPER).setName(ChatColor.GREEN + conversation.getName()).setLore("&7this conversation has &b" + conversation.getTexts().size() + " &7texts,", "&7it will activate when a player is on a &b" + conversation.getRadius() + "x" + conversation.getRadius() + " &7radius,", "&7or when a player interacts with an npc.", "&7when the conversation is finish, there is a &b" + conversation.getDelay() + "s &7delay to start again.", "&f&lUSES", " &bLeft-click &7to manage texts.", " &bRight-click &7to add a new text.", " &bQ &7to change the radius.", " &bMiddle-click &7to change the cooldown.").build(), i - ((getRows() - 9) * (pageID - 1)), clickEvent -> {
                     if (clickEvent.getClick() == ClickType.DROP) {
                         Utils.sendTitle(this.getPlayer(), "&b&lCHANGE RADIUS", "&7Type the new radius...");
-                        EventService.addService(ZUser.find(this.getPlayer()), AsyncPlayerChatEvent.class).addConsumer(event -> {
+                        EventService.addService(User.get(this.getPlayer()), AsyncPlayerChatEvent.class).addConsumer(event -> {
                             if (!ConfigurationConstants.NPC_CONVERSATIONS.contains(conversation)) {
                                 Configuration.MESSAGES.sendMessage(this.getPlayer(), ConfigurationValue.NO_CONVERSATION_FOUND);
                             } else {
@@ -96,7 +85,7 @@ public class ConversationGUI extends ZInventory {
                         }).addConsumer(event -> this.openInventory());
                     } else if (clickEvent.isRightClick()) {
                         Utils.sendTitle(this.getPlayer(), "&e&lADD LINE", "&7Type the new line...");
-                        EventService.addService(ZUser.find(this.getPlayer()), AsyncPlayerChatEvent.class).addConsumer(event -> {
+                        EventService.addService(User.get(this.getPlayer()), AsyncPlayerChatEvent.class).addConsumer(event -> {
                             if (!ConfigurationConstants.NPC_CONVERSATIONS.contains(conversation)) {
                                 Configuration.MESSAGES.sendMessage(this.getPlayer(), ConfigurationValue.NO_CONVERSATION_FOUND);
                             } else {
@@ -108,7 +97,7 @@ public class ConversationGUI extends ZInventory {
                         new EditConversationPage(this.getInventory(), conversation).openInventory();
                     } else if (clickEvent.getClick() == ClickType.MIDDLE) {
                         Utils.sendTitle(this.getPlayer(), "&6&lCHANGE COOLDOWN", "&7Type the new cooldown...");
-                        EventService.addService(ZUser.find(this.getPlayer()), AsyncPlayerChatEvent.class).addConsumer(event -> {
+                        EventService.addService(User.get(this.getPlayer()), AsyncPlayerChatEvent.class).addConsumer(event -> {
                             if (!ConfigurationConstants.NPC_CONVERSATIONS.contains(conversation)) {
                                 Configuration.MESSAGES.sendMessage(this.getPlayer(), ConfigurationValue.NO_CONVERSATION_FOUND);
                             } else {
@@ -182,7 +171,7 @@ public class ConversationGUI extends ZInventory {
                 }
                 this.addItem(ItemStackBuilder.forMaterial(Material.EMERALD).setName(ChatColor.AQUA + "ADD A NEW ACTION").setLore("&7click here...").build(), this.getRows() - 5, clickEvent -> {
                     Utils.sendTitle(this.getPlayer(), "&d&lADD ACTION", "&7Type the new action...");
-                    EventService.addService(ZUser.find(this.getPlayer()), AsyncPlayerChatEvent.class).addConsumer(event -> {
+                    EventService.addService(User.get(this.getPlayer()), AsyncPlayerChatEvent.class).addConsumer(event -> {
                         if (ConfigurationConstants.NPC_CONVERSATIONS.contains(this.conversation) && this.conversation.getTexts().contains(this.conversationKey)) {
                             List<String> stringList = SPACE_SPLITTER.splitToList(event.getMessage());
                             if (stringList.size() < 2) {
@@ -199,7 +188,7 @@ public class ConversationGUI extends ZInventory {
             }
         }
 
-        @SuppressWarnings({"deprecation", "UnstableApiUsage"})
+        @SuppressWarnings({"UnstableApiUsage"})
         static class EditConversationPage extends ZInventoryPage {
             private final Conversation conversation;
 
@@ -240,7 +229,7 @@ public class ConversationGUI extends ZInventory {
                     this.addItem(ItemStackBuilder.forMaterial(Material.NAME_TAG).setName(ChatColor.AQUA + conversationKey.getTextFormatted() + "....").setLore("&7this conversation text has a delay of &b" + conversationKey.getDelay() + "s &7to be executed,", "&7the sound for the text is &b" + (conversationKey.getSoundName() == null ? "NONE" : conversationKey.getSoundName()) + "&7,", "&7before sending the text there is a delay of &b" + conversationKey.getDelay() + "s", "&7the index for the text is &b" + i + "&7,", "&7and the conversation has currently &b" + conversationKey.getActions().size() + " actions&7.", "&f&lUSES", " &bLeft-click &7to change the position.", " &bRight-click &7to remove text.", " &bLeft-Shift-click &7to change the sound.", " &bMiddle-click &7to change the delay.", " &bRight-Shift-click &7to edit the text.", " &bQ &7to manage actions.").build(), i, clickEvent -> {
                         if (clickEvent.getClick() == ClickType.SHIFT_LEFT) {
                             Utils.sendTitle(this.getPlayer(), "&c&lCHANGE SOUND", "&7Type the new sound...");
-                            EventService.addService(ZUser.find(this.getPlayer()), AsyncPlayerChatEvent.class).addConsumer(event -> {
+                            EventService.addService(User.get(this.getPlayer()), AsyncPlayerChatEvent.class).addConsumer(event -> {
                                 if (ConfigurationConstants.NPC_CONVERSATIONS.contains(this.conversation) && this.conversation.getTexts().contains(conversationKey)) {
                                     String sound = event.getMessage().trim();
                                     conversationKey.setSoundName(sound);
@@ -251,7 +240,7 @@ public class ConversationGUI extends ZInventory {
                             }).addConsumer(event -> this.openInventory());
                         } else if (clickEvent.getClick() == ClickType.SHIFT_RIGHT) {
                             Utils.sendTitle(this.getPlayer(), "&a&lEDIT TEXT", "&7Type the new text...");
-                            EventService.addService(ZUser.find(this.getPlayer()), AsyncPlayerChatEvent.class).addConsumer(event -> {
+                            EventService.addService(User.get(this.getPlayer()), AsyncPlayerChatEvent.class).addConsumer(event -> {
                                 if (ConfigurationConstants.NPC_CONVERSATIONS.contains(this.conversation) && this.conversation.getTexts().contains(conversationKey)) {
                                     conversationKey.getLines().clear();
                                     conversationKey.getLines().addAll(SPACE_SPLITTER.splitToList(event.getMessage()));
@@ -262,7 +251,7 @@ public class ConversationGUI extends ZInventory {
                             }).addConsumer(event -> this.openInventory());
                         } else if (clickEvent.isLeftClick()) {
                             Utils.sendTitle(this.getPlayer(), "&e&lCHANGE POSITION &a>=0&c<=" + this.conversation.getTexts().size(), "&7Type the new position...");
-                            EventService.addService(ZUser.find(this.getPlayer()), AsyncPlayerChatEvent.class).addConsumer(event -> {
+                            EventService.addService(User.get(this.getPlayer()), AsyncPlayerChatEvent.class).addConsumer(event -> {
                                 if (ConfigurationConstants.NPC_CONVERSATIONS.contains(this.conversation) && this.conversation.getTexts().contains(conversationKey)) {
                                     Integer position = Ints.tryParse(event.getMessage());
                                     if (position == null) {
@@ -283,7 +272,7 @@ public class ConversationGUI extends ZInventory {
                             this.openInventory();
                         } else if (clickEvent.getClick() == ClickType.MIDDLE) {
                             Utils.sendTitle(this.getPlayer(), "&d&lCHANGE DELAY", "&7Type the new delay...");
-                            EventService.addService(ZUser.find(this.getPlayer()), AsyncPlayerChatEvent.class).addConsumer(event -> {
+                            EventService.addService(User.get(this.getPlayer()), AsyncPlayerChatEvent.class).addConsumer(event -> {
                                 if (ConfigurationConstants.NPC_CONVERSATIONS.contains(this.conversation) && this.conversation.getTexts().contains(conversationKey)) {
                                     Integer delay = Ints.tryParse(event.getMessage());
                                     if (delay == null) {
@@ -310,5 +299,6 @@ public class ConversationGUI extends ZInventory {
                 return super.getPageName() + " - " + pageID + "/" + (int) (Math.ceil((double) conversation.getTexts().size() / (double) 45));
             }
         }
+         */
     }
 }
