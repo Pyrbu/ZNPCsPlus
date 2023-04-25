@@ -71,6 +71,8 @@ runServer {
 tasks.assemble.dependsOn shadowJar
 tasks.compileJava.dependsOn clean
 
+System.out.println()
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -85,10 +87,10 @@ publishing {
     }
     repositories {
         maven {
-            if (DIST_USERNAME != null && DIST_PASSWORD != null) {
+            if (properties.containsKey("DIST_USERNAME") && properties.containsKey("DIST_PASSWORD")) {
                 credentials {
-                    username DIST_USERNAME
-                    password DIST_PASSWORD
+                    username properties.get("DIST_USERNAME")
+                    password properties.get("DIST_PASSWORD")
                 }
             }
             url = uri("https://repo.pyr.lol/releases/")
