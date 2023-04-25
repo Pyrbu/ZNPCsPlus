@@ -1,4 +1,4 @@
-package io.github.znetworkw.znpcservers.commands.list.inventory;
+package io.github.znetworkw.znpcservers.gui;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
@@ -65,7 +65,7 @@ public class ConversationGUI extends ZInventory {
 
             for (int i = slots - (getRows() - 9); i < min; ++i) {
                 Conversation conversation = ConfigurationConstants.NPC_CONVERSATIONS.get(i);
-                this.addItem(ItemStackBuilder.forMaterial(Material.PAPER).setName(ChatColor.GREEN + conversation.getName()).setLore("&7this conversation has &b" + conversation.getTexts().size() + " &7texts,", "&7it will activate when a player is on a &b" + conversation.getRadius() + "x" + conversation.getRadius() + " &7radius,", "&7or when a player interacts with an npc.", "&7when the conversation is finish, there is a &b" + conversation.getDelay() + "s &7delay to start again.", "&f&lUSES", " &bLeft-click &7to manage texts.", " &bRight-click &7to add a new text.", " &bQ &7to change the radius.", " &bMiddle-click &7to change the cooldown.").build(), i - ((getRows() - 9) * (pageID - 1)), clickEvent -> {
+                this.addItem(ItemStackBuilder.forMaterial(Material.PAPER).setName(ChatColor.GREEN + conversation.getName()).setLore("&7this conversation has &b" + conversation.getTexts().size() + " &7texts,", "&7it will activate when a player is on a &b" + conversation.getRadius() + "x" + conversation.getRadius() + " &7radius,", "&7or when a player interacts with an npc.", "&7when the conversation is finish, there is a &b" + conversation.getCooldown() + "s &7delay to start again.", "&f&lUSES", " &bLeft-click &7to manage texts.", " &bRight-click &7to add a new text.", " &bQ &7to change the radius.", " &bMiddle-click &7to change the cooldown.").build(), i - ((getRows() - 9) * (pageID - 1)), clickEvent -> {
                     if (clickEvent.getClick() == ClickType.DROP) {
                         Utils.sendTitle(this.getPlayer(), "&b&lCHANGE RADIUS", "&7Type the new radius...");
                         EventService.addService(User.get(this.getPlayer()), AsyncPlayerChatEvent.class).addConsumer(event -> {
@@ -226,7 +226,7 @@ public class ConversationGUI extends ZInventory {
 
                 for (int i = slots - (getRows() - 9); i < min; i++) {
                     ConversationKey conversationKey = this.conversation.getTexts().get(i);
-                    this.addItem(ItemStackBuilder.forMaterial(Material.NAME_TAG).setName(ChatColor.AQUA + conversationKey.getTextFormatted() + "....").setLore("&7this conversation text has a delay of &b" + conversationKey.getDelay() + "s &7to be executed,", "&7the sound for the text is &b" + (conversationKey.getSoundName() == null ? "NONE" : conversationKey.getSoundName()) + "&7,", "&7before sending the text there is a delay of &b" + conversationKey.getDelay() + "s", "&7the index for the text is &b" + i + "&7,", "&7and the conversation has currently &b" + conversationKey.getActions().size() + " actions&7.", "&f&lUSES", " &bLeft-click &7to change the position.", " &bRight-click &7to remove text.", " &bLeft-Shift-click &7to change the sound.", " &bMiddle-click &7to change the delay.", " &bRight-Shift-click &7to edit the text.", " &bQ &7to manage actions.").build(), i, clickEvent -> {
+                    this.addItem(ItemStackBuilder.forMaterial(Material.NAME_TAG).setName(ChatColor.AQUA + conversationKey.getTextFormatted() + "....").setLore("&7this conversation text has a delay of &b" + conversationKey.getCooldown() + "s &7to be executed,", "&7the sound for the text is &b" + (conversationKey.getSoundName() == null ? "NONE" : conversationKey.getSoundName()) + "&7,", "&7before sending the text there is a delay of &b" + conversationKey.getCooldown() + "s", "&7the index for the text is &b" + i + "&7,", "&7and the conversation has currently &b" + conversationKey.getActions().size() + " actions&7.", "&f&lUSES", " &bLeft-click &7to change the position.", " &bRight-click &7to remove text.", " &bLeft-Shift-click &7to change the sound.", " &bMiddle-click &7to change the delay.", " &bRight-Shift-click &7to edit the text.", " &bQ &7to manage actions.").build(), i, clickEvent -> {
                         if (clickEvent.getClick() == ClickType.SHIFT_LEFT) {
                             Utils.sendTitle(this.getPlayer(), "&c&lCHANGE SOUND", "&7Type the new sound...");
                             EventService.addService(User.get(this.getPlayer()), AsyncPlayerChatEvent.class).addConsumer(event -> {
