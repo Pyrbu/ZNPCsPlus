@@ -17,7 +17,7 @@ public class FieldReflection extends ReflectionLazyLoader<Field> {
         this.expectType = reflectionBuilder.getExpectType();
     }
 
-    protected Field load() throws NoSuchFieldException {
+    protected Field load() {
         if (fieldName != null && fieldName.length() > 0) for (Class<?> clazz : this.reflectionClasses) {
             Field field = loadByName(clazz);
             if (field != null) return field;

@@ -4,7 +4,9 @@ import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import lol.pyr.znpcsplus.util.LazyLoader;
+import net.kyori.adventure.text.Component;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +27,8 @@ import java.util.Map;
 public interface MetadataFactory {
     EntityData skinLayers();
     EntityData effects(boolean onFire, boolean glowing, boolean invisible);
+    Collection<EntityData> name(Component name);
+    EntityData silent();
 
     MetadataFactory factory = get();
 

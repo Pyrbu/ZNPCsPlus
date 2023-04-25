@@ -6,6 +6,7 @@ import com.github.retrooper.packetevents.protocol.player.UserProfile;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPlayerInfoRemove;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPlayerInfoUpdate;
 import lol.pyr.znpcsplus.entity.PacketEntity;
+import lol.pyr.znpcsplus.entity.PropertyHolder;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
@@ -14,10 +15,10 @@ import java.util.concurrent.CompletableFuture;
 
 public class V1_19Factory extends V1_14Factory {
     @Override
-    public CompletableFuture<Void> addTabPlayer(Player player, PacketEntity entity) {
+    public CompletableFuture<Void> addTabPlayer(Player player, PacketEntity entity, PropertyHolder properties) {
         if (entity.getType() != EntityTypes.PLAYER) return CompletableFuture.completedFuture(null);
         CompletableFuture<Void> future = new CompletableFuture<>();
-        skinned(player, entity, new UserProfile(entity.getUuid(), Integer.toString(entity.getEntityId()))).thenAccept(profile -> {
+        skinned(player, properties, new UserProfile(entity.getUuid(), Integer.toString(entity.getEntityId()))).thenAccept(profile -> {
             WrapperPlayServerPlayerInfoUpdate.PlayerInfo info = new WrapperPlayServerPlayerInfoUpdate.PlayerInfo(
                     profile, false, 1, GameMode.CREATIVE, Component.empty(), null);
             sendPacket(player, new WrapperPlayServerPlayerInfoUpdate(EnumSet.of(WrapperPlayServerPlayerInfoUpdate.Action.ADD_PLAYER,

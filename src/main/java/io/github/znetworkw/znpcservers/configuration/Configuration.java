@@ -1,6 +1,5 @@
 package io.github.znetworkw.znpcservers.configuration;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.internal.$Gson$Types;
@@ -25,9 +24,6 @@ public class Configuration {
     private final Map<ConfigurationValue, Object> configurationValues;
     public static final Configuration CONFIGURATION = new Configuration("config");
     public static final Configuration MESSAGES = new Configuration("messages");
-    public static final Configuration CONVERSATIONS = new Configuration("conversations");
-    public static final Configuration DATA = new Configuration("data");
-    public static final ImmutableList<Configuration> SAVE_CONFIGURATIONS = ImmutableList.of(CONVERSATIONS, DATA);
 
     protected Configuration(String name) {
         this(name, ZNPCsPlus.PLUGIN_FOLDER.toPath().resolve(name + ".json"));
