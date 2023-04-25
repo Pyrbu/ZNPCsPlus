@@ -6,19 +6,14 @@ import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
-import io.github.znetworkw.znpcservers.commands.list.DefaultCommand;
 import io.github.znetworkw.znpcservers.configuration.Configuration;
 import io.github.znetworkw.znpcservers.configuration.ConfigurationConstants;
 import io.github.znetworkw.znpcservers.listeners.InventoryListener;
-import io.github.znetworkw.znpcservers.listeners.PlayerListener;
-import io.github.znetworkw.znpcservers.npc.NPCPath;
-import io.github.znetworkw.znpcservers.npc.interaction.InteractionPacketListener;
-import io.github.znetworkw.znpcservers.user.ZUser;
 import io.github.znetworkw.znpcservers.utility.BungeeUtils;
 import io.github.znetworkw.znpcservers.utility.SchedulerUtils;
 import io.github.znetworkw.znpcservers.utility.itemstack.ItemStackSerializer;
-import io.github.znetworkw.znpcservers.utility.location.ZLocation;
 import lol.pyr.znpcsplus.entity.PacketLocation;
+import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
 import lol.pyr.znpcsplus.npc.NPC;
 import lol.pyr.znpcsplus.npc.NPCProperty;
 import lol.pyr.znpcsplus.npc.NPCRegistry;
@@ -31,6 +26,8 @@ import lol.pyr.znpcsplus.skin.descriptor.PrefetchedDescriptor;
 import lol.pyr.znpcsplus.tasks.NPCVisibilityTask;
 import lol.pyr.znpcsplus.updater.UpdateChecker;
 import lol.pyr.znpcsplus.updater.UpdateNotificationListener;
+import lol.pyr.znpcsplus.user.User;
+import lol.pyr.znpcsplus.user.UserListener;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.apache.commons.io.FileUtils;
@@ -50,7 +47,6 @@ public class ZNPCsPlus extends JavaPlugin {
     public static File PLUGIN_FOLDER;
     public static File PATH_FOLDER;
     public static final Gson GSON = new GsonBuilder()
-            .registerTypeAdapter(ZLocation.class, ZLocation.SERIALIZER)
             .registerTypeHierarchyAdapter(ItemStack.class, new ItemStackSerializer())
             .setPrettyPrinting()
             .disableHtmlEscaping()
@@ -115,22 +111,18 @@ public class ZNPCsPlus extends JavaPlugin {
         PLUGIN_FOLDER.mkdirs();
         PATH_FOLDER.mkdirs();
 
-        log(ChatColor.WHITE + " * Loading paths...");
-        loadAllPaths();
-
         log(ChatColor.WHITE + " * Registering components...");
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         new Metrics(this, PLUGIN_ID);
-        new DefaultCommand();
         SCHEDULER = new SchedulerUtils(this);
         BUNGEE_UTILS = new BungeeUtils(this);
-        Bukkit.getOnlinePlayers().forEach(ZUser::find);
+        Bukkit.getOnlinePlayers().forEach(User::get);
 
         log(ChatColor.WHITE + " * Starting tasks...");
         new NPCVisibilityTask(this);
-        new PlayerListener(this);
         new InventoryListener(this);
         new SkinCacheCleanTask(this);
+        new UserListener(this);
         if (ConfigurationConstants.CHECK_FOR_UPDATES) new UpdateNotificationListener(this, new UpdateChecker(this));
 
         enabled = true;
@@ -171,18 +163,9 @@ public class ZNPCsPlus extends JavaPlugin {
     public void onDisable() {
         if (!enabled) return;
         Configuration.SAVE_CONFIGURATIONS.forEach(Configuration::save);
-        Bukkit.getOnlinePlayers().forEach(ZUser::unregister);
+        Bukkit.getOnlinePlayers().forEach(User::remove);
         ADVENTURE.close();
         ADVENTURE = null;
     }
 
-    public void loadAllPaths() {
-        File[] files = PATH_FOLDER.listFiles();
-        if (files == null) return;
-        for (File file : files) {
-            if (!file.getName().endsWith(".path")) continue;
-            NPCPath.AbstractTypeWriter abstractTypeWriter = NPCPath.AbstractTypeWriter.forFile(file, NPCPath.AbstractTypeWriter.TypeWriter.MOVEMENT);
-            abstractTypeWriter.load();
-        }
-    }
 }

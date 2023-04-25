@@ -1,6 +1,7 @@
 package io.github.znetworkw.znpcservers.user;
 
 import lol.pyr.znpcsplus.ZNPCsPlus;
+import lol.pyr.znpcsplus.user.User;
 import org.bukkit.event.Event;
 
 import java.util.ArrayList;
@@ -34,21 +35,21 @@ public class EventService<T extends Event> {
         ZNPCsPlus.SCHEDULER.runNextTick(() -> this.eventConsumers.forEach(consumer -> consumer.accept(event)));
     }
 
-    public static <T extends Event> EventService<T> addService(ZUser user, Class<T> eventClass) {
-        if (EventService.hasService(user, eventClass)) throw new IllegalStateException(eventClass.getSimpleName() + " is already register for " + user.getUUID().toString());
+    public static <T extends Event> EventService<T> addService(User user, Class<T> eventClass) {
+        if (EventService.hasService(user, eventClass)) throw new IllegalStateException(eventClass.getSimpleName() + " is already register for " + user.getUuid().toString());
         EventService<T> service = new EventService<>(eventClass, new ArrayList<>());
         user.getEventServices().add(service);
-        user.toPlayer().closeInventory();
+        user.getPlayer().closeInventory();
         return service;
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends Event> EventService<T> findService(ZUser user, Class<T> eventClass) {
+    public static <T extends Event> EventService<T> findService(User user, Class<T> eventClass) {
         Objects.requireNonNull(EventService.class);
         return user.getEventServices().stream().filter(eventService -> eventService.getEventClass().isAssignableFrom(eventClass)).map(EventService.class::cast).findFirst().orElse(null);
     }
 
-    public static boolean hasService(ZUser user, Class<? extends Event> eventClass) {
+    public static boolean hasService(User user, Class<? extends Event> eventClass) {
         return user.getEventServices().stream().anyMatch(eventService -> eventService.getEventClass() == eventClass);
     }
 }

@@ -1,23 +1,17 @@
 package io.github.znetworkw.znpcservers.configuration;
 
 import com.google.common.collect.ImmutableSet;
-import io.github.znetworkw.znpcservers.npc.NPCModel;
-import io.github.znetworkw.znpcservers.npc.NamingType;
-import io.github.znetworkw.znpcservers.npc.conversation.Conversation;
 import io.github.znetworkw.znpcservers.utility.GuavaCollectors;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public enum ConfigurationValue {
-    NPC_LIST("data", new ArrayList<>(), NPCModel.class),
     VIEW_DISTANCE("config", 32, Integer.class),
     REPLACE_SYMBOL("config", "-", String.class),
     SAVE_NPCS_DELAY_SECONDS("config", 600, Integer.class),
     MAX_PATH_LOCATIONS("config", 500, Integer.class),
-    NAMING_METHOD("config", NamingType.DEFAULT, NamingType.class),
     DEBUG_ENABLED("config", false, Boolean.class),
     LINE_SPACING("config", 0.3D, Double.class),
     ANIMATION_RGB("config", false, Boolean.class),
@@ -51,9 +45,7 @@ public enum ConfigurationValue {
     FETCHING_SKIN("messages", "&aFetching skin for name: &f%s&a. Please wait...", String.class),
     CANT_GET_SKIN("messages", "&cCould not fetch skin for name: %s.", String.class),
     GET_SKIN("messages", "&aSkin successfully fetched!", String.class),
-    NOT_SUPPORTED_NPC_TYPE("messages", "&cThis NPC type doesn't exists or is not supported in your current server version.", String.class),
-    INVALID_CUSTOMIZE_ARGUMENTS("messages", "&cThe argument(s) you have specified is/are invalid. Type &f/znpcs&c or view our documentation for a list/examples of existing arguments.", String.class),
-    CONVERSATION_LIST("conversations" /* Leave this lowercase or it will break */, new ArrayList<>(), Conversation.class);
+    NOT_SUPPORTED_NPC_TYPE("messages", "&cThis NPC type doesn't exists or is not supported in your current server version.", String.class);
 
     public static final Map<String, ImmutableSet<ConfigurationValue>> VALUES_BY_NAME;
 

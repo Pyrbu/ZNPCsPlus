@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class NPC {
+    protected static final Set<NPC> _ALL_NPCS = new HashSet<>();
+
     private final Set<Player> viewers = new HashSet<>();
     private final String worldName;
     private PacketEntity entity;
@@ -25,6 +27,8 @@ public class NPC {
         this.type = type;
         this.location = location;
         entity = new PacketEntity(this, type.getType(), location);
+
+        _ALL_NPCS.add(this);
     }
 
     public void setType(NPCType type) {
@@ -56,6 +60,7 @@ public class NPC {
     }
 
     public void delete() {
+        _ALL_NPCS.remove(this);
         _hideAll();
         viewers.clear();
     }
