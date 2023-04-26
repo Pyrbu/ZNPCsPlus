@@ -19,7 +19,6 @@ public class NPCModel {
     private ConversationModel conversation;
     private ZLocation location;
     private NPCType npcType;
-    private boolean shouldSpawn;
     private List<String> hologramLines;
     private List<NPCAction> clickActions;
     private Map<EquipmentSlot, ItemStack> npcEquip;
@@ -32,7 +31,6 @@ public class NPCModel {
         this.skin = "";
         this.signature = "";
         this.npcType = NPCType.PLAYER;
-        this.shouldSpawn = true;
         this.hologramLines = Collections.singletonList("/znpcs lines");
         this.clickActions = new ArrayList<>();
         this.npcEquip = new HashMap<>();
@@ -177,19 +175,6 @@ public class NPCModel {
 
     public NPCModel withNpcType(NPCType npcType) {
         setNpcType(npcType);
-        return this;
-    }
-
-    public boolean getShouldSpawn() {
-        return this.shouldSpawn;
-    }
-
-    public void setShouldSpawn(boolean shouldSpawn) {
-        this.shouldSpawn = shouldSpawn;
-    }
-
-    public NPCModel withShouldSpawn(boolean shouldSpawn) {
-        setShouldSpawn(shouldSpawn);
         return this;
     }
 

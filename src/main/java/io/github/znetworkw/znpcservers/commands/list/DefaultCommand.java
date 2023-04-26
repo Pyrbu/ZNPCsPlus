@@ -123,7 +123,7 @@ public class DefaultCommand extends Command {
             sender.sendMessage(ChatColor.DARK_GREEN + "NPC list:");
             for (NPCModel npcModel : ConfigurationConstants.NPC_LIST)
                 ZNPCsPlus.ADVENTURE.player(sender.getPlayer()).sendMessage(Component.text("-", NamedTextColor.GREEN)
-                        .append(Component.text(" " + npcModel.getId(), npcModel.getShouldSpawn() ? NamedTextColor.GREEN : NamedTextColor.RED))
+                        .append(Component.text(" " + npcModel.getId(), NamedTextColor.GREEN))
                         .append(Component.text(" " + npcModel.getHologramLines().toString() +
                                 " (" + npcModel.getLocation().getWorldName() + " " + (int) npcModel.getLocation().getX() + " " +
                                 (int) npcModel.getLocation().getY() + " " + (int) npcModel.getLocation().getZ() + ") ", NamedTextColor.GREEN))
