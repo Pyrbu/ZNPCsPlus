@@ -9,6 +9,7 @@ import space.arim.dazzleconf.ext.snakeyaml.CommentMode;
 import space.arim.dazzleconf.ext.snakeyaml.SnakeYamlConfigurationFactory;
 import space.arim.dazzleconf.ext.snakeyaml.SnakeYamlOptions;
 import space.arim.dazzleconf.helper.ConfigurationHelper;
+import space.arim.dazzleconf.serialiser.ValueSerialiser;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,15 +21,17 @@ public class Configs {
     private volatile static MessageConfig messages;
     private static ConfigurationHelper<MessageConfig> messagesHelper;
 
-    private static <T> ConfigurationHelper<T> createHelper(Class<T> configClass, File file) {
+    private static <T> ConfigurationHelper<T> createHelper(Class<T> configClass, File file, ValueSerialiser<?>... serialisers) {
         SnakeYamlOptions yamlOptions = new SnakeYamlOptions.Builder().commentMode(CommentMode.fullComments()).build();
-        ConfigurationFactory<T> configFactory = SnakeYamlConfigurationFactory.create(configClass, ConfigurationOptions.defaults(), yamlOptions);
+        ConfigurationOptions.Builder optionBuilder = new ConfigurationOptions.Builder();
+        if (serialisers != null && serialisers.length > 0) optionBuilder.addSerialisers(serialisers);
+        ConfigurationFactory<T> configFactory = SnakeYamlConfigurationFactory.create(configClass, optionBuilder.build(), yamlOptions);
         return new ConfigurationHelper<>(file.getParentFile().toPath(), file.getName(), configFactory);
     }
 
     public static void init(File pluginFolder) {
         configHelper = createHelper(MainConfig.class, new File(pluginFolder, "config.yaml"));
-        messagesHelper = createHelper(MessageConfig.class, new File(pluginFolder, "messages.yaml"));
+        messagesHelper = createHelper(MessageConfig.class, new File(pluginFolder, "messages.yaml"), new ComponentSerializer());
         load();
     }
 
