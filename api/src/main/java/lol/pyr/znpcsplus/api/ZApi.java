@@ -1,6 +1,7 @@
 package lol.pyr.znpcsplus.api;
 
 import lol.pyr.znpcsplus.api.npc.NPC;
+import lol.pyr.znpcsplus.api.npc.NPCRegistry;
 import lol.pyr.znpcsplus.api.npc.NPCType;
 import lol.pyr.znpcsplus.util.ZLocation;
 import org.bukkit.World;

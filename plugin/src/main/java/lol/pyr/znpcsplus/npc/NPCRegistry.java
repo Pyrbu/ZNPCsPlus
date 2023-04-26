@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NPCRegistry implements lol.pyr.znpcsplus.api.NPCRegistry {
+public class NPCRegistry implements lol.pyr.znpcsplus.api.npc.NPCRegistry {
     private final static NPCRegistry registry = new NPCRegistry();
 
     public static NPCRegistry get() {

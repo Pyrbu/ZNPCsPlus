@@ -1,4 +1,4 @@
-package lol.pyr.znpcsplus.api;
+package lol.pyr.znpcsplus.api.hologram;
 
 import net.kyori.adventure.text.Component;
 

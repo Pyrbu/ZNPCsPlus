@@ -1,4 +1,4 @@
-package lol.pyr.znpcsplus.api.npc;
+package lol.pyr.znpcsplus.api.entity;
 
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import net.kyori.adventure.text.Component;

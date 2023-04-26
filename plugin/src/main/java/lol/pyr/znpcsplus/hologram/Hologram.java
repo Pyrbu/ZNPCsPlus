@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class Hologram extends Viewable implements lol.pyr.znpcsplus.api.Hologram {
+public class Hologram extends Viewable implements lol.pyr.znpcsplus.api.hologram.Hologram {
     private ZLocation location;
     private final List<HologramLine> lines = new ArrayList<>();
 

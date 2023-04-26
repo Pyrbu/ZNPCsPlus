@@ -8,7 +8,7 @@ import io.github.znetworkw.znpcservers.listeners.InventoryListener;
 import io.github.znetworkw.znpcservers.utility.BungeeUtils;
 import io.github.znetworkw.znpcservers.utility.SchedulerUtils;
 import lol.pyr.znpcsplus.api.ZApiProvider;
-import lol.pyr.znpcsplus.api.npc.EntityProperty;
+import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.npc.NPCType;
 import lol.pyr.znpcsplus.config.Configs;
 import lol.pyr.znpcsplus.interaction.InteractionPacketListener;

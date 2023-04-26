@@ -5,7 +5,7 @@ import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import lol.pyr.znpcsplus.ZNPCsPlus;
 import lol.pyr.znpcsplus.entity.PacketEntity;
-import lol.pyr.znpcsplus.api.PropertyHolder;
+import lol.pyr.znpcsplus.api.entity.PropertyHolder;
 import lol.pyr.znpcsplus.util.LazyLoader;
 import org.bukkit.entity.Player;
 

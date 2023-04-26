@@ -4,7 +4,7 @@ import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import io.github.znetworkw.znpcservers.reflection.Reflections;
 import io.github.znetworkw.znpcservers.utility.Utils;
-import lol.pyr.znpcsplus.api.PropertyHolder;
+import lol.pyr.znpcsplus.api.entity.PropertyHolder;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.util.ZLocation;
 import org.bukkit.entity.Player;

@@ -6,7 +6,7 @@ import com.github.retrooper.packetevents.protocol.player.UserProfile;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPlayerInfoRemove;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPlayerInfoUpdate;
 import lol.pyr.znpcsplus.entity.PacketEntity;
-import lol.pyr.znpcsplus.api.PropertyHolder;
+import lol.pyr.znpcsplus.api.entity.PropertyHolder;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 

@@ -3,8 +3,8 @@ package lol.pyr.znpcsplus.packets;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSpawnEntity;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.util.ZLocation;
-import lol.pyr.znpcsplus.api.npc.EntityProperty;
-import lol.pyr.znpcsplus.api.PropertyHolder;
+import lol.pyr.znpcsplus.api.entity.EntityProperty;
+import lol.pyr.znpcsplus.api.entity.PropertyHolder;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;

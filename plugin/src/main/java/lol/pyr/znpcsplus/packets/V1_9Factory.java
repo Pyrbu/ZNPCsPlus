@@ -4,8 +4,8 @@ import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.metadata.MetadataFactory;
-import lol.pyr.znpcsplus.api.npc.EntityProperty;
-import lol.pyr.znpcsplus.api.PropertyHolder;
+import lol.pyr.znpcsplus.api.entity.EntityProperty;
+import lol.pyr.znpcsplus.api.entity.PropertyHolder;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;

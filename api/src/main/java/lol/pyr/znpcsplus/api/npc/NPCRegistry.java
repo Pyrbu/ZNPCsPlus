@@ -1,6 +1,4 @@
-package lol.pyr.znpcsplus.api;
-
-import lol.pyr.znpcsplus.api.npc.NPC;
+package lol.pyr.znpcsplus.api.npc;
 
 import java.util.Collection;
 

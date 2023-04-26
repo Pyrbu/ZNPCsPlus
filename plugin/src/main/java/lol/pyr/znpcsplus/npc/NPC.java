@@ -1,6 +1,6 @@
 package lol.pyr.znpcsplus.npc;
 
-import lol.pyr.znpcsplus.api.npc.EntityProperty;
+import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.npc.NPCType;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.hologram.Hologram;
