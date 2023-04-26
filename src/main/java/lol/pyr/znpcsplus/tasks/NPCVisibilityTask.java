@@ -1,12 +1,13 @@
 package lol.pyr.znpcsplus.tasks;
 
-import io.github.znetworkw.znpcservers.configuration.ConfigurationConstants;
+import lol.pyr.znpcsplus.config.Configs;
 import lol.pyr.znpcsplus.npc.NPC;
 import lol.pyr.znpcsplus.npc.NPCRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.NumberConversions;
 
 public class NPCVisibilityTask extends BukkitRunnable {
     public NPCVisibilityTask(Plugin plugin) {
@@ -14,7 +15,7 @@ public class NPCVisibilityTask extends BukkitRunnable {
     }
 
     public void run() {
-        int distSq = ConfigurationConstants.VIEW_DISTANCE * ConfigurationConstants.VIEW_DISTANCE;
+        double distSq = NumberConversions.square(Configs.config().viewDistance());
         for (NPC npc : NPCRegistry.all()) for (Player player : Bukkit.getOnlinePlayers()) {
             boolean inRange = (player.getWorld() == npc.getWorld() && player.getLocation().distanceSquared(npc.getLocation().toBukkitLocation(npc.getWorld())) <= distSq);
             if (!inRange && npc.isShown(player)) npc.hide(player);

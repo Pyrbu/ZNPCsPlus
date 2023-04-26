@@ -6,11 +6,11 @@ import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
-import io.github.znetworkw.znpcservers.configuration.ConfigurationConstants;
 import io.github.znetworkw.znpcservers.listeners.InventoryListener;
 import io.github.znetworkw.znpcservers.utility.BungeeUtils;
 import io.github.znetworkw.znpcservers.utility.SchedulerUtils;
 import io.github.znetworkw.znpcservers.utility.itemstack.ItemStackSerializer;
+import lol.pyr.znpcsplus.config.Configs;
 import lol.pyr.znpcsplus.entity.EntityProperty;
 import lol.pyr.znpcsplus.entity.PacketLocation;
 import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
@@ -110,6 +110,9 @@ public class ZNPCsPlus extends JavaPlugin {
         PLUGIN_FOLDER.mkdirs();
         PATH_FOLDER.mkdirs();
 
+        log(ChatColor.WHITE + " * Loading configurations...");
+        Configs.init(PLUGIN_FOLDER);
+
         log(ChatColor.WHITE + " * Registering components...");
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         new Metrics(this, PLUGIN_ID);
@@ -122,13 +125,13 @@ public class ZNPCsPlus extends JavaPlugin {
         new InventoryListener(this);
         new SkinCacheCleanTask(this);
         new UserListener(this);
-        if (ConfigurationConstants.CHECK_FOR_UPDATES) new UpdateNotificationListener(this, new UpdateChecker(this));
+        if (Configs.config().checkForUpdates()) new UpdateNotificationListener(this, new UpdateChecker(this));
 
         enabled = true;
         log(ChatColor.WHITE + " * Loading complete! (" + (System.currentTimeMillis() - before) + "ms)");
         log("");
 
-        if (ConfigurationConstants.DEBUG_ENABLED) {
+        if (Configs.config().debugEnabled()) {
             int wrap = 20;
             int x = 0;
             int z = 0;
