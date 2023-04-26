@@ -1,0 +1,34 @@
+plugins {
+    id "maven-publish"
+}
+
+dependencies {
+    compileOnly "org.spigotmc:spigot-api:1.19.4-R0.1-SNAPSHOT"
+    compileOnly "net.kyori:adventure-platform-bukkit:4.3.0"
+    compileOnly "com.github.retrooper.packetevents:spigot:2.0.0-SNAPSHOT"
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            pom {
+                name.set("znpcsplus")
+                description.set("A fork of the ZNPCs plugin")
+                url.set("https://github.com/Pyrbu/ZNPCsPlus")
+            }
+        }
+    }
+    repositories {
+        maven {
+            if (properties.containsKey("DIST_USERNAME") && properties.containsKey("DIST_PASSWORD")) {
+                credentials {
+                    username properties.get("DIST_USERNAME")
+                    password properties.get("DIST_PASSWORD")
+                }
+            }
+            url = uri("https://repo.pyr.lol/releases/")
+        }
+    }
+}

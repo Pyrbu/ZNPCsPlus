@@ -1,2 +1,3 @@
-rootProject.name = 'ZNPCsPlus'
+rootProject.name = "ZNPCsPlus"
 
+include "api", "plugin"
