@@ -11,6 +11,8 @@ import lol.pyr.znpcsplus.config.Configs;
 import lol.pyr.znpcsplus.entity.EntityProperty;
 import lol.pyr.znpcsplus.entity.PacketLocation;
 import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
+import lol.pyr.znpcsplus.interaction.types.ConsoleCommandAction;
+import lol.pyr.znpcsplus.interaction.types.MessageAction;
 import lol.pyr.znpcsplus.npc.NPC;
 import lol.pyr.znpcsplus.npc.NPCRegistry;
 import lol.pyr.znpcsplus.npc.NPCType;
@@ -151,10 +153,12 @@ public class ZNPCsPlus extends JavaPlugin {
             }
             NPC npc = new NPC(world, NPCType.byName("player"), new PacketLocation(x * 3, 200, z * 3, 0, 0));
             npc.setProperty(EntityProperty.SKIN, new FetchingDescriptor("jeb_"));
+            npc.addAction(new MessageAction(1000L, "<red>Hi, I'm jeb!"));
             NPCRegistry.register("debug_npc" + (z * wrap + x), npc);
             x++;
             npc = new NPC(world, NPCType.byName("player"), new PacketLocation(x * 3, 200, z * 3, 0, 0));
             npc.setProperty(EntityProperty.SKIN, new MirrorDescriptor());
+            npc.addAction(new ConsoleCommandAction(1000L, "kick {player}"));
             NPCRegistry.register("debug_npc" + (z * wrap + x), npc);
         }
     }

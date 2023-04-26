@@ -7,10 +7,12 @@ import java.util.UUID;
 public abstract class NPCAction {
     private final UUID id;
     private final long delay;
+    protected final String argument;
 
-    protected NPCAction(long delay) {
+    protected NPCAction(long delay, String argument) {
         this.id = UUID.randomUUID();
         this.delay = delay;
+        this.argument = argument;
     }
 
     public UUID getUuid() {
