@@ -4,6 +4,7 @@ import lol.pyr.znpcsplus.entity.EntityProperty;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.entity.PacketLocation;
 import lol.pyr.znpcsplus.entity.PropertyHolder;
+import lol.pyr.znpcsplus.hologram.Hologram;
 import lol.pyr.znpcsplus.interaction.NPCAction;
 import lol.pyr.znpcsplus.util.Viewable;
 import org.bukkit.Bukkit;
@@ -20,6 +21,7 @@ public class NPC extends Viewable implements PropertyHolder {
     private PacketEntity entity;
     private PacketLocation location;
     private NPCType type;
+    private final Hologram hologram;
 
     private final Map<EntityProperty<?>, Object> propertyMap = new HashMap<>();
     private final Set<NPCAction> actions = new HashSet<>();
@@ -29,7 +31,7 @@ public class NPC extends Viewable implements PropertyHolder {
         this.type = type;
         this.location = location;
         entity = new PacketEntity(this, type.getType(), location);
-
+        hologram = new Hologram(location.withY(location.getY() + type.getHologramOffset()));
         _ALL_NPCS.add(this);
     }
 
@@ -55,6 +57,11 @@ public class NPC extends Viewable implements PropertyHolder {
     public void setLocation(PacketLocation location) {
         this.location = location;
         entity.setLocation(location, viewers);
+        hologram.setLocation(location.withY(location.getY() + type.getHologramOffset()));
+    }
+
+    public Hologram getHologram() {
+        return hologram;
     }
 
     public World getWorld() {
@@ -74,11 +81,13 @@ public class NPC extends Viewable implements PropertyHolder {
     @Override
     protected void _show(Player player) {
         entity.spawn(player);
+        hologram.show(player);
     }
 
     @Override
     protected void _hide(Player player) {
         entity.despawn(player);
+        hologram.hide(player);
     }
 
     private void _refreshMeta() {

@@ -44,7 +44,7 @@ public class HologramLine implements PropertyHolder {
     public <T> T getProperty(EntityProperty<T> key) {
         if (key == EntityProperty.INVISIBLE) return (T) Boolean.TRUE;
         if (key == EntityProperty.NAME) return (T) text;
-        return null;
+        return key.getDefaultValue();
     }
 
     @Override
