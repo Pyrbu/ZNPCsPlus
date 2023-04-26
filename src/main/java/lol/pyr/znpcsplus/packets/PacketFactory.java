@@ -3,6 +3,7 @@ package lol.pyr.znpcsplus.packets;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
+import lol.pyr.znpcsplus.ZNPCsPlus;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.entity.PropertyHolder;
 import lol.pyr.znpcsplus.util.LazyLoader;
@@ -35,7 +36,9 @@ public interface PacketFactory {
         for (ServerVersion v : ServerVersion.reversedValues()) {
             if (v.isNewerThan(version)) continue;
             if (!factories.containsKey(v)) continue;
-            return factories.get(v).get();
+            PacketFactory f = factories.get(v).get();
+            ZNPCsPlus.debug("Using PacketFactory Version " + v.name() + " (" + f.getClass().getName() + ")");
+            return f;
         }
         throw new RuntimeException("Unsupported version!");
     }

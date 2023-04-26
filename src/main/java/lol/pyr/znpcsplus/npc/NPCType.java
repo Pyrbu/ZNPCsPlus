@@ -22,10 +22,12 @@ public class NPCType {
     private final EntityType type;
     private final Set<EntityProperty<?>> allowedProperties;
     private final String name;
+    private final double hologramOffset;
 
-    private NPCType(String name, EntityType type, Set<EntityProperty<?>> allowedProperties) {
+    private NPCType(String name, EntityType type, double hologramOffset, Set<EntityProperty<?>> allowedProperties) {
         this.name = name.toUpperCase();
         this.type = type;
+        this.hologramOffset = hologramOffset;
         this.allowedProperties = allowedProperties;
     }
 
@@ -35,6 +37,10 @@ public class NPCType {
 
     public EntityType getType() {
         return type;
+    }
+
+    public double getHologramOffset() {
+        return hologramOffset;
     }
 
     public Set<EntityProperty<?>> getAllowedProperties() {
@@ -52,10 +58,14 @@ public class NPCType {
 
     static {
         register(new Builder("player", EntityTypes.PLAYER)
-                .addProperties(EntityProperty.SKIN, EntityProperty.SKIN_LAYERS));
-        register(new Builder("creeper", EntityTypes.CREEPER));
-        register(new Builder("zombie", EntityTypes.ZOMBIE));
-        register(new Builder("skeleton", EntityTypes.SKELETON));
+                .addProperties(EntityProperty.SKIN, EntityProperty.SKIN_LAYERS)
+                .setHologramOffset(-0.45D));
+        register(new Builder("creeper", EntityTypes.CREEPER)
+                .setHologramOffset(-0.6D));
+        register(new Builder("zombie", EntityTypes.ZOMBIE)
+                .setHologramOffset(-0.3D));
+        register(new Builder("skeleton", EntityTypes.SKELETON)
+                .setHologramOffset(-0.3D));
     }
 
     private static final class Builder {
@@ -63,6 +73,7 @@ public class NPCType {
         private final EntityType type;
         private final List<EntityProperty<?>> allowedProperties = new ArrayList<>();
         private boolean globalProperties = true;
+        private double hologramOffset = 0;
 
         private Builder(String name, EntityType type) {
             this.name = name;
@@ -79,6 +90,11 @@ public class NPCType {
             return this;
         }
 
+        public Builder setHologramOffset(double hologramOffset) {
+            this.hologramOffset = hologramOffset;
+            return this;
+        }
+
         public NPCType build() {
             if (globalProperties) {
                 allowedProperties.add(EntityProperty.FIRE);
@@ -87,7 +103,7 @@ public class NPCType {
                 if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9))
                     allowedProperties.add(EntityProperty.GLOW);
             }
-            return new NPCType(name, type, Set.copyOf(allowedProperties));
+            return new NPCType(name, type, hologramOffset, Set.copyOf(allowedProperties));
         }
     }
 }

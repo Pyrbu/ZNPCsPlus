@@ -3,13 +3,10 @@ package lol.pyr.znpcsplus;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import io.github.znetworkw.znpcservers.listeners.InventoryListener;
 import io.github.znetworkw.znpcservers.utility.BungeeUtils;
 import io.github.znetworkw.znpcservers.utility.SchedulerUtils;
-import io.github.znetworkw.znpcservers.utility.itemstack.ItemStackSerializer;
 import lol.pyr.znpcsplus.config.Configs;
 import lol.pyr.znpcsplus.entity.EntityProperty;
 import lol.pyr.znpcsplus.entity.PacketLocation;
@@ -28,13 +25,13 @@ import lol.pyr.znpcsplus.updater.UpdateNotificationListener;
 import lol.pyr.znpcsplus.user.User;
 import lol.pyr.znpcsplus.user.UserListener;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.apache.commons.io.FileUtils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -45,11 +42,6 @@ public class ZNPCsPlus extends JavaPlugin {
     public static Logger LOGGER;
     public static File PLUGIN_FOLDER;
     public static File PATH_FOLDER;
-    public static final Gson GSON = new GsonBuilder()
-            .registerTypeHierarchyAdapter(ItemStack.class, new ItemStackSerializer())
-            .setPrettyPrinting()
-            .disableHtmlEscaping()
-            .create();
     private static final int PLUGIN_ID = 18244;
     public static SchedulerUtils SCHEDULER;
     public static BungeeUtils BUNGEE_UTILS;
@@ -57,6 +49,11 @@ public class ZNPCsPlus extends JavaPlugin {
     public static boolean PLACEHOLDERS_SUPPORTED;
 
     private boolean enabled = false;
+
+    public static void debug(String str) {
+        if (!Configs.config().debugEnabled()) return;
+        LOGGER.info("[DEBUG] " + str);
+    }
 
     @Override
     public void onLoad() {
@@ -144,7 +141,8 @@ public class ZNPCsPlus extends JavaPlugin {
                     npc.setProperty(EntityProperty.INVISIBLE, true);
                 }
                 npc.setProperty(EntityProperty.GLOW, NamedTextColor.RED);
-                npc.setProperty(EntityProperty.FIRE, true);
+                // npc.setProperty(EntityProperty.FIRE, true);
+                npc.getHologram().addLine(Component.text("Hello, World!"));
                 NPCRegistry.register("debug_npc" + (z * wrap + x), npc);
                 if (x++ > wrap) {
                     x = 0;

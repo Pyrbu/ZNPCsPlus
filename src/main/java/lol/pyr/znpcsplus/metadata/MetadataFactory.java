@@ -3,6 +3,7 @@ package lol.pyr.znpcsplus.metadata;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
+import lol.pyr.znpcsplus.ZNPCsPlus;
 import lol.pyr.znpcsplus.util.LazyLoader;
 import net.kyori.adventure.text.Component;
 
@@ -40,7 +41,9 @@ public interface MetadataFactory {
         for (ServerVersion v : ServerVersion.reversedValues()) {
             if (v.isNewerThan(version)) continue;
             if (!factories.containsKey(v)) continue;
-            return factories.get(v).get();
+            MetadataFactory f = factories.get(v).get();
+            ZNPCsPlus.debug("Using MetadataFactory Version " + v.name() + " (" + f.getClass().getName() + ")");
+            return f;
         }
         throw new RuntimeException("Unsupported version!");
     }
@@ -49,6 +52,7 @@ public interface MetadataFactory {
         HashMap<ServerVersion, LazyLoader<? extends MetadataFactory>> map = new HashMap<>();
         map.put(ServerVersion.V_1_8, LazyLoader.of(V1_8Factory::new));
         map.put(ServerVersion.V_1_9, LazyLoader.of(V1_9Factory::new));
+        map.put(ServerVersion.V_1_13, LazyLoader.of(V1_13Factory::new));
         map.put(ServerVersion.V_1_14, LazyLoader.of(V1_14Factory::new));
         map.put(ServerVersion.V_1_16, LazyLoader.of(V1_16Factory::new));
         map.put(ServerVersion.V_1_17, LazyLoader.of(V1_17Factory::new));

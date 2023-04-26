@@ -49,6 +49,10 @@ public class PacketLocation {
         return new Location(world, this.x, this.y, this.z, this.yaw, this.pitch);
     }
 
+    public PacketLocation withY(double y) {
+        return new PacketLocation(x, y, z, yaw, pitch);
+    }
+
     public Vector toVector() {
         return new Vector(x, y, z);
     }
