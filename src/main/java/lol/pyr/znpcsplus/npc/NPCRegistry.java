@@ -1,6 +1,7 @@
 package lol.pyr.znpcsplus.npc;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +13,7 @@ public class NPCRegistry {
     }
 
     public static Collection<NPC> all() {
-        return NPC._ALL_NPCS;
+        return Collections.unmodifiableSet(NPC._ALL_NPCS);
     }
 
     public static NPC getByEntityId(int id) {
@@ -20,7 +21,7 @@ public class NPCRegistry {
     }
 
     public static Collection<String> ids() {
-        return npcMap.keySet();
+        return Collections.unmodifiableSet(npcMap.keySet());
     }
 
     public static void register(String id, NPC npc) {
