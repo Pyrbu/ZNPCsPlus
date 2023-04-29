@@ -43,8 +43,7 @@ bin/
 .DS_Store
 
 /run/
+/spigot/run/
 /.idea/
-
-gradle.properties
 
 gradle.properties

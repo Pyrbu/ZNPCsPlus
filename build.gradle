@@ -5,7 +5,7 @@ subprojects {
     version "1.0.5"
 
     compileJava {
-        options.release.set(16)
+        options.release.set(17)
     }
 
     repositories {
@@ -15,6 +15,9 @@ subprojects {
         }
         maven {
             url "https://repo.codemc.io/repository/maven-snapshots/"
+        }
+        maven {
+            url "https://repo.papermc.io/repository/maven-public/"
         }
     }
 }
