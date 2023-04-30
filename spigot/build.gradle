@@ -1,15 +1,5 @@
 plugins {
     id "com.github.johnrengelman.shadow" version "8.1.1"
-    id "xyz.jpenilla.run-paper" version "2.0.1"
-}
-
-repositories {
-    maven {
-        url "https://repo.extendedclip.com/content/repositories/placeholderapi/"
-    }
-    maven {
-        url "https://jitpack.io/"
-    }
 }
 
 dependencies {
@@ -28,15 +18,14 @@ dependencies {
     implementation "com.github.retrooper.packetevents:spigot:2.0.0-SNAPSHOT"
     implementation "space.arim.dazzleconf:dazzleconf-ext-snakeyaml:1.2.1"
 
-    implementation project(":api")
-    implementation project(":common")
-    implementation project(":folia")
+    compileOnly project(":api")
+    compileOnly project(":folia")
 }
 
 shadowJar {
     archiveClassifier.set ""
     relocate "org.bstats", "lol.pyr.znpcsplus.lib.bstats"
-    relocate "org.apache.commons", "lol.pyr.znpcsplus.lib.commons"
+    relocate "org.apache.commons.io", "lol.pyr.znpcsplus.lib.commonsio"
     relocate "me.robertlit.spigotresources", "lol.pyr.znpcsplus.lib.spigotresources"
     relocate "net.kyori", "lol.pyr.znpcsplus.lib.kyori"
     relocate "org.checkerframework", "lol.pyr.znpcsplus.lib.checkerframework"
@@ -50,14 +39,3 @@ shadowJar {
     relocate "space.arim.dazzleconf", "lol.pyr.znpcsplus.lib.dazzleconf"
     minimize()
 }
-
-processResources {
-    expand("version": version)
-}
-
-runServer {
-    minecraftVersion "1.19.4"
-}
-
-tasks.assemble.dependsOn shadowJar
-tasks.compileJava.dependsOn clean

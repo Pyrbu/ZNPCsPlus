@@ -1,4 +1,20 @@
-subprojects {
+plugins {
+    id "java"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
+    id "xyz.jpenilla.run-paper" version "2.0.1"
+}
+
+dependencies {
+    implementation project(path: ":spigot", configuration: "shadow")
+    implementation project(":api")
+    implementation project(":folia")
+}
+
+runServer {
+    minecraftVersion "1.19.4"
+}
+
+allprojects {
     apply plugin: "java"
 
     group "lol.pyr"
@@ -19,5 +35,14 @@ subprojects {
         maven {
             url "https://repo.papermc.io/repository/maven-public/"
         }
+        maven {
+            url "https://repo.extendedclip.com/content/repositories/placeholderapi/"
+        }
+        maven {
+            url "https://jitpack.io/"
+        }
     }
 }
+
+tasks.assemble.dependsOn shadowJar
+tasks.compileJava.dependsOn clean
