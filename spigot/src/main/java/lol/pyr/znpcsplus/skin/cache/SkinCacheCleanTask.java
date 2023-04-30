@@ -4,8 +4,8 @@ import lol.pyr.znpcsplus.ZNPCsPlus;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class SkinCacheCleanTask extends BukkitRunnable {
-    public SkinCacheCleanTask(ZNPCsPlus plugin) {
-        runTaskTimerAsynchronously(plugin, 1200, 1200);
+    public SkinCacheCleanTask() {
+        ZNPCsPlus.SCHEDULER.runDelayedTimerAsync(this, 1200, 1200);
     }
 
     @Override

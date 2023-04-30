@@ -18,7 +18,7 @@ public class UpdateChecker extends BukkitRunnable {
 
     public UpdateChecker(ZNPCsPlus plugin) {
         this.plugin = plugin;
-        runTaskTimerAsynchronously(plugin, 5L, 6000L);
+        ZNPCsPlus.SCHEDULER.runDelayedTimerAsync(this, 5L, 6000L);
     }
 
     public void run() {
