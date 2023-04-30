@@ -8,16 +8,21 @@ import io.github.znetworkw.znpcservers.reflection.Reflections;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
+import org.bukkit.util.StringUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Command extends BukkitCommand {
     private final Map<CommandInformation, CommandInvoker> subCommands;
+    private final Map<CommandTabInformation, CommandTabInvoker> subCommandsTab;
 
     public Command(String name) {
         super(name);
         this.subCommands = new HashMap<>();
+        this.subCommandsTab = new HashMap<>();
         load();
     }
 
@@ -27,6 +32,10 @@ public class Command extends BukkitCommand {
             if (method.isAnnotationPresent(CommandInformation.class)) {
                 CommandInformation cmdInfo = method.getAnnotation(CommandInformation.class);
                 this.subCommands.put(cmdInfo, new CommandInvoker(this, method, cmdInfo.permission()));
+            }
+            if (method.isAnnotationPresent(CommandTabInformation.class)) {
+                CommandTabInformation cmdTabInfo = method.getAnnotation(CommandTabInformation.class);
+                this.subCommandsTab.put(cmdTabInfo, new CommandTabInvoker(this, method, cmdTabInfo.permission()));
             }
         }
     }
@@ -55,6 +64,10 @@ public class Command extends BukkitCommand {
         return this.subCommands.keySet();
     }
 
+    public Set<CommandTabInformation> getCommandsTab() {
+        return this.subCommandsTab.keySet();
+    }
+
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
         Optional<Map.Entry<CommandInformation, CommandInvoker>> subCommandOptional = this.subCommands.entrySet().stream().filter(command -> command.getKey().name().contentEquals((args.length > 0) ? args[0] : "")).findFirst();
         if (subCommandOptional.isEmpty()) {
@@ -73,5 +86,25 @@ public class Command extends BukkitCommand {
             sender.sendMessage(ChatColor.RED + e.getMessage());
         }
         return true;
+    }
+
+    public @NotNull List<String> tabComplete(CommandSender sender, String commandLabel, String[] args) {
+        Optional<Map.Entry<CommandTabInformation, CommandTabInvoker>> subCommandOptional = this.subCommandsTab.entrySet().stream().filter(command -> command.getKey().name().contentEquals((args.length > 0) ? args[0] : "")).findFirst();
+        if (subCommandOptional.isEmpty()) {
+            List<String> collect = getCommands().stream().map(CommandInformation::name).collect(Collectors.toList());
+            if (args.length == 0) {
+                return collect;
+            }
+            return StringUtil.copyPartialMatches(args[0], collect, new ArrayList<>());
+        }
+        try {
+            Map.Entry<CommandTabInformation, CommandTabInvoker> subCommand = subCommandOptional.get();
+            if (args.length == 0) {
+                return subCommand.getValue().tabComplete(new io.github.znetworkw.znpcservers.commands.CommandSender(sender), args);
+            }
+            return subCommand.getValue().tabComplete(new io.github.znetworkw.znpcservers.commands.CommandSender(sender), Arrays.copyOfRange(args, 1, args.length));
+        } catch (CommandException e) {
+            return List.of();
+        }
     }
 }

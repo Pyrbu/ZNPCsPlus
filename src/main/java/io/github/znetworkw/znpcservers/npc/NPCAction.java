@@ -62,7 +62,7 @@ public class NPCAction {
                 .toString();
     }
 
-    enum ActionType {
+    public enum ActionType {
         CMD {
             public void run(ZUser user, String actionValue) {
                 user.toPlayer().performCommand(actionValue);

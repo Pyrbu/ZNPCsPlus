@@ -7,6 +7,8 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Ints;
+import io.github.znetworkw.znpcservers.commands.CommandTabInformation;
+import lol.pyr.znpcsplus.ZNPCsPlus;
 import io.github.znetworkw.znpcservers.commands.Command;
 import io.github.znetworkw.znpcservers.commands.CommandInformation;
 import io.github.znetworkw.znpcservers.commands.CommandSender;
@@ -19,19 +21,20 @@ import io.github.znetworkw.znpcservers.npc.conversation.Conversation;
 import io.github.znetworkw.znpcservers.npc.conversation.ConversationModel;
 import io.github.znetworkw.znpcservers.user.ZUser;
 import io.github.znetworkw.znpcservers.utility.location.ZLocation;
-import lol.pyr.znpcsplus.ZNPCsPlus;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Team;
+import org.bukkit.util.StringUtil;
 
 import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @SuppressWarnings({"UnstableApiUsage", "deprecation"})
 public class DefaultCommand extends Command {
@@ -95,6 +98,20 @@ public class DefaultCommand extends Command {
         Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.SUCCESS);
     }
 
+    @CommandTabInformation(name = "create", permission = "znpcs.cmd.create")
+    public List<String> createNPCTab(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            return Lists.newArrayList("<npc_id>");
+        }
+        if (args.length == 2) {
+            return partialTabCompleteOptions(args[1], Arrays.stream(NPCType.values()).map(Enum::toString).collect(Collectors.toList()));
+        }
+        if (args.length == 3) {
+            return Lists.newArrayList("<name>");
+        }
+        return Lists.newArrayList();
+    }
+
     @CommandInformation(arguments = {"id"}, name = "delete", permission = "znpcs.cmd.delete", help = {" &f&l* &e/znpcs delete <npc_id>"})
     public void deleteNPC(CommandSender sender, Map<String, String> args) {
         if (args.size() < 1) {
@@ -113,6 +130,14 @@ public class DefaultCommand extends Command {
         }
         ZNPCsPlus.deleteNPC(id);
         Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.SUCCESS);
+    }
+
+    @CommandTabInformation(name = "delete", permission = "znpcs.cmd.delete")
+    public List<String> deleteNPCTab(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            return partialTabCompleteOptions(args[0], NPC.all().stream().map(npc -> npc.getNpcPojo().getId()+"").collect(Collectors.toList()));
+        }
+        return Lists.newArrayList();
     }
 
     @CommandInformation(arguments = {}, name = "list", permission = "znpcs.cmd.list")
@@ -136,6 +161,11 @@ public class DefaultCommand extends Command {
         }
     }
 
+    @CommandTabInformation(name = "list", permission = "znpcs.cmd.list")
+    public List<String> listTab(CommandSender sender, String[] args) {
+        return Lists.newArrayList();
+    }
+
     @CommandInformation(arguments = {"id", "skin"}, name = "skin", permission = "znpcs.cmd.skin", help = {" &f&l* &e/znpcs skin <npc_id> Notch"})
     public void setSkin(CommandSender sender, Map<String, String> args) {
         if (args.size() < 1) {
@@ -155,6 +185,17 @@ public class DefaultCommand extends Command {
         String skin = args.get("skin");
         Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.FETCHING_SKIN, skin);
         DO_APPLY_SKIN.apply(sender.getPlayer(), foundNPC, args.get("skin"));
+    }
+
+    @CommandTabInformation(name = "skin", permission = "znpcs.cmd.skin")
+    public List<String> skinTab(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            return partialTabCompleteOptions(args[0], NPC.all().stream().map(npc -> npc.getNpcPojo().getId()+"").collect(Collectors.toList()));
+        }
+        if (args.length == 2) {
+            return Lists.newArrayList("player_name", "link_to_skin");
+        }
+        return Lists.newArrayList();
     }
 
     @CommandInformation(arguments = {"id", "slot"}, name = "equip", permission = "znpcs.cmd.equip", help = {" &f&l* &e/znpcs equip <npc_id> [HAND/OFFHAND/HELMET/CHESTPLATE/LEGGINGS/BOOTS]", "&8(You need to have the item in your hand)."})
@@ -180,6 +221,17 @@ public class DefaultCommand extends Command {
         Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.SUCCESS);
     }
 
+    @CommandTabInformation(name = "equip", permission = "znpcs.cmd.equip")
+    public List<String> equipTab(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            return partialTabCompleteOptions(args[0], NPC.all().stream().map(npc -> npc.getNpcPojo().getId()+"").collect(Collectors.toList()));
+        }
+        if (args.length == 2) {
+            return partialTabCompleteOptions(args[1], Arrays.stream(EquipmentSlot.values()).map(Enum::toString).collect(Collectors.toList()));
+        }
+        return Lists.newArrayList();
+    }
+
     @CommandInformation(arguments = {"id", "lines"}, name = "lines", permission = "znpcs.cmd.lines", help = {" &f&l* &e/znpcs lines <npc_id> First Second Third-Space"})
     public void changeLines(CommandSender sender, Map<String, String> args) {
         if (args.size() < 2) {
@@ -201,6 +253,14 @@ public class DefaultCommand extends Command {
         Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.SUCCESS);
     }
 
+    @CommandTabInformation(name = "lines", permission = "znpcs.cmd.lines")
+    public List<String> linesTab(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            return partialTabCompleteOptions(args[0], NPC.all().stream().map(npc -> npc.getNpcPojo().getId()+"").collect(Collectors.toList()));
+        }
+        return Lists.newArrayList();
+    }
+
     @CommandInformation(arguments = {"id"}, name = "move", permission = "znpcs.cmd.move", help = {" &f&l* &e/znpcs move <npc_id>"})
     public void move(CommandSender sender, Map<String, String> args) {
         if (args.size() < 1) {
@@ -220,6 +280,14 @@ public class DefaultCommand extends Command {
         foundNPC.getNpcPojo().setLocation(new ZLocation(sender.getPlayer().getLocation()));
         foundNPC.changeType(foundNPC.getNpcPojo().getNpcType());
         Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.SUCCESS);
+    }
+
+    @CommandTabInformation(name = "move", permission = "znpcs.cmd.move")
+    public List<String> moveTab(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            return partialTabCompleteOptions(args[0], NPC.all().stream().map(npc -> npc.getNpcPojo().getId()+"").collect(Collectors.toList()));
+        }
+        return Lists.newArrayList();
     }
 
     @CommandInformation(arguments = {"id", "type"}, name = "type", permission = "znpcs.cmd.type", help = {" &f&l* &e/znpcs type <npc_id> ZOMBIE"})
@@ -245,6 +313,17 @@ public class DefaultCommand extends Command {
         }
         foundNPC.changeType(npcType);
         Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.SUCCESS);
+    }
+
+    @CommandTabInformation(name = "type", permission = "znpcs.cmd.type")
+    public List<String> typeTab(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            return partialTabCompleteOptions(args[0], NPC.all().stream().map(npc -> npc.getNpcPojo().getId()+"").collect(Collectors.toList()));
+        }
+        if (args.length == 2) {
+            return partialTabCompleteOptions(args[1], Arrays.stream(NPCType.values()).map(Enum::toString).collect(Collectors.toList()));
+        }
+        return Lists.newArrayList();
     }
 
     @CommandInformation(arguments = {"add", "remove", "cooldown", "list"}, name = "action", isMultiple = true, permission = "znpcs.cmd.action", help = {" &f&l* &e/znpcs action add <npc_id> SERVER survival", " &f&l* &e/znpcs action add <npc_id> CMD spawn", " &f&l* &e/znpcs action remove <npc_id> <action_id>", " &f&l* &e/znpcs action cooldown <npc_id> <action_id> <delay_in_seconds>", " &f&l* &e/znpcs action list <npc_id>"})
@@ -341,6 +420,78 @@ public class DefaultCommand extends Command {
         }
     }
 
+    @CommandTabInformation(name = "action", permission = "znpcs.cmd.action")
+    public List<String> actionTabComplete(CommandSender sender, String[] args) {
+        if (args.length == 0) {
+            return Lists.newArrayList("add", "remove", "cooldown", "list");
+        }
+        if (args.length == 1) {
+            return partialTabCompleteOptions(args[0], Lists.newArrayList("add", "remove", "cooldown", "list"));
+        }
+
+        switch (args[0].toLowerCase()) {
+            default -> {
+                return Lists.newArrayList();
+            }
+            case "add" -> {
+                if (args.length == 2) {
+                    return Lists.newArrayList("<npc_id>");
+                }
+                if (args.length == 3) {
+                    return partialTabCompleteOptions(args[2], Arrays.stream(NPCAction.ActionType.values()).map(Enum::toString).collect(Collectors.toList()));
+                }
+                if (args.length == 4) {
+                    NPCAction.ActionType actionType = NPCAction.ActionType.valueOf(args[2].toUpperCase());
+                    switch (actionType) {
+                        default -> {
+                            return Lists.newArrayList();
+                        }
+                        case MESSAGE -> {
+                            return Lists.newArrayList("<message>");
+                        }
+                        case CMD -> {
+                            return Lists.newArrayList("<command>");
+                        }
+                        case CONSOLE -> {
+                            return Lists.newArrayList("<console command>");
+                        }
+                        case CHAT -> {
+                            return Lists.newArrayList("<chat>");
+                        }
+                        case SERVER -> {
+                            return Lists.newArrayList("<server>");
+                        }
+                    }
+                }
+            }
+            case "remove" -> {
+                if (args.length == 2) {
+                    return Lists.newArrayList("<npc_id>");
+                }
+                if (args.length == 3) {
+                    return Lists.newArrayList("<action_id>");
+                }
+            }
+            case "cooldown" -> {
+                if (args.length == 2) {
+                    return Lists.newArrayList("<npc_id>");
+                }
+                if (args.length == 3) {
+                    return Lists.newArrayList("<action_id>");
+                }
+                if (args.length == 4) {
+                    return Lists.newArrayList("<delay_in_seconds>");
+                }
+            }
+            case "list" -> {
+                if (args.length == 2) {
+                    return Lists.newArrayList("<npc_id>");
+                }
+            }
+        }
+        return Lists.newArrayList();
+    }
+
     @CommandInformation(arguments = {"id", "type", "value"}, name = "toggle", permission = "znpcs.cmd.toggle", help = {" &f&l* &e/znpcs toggle <npc_id> look"})
     public void toggle(CommandSender sender, Map<String, String> args) {
         if (args.size() < 2) {
@@ -364,6 +515,23 @@ public class DefaultCommand extends Command {
             npcFunction.doRunFunction(foundNPC, new FunctionContext.DefaultContext(foundNPC));
         }
         Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.SUCCESS);
+    }
+
+    @CommandTabInformation(name = "toggle", permission = "znpcs.cmd.toggle")
+    public List<String> toggleTabComplete(CommandSender sender, String[] args) {
+        if (args.length == 0) {
+            return Lists.newArrayList("<npc_id>");
+        }
+        if (args.length == 1) {
+            return partialTabCompleteOptions(args[0], Lists.newArrayList("look", "glow"));
+        }
+        if (args.length == 2) {
+            NPCFunction npcFunction = FunctionFactory.findFunctionForName(args[0]);
+            if (npcFunction.getName().equalsIgnoreCase("glow")) {
+                return partialTabCompleteOptions(args[1], Arrays.stream(org.bukkit.ChatColor.values()).filter(org.bukkit.ChatColor::isColor).map(Enum::toString).collect(Collectors.toList()));
+            }
+        }
+        return Lists.newArrayList();
     }
 
     @CommandInformation(arguments = {"id", "customizeValues"}, name = "customize", permission = "znpcs.cmd.customize", help = {" &f&l* &e/znpcs customize <npc_id> <customization>"})
@@ -411,6 +579,34 @@ public class DefaultCommand extends Command {
             for (Map.Entry<String, Method> method : npcType.getCustomizationLoader().getMethods().entrySet())
                 sender.sendMessage(ChatColor.YELLOW + method.getKey() + " " + SPACE_JOINER.join(method.getValue().getParameterTypes()));
         }
+    }
+
+    @CommandTabInformation(name = "customize", permission = "znpcs.cmd.customize")
+    public List<String> customizeTabComplete(CommandSender sender, String[] args) {
+        if (args.length == 0) {
+            return Lists.newArrayList("<npc_id>");
+        }
+        if (args.length == 1) {
+            return partialTabCompleteOptions(args[0], NPC.all().stream().map(npc -> npc.getNpcPojo().getId()+"").collect(Collectors.toList()));
+        }
+        if (args.length == 2) {
+            NPC foundNPC = NPC.find(Integer.parseInt(args[1]));
+            if (foundNPC == null)
+                return Lists.newArrayList();
+            NPCType npcType = foundNPC.getNpcPojo().getNpcType();
+            return partialTabCompleteOptions(args[1], npcType.getCustomizationLoader().getMethods().keySet().stream().toList());
+        }
+        if (args.length == 3) {
+            NPC foundNPC = NPC.find(Integer.parseInt(args[1]));
+            if (foundNPC == null)
+                return Lists.newArrayList();
+            NPCType npcType = foundNPC.getNpcPojo().getNpcType();
+            if (npcType.getCustomizationLoader().contains(args[2])) {
+                Method method = npcType.getCustomizationLoader().getMethods().get(args[2]);
+                return partialTabCompleteOptions(args[2], Arrays.stream(method.getParameterTypes()).map(Class::getSimpleName).collect(Collectors.toList()));
+            }
+        }
+        return Lists.newArrayList();
     }
 
     @CommandInformation(arguments = {"set", "create", "exit", "path", "list"}, name = "path", isMultiple = true, permission = "znpcs.cmd.path", help = {" &f&l* &e/znpcs path create name", " &f&l* &e/znpcs path set <npc_id> name"})
@@ -468,6 +664,25 @@ public class DefaultCommand extends Command {
         }
     }
 
+    @CommandTabInformation(name = "path" , permission = "znpcs.cmd.path")
+    public List<String> pathTabComplete(CommandSender sender, String[] args) {
+        if (args.length == 0) {
+            return Lists.newArrayList("set", "create", "exit", "list");
+        }
+        if (args.length == 1) {
+            return partialTabCompleteOptions(args[0], Lists.newArrayList("set", "create", "exit", "list"));
+        }
+        if (args.length == 2) {
+            if (args[0].equalsIgnoreCase("set")) {
+                return partialTabCompleteOptions(args[1], NPC.all().stream().map(npc -> npc.getNpcPojo().getId()+"").collect(Collectors.toList()));
+            }
+            if (args[0].equalsIgnoreCase("create")) {
+                return Lists.newArrayList("<name>");
+            }
+        }
+        return Lists.newArrayList();
+    }
+
     @CommandInformation(arguments = {"id"}, name = "teleport", permission = "znpcs.cmd.teleport", help = {" &f&l* &e/znpcs teleport <npc_id>"})
     public void teleport(CommandSender sender, Map<String, String> args) {
         if (args.size() < 1) {
@@ -485,6 +700,17 @@ public class DefaultCommand extends Command {
             return;
         }
         sender.getPlayer().teleport(foundNPC.getLocation());
+    }
+
+    @CommandTabInformation(name = "teleport" , permission = "znpcs.cmd.teleport")
+    public List<String> teleportTabComplete(CommandSender sender, String[] args) {
+        if (args.length == 0) {
+            return NPC.all().stream().map(npc -> npc.getNpcPojo().getId()+"").collect(Collectors.toList());
+        }
+        if (args.length == 1) {
+            return partialTabCompleteOptions(args[0], NPC.all().stream().map(npc -> npc.getNpcPojo().getId()+"").collect(Collectors.toList()));
+        }
+        return Lists.newArrayList();
     }
 
     @CommandInformation(arguments = {"id", "height"}, name = "height", permission = "znpcs.cmd.height", help = {" &f&l* &e/znpcs height <npc_id> 2", "&8Set a greater or lesser distance of a hologram from the NPC."})
@@ -511,6 +737,20 @@ public class DefaultCommand extends Command {
         foundNPC.getNpcPojo().setHologramHeight(givenHeight);
         foundNPC.getHologram().createHologram();
         Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.SUCCESS);
+    }
+
+    @CommandTabInformation(name = "height" , permission = "znpcs.cmd.height")
+    public List<String> heightTabComplete(CommandSender sender, String[] args) {
+        if (args.length == 0) {
+            return NPC.all().stream().map(npc -> npc.getNpcPojo().getId()+"").collect(Collectors.toList());
+        }
+        if (args.length == 1) {
+            return partialTabCompleteOptions(args[0], NPC.all().stream().map(npc -> npc.getNpcPojo().getId()+"").collect(Collectors.toList()));
+        }
+        if (args.length == 2) {
+            return Lists.newArrayList("<height>");
+        }
+        return Lists.newArrayList();
     }
 
     @CommandInformation(arguments = {"create", "remove", "gui", "set"}, name = "conversation", isMultiple = true, permission = "znpcs.cmd.conversation", help = {" &f&l* &e/znpcs conversation create first", " &f&l* &e/znpcs conversation remove first", " &f&l* &e/znpcs conversation set <npc_id> first [CLICK/RADIUS]", " &f&l* &e/znpcs conversation gui &8(&7Opens a GUI to manage conversations&8)", "&8RADIUS: &7Activates when the player is near the NPC", "&8CLICK: &7Activates when the player interacts with the NPC"})
@@ -565,6 +805,46 @@ public class DefaultCommand extends Command {
             }
             Configuration.MESSAGES.sendMessage(sender.getCommandSender(), ConfigurationValue.SUCCESS);
         }
+    }
+
+    @CommandTabInformation(name = "conversation" , permission = "znpcs.cmd.conversation")
+    public List<String> conversationTabComplete(CommandSender sender, String[] args) {
+        if (args.length == 0) {
+            return Lists.newArrayList("create", "remove", "gui", "set");
+        }
+        if (args.length == 1) {
+            return partialTabCompleteOptions(args[0], Lists.newArrayList("create", "remove", "gui", "set"));
+        }
+        if (args.length == 2) {
+            if (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("set")) {
+                Integer id = Ints.tryParse(args[1]);
+                if (id == null) {
+                    return List.of();
+                }
+                NPC npc = NPC.find(id);
+                if (npc == null) {
+                    return List.of();
+                }
+
+                return Lists.newArrayList(npc.getNpcPojo().getConversation() == null ? "null" : npc.getNpcPojo().getConversation().getConversationName());
+            }
+        }
+        if (args.length == 3) {
+            if (args[0].equalsIgnoreCase("set")) {
+                return Lists.newArrayList("CLICK", "RADIUS");
+            }
+        }
+        return Lists.newArrayList();
+    }
+
+    private List<String> partialTabCompleteOptions(String arg, List<String> completions) {
+        if (arg.isEmpty()) {
+            return completions;
+        }
+        List<String> result = new ArrayList<>();
+        StringUtil.copyPartialMatches(arg, completions, result);
+        Collections.sort(result);
+        return result;
     }
 
     interface SkinFunction {
