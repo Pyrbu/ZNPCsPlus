@@ -1,17 +1,17 @@
 package lol.pyr.znpcsplus.tasks;
 
+import lol.pyr.znpcsplus.ZNPCsPlus;
 import lol.pyr.znpcsplus.config.Configs;
 import lol.pyr.znpcsplus.npc.NPC;
 import lol.pyr.znpcsplus.npc.NPCRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.NumberConversions;
 
 public class NPCVisibilityTask extends BukkitRunnable {
-    public NPCVisibilityTask(Plugin plugin) {
-        runTaskTimerAsynchronously(plugin, 60L, 10L);
+    public NPCVisibilityTask() {
+        ZNPCsPlus.SCHEDULER.runDelayedTimerAsync(this, 60L, 10L);
     }
 
     public void run() {

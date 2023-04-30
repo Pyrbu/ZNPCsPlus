@@ -124,9 +124,9 @@ public class ZNPCsPlus extends JavaPlugin {
         Bukkit.getOnlinePlayers().forEach(User::get);
 
         log(ChatColor.WHITE + " * Starting tasks...");
-        new NPCVisibilityTask(this);
+        new NPCVisibilityTask();
         new InventoryListener(this);
-        new SkinCacheCleanTask(this);
+        new SkinCacheCleanTask();
         new UserListener(this);
         if (Configs.config().checkForUpdates()) new UpdateNotificationListener(this, new UpdateChecker(this));
 
