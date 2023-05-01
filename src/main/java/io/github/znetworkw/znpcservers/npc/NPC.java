@@ -328,7 +328,7 @@ public class NPC {
                 .filter(entry -> Objects.nonNull(entry.getValue()))
                 .map(entry -> new Equipment(entry.getKey(), SpigotConversionUtil.fromBukkitItemStack(entry.getValue())))
                 .toList();
-
+        if (equipment.size() == 0) return;
         if (Utils.versionNewer(16)) PacketEvents.getAPI().getPlayerManager().sendPacket(zUser.toPlayer(), new WrapperPlayServerEntityEquipment(entityID, equipment));
         else for (Equipment e : equipment) PacketEvents.getAPI().getPlayerManager().sendPacket(zUser.toPlayer(), new WrapperPlayServerEntityEquipment(entityID, List.of(e)));
     }
