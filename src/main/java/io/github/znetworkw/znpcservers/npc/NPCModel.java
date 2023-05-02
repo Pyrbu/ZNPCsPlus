@@ -122,7 +122,7 @@ public class NPCModel {
     }
 
     public NPCModel withGlowName(String glowName) {
-        setGlowName(this.pathName);
+        setGlowName(glowName);
         return this;
     }
 
