@@ -18,7 +18,7 @@ allprojects {
     apply plugin: "java"
 
     group "lol.pyr"
-    version "1.0.5"
+    version "2.0.0"
 
     compileJava {
         options.release.set(17)
@@ -37,6 +37,9 @@ allprojects {
         }
         maven {
             url "https://repo.extendedclip.com/content/repositories/placeholderapi/"
+        }
+        maven {
+            url "https://repo.pyr.lol/releases"
         }
         maven {
             url "https://jitpack.io/"

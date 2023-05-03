@@ -18,6 +18,8 @@ dependencies {
     implementation "com.github.retrooper.packetevents:spigot:2.0.0-SNAPSHOT"
     implementation "space.arim.dazzleconf:dazzleconf-ext-snakeyaml:1.2.1"
 
+    implementation "lol.pyr:director-adventure:2.0.1"
+
     compileOnly project(":api")
     compileOnly project(":folia")
 }
@@ -37,5 +39,7 @@ shadowJar {
 
     relocate "org.yaml.snakeyaml", "lol.pyr.znpcsplus.lib.snakeyaml"
     relocate "space.arim.dazzleconf", "lol.pyr.znpcsplus.lib.dazzleconf"
+
+    relocate "lol.pyr.director", "lol.pyr.znpcsplus.lib.command"
     minimize()
 }

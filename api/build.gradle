@@ -12,10 +12,11 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
+            artifactId = "znpcsplus-api"
 
             pom {
-                name.set("znpcsplus")
-                description.set("A fork of the ZNPCs plugin")
+                name.set("znpcsplus-api")
+                description.set("The API for the ZNPCsPlus plugin")
                 url.set("https://github.com/Pyrbu/ZNPCsPlus")
             }
         }

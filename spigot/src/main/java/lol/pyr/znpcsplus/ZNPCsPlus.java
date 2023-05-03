@@ -5,6 +5,7 @@ import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import io.github.znetworkw.znpcservers.utility.BungeeUtils;
+import lol.pyr.director.adventure.command.CommandManager;
 import lol.pyr.znpcsplus.api.ZApiProvider;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.npc.NPCType;
@@ -173,5 +174,9 @@ public class ZNPCsPlus extends JavaPlugin {
         Bukkit.getOnlinePlayers().forEach(User::remove);
         ADVENTURE.close();
         ADVENTURE = null;
+    }
+
+    private void registerCommands() {
+        CommandManager manager = new CommandManager(this, ADVENTURE, context -> {});
     }
 }
