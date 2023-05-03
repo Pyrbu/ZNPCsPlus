@@ -4,7 +4,6 @@ import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
-import io.github.znetworkw.znpcservers.listeners.InventoryListener;
 import io.github.znetworkw.znpcservers.utility.BungeeUtils;
 import lol.pyr.znpcsplus.api.ZApiProvider;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
@@ -125,7 +124,6 @@ public class ZNPCsPlus extends JavaPlugin {
 
         log(ChatColor.WHITE + " * Starting tasks...");
         new NPCVisibilityTask();
-        new InventoryListener(this);
         new SkinCacheCleanTask();
         new UserListener(this);
         if (Configs.config().checkForUpdates()) new UpdateNotificationListener(this, new UpdateChecker(this));
