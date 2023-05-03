@@ -1,4 +1,4 @@
-package io.github.znetworkw.znpcservers.utility;
+package lol.pyr.znpcsplus.util;
 
 import org.bukkit.Bukkit;
 

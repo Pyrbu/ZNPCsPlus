@@ -4,7 +4,7 @@ import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
-import io.github.znetworkw.znpcservers.utility.BungeeUtils;
+import lol.pyr.znpcsplus.util.BungeeUtil;
 import lol.pyr.director.adventure.command.CommandManager;
 import lol.pyr.znpcsplus.api.ZApiProvider;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
@@ -50,7 +50,7 @@ public class ZNPCsPlus extends JavaPlugin {
     public static File PATH_FOLDER;
     private static final int PLUGIN_ID = 18244;
     public static TaskScheduler SCHEDULER;
-    public static BungeeUtils BUNGEE_UTILS;
+    public static BungeeUtil BUNGEE_UTILS;
     public static BukkitAudiences ADVENTURE;
     public static boolean PLACEHOLDERS_SUPPORTED;
 
@@ -120,7 +120,7 @@ public class ZNPCsPlus extends JavaPlugin {
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         new Metrics(this, PLUGIN_ID);
         SCHEDULER = FoliaUtil.isFolia() ? new FoliaScheduler(this) : new SpigotScheduler(this);
-        BUNGEE_UTILS = new BungeeUtils(this);
+        BUNGEE_UTILS = new BungeeUtil(this);
         Bukkit.getOnlinePlayers().forEach(User::get);
 
         log(ChatColor.WHITE + " * Starting tasks...");

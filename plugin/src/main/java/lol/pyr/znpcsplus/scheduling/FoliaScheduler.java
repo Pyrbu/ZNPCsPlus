@@ -1,6 +1,6 @@
 package lol.pyr.znpcsplus.scheduling;
 
-import io.github.znetworkw.znpcservers.reflection.Reflections;
+import lol.pyr.znpcsplus.reflection.Reflections;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.InvocationTargetException;

@@ -12,5 +12,5 @@ softdepend:
   - ViaBackwards
   - ViaRewind
   - Geyser-Spigot
-authors: [gonalez (g0b#3830), Pyr (Pyr#6969)]
+authors: [Pyr (Pyr#6969)]
 folia-supported: true

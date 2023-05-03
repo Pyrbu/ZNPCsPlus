@@ -1,8 +1,8 @@
-package io.github.znetworkw.znpcservers.reflection.types;
+package lol.pyr.znpcsplus.reflection.types;
 
 import com.google.common.collect.ImmutableList;
-import io.github.znetworkw.znpcservers.reflection.ReflectionBuilder;
-import io.github.znetworkw.znpcservers.reflection.ReflectionLazyLoader;
+import lol.pyr.znpcsplus.reflection.ReflectionBuilder;
+import lol.pyr.znpcsplus.reflection.ReflectionLazyLoader;
 
 import java.lang.reflect.Method;
 import java.util.*;

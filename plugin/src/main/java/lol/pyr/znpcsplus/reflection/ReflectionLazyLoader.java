@@ -1,6 +1,6 @@
-package io.github.znetworkw.znpcservers.reflection;
+package lol.pyr.znpcsplus.reflection;
 
-import io.github.znetworkw.znpcservers.utility.VersionUtil;
+import lol.pyr.znpcsplus.util.VersionUtil;
 import lol.pyr.znpcsplus.ZNPCsPlus;
 
 import java.util.ArrayList;

@@ -3,7 +3,7 @@ package lol.pyr.znpcsplus.skin.cache;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
-import io.github.znetworkw.znpcservers.reflection.Reflections;
+import lol.pyr.znpcsplus.reflection.Reflections;
 import lol.pyr.znpcsplus.skin.Skin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

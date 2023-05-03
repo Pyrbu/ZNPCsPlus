@@ -1,7 +1,7 @@
-package io.github.znetworkw.znpcservers.reflection;
+package lol.pyr.znpcsplus.reflection;
 
 import com.google.common.collect.ImmutableList;
-import io.github.znetworkw.znpcservers.utility.VersionUtil;
+import lol.pyr.znpcsplus.util.VersionUtil;
 
 import java.util.ArrayList;
 

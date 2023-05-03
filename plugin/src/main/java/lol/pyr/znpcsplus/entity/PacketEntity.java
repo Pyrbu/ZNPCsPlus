@@ -2,8 +2,8 @@ package lol.pyr.znpcsplus.entity;
 
 import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
-import io.github.znetworkw.znpcservers.reflection.Reflections;
-import io.github.znetworkw.znpcservers.utility.VersionUtil;
+import lol.pyr.znpcsplus.reflection.Reflections;
+import lol.pyr.znpcsplus.util.VersionUtil;
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.util.ZLocation;

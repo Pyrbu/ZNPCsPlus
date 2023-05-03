@@ -1,7 +1,7 @@
-package io.github.znetworkw.znpcservers.reflection.types;
+package lol.pyr.znpcsplus.reflection.types;
 
-import io.github.znetworkw.znpcservers.reflection.ReflectionLazyLoader;
-import io.github.znetworkw.znpcservers.reflection.ReflectionBuilder;
+import lol.pyr.znpcsplus.reflection.ReflectionLazyLoader;
+import lol.pyr.znpcsplus.reflection.ReflectionBuilder;
 
 import java.lang.reflect.Field;
 import java.util.List;

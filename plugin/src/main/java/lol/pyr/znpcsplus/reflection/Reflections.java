@@ -1,10 +1,10 @@
-package io.github.znetworkw.znpcservers.reflection;
+package lol.pyr.znpcsplus.reflection;
 
 import com.mojang.authlib.GameProfile;
-import io.github.znetworkw.znpcservers.reflection.types.ClassReflection;
-import io.github.znetworkw.znpcservers.reflection.types.FieldReflection;
-import io.github.znetworkw.znpcservers.reflection.types.MethodReflection;
-import io.github.znetworkw.znpcservers.utility.VersionUtil;
+import lol.pyr.znpcsplus.reflection.types.ClassReflection;
+import lol.pyr.znpcsplus.reflection.types.FieldReflection;
+import lol.pyr.znpcsplus.reflection.types.MethodReflection;
+import lol.pyr.znpcsplus.util.VersionUtil;
 import lol.pyr.znpcsplus.util.FoliaUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;

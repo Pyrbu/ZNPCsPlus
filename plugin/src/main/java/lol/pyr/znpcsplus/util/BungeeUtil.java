@@ -1,4 +1,4 @@
-package io.github.znetworkw.znpcservers.utility;
+package lol.pyr.znpcsplus.util;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -7,10 +7,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class BungeeUtils {
+public class BungeeUtil {
     private final Plugin plugin;
 
-    public BungeeUtils(Plugin plugin) {
+    public BungeeUtil(Plugin plugin) {
         this.plugin = plugin;
     }
 
