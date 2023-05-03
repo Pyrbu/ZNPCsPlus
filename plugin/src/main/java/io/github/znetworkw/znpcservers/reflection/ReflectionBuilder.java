@@ -1,7 +1,7 @@
 package io.github.znetworkw.znpcservers.reflection;
 
 import com.google.common.collect.ImmutableList;
-import io.github.znetworkw.znpcservers.utility.Utils;
+import io.github.znetworkw.znpcservers.utility.VersionUtil;
 
 import java.util.ArrayList;
 
@@ -32,7 +32,7 @@ public class ReflectionBuilder {
     }
 
     public ReflectionBuilder withClassName(String className) {
-        this.className.add(ReflectionPackage.join(reflectionPackage, Utils.versionNewer(17) ? additionalData : "", className));
+        this.className.add(ReflectionPackage.join(reflectionPackage, VersionUtil.isNewerThan(17) ? additionalData : "", className));
         return this;
     }
 

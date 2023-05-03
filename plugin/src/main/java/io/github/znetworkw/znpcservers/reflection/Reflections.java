@@ -4,7 +4,7 @@ import com.mojang.authlib.GameProfile;
 import io.github.znetworkw.znpcservers.reflection.types.ClassReflection;
 import io.github.znetworkw.znpcservers.reflection.types.FieldReflection;
 import io.github.znetworkw.znpcservers.reflection.types.MethodReflection;
-import io.github.znetworkw.znpcservers.utility.Utils;
+import io.github.znetworkw.znpcservers.utility.VersionUtil;
 import lol.pyr.znpcsplus.util.FoliaUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -42,7 +42,7 @@ public final class Reflections {
             new ReflectionBuilder(ReflectionPackage.ENTITY)
                     .withClassName(ENTITY_CLASS)
                     .withFieldName("entityCount")
-                    .setStrict(!Utils.versionNewer(14))).staticValueModifier(int.class);
+                    .setStrict(!VersionUtil.isNewerThan(14))).staticValueModifier(int.class);
 
     public static final ReflectionLazyLoader<AtomicInteger> ATOMIC_ENTITY_ID_FIELD = new FieldReflection(
             new ReflectionBuilder(ReflectionPackage.ENTITY)
@@ -51,7 +51,7 @@ public final class Reflections {
                     .withFieldName("d")
                     .withFieldName("c")
                     .withExpectResult(AtomicInteger.class)
-                    .setStrict(Utils.versionNewer(14))).staticValueLoader(AtomicInteger.class);
+                    .setStrict(VersionUtil.isNewerThan(14))).staticValueLoader(AtomicInteger.class);
 
     public static final Class<?> ASYNC_SCHEDULER_CLASS = new ClassReflection(
             new ReflectionBuilder("io.papermc.paper.threadedregions.scheduler")

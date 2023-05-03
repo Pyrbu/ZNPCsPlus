@@ -3,7 +3,7 @@ package lol.pyr.znpcsplus.entity;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import io.github.znetworkw.znpcservers.reflection.Reflections;
-import io.github.znetworkw.znpcservers.utility.Utils;
+import io.github.znetworkw.znpcservers.utility.VersionUtil;
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.util.ZLocation;
@@ -63,7 +63,7 @@ public class PacketEntity {
     }
 
     private static int reserveEntityID() {
-        if (Utils.versionNewer(14)) return Reflections.ATOMIC_ENTITY_ID_FIELD.get().incrementAndGet();
+        if (VersionUtil.isNewerThan(14)) return Reflections.ATOMIC_ENTITY_ID_FIELD.get().incrementAndGet();
         else {
             int id = Reflections.ENTITY_ID_MODIFIER.get();
             Reflections.ENTITY_ID_MODIFIER.set(id + 1);

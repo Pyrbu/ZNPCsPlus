@@ -1,6 +1,6 @@
 package io.github.znetworkw.znpcservers.reflection;
 
-import io.github.znetworkw.znpcservers.utility.Utils;
+import io.github.znetworkw.znpcservers.utility.VersionUtil;
 import lol.pyr.znpcsplus.ZNPCsPlus;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public abstract class ReflectionLazyLoader<T> {
                 warn(getClass().getSimpleName() + " failed!");
                 warn("Class Names: " + possibleClassNames);
                 warn("Reflection Type: " + getClass().getCanonicalName());
-                warn("Bukkit Version: " + Utils.BUKKIT_VERSION + " (" + Utils.getBukkitPackage() + ")");
+                warn("Bukkit Version: " + VersionUtil.BUKKIT_VERSION + " (" + VersionUtil.getBukkitPackage() + ")");
                 printDebugInfo(this::warn);
                 warn("Exception:");
                 throwable.printStackTrace();

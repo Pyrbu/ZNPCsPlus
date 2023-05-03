@@ -1,9 +1,8 @@
 package io.github.znetworkw.znpcservers.utility;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 
-public final class Utils {
+public final class VersionUtil {
     public static final int BUKKIT_VERSION;
 
     static {
@@ -14,7 +13,7 @@ public final class Utils {
         BUKKIT_VERSION = version;
     }
 
-    public static boolean versionNewer(int version) {
+    public static boolean isNewerThan(int version) {
         return (BUKKIT_VERSION >= version);
     }
 
@@ -25,9 +24,5 @@ public final class Utils {
     public static String getFormattedBukkitPackage() {
         String version = getBukkitPackage().replace("v", "").replace("R", "");
         return version.substring(2, version.length() - 2);
-    }
-
-    public static String toColor(String string) {
-        return ChatColor.translateAlternateColorCodes('&', string);
     }
 }
