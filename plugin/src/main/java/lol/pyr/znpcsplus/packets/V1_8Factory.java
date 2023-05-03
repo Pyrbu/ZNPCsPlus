@@ -51,12 +51,13 @@ public class V1_8Factory implements PacketFactory {
                 new WrapperPlayServerSpawnEntity(entity.getEntityId(), Optional.of(entity.getUuid()), entity.getType(), location.toVector3d(),
                         location.getPitch(), location.getYaw(), location.getYaw(), 0, Optional.empty()));
         sendAllMetadata(player, entity, properties);
+        createTeam(player, entity, properties);
     }
 
     @Override
     public void destroyEntity(Player player, PacketEntity entity, PropertyHolder properties) {
         sendPacket(player, new WrapperPlayServerDestroyEntities(entity.getEntityId()));
-        if (entity.getType() == EntityTypes.PLAYER) removeTeam(player, entity);
+        removeTeam(player, entity);
     }
 
     @Override

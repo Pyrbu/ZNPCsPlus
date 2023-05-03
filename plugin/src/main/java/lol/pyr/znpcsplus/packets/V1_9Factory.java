@@ -23,16 +23,4 @@ public class V1_9Factory extends V1_8Factory {
         if (properties.hasProperty(EntityProperty.NAME)) data.addAll(MetadataFactory.get().name(properties.getProperty(EntityProperty.NAME)));
         sendMetadata(player, entity, data);
     }
-
-    @Override
-    public void spawnEntity(Player player, PacketEntity entity, PropertyHolder properties) {
-        super.spawnEntity(player, entity, properties);
-        if (properties.hasProperty(EntityProperty.GLOW)) createTeam(player, entity, properties);
-    }
-
-    @Override
-    public void destroyEntity(Player player, PacketEntity entity, PropertyHolder properties) {
-        super.destroyEntity(player, entity, properties);
-        if (entity.getType() != EntityTypes.PLAYER && properties.hasProperty(EntityProperty.GLOW)) removeTeam(player, entity);
-    }
 }
