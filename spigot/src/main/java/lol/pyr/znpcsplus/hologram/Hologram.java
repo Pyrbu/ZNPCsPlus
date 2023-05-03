@@ -1,14 +1,14 @@
 package lol.pyr.znpcsplus.hologram;
 
 import lol.pyr.znpcsplus.config.Configs;
-import lol.pyr.znpcsplus.util.ZLocation;
 import lol.pyr.znpcsplus.util.Viewable;
+import lol.pyr.znpcsplus.util.ZLocation;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 public class Hologram extends Viewable implements lol.pyr.znpcsplus.api.hologram.Hologram {
     private ZLocation location;
@@ -70,7 +70,7 @@ public class Hologram extends Viewable implements lol.pyr.znpcsplus.api.hologram
         final double lineSpacing = Configs.config().lineSpacing();
         double height = location.getY() + lines.size() * lineSpacing;
         for (HologramLine line : lines) {
-            line.setLocation(location.withY(height), line == newLine ? Set.of() : getViewers());
+            line.setLocation(location.withY(height), line == newLine ? Collections.emptySet() : getViewers());
             height -= lineSpacing;
         }
     }

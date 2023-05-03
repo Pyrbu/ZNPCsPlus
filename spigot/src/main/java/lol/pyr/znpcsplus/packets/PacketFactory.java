@@ -43,7 +43,7 @@ public interface PacketFactory {
         throw new RuntimeException("Unsupported version!");
     }
 
-    private static Map<ServerVersion, LazyLoader<? extends PacketFactory>> buildFactoryMap() {
+    static Map<ServerVersion, LazyLoader<? extends PacketFactory>> buildFactoryMap() {
         HashMap<ServerVersion, LazyLoader<? extends PacketFactory>> map = new HashMap<>();
         map.put(ServerVersion.V_1_8, LazyLoader.of(V1_8Factory::new));
         map.put(ServerVersion.V_1_9, LazyLoader.of(V1_9Factory::new));

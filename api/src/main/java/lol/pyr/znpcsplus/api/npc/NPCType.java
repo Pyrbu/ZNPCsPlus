@@ -86,7 +86,7 @@ public class NPCType {
         }
 
         public Builder addProperties(EntityProperty<?>... properties) {
-            allowedProperties.addAll(List.of(properties));
+            allowedProperties.addAll(Arrays.asList(properties));
             return this;
         }
 
@@ -108,7 +108,7 @@ public class NPCType {
                 if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9))
                     allowedProperties.add(EntityProperty.GLOW);
             }
-            return new NPCType(name, type, hologramOffset, Set.copyOf(allowedProperties));
+            return new NPCType(name, type, hologramOffset, new HashSet<>(allowedProperties));
         }
     }
 }

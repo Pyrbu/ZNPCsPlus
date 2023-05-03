@@ -1,27 +1,11 @@
-plugins {
-    id "java"
-    id "com.github.johnrengelman.shadow" version "8.1.1"
-    id "xyz.jpenilla.run-paper" version "2.0.1"
-}
-
-dependencies {
-    implementation project(path: ":spigot", configuration: "shadow")
-    implementation project(":api")
-    implementation project(":folia")
-}
-
-runServer {
-    minecraftVersion "1.19.4"
-}
-
-allprojects {
+subprojects {
     apply plugin: "java"
 
     group "lol.pyr"
     version "2.0.0"
 
     compileJava {
-        options.release.set(17)
+        options.release.set(8)
     }
 
     repositories {
@@ -31,6 +15,9 @@ allprojects {
         }
         maven {
             url "https://repo.codemc.io/repository/maven-snapshots/"
+        }
+        maven {
+            url "https://libraries.minecraft.net"
         }
         maven {
             url "https://repo.papermc.io/repository/maven-public/"
@@ -46,6 +33,3 @@ allprojects {
         }
     }
 }
-
-tasks.assemble.dependsOn shadowJar
-tasks.compileJava.dependsOn clean

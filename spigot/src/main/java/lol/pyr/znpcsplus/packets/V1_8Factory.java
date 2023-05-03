@@ -22,6 +22,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -33,7 +34,7 @@ public class V1_8Factory implements PacketFactory {
             createTeam(player, entity, properties);
             ZLocation location = entity.getLocation();
             sendPacket(player, new WrapperPlayServerSpawnPlayer(entity.getEntityId(),
-                    entity.getUuid(), location.toVector3d(), location.getYaw(), location.getPitch(), List.of()));
+                    entity.getUuid(), location.toVector3d(), location.getYaw(), location.getPitch(), Collections.emptyList()));
             sendAllMetadata(player, entity, properties);
             ZNPCsPlus.SCHEDULER.runLaterAsync(() -> removeTabPlayer(player, entity), 60);
         });
@@ -46,7 +47,7 @@ public class V1_8Factory implements PacketFactory {
         ClientVersion clientVersion = PacketEvents.getAPI().getServerManager().getVersion().toClientVersion();
         sendPacket(player, type.getLegacyId(clientVersion) == -1 ?
                 new WrapperPlayServerSpawnLivingEntity(entity.getEntityId(), entity.getUuid(), type, location.toVector3d(),
-                        location.getYaw(), location.getPitch(), location.getPitch(), new Vector3d(), List.of()) :
+                        location.getYaw(), location.getPitch(), location.getPitch(), new Vector3d(), Collections.emptyList()) :
                 new WrapperPlayServerSpawnEntity(entity.getEntityId(), Optional.of(entity.getUuid()), entity.getType(), location.toVector3d(),
                         location.getPitch(), location.getYaw(), location.getYaw(), 0, Optional.empty()));
         sendAllMetadata(player, entity, properties);

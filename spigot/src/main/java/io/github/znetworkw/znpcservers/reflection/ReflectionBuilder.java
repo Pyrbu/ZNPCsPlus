@@ -15,6 +15,11 @@ public class ReflectionBuilder {
     private Class<?> expectType;
     private boolean strict = true;
 
+    public ReflectionBuilder(Class<?> clazz) {
+        this("");
+        withClassName(clazz);
+    }
+
     public ReflectionBuilder(String reflectionPackage) {
         this(reflectionPackage, "", "", null);
     }

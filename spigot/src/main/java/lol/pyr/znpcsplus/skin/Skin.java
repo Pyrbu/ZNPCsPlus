@@ -5,9 +5,11 @@ import com.github.retrooper.packetevents.protocol.player.UserProfile;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.properties.PropertyMap;
+import lol.pyr.znpcsplus.util.list.ListUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Skin {
     private final long timestamp = System.currentTimeMillis();
@@ -18,13 +20,13 @@ public class Skin {
     }
 
     public Skin(TextureProperty... properties) {
-        this.properties.addAll(List.of(properties));
+        this.properties.addAll(ListUtil.immutableList(properties));
     }
 
     public Skin(PropertyMap properties) {
         this.properties.addAll(properties.values().stream()
                 .map(property -> new TextureProperty(property.getName(), property.getValue(), property.getSignature()))
-                .toList());
+                .collect(Collectors.toList()));
     }
 
     public Skin(JsonObject obj) {

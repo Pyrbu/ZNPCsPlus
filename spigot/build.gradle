@@ -1,12 +1,22 @@
 plugins {
+    id "java"
     id "com.github.johnrengelman.shadow" version "8.1.1"
+    id "xyz.jpenilla.run-paper" version "2.0.1"
+}
+
+runServer {
+    minecraftVersion "1.19.4"
+}
+
+processResources {
+    expand("version": version)
 }
 
 dependencies {
     compileOnly "org.spigotmc:spigot-api:1.19.4-R0.1-SNAPSHOT"
     compileOnly "me.clip:placeholderapi:2.11.1"
 
-    compileOnly "com.mojang:authlib:3.4.40"
+    compileOnly "com.mojang:authlib:1.5.21"
     compileOnly "com.mojang:datafixerupper:4.0.26"
 
     implementation "commons-io:commons-io:2.11.0"
@@ -19,13 +29,13 @@ dependencies {
     implementation "space.arim.dazzleconf:dazzleconf-ext-snakeyaml:1.2.1"
 
     implementation "lol.pyr:director-adventure:2.0.1"
-
-    compileOnly project(":api")
-    compileOnly project(":folia")
+    implementation project(":api")
 }
 
 shadowJar {
+    archivesBaseName = "ZNPCsPlus"
     archiveClassifier.set ""
+
     relocate "org.bstats", "lol.pyr.znpcsplus.lib.bstats"
     relocate "org.apache.commons.io", "lol.pyr.znpcsplus.lib.commonsio"
     relocate "me.robertlit.spigotresources", "lol.pyr.znpcsplus.lib.spigotresources"
@@ -43,3 +53,5 @@ shadowJar {
     relocate "lol.pyr.director", "lol.pyr.znpcsplus.lib.command"
     minimize()
 }
+
+tasks.assemble.dependsOn shadowJar
