@@ -20,7 +20,6 @@ public class FoliaScheduler extends TaskScheduler {
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
-        // Bukkit.getAsyncScheduler().runNow(plugin, task -> runnable.run());
     }
 
     @Override
@@ -31,7 +30,6 @@ public class FoliaScheduler extends TaskScheduler {
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
-        // Bukkit.getAsyncScheduler().runDelayed(plugin, task -> runnable.run(), ticks * 50, TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -42,7 +40,6 @@ public class FoliaScheduler extends TaskScheduler {
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
-        // Bukkit.getAsyncScheduler().runAtFixedRate(plugin, task -> runnable.run(), delay * 50, ticks * 50, TimeUnit.MILLISECONDS);
     }
 }
 
