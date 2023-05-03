@@ -1,8 +1,15 @@
 name: ZNPCsPlus
+authors:
+  - Pyr (Pyr#6969)
+
 main: lol.pyr.znpcsplus.ZNPCsPlus
 load: POSTWORLD
+
 version: ${version}
 api-version: 1.13
+
+folia-supported: true
+
 softdepend:
   - PlaceholderAPI
   - ServersNPC
@@ -12,5 +19,3 @@ softdepend:
   - ViaBackwards
   - ViaRewind
   - Geyser-Spigot
-authors: [Pyr (Pyr#6969)]
-folia-supported: true
