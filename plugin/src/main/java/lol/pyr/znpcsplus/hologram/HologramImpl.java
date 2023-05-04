@@ -1,5 +1,6 @@
 package lol.pyr.znpcsplus.hologram;
 
+import lol.pyr.znpcsplus.api.hologram.Hologram;
 import lol.pyr.znpcsplus.config.Configs;
 import lol.pyr.znpcsplus.util.Viewable;
 import lol.pyr.znpcsplus.util.ZLocation;
@@ -10,11 +11,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Hologram extends Viewable implements lol.pyr.znpcsplus.api.hologram.Hologram {
+public class HologramImpl extends Viewable implements Hologram {
     private ZLocation location;
     private final List<HologramLine> lines = new ArrayList<>();
 
-    public Hologram(ZLocation location) {
+    public HologramImpl(ZLocation location) {
         this.location = location;
     }
 

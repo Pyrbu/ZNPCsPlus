@@ -90,7 +90,3 @@ public final class Reflections {
                     .withExpectResult(SCHEDULED_TASK_CLASS)
                     .setStrict(FoliaUtil.isFolia()));
 }
-
-// Bukkit.getAsyncScheduler().runNow(plugin, task -> runnable.run());
-// Bukkit.getAsyncScheduler().runDelayed(plugin, task -> runnable.run(), ticks * 50, TimeUnit.MILLISECONDS);
-// Bukkit.getAsyncScheduler().runAtFixedRate(plugin, task -> runnable.run(), delay * 50, ticks * 50, TimeUnit.MILLISECONDS);

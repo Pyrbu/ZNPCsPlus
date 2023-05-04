@@ -3,7 +3,7 @@ package lol.pyr.znpcsplus.npc;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.npc.NPCType;
 import lol.pyr.znpcsplus.entity.PacketEntity;
-import lol.pyr.znpcsplus.hologram.Hologram;
+import lol.pyr.znpcsplus.hologram.HologramImpl;
 import lol.pyr.znpcsplus.interaction.NPCAction;
 import lol.pyr.znpcsplus.util.Viewable;
 import lol.pyr.znpcsplus.util.ZLocation;
@@ -13,26 +13,23 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
-public class NPC extends Viewable implements lol.pyr.znpcsplus.api.npc.NPC {
-    protected static final Set<NPC> _ALL_NPCS = new HashSet<>();
-
+public class NPCImpl extends Viewable implements lol.pyr.znpcsplus.api.npc.NPC {
     private final Set<Player> viewers = new HashSet<>();
     private final String worldName;
     private PacketEntity entity;
     private ZLocation location;
     private NPCType type;
-    private final Hologram hologram;
+    private final HologramImpl hologram;
 
     private final Map<EntityProperty<?>, Object> propertyMap = new HashMap<>();
     private final Set<NPCAction> actions = new HashSet<>();
 
-    public NPC(World world, NPCType type, ZLocation location) {
+    protected NPCImpl(World world, NPCType type, ZLocation location) {
         this.worldName = world.getName();
         this.type = type;
         this.location = location;
         entity = new PacketEntity(this, type.getType(), location);
-        hologram = new Hologram(location.withY(location.getY() + type.getHologramOffset()));
-        _ALL_NPCS.add(this);
+        hologram = new HologramImpl(location.withY(location.getY() + type.getHologramOffset()));
     }
 
     public void setType(NPCType type) {
@@ -60,22 +57,12 @@ public class NPC extends Viewable implements lol.pyr.znpcsplus.api.npc.NPC {
         hologram.setLocation(location.withY(location.getY() + type.getHologramOffset()));
     }
 
-    public Hologram getHologram() {
+    public HologramImpl getHologram() {
         return hologram;
     }
 
     public World getWorld() {
         return Bukkit.getWorld(worldName);
-    }
-
-    @Override
-    public void delete() {
-        _ALL_NPCS.remove(this);
-        super.delete();
-    }
-
-    public void undelete() {
-        _ALL_NPCS.add(this);
     }
 
     @Override

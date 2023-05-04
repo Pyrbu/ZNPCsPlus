@@ -19,3 +19,11 @@ softdepend:
   - ViaBackwards
   - ViaRewind
   - Geyser-Spigot
+
+commands:
+  npc:
+    aliases:
+      - znpc
+      - znpcs
+      - npcs
+    permission: znpcsplus.command.npc

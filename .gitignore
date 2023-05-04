@@ -42,8 +42,7 @@ bin/
 ### Mac OS ###
 .DS_Store
 
-/run/
-/spigot/run/
+/plugin/run/
 /.idea/
 
 gradle.properties

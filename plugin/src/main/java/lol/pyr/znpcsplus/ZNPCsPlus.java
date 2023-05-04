@@ -4,8 +4,8 @@ import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
-import lol.pyr.znpcsplus.util.BungeeUtil;
 import lol.pyr.director.adventure.command.CommandManager;
+import lol.pyr.director.adventure.command.MultiCommand;
 import lol.pyr.znpcsplus.api.ZApiProvider;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.npc.NPCType;
@@ -13,8 +13,9 @@ import lol.pyr.znpcsplus.config.Configs;
 import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
 import lol.pyr.znpcsplus.interaction.types.ConsoleCommandAction;
 import lol.pyr.znpcsplus.interaction.types.MessageAction;
-import lol.pyr.znpcsplus.npc.NPC;
-import lol.pyr.znpcsplus.npc.NPCRegistry;
+import lol.pyr.znpcsplus.npc.NPCEntryImpl;
+import lol.pyr.znpcsplus.npc.NPCImpl;
+import lol.pyr.znpcsplus.npc.NPCRegistryImpl;
 import lol.pyr.znpcsplus.scheduling.FoliaScheduler;
 import lol.pyr.znpcsplus.scheduling.SpigotScheduler;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
@@ -28,6 +29,7 @@ import lol.pyr.znpcsplus.updater.UpdateChecker;
 import lol.pyr.znpcsplus.updater.UpdateNotificationListener;
 import lol.pyr.znpcsplus.user.User;
 import lol.pyr.znpcsplus.user.UserListener;
+import lol.pyr.znpcsplus.util.BungeeUtil;
 import lol.pyr.znpcsplus.util.FoliaUtil;
 import lol.pyr.znpcsplus.util.ZLocation;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
@@ -122,6 +124,7 @@ public class ZNPCsPlus extends JavaPlugin {
         SCHEDULER = FoliaUtil.isFolia() ? new FoliaScheduler(this) : new SpigotScheduler(this);
         BUNGEE_UTILS = new BungeeUtil(this);
         Bukkit.getOnlinePlayers().forEach(User::get);
+        registerCommands();
 
         log(ChatColor.WHITE + " * Starting tasks...");
         new NPCVisibilityTask();
@@ -141,7 +144,9 @@ public class ZNPCsPlus extends JavaPlugin {
             World world = Bukkit.getWorld("world");
             if (world == null) world = Bukkit.getWorlds().get(0);
             for (NPCType type : NPCType.values()) {
-                NPC npc = new NPC(world, type, new ZLocation(x * 3, 200, z * 3, 0, 0));
+                NPCEntryImpl entry = NPCRegistryImpl.get().create("debug_npc" + (z * wrap + x), world, type,  new ZLocation(x * 3, 200, z * 3, 0, 0));
+                entry.setProcessed(true);
+                NPCImpl npc = entry.getNpc();
                 if (type.getType() == EntityTypes.PLAYER) {
                     SkinCache.fetchByName("Notch").thenAccept(skin -> npc.setProperty(EntityProperty.SKIN, new PrefetchedDescriptor(skin)));
                     npc.setProperty(EntityProperty.INVISIBLE, true);
@@ -149,21 +154,22 @@ public class ZNPCsPlus extends JavaPlugin {
                 npc.setProperty(EntityProperty.GLOW, NamedTextColor.RED);
                 // npc.setProperty(EntityProperty.FIRE, true);
                 npc.getHologram().addLine(Component.text("Hello, World!"));
-                NPCRegistry.get().register("debug_npc" + (z * wrap + x), npc);
                 if (x++ > wrap) {
                     x = 0;
                     z++;
                 }
             }
-            NPC npc = new NPC(world, NPCType.byName("player"), new ZLocation(x * 3, 200, z * 3, 0, 0));
+            NPCEntryImpl entry = NPCRegistryImpl.get().create("debug_npc" + (z * wrap + x), world, NPCType.byName("player"),  new ZLocation(x * 3, 200, z * 3, 0, 0));
+            entry.setProcessed(true);
+            NPCImpl npc = entry.getNpc();
             npc.setProperty(EntityProperty.SKIN, new FetchingDescriptor("jeb_"));
             npc.addAction(new MessageAction(1000L, "<red>Hi, I'm jeb!"));
-            NPCRegistry.get().register("debug_npc" + (z * wrap + x), npc);
             x++;
-            npc = new NPC(world, NPCType.byName("player"), new ZLocation(x * 3, 200, z * 3, 0, 0));
+            entry = NPCRegistryImpl.get().create("debug_npc" + (z * wrap + x), world, NPCType.byName("player"),  new ZLocation(x * 3, 200, z * 3, 0, 0));
+            entry.setProcessed(true);
+            npc = entry.getNpc();
             npc.setProperty(EntityProperty.SKIN, new MirrorDescriptor());
             npc.addAction(new ConsoleCommandAction(1000L, "kick {player}"));
-            NPCRegistry.get().register("debug_npc" + (z * wrap + x), npc);
         }
     }
 
@@ -178,5 +184,6 @@ public class ZNPCsPlus extends JavaPlugin {
 
     private void registerCommands() {
         CommandManager manager = new CommandManager(this, ADVENTURE, context -> {});
+        manager.registerCommand("npc", new MultiCommand());
     }
 }
