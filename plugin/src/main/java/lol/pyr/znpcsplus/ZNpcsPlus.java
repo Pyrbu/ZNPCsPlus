@@ -46,7 +46,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-public class ZNpcsPlus extends JavaPlugin {
+public class ZNPCsPlus extends JavaPlugin {
     public static Logger LOGGER;
     public static File PLUGIN_FOLDER;
     public static File PATH_FOLDER;
