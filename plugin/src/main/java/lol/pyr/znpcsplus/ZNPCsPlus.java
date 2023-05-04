@@ -13,9 +13,9 @@ import lol.pyr.znpcsplus.config.Configs;
 import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
 import lol.pyr.znpcsplus.interaction.types.ConsoleCommandAction;
 import lol.pyr.znpcsplus.interaction.types.MessageAction;
-import lol.pyr.znpcsplus.npc.NpcEntryImpl;
-import lol.pyr.znpcsplus.npc.NpcImpl;
-import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
+import lol.pyr.znpcsplus.npc.NPCEntryImpl;
+import lol.pyr.znpcsplus.npc.NPCImpl;
+import lol.pyr.znpcsplus.npc.NPCRegistryImpl;
 import lol.pyr.znpcsplus.scheduling.FoliaScheduler;
 import lol.pyr.znpcsplus.scheduling.SpigotScheduler;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
@@ -24,7 +24,7 @@ import lol.pyr.znpcsplus.skin.cache.SkinCacheCleanTask;
 import lol.pyr.znpcsplus.skin.descriptor.FetchingDescriptor;
 import lol.pyr.znpcsplus.skin.descriptor.MirrorDescriptor;
 import lol.pyr.znpcsplus.skin.descriptor.PrefetchedDescriptor;
-import lol.pyr.znpcsplus.tasks.NpcVisibilityTask;
+import lol.pyr.znpcsplus.tasks.NPCVisibilityTask;
 import lol.pyr.znpcsplus.updater.UpdateChecker;
 import lol.pyr.znpcsplus.updater.UpdateNotificationListener;
 import lol.pyr.znpcsplus.user.User;
@@ -46,7 +46,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-public class ZNpcsPlus extends JavaPlugin {
+public class ZNPCsPlus extends JavaPlugin {
     public static Logger LOGGER;
     public static File PLUGIN_FOLDER;
     public static File PATH_FOLDER;
@@ -127,12 +127,12 @@ public class ZNpcsPlus extends JavaPlugin {
         registerCommands();
 
         log(ChatColor.WHITE + " * Starting tasks...");
-        new NpcVisibilityTask();
+        new NPCVisibilityTask();
         new SkinCacheCleanTask();
         new UserListener(this);
         if (Configs.config().checkForUpdates()) new UpdateNotificationListener(this, new UpdateChecker(this));
 
-        ZApiProvider.register(new ZNpcsApi());
+        ZApiProvider.register(new ZNPCsAPI());
         enabled = true;
         log(ChatColor.WHITE + " * Loading complete! (" + (System.currentTimeMillis() - before) + "ms)");
         log("");
@@ -144,9 +144,9 @@ public class ZNpcsPlus extends JavaPlugin {
             World world = Bukkit.getWorld("world");
             if (world == null) world = Bukkit.getWorlds().get(0);
             for (NpcType type : NpcType.values()) {
-                NpcEntryImpl entry = NpcRegistryImpl.get().create("debug_npc" + (z * wrap + x), world, type, new ZLocation(x * 3, 200, z * 3, 0, 0));
+                NPCEntryImpl entry = NPCRegistryImpl.get().create("debug_npc" + (z * wrap + x), world, type, new ZLocation(x * 3, 200, z * 3, 0, 0));
                 entry.setProcessed(true);
-                NpcImpl npc = entry.getNpc();
+                NPCImpl npc = entry.getNpc();
                 if (type.getType() == EntityTypes.PLAYER) {
                     SkinCache.fetchByName("Notch").thenAccept(skin -> npc.setProperty(EntityProperty.SKIN, new PrefetchedDescriptor(skin)));
                     npc.setProperty(EntityProperty.INVISIBLE, true);
@@ -159,13 +159,13 @@ public class ZNpcsPlus extends JavaPlugin {
                     z++;
                 }
             }
-            NpcEntryImpl entry = NpcRegistryImpl.get().create("debug_npc" + (z * wrap + x), world, NpcType.byName("player"), new ZLocation(x * 3, 200, z * 3, 0, 0));
+            NPCEntryImpl entry = NPCRegistryImpl.get().create("debug_npc" + (z * wrap + x), world, NpcType.byName("player"), new ZLocation(x * 3, 200, z * 3, 0, 0));
             entry.setProcessed(true);
-            NpcImpl npc = entry.getNpc();
+            NPCImpl npc = entry.getNpc();
             npc.setProperty(EntityProperty.SKIN, new FetchingDescriptor("jeb_"));
             npc.addAction(new MessageAction(1000L, "<red>Hi, I'm jeb!"));
             x++;
-            entry = NpcRegistryImpl.get().create("debug_npc" + (z * wrap + x), world, NpcType.byName("player"), new ZLocation(x * 3, 200, z * 3, 0, 0));
+            entry = NPCRegistryImpl.get().create("debug_npc" + (z * wrap + x), world, NpcType.byName("player"), new ZLocation(x * 3, 200, z * 3, 0, 0));
             entry.setProcessed(true);
             npc = entry.getNpc();
             npc.setProperty(EntityProperty.SKIN, new MirrorDescriptor());

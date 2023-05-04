@@ -10,28 +10,28 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NpcRegistryImpl implements NpcRegistry {
-    private final static NpcRegistryImpl registry = new NpcRegistryImpl();
+public class NPCRegistryImpl implements NpcRegistry {
+    private final static NPCRegistryImpl registry = new NPCRegistryImpl();
 
-    public static NpcRegistryImpl get() {
+    public static NPCRegistryImpl get() {
         return registry;
     }
 
-    private NpcRegistryImpl() {
+    private NPCRegistryImpl() {
         if (registry != null) throw new UnsupportedOperationException("This class can only be instanciated once!");
     }
 
-    private final Map<String, NpcEntryImpl> npcMap = new HashMap<>();
+    private final Map<String, NPCEntryImpl> npcMap = new HashMap<>();
 
-    public NpcEntryImpl get(String id) {
+    public NPCEntryImpl get(String id) {
         return npcMap.get(id.toUpperCase());
     }
 
-    public Collection<NpcEntryImpl> all() {
+    public Collection<NPCEntryImpl> all() {
         return Collections.unmodifiableCollection(npcMap.values());
     }
 
-    public NpcEntryImpl getByEntityId(int id) {
+    public NPCEntryImpl getByEntityId(int id) {
         return all().stream().filter(entry -> entry.getNpc().getEntity().getEntityId() == id).findFirst().orElse(null);
     }
 
@@ -40,11 +40,11 @@ public class NpcRegistryImpl implements NpcRegistry {
     }
 
     @Override
-    public NpcEntryImpl create(String id, World world, NpcType type, ZLocation location) {
+    public NPCEntryImpl create(String id, World world, NpcType type, ZLocation location) {
         id = id.toUpperCase();
         if (npcMap.containsKey(id)) throw new IllegalArgumentException("An npc with the id " + id + " already exists!");
-        NpcImpl npc = new NpcImpl(world, type, location);
-        NpcEntryImpl entry = new NpcEntryImpl(npc);
+        NPCImpl npc = new NPCImpl(world, type, location);
+        NPCEntryImpl entry = new NPCEntryImpl(npc);
         npcMap.put(id, entry);
         return entry;
     }

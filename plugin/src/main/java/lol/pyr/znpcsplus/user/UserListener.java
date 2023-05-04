@@ -1,6 +1,6 @@
 package lol.pyr.znpcsplus.user;
 
-import lol.pyr.znpcsplus.ZNpcsPlus;
+import lol.pyr.znpcsplus.ZNPCsPlus;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -8,7 +8,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class UserListener implements Listener {
-    public UserListener(ZNpcsPlus plugin) {
+    public UserListener(ZNPCsPlus plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 

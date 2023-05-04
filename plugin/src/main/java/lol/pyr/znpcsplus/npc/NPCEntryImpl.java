@@ -2,19 +2,19 @@ package lol.pyr.znpcsplus.npc;
 
 import lol.pyr.znpcsplus.api.npc.NpcEntry;
 
-public class NpcEntryImpl implements NpcEntry {
-    private final NpcImpl npc;
+public class NPCEntryImpl implements NpcEntry {
+    private final NPCImpl npc;
 
     private boolean process = false;
     private boolean save = false;
     private boolean modify = false;
 
-    public NpcEntryImpl(NpcImpl npc) {
+    public NPCEntryImpl(NPCImpl npc) {
         this.npc = npc;
     }
 
     @Override
-    public NpcImpl getNpc() {
+    public NPCImpl getNpc() {
         return npc;
     }
 

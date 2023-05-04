@@ -1,6 +1,6 @@
 package lol.pyr.znpcsplus.user;
 
-import lol.pyr.znpcsplus.interaction.NpcAction;
+import lol.pyr.znpcsplus.interaction.NPCAction;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -51,7 +51,7 @@ public class User {
         return uuid;
     }
 
-    public boolean actionCooldownCheck(NpcAction action) {
+    public boolean actionCooldownCheck(NPCAction action) {
         UUID id = action.getUuid();
         if (System.currentTimeMillis() - actionCooldownMap.getOrDefault(id, 0L) >= action.getCooldown()) {
             actionCooldownMap.put(id, System.currentTimeMillis());
