@@ -1,12 +1,12 @@
 package lol.pyr.znpcsplus.interaction.types;
 
-import lol.pyr.znpcsplus.ZNPCsPlus;
-import lol.pyr.znpcsplus.interaction.NPCAction;
+import lol.pyr.znpcsplus.ZNpcsPlus;
+import lol.pyr.znpcsplus.interaction.NpcAction;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
 
-public class MessageAction extends NPCAction {
+public class MessageAction extends NpcAction {
     private final Component message;
 
     public MessageAction(long delay, String argument) {
@@ -16,6 +16,6 @@ public class MessageAction extends NPCAction {
 
     @Override
     public void run(Player player) {
-        ZNPCsPlus.ADVENTURE.player(player).sendMessage(message);
+        ZNpcsPlus.ADVENTURE.player(player).sendMessage(message);
     }
 }

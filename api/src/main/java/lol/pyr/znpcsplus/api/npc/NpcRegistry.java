@@ -5,10 +5,10 @@ import org.bukkit.World;
 
 import java.util.Collection;
 
-public interface NPCRegistry {
-    Collection<? extends NPCEntry> all();
+public interface NpcRegistry {
+    Collection<? extends NpcEntry> all();
     Collection<String> ids();
-    NPCEntry create(String id, World world, NPCType type, ZLocation location);
-    NPCEntry get(String id);
+    NpcEntry create(String id, World world, NpcType type, ZLocation location);
+    NpcEntry get(String id);
     void delete(String id);
 }

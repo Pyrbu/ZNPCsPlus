@@ -1,7 +1,7 @@
 package lol.pyr.znpcsplus.api.npc;
 
-public interface NPCEntry {
-    NPC getNpc();
+public interface NpcEntry {
+    Npc getNpc();
 
     boolean isProcessed();
     void setProcessed(boolean value);

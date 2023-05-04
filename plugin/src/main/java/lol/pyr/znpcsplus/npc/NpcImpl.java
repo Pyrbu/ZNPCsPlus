@@ -1,10 +1,11 @@
 package lol.pyr.znpcsplus.npc;
 
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
-import lol.pyr.znpcsplus.api.npc.NPCType;
+import lol.pyr.znpcsplus.api.npc.NpcType;
+import lol.pyr.znpcsplus.api.npc.Npc;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.hologram.HologramImpl;
-import lol.pyr.znpcsplus.interaction.NPCAction;
+import lol.pyr.znpcsplus.interaction.NpcAction;
 import lol.pyr.znpcsplus.util.Viewable;
 import lol.pyr.znpcsplus.util.ZLocation;
 import org.bukkit.Bukkit;
@@ -13,18 +14,18 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
-public class NPCImpl extends Viewable implements lol.pyr.znpcsplus.api.npc.NPC {
+public class NpcImpl extends Viewable implements Npc {
     private final Set<Player> viewers = new HashSet<>();
     private final String worldName;
     private PacketEntity entity;
     private ZLocation location;
-    private NPCType type;
+    private NpcType type;
     private final HologramImpl hologram;
 
     private final Map<EntityProperty<?>, Object> propertyMap = new HashMap<>();
-    private final Set<NPCAction> actions = new HashSet<>();
+    private final Set<NpcAction> actions = new HashSet<>();
 
-    protected NPCImpl(World world, NPCType type, ZLocation location) {
+    protected NpcImpl(World world, NpcType type, ZLocation location) {
         this.worldName = world.getName();
         this.type = type;
         this.location = location;
@@ -32,14 +33,14 @@ public class NPCImpl extends Viewable implements lol.pyr.znpcsplus.api.npc.NPC {
         hologram = new HologramImpl(location.withY(location.getY() + type.getHologramOffset()));
     }
 
-    public void setType(NPCType type) {
+    public void setType(NpcType type) {
         UNSAFE_hideAll();
         this.type = type;
         entity = new PacketEntity(this, type.getType(), entity.getLocation());
         UNSAFE_showAll();
     }
 
-    public NPCType getType() {
+    public NpcType getType() {
         return type;
     }
 
@@ -103,11 +104,11 @@ public class NPCImpl extends Viewable implements lol.pyr.znpcsplus.api.npc.NPC {
         _refreshMeta();
     }
 
-    public Collection<NPCAction> getActions() {
+    public Collection<NpcAction> getActions() {
         return Collections.unmodifiableSet(actions);
     }
 
-    public void addAction(NPCAction action) {
+    public void addAction(NpcAction action) {
         actions.add(action);
     }
 }

@@ -1,6 +1,6 @@
 package lol.pyr.znpcsplus.skin.descriptor;
 
-import lol.pyr.znpcsplus.ZNPCsPlus;
+import lol.pyr.znpcsplus.ZNpcsPlus;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.skin.BaseSkinDescriptor;
 import lol.pyr.znpcsplus.skin.Skin;
@@ -33,7 +33,7 @@ public class FetchingDescriptor implements BaseSkinDescriptor, SkinDescriptor {
     }
 
     private String papi(Player player) {
-        if (ZNPCsPlus.PLACEHOLDERS_SUPPORTED) return PlaceholderAPI.setPlaceholders(player, name);
+        if (ZNpcsPlus.PLACEHOLDERS_SUPPORTED) return PlaceholderAPI.setPlaceholders(player, name);
         return name;
     }
 }
