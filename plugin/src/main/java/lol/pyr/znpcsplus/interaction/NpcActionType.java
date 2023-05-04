@@ -2,20 +2,20 @@ package lol.pyr.znpcsplus.interaction;
 
 import lol.pyr.znpcsplus.interaction.types.*;
 
-public enum NPCActionType implements NPCActionDeserializer {
+public enum NpcActionType implements NpcActionDeserializer {
     CONSOLE_CMD(ConsoleCommandAction::new),
     MESSAGE(MessageAction::new),
     PLAYER_CMD(PlayerCommandAction::new),
     SERVER(SwitchServerAction::new);
 
-    private final NPCActionDeserializer deserializer;
+    private final NpcActionDeserializer deserializer;
 
-    NPCActionType(NPCActionDeserializer deserializer) {
+    NpcActionType(NpcActionDeserializer deserializer) {
         this.deserializer = deserializer;
     }
 
     @Override
-    public NPCAction deserialize(long delay, String str) {
+    public NpcAction deserialize(long delay, String str) {
         return deserializer.deserialize(delay, str);
     }
 }

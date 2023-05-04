@@ -1,7 +1,7 @@
 package lol.pyr.znpcsplus.reflection;
 
 import lol.pyr.znpcsplus.util.VersionUtil;
-import lol.pyr.znpcsplus.ZNPCsPlus;
+import lol.pyr.znpcsplus.ZNpcsPlus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +50,7 @@ public abstract class ReflectionLazyLoader<T> {
     }
 
     private void warn(String message) {
-        ZNPCsPlus.LOGGER.warning("[Reflection] " + message);
+        ZNpcsPlus.LOGGER.warning("[Reflection] " + message);
     }
 
     protected abstract T load() throws Exception;

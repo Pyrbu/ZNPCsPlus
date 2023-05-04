@@ -1,7 +1,7 @@
 package lol.pyr.znpcsplus.api;
 
-import lol.pyr.znpcsplus.api.npc.NPCRegistry;
+import lol.pyr.znpcsplus.api.npc.NpcRegistry;
 
 public interface ZApi {
-    NPCRegistry getNPCRegistry();
+    NpcRegistry getNpcRegistry();
 }

@@ -1,6 +1,6 @@
 package lol.pyr.znpcsplus.updater;
 
-import lol.pyr.znpcsplus.ZNPCsPlus;
+import lol.pyr.znpcsplus.ZNpcsPlus;
 import me.robertlit.spigotresources.api.Resource;
 import me.robertlit.spigotresources.api.SpigotResourcesAPI;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -12,13 +12,13 @@ public class UpdateChecker extends BukkitRunnable {
     public final static int RESOURCE_ID = 109380;
     public final static String DOWNLOAD_LINK = "https://www.spigotmc.org/resources/znpcsplus.109380/";
 
-    private final ZNPCsPlus plugin;
+    private final ZNpcsPlus plugin;
     private Status status = Status.UNKNOWN;
     private String newestVersion = "N/A";
 
-    public UpdateChecker(ZNPCsPlus plugin) {
+    public UpdateChecker(ZNpcsPlus plugin) {
         this.plugin = plugin;
-        ZNPCsPlus.SCHEDULER.runDelayedTimerAsync(this, 5L, 6000L);
+        ZNpcsPlus.SCHEDULER.runDelayedTimerAsync(this, 5L, 6000L);
     }
 
     public void run() {
@@ -34,8 +34,8 @@ public class UpdateChecker extends BukkitRunnable {
     }
 
     private void notifyConsole() {
-        ZNPCsPlus.LOGGER.warning("Version " + getLatestVersion() + " of " + plugin.getDescription().getName() + " is available now!");
-        ZNPCsPlus.LOGGER.warning("Download it at " + UpdateChecker.DOWNLOAD_LINK);
+        ZNpcsPlus.LOGGER.warning("Version " + getLatestVersion() + " of " + plugin.getDescription().getName() + " is available now!");
+        ZNpcsPlus.LOGGER.warning("Download it at " + UpdateChecker.DOWNLOAD_LINK);
     }
 
     private int versionToNumber(String version) {

@@ -3,7 +3,7 @@ package lol.pyr.znpcsplus.metadata;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
-import lol.pyr.znpcsplus.ZNPCsPlus;
+import lol.pyr.znpcsplus.ZNpcsPlus;
 import lol.pyr.znpcsplus.util.LazyLoader;
 import net.kyori.adventure.text.Component;
 
@@ -42,7 +42,7 @@ public interface MetadataFactory {
             if (v.isNewerThan(version)) continue;
             if (!factories.containsKey(v)) continue;
             MetadataFactory f = factories.get(v).get();
-            ZNPCsPlus.debug("Using MetadataFactory Version " + v.name() + " (" + f.getClass().getName() + ")");
+            ZNpcsPlus.debug("Using MetadataFactory Version " + v.name() + " (" + f.getClass().getName() + ")");
             return f;
         }
         throw new RuntimeException("Unsupported version!");

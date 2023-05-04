@@ -4,12 +4,12 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public abstract class NPCAction {
+public abstract class NpcAction {
     private final UUID id;
     private final long delay;
     protected final String argument;
 
-    protected NPCAction(long delay, String argument) {
+    protected NpcAction(long delay, String argument) {
         this.id = UUID.randomUUID();
         this.delay = delay;
         this.argument = argument;

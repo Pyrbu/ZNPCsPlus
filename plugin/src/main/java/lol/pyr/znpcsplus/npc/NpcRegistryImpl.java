@@ -1,7 +1,7 @@
 package lol.pyr.znpcsplus.npc;
 
-import lol.pyr.znpcsplus.api.npc.NPCRegistry;
-import lol.pyr.znpcsplus.api.npc.NPCType;
+import lol.pyr.znpcsplus.api.npc.NpcRegistry;
+import lol.pyr.znpcsplus.api.npc.NpcType;
 import lol.pyr.znpcsplus.util.ZLocation;
 import org.bukkit.World;
 
@@ -10,28 +10,28 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NPCRegistryImpl implements NPCRegistry {
-    private final static NPCRegistryImpl registry = new NPCRegistryImpl();
+public class NpcRegistryImpl implements NpcRegistry {
+    private final static NpcRegistryImpl registry = new NpcRegistryImpl();
 
-    public static NPCRegistryImpl get() {
+    public static NpcRegistryImpl get() {
         return registry;
     }
 
-    private NPCRegistryImpl() {
+    private NpcRegistryImpl() {
         if (registry != null) throw new UnsupportedOperationException("This class can only be instanciated once!");
     }
 
-    private final Map<String, NPCEntryImpl> npcMap = new HashMap<>();
+    private final Map<String, NpcEntryImpl> npcMap = new HashMap<>();
 
-    public NPCEntryImpl get(String id) {
+    public NpcEntryImpl get(String id) {
         return npcMap.get(id.toUpperCase());
     }
 
-    public Collection<NPCEntryImpl> all() {
+    public Collection<NpcEntryImpl> all() {
         return Collections.unmodifiableCollection(npcMap.values());
     }
 
-    public NPCEntryImpl getByEntityId(int id) {
+    public NpcEntryImpl getByEntityId(int id) {
         return all().stream().filter(entry -> entry.getNpc().getEntity().getEntityId() == id).findFirst().orElse(null);
     }
 
@@ -40,11 +40,11 @@ public class NPCRegistryImpl implements NPCRegistry {
     }
 
     @Override
-    public NPCEntryImpl create(String id, World world, NPCType type, ZLocation location) {
+    public NpcEntryImpl create(String id, World world, NpcType type, ZLocation location) {
         id = id.toUpperCase();
         if (npcMap.containsKey(id)) throw new IllegalArgumentException("An npc with the id " + id + " already exists!");
-        NPCImpl npc = new NPCImpl(world, type, location);
-        NPCEntryImpl entry = new NPCEntryImpl(npc);
+        NpcImpl npc = new NpcImpl(world, type, location);
+        NpcEntryImpl entry = new NpcEntryImpl(npc);
         npcMap.put(id, entry);
         return entry;
     }

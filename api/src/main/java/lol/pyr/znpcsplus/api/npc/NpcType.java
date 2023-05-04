@@ -8,14 +8,14 @@ import lol.pyr.znpcsplus.api.entity.EntityProperty;
 
 import java.util.*;
 
-public class NPCType {
-    private final static Map<String, NPCType> BY_NAME = new HashMap<>();
+public class NpcType {
+    private final static Map<String, NpcType> BY_NAME = new HashMap<>();
 
-    public static Collection<NPCType> values() {
+    public static Collection<NpcType> values() {
         return BY_NAME.values();
     }
 
-    public static NPCType byName(String name) {
+    public static NpcType byName(String name) {
         return BY_NAME.get(name.toUpperCase());
     }
 
@@ -24,7 +24,7 @@ public class NPCType {
     private final String name;
     private final double hologramOffset;
 
-    private NPCType(String name, EntityType type, double hologramOffset, Set<EntityProperty<?>> allowedProperties) {
+    private NpcType(String name, EntityType type, double hologramOffset, Set<EntityProperty<?>> allowedProperties) {
         this.name = name.toUpperCase();
         this.type = type;
         this.hologramOffset = hologramOffset;
@@ -47,29 +47,29 @@ public class NPCType {
         return allowedProperties;
     }
 
-    private static NPCType define(Builder builder) {
+    private static NpcType define(Builder builder) {
         return define(builder.build());
     }
 
-    private static NPCType define(NPCType type) {
+    private static NpcType define(NpcType type) {
         BY_NAME.put(type.getName(), type);
         return type;
     }
 
-    public static final NPCType PLAYER = define(
+    public static final NpcType PLAYER = define(
             new Builder("player", EntityTypes.PLAYER)
                     .addProperties(EntityProperty.SKIN, EntityProperty.SKIN_LAYERS)
                     .setHologramOffset(-0.45D));
 
-    public static final NPCType CREEPER = define(
+    public static final NpcType CREEPER = define(
             new Builder("creeper", EntityTypes.CREEPER)
                     .setHologramOffset(-0.6D));
 
-    public static final NPCType ZOMBIE = define(
+    public static final NpcType ZOMBIE = define(
             new Builder("zombie", EntityTypes.ZOMBIE)
                     .setHologramOffset(-0.3D));
 
-    public static final NPCType SKELETON = define(
+    public static final NpcType SKELETON = define(
             new Builder("skeleton", EntityTypes.SKELETON)
                     .setHologramOffset(-0.3D));
 
@@ -100,7 +100,7 @@ public class NPCType {
             return this;
         }
 
-        public NPCType build() {
+        public NpcType build() {
             if (globalProperties) {
                 allowedProperties.add(EntityProperty.FIRE);
                 allowedProperties.add(EntityProperty.INVISIBLE);
@@ -108,7 +108,7 @@ public class NPCType {
                 if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9))
                     allowedProperties.add(EntityProperty.GLOW);
             }
-            return new NPCType(name, type, hologramOffset, new HashSet<>(allowedProperties));
+            return new NpcType(name, type, hologramOffset, new HashSet<>(allowedProperties));
         }
     }
 }

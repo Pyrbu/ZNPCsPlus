@@ -2,7 +2,7 @@ name: ZNPCsPlus
 authors:
   - Pyr (Pyr#6969)
 
-main: lol.pyr.znpcsplus.ZNPCsPlus
+main: lol.pyr.znpcsplus.ZNpcsPlus
 load: POSTWORLD
 
 version: ${version}

@@ -1,6 +1,6 @@
 package lol.pyr.znpcsplus.config;
 
-import lol.pyr.znpcsplus.ZNPCsPlus;
+import lol.pyr.znpcsplus.ZNpcsPlus;
 import space.arim.dazzleconf.ConfigurationFactory;
 import space.arim.dazzleconf.ConfigurationOptions;
 import space.arim.dazzleconf.error.ConfigFormatSyntaxException;
@@ -40,13 +40,13 @@ public class Configs {
             config = configHelper.reloadConfigData();
             messages = messagesHelper.reloadConfigData();
         } catch (IOException e) {
-            ZNPCsPlus.LOGGER.severe("Couldn't open config file!");
+            ZNpcsPlus.LOGGER.severe("Couldn't open config file!");
             e.printStackTrace();
         } catch (ConfigFormatSyntaxException e) {
-            ZNPCsPlus.LOGGER.severe("Invalid config syntax!");
+            ZNpcsPlus.LOGGER.severe("Invalid config syntax!");
             e.printStackTrace();
         } catch (InvalidConfigException e) {
-            ZNPCsPlus.LOGGER.severe("Invalid config value!");
+            ZNpcsPlus.LOGGER.severe("Invalid config value!");
             e.printStackTrace();
         }
     }

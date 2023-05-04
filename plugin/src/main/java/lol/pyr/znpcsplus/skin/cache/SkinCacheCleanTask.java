@@ -1,11 +1,11 @@
 package lol.pyr.znpcsplus.skin.cache;
 
-import lol.pyr.znpcsplus.ZNPCsPlus;
+import lol.pyr.znpcsplus.ZNpcsPlus;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class SkinCacheCleanTask extends BukkitRunnable {
     public SkinCacheCleanTask() {
-        ZNPCsPlus.SCHEDULER.runDelayedTimerAsync(this, 1200, 1200);
+        ZNpcsPlus.SCHEDULER.runDelayedTimerAsync(this, 1200, 1200);
     }
 
     @Override

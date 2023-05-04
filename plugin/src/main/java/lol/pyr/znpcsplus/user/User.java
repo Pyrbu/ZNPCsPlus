@@ -1,6 +1,6 @@
 package lol.pyr.znpcsplus.user;
 
-import lol.pyr.znpcsplus.interaction.NPCAction;
+import lol.pyr.znpcsplus.interaction.NpcAction;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -28,7 +28,7 @@ public class User {
     }
 
     private final UUID uuid;
-    private long lastNPCInteraction;
+    private long lastNpcInteraction;
     private final Map<UUID, Long> actionCooldownMap = new HashMap<>();
 
     public User(UUID uuid) {
@@ -40,8 +40,8 @@ public class User {
     }
 
     public boolean canInteract() {
-        if (System.currentTimeMillis() - lastNPCInteraction > 100L) {
-            lastNPCInteraction = System.currentTimeMillis();
+        if (System.currentTimeMillis() - lastNpcInteraction > 100L) {
+            lastNpcInteraction = System.currentTimeMillis();
             return true;
         }
         return false;
@@ -51,7 +51,7 @@ public class User {
         return uuid;
     }
 
-    public boolean actionCooldownCheck(NPCAction action) {
+    public boolean actionCooldownCheck(NpcAction action) {
         UUID id = action.getUuid();
         if (System.currentTimeMillis() - actionCooldownMap.getOrDefault(id, 0L) >= action.getCooldown()) {
             actionCooldownMap.put(id, System.currentTimeMillis());

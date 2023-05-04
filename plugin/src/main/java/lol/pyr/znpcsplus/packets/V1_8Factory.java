@@ -10,7 +10,7 @@ import com.github.retrooper.packetevents.protocol.player.UserProfile;
 import com.github.retrooper.packetevents.util.Vector3d;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.*;
-import lol.pyr.znpcsplus.ZNPCsPlus;
+import lol.pyr.znpcsplus.ZNpcsPlus;
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.entity.PacketEntity;
@@ -36,7 +36,7 @@ public class V1_8Factory implements PacketFactory {
             sendPacket(player, new WrapperPlayServerSpawnPlayer(entity.getEntityId(),
                     entity.getUuid(), location.toVector3d(), location.getYaw(), location.getPitch(), Collections.emptyList()));
             sendAllMetadata(player, entity, properties);
-            ZNPCsPlus.SCHEDULER.runLaterAsync(() -> removeTabPlayer(player, entity), 60);
+            ZNpcsPlus.SCHEDULER.runLaterAsync(() -> removeTabPlayer(player, entity), 60);
         });
     }
 
