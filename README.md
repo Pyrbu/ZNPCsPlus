@@ -1,6 +1,8 @@
 # ZNPCsPlus
-[ZNPCsPlus](https://www.spigotmc.org/resources/znpcsplus.109380/) is an remake of the popular NPC plugin ZNPCs written with the Spigot/Bukkit API originally made by 
-gonalez/ZNetwork. This project was originally started because the maintainer of ZNPCs decided to announce that he was 
+[ZNPCsPlus](https://www.spigotmc.org/resources/znpcsplus.109380/) is a Spigot plugin that is used to create fake entities 
+that players can interact with to perform actions like switching servers on a network or executing commands.
+
+This plugin is a remake of a plugin called ZNPCs, we originally started because the maintainer of ZNPCs decided to announce that he was 
 [dropping support for the plugin](https://media.discordapp.net/attachments/1093914615873806477/1098409384855474237/znpc.png).
 
 ### Dependencies
@@ -8,14 +10,12 @@ gonalez/ZNetwork. This project was originally started because the maintainer of 
 - Spigot 1.8 - 1.19.4
 - PlaceholderAPI (OPTIONAL)
 
-## Why is it better?
-This fork makes several improvements over the original including:
-- More performance-conscious code
-- Latest version support (1.19.4)
-- Fixes for long-running issues of the original plugin
-- Better stability
+## Why is it so good?
+- 100% Packet Based - Nothing is ran on the main thread
+- Performance & stability oriented code
+- Support for all versions from 1.8 to 1.19.4
 - Support for multiple different storage options (WIP)
-- Better command system (WIP)
+- Intuitive command system (WIP)
 
 ## Found a bug?
 Open an issue in the GitHub [issue tracker](https://github.com/Pyrbu/ZNPCsPlus/issues)
