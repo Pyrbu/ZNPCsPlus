@@ -1,4 +1,6 @@
-# ZNPCsPlus
+# ZNPCsPlus [![](https://img.shields.io/discord/1099449144948555957?label=Discord&logo=Discord&style=plastic)](https://discord.gg/MAZz6XpPcg) 
+[![](https://img.shields.io/bstats/players/18244?style=plastic&label=bStats%20Players)]((https://bstats.org/plugin/bukkit/ZNPCsPlus/18244/)) [![](https://img.shields.io/bstats/servers/18244?style=plastic&label=bStats%20Servers)]((https://bstats.org/plugin/bukkit/ZNPCsPlus/18244/)) [![](https://img.shields.io/spiget/downloads/109380?style=plastic&label=Spigot%20Downloads)]((https://www.spigotmc.org/resources/znpcsplus.109380/))
+
 [ZNPCsPlus](https://www.spigotmc.org/resources/znpcsplus.109380/) is a Spigot plugin that is used to create fake entities 
 that players can interact with to perform actions like switching servers on a network or executing commands.
 
@@ -18,7 +20,7 @@ This plugin is a remake of a plugin called ZNPCs, we originally started because 
 - Intuitive command system (WIP)
 
 ## Found a bug?
-Open an issue in the GitHub [issue tracker](https://github.com/Pyrbu/ZNPCsPlus/issues)
+Open an issue in the GitHub [issue tracker](https://github.com/Pyrbu/ZNPCsPlus/issues) or join our [support discord](https://discord.gg/MAZz6XpPcg)
 
 ## BStats
 [![](https://bstats.org/signatures/bukkit/znpcsplus.svg)](https://bstats.org/plugin/bukkit/ZNPCsPlus/18244/)
