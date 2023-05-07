@@ -7,17 +7,26 @@ that players can interact with to perform actions like switching servers on a ne
 This plugin is a remake of a plugin called ZNPCs, we originally started because the maintainer of ZNPCs decided to announce that he was 
 [dropping support for the plugin](https://media.discordapp.net/attachments/1093914615873806477/1098409384855474237/znpc.png).
 
-### Dependencies
-- Java 8
-- Spigot 1.8 - 1.19.4
-- PlaceholderAPI (OPTIONAL)
-
 ## Why is it so good?
 - 100% Packet Based - Nothing is ran on the main thread
 - Performance & stability oriented code
 - Support for all versions from 1.8 to 1.19.4
 - Support for multiple different storage options (WIP)
 - Intuitive command system (WIP)
+
+### Requirements, Extensions & Supported Software
+Requirements:
+- Java 8
+- Minecraft 1.8 - 1.19.4
+
+Supported Softwares:
+- Spigot ([Website](https://www.spigotmc.org/))
+- Paper ([Github](https://github.com/PaperMC/Paper)) ([Website](https://papermc.io/software/paper))
+- Folia ([Github](https://github.com/PaperMC/Folia)) ([Website](https://papermc.io/software/folia))
+- ArcLight ([Github](https://github.com/IzzelAliz/Arclight))
+
+Optional Dependencies/Extensions:
+- PlaceholderAPI
 
 ## Found a bug?
 Open an issue in the GitHub [issue tracker](https://github.com/Pyrbu/ZNPCsPlus/issues) or join our [support discord](https://discord.gg/MAZz6XpPcg)
