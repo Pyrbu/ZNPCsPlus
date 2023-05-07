@@ -626,6 +626,7 @@ public final class Reflections {
             .withParameterTypes(String.class));
 
     public static final ReflectionLazyLoader<Method> GET_UNIQUE_ID_METHOD = new MethodReflection(new ReflectionBuilder(ReflectionPackage.MINECRAFT)
+            .withMethodName("getUUID") // #41
             .withClassName(ENTITY_CLASS)
             .withExpectResult(UUID.class));
 
