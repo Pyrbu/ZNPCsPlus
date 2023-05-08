@@ -7,8 +7,8 @@ import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder
 import lol.pyr.director.adventure.command.CommandManager;
 import lol.pyr.director.adventure.command.MultiCommand;
 import lol.pyr.znpcsplus.api.ZApiProvider;
-import lol.pyr.znpcsplus.api.entity.EntityProperty;
-import lol.pyr.znpcsplus.api.npc.NpcType;
+import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
+import lol.pyr.znpcsplus.npc.NpcTypeImpl;
 import lol.pyr.znpcsplus.config.Configs;
 import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
 import lol.pyr.znpcsplus.interaction.types.ConsoleCommandAction;
@@ -143,15 +143,15 @@ public class ZNpcsPlus extends JavaPlugin {
             int z = 0;
             World world = Bukkit.getWorld("world");
             if (world == null) world = Bukkit.getWorlds().get(0);
-            for (NpcType type : NpcType.values()) {
+            for (NpcTypeImpl type : NpcTypeImpl.values()) {
                 NpcEntryImpl entry = NpcRegistryImpl.get().create("debug_npc" + (z * wrap + x), world, type, new ZLocation(x * 3, 200, z * 3, 0, 0));
                 entry.setProcessed(true);
                 NpcImpl npc = entry.getNpc();
                 if (type.getType() == EntityTypes.PLAYER) {
-                    SkinCache.fetchByName("Notch").thenAccept(skin -> npc.setProperty(EntityProperty.SKIN, new PrefetchedDescriptor(skin)));
-                    npc.setProperty(EntityProperty.INVISIBLE, true);
+                    SkinCache.fetchByName("Notch").thenAccept(skin -> npc.setProperty(EntityPropertyImpl.SKIN, new PrefetchedDescriptor(skin)));
+                    npc.setProperty(EntityPropertyImpl.INVISIBLE, true);
                 }
-                npc.setProperty(EntityProperty.GLOW, NamedTextColor.RED);
+                npc.setProperty(EntityPropertyImpl.GLOW, NamedTextColor.RED);
                 // npc.setProperty(EntityProperty.FIRE, true);
                 npc.getHologram().addLine(Component.text("Hello, World!"));
                 if (x++ > wrap) {
@@ -159,16 +159,16 @@ public class ZNpcsPlus extends JavaPlugin {
                     z++;
                 }
             }
-            NpcEntryImpl entry = NpcRegistryImpl.get().create("debug_npc" + (z * wrap + x), world, NpcType.byName("player"), new ZLocation(x * 3, 200, z * 3, 0, 0));
+            NpcEntryImpl entry = NpcRegistryImpl.get().create("debug_npc" + (z * wrap + x), world, NpcTypeImpl.byName("player"), new ZLocation(x * 3, 200, z * 3, 0, 0));
             entry.setProcessed(true);
             NpcImpl npc = entry.getNpc();
-            npc.setProperty(EntityProperty.SKIN, new FetchingDescriptor("jeb_"));
+            npc.setProperty(EntityPropertyImpl.SKIN, new FetchingDescriptor("jeb_"));
             npc.addAction(new MessageAction(1000L, "<red>Hi, I'm jeb!"));
             x++;
-            entry = NpcRegistryImpl.get().create("debug_npc" + (z * wrap + x), world, NpcType.byName("player"), new ZLocation(x * 3, 200, z * 3, 0, 0));
+            entry = NpcRegistryImpl.get().create("debug_npc" + (z * wrap + x), world, NpcTypeImpl.byName("player"), new ZLocation(x * 3, 200, z * 3, 0, 0));
             entry.setProcessed(true);
             npc = entry.getNpc();
-            npc.setProperty(EntityProperty.SKIN, new MirrorDescriptor());
+            npc.setProperty(EntityPropertyImpl.SKIN, new MirrorDescriptor());
             npc.addAction(new ConsoleCommandAction(1000L, "kick {player}"));
         }
     }

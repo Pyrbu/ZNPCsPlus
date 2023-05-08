@@ -24,7 +24,7 @@ public class NpcRegistryImpl implements NpcRegistry {
     private final Map<String, NpcEntryImpl> npcMap = new HashMap<>();
 
     public NpcEntryImpl get(String id) {
-        return npcMap.get(id.toUpperCase());
+        return npcMap.get(id.toLowerCase());
     }
 
     public Collection<NpcEntryImpl> all() {
@@ -39,19 +39,22 @@ public class NpcRegistryImpl implements NpcRegistry {
         return Collections.unmodifiableSet(npcMap.keySet());
     }
 
-    @Override
     public NpcEntryImpl create(String id, World world, NpcType type, ZLocation location) {
-        id = id.toUpperCase();
+        return create(id, world, (NpcTypeImpl) type, location);
+    }
+
+    public NpcEntryImpl create(String id, World world, NpcTypeImpl type, ZLocation location) {
+        id = id.toLowerCase();
         if (npcMap.containsKey(id)) throw new IllegalArgumentException("An npc with the id " + id + " already exists!");
         NpcImpl npc = new NpcImpl(world, type, location);
-        NpcEntryImpl entry = new NpcEntryImpl(npc);
+        NpcEntryImpl entry = new NpcEntryImpl(id, npc);
         npcMap.put(id, entry);
         return entry;
     }
 
     @Override
     public void delete(String id) {
-        id = id.toUpperCase();
+        id = id.toLowerCase();
         if (!npcMap.containsKey(id)) return;
         npcMap.remove(id).getNpc().delete();
     }

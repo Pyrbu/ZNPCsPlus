@@ -23,5 +23,11 @@ public abstract class NpcAction {
         return delay;
     }
 
+    public String getArgument() {
+        return argument;
+    }
+
     public abstract void run(Player player);
+
+    public abstract NpcActionType getType();
 }

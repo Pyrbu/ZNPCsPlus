@@ -2,6 +2,7 @@ package lol.pyr.znpcsplus.interaction.types;
 
 import lol.pyr.znpcsplus.ZNpcsPlus;
 import lol.pyr.znpcsplus.interaction.NpcAction;
+import lol.pyr.znpcsplus.interaction.NpcActionType;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
@@ -17,5 +18,10 @@ public class MessageAction extends NpcAction {
     @Override
     public void run(Player player) {
         ZNpcsPlus.ADVENTURE.player(player).sendMessage(message);
+    }
+
+    @Override
+    public NpcActionType getType() {
+        return NpcActionType.MESSAGE;
     }
 }

@@ -12,7 +12,7 @@ import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.*;
 import lol.pyr.znpcsplus.ZNpcsPlus;
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
-import lol.pyr.znpcsplus.api.entity.EntityProperty;
+import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.metadata.MetadataFactory;
 import lol.pyr.znpcsplus.skin.BaseSkinDescriptor;
@@ -94,7 +94,7 @@ public class V1_8Factory implements PacketFactory {
                 Component.empty(), Component.empty(), Component.empty(),
                 WrapperPlayServerTeams.NameTagVisibility.NEVER,
                 WrapperPlayServerTeams.CollisionRule.NEVER,
-                properties.hasProperty(EntityProperty.GLOW) ? properties.getProperty(EntityProperty.GLOW) : NamedTextColor.WHITE,
+                properties.hasProperty(EntityPropertyImpl.GLOW) ? properties.getProperty(EntityPropertyImpl.GLOW) : NamedTextColor.WHITE,
                 WrapperPlayServerTeams.OptionData.NONE
         )));
         sendPacket(player, new WrapperPlayServerTeams("npc_team_" + entity.getEntityId(), WrapperPlayServerTeams.TeamMode.ADD_ENTITIES, (WrapperPlayServerTeams.ScoreBoardTeamInfo) null,
@@ -109,12 +109,12 @@ public class V1_8Factory implements PacketFactory {
     @Override
     public void sendAllMetadata(Player player, PacketEntity entity, PropertyHolder properties) {
         ArrayList<EntityData> data = new ArrayList<>();
-        if (entity.getType() == EntityTypes.PLAYER && properties.getProperty(EntityProperty.SKIN_LAYERS)) data.add(MetadataFactory.get().skinLayers());
-        boolean fire = properties.getProperty(EntityProperty.FIRE);
-        boolean invisible = properties.getProperty(EntityProperty.INVISIBLE);
+        if (entity.getType() == EntityTypes.PLAYER && properties.getProperty(EntityPropertyImpl.SKIN_LAYERS)) data.add(MetadataFactory.get().skinLayers());
+        boolean fire = properties.getProperty(EntityPropertyImpl.FIRE);
+        boolean invisible = properties.getProperty(EntityPropertyImpl.INVISIBLE);
         if (fire || invisible) data.add(MetadataFactory.get().effects(fire, false, invisible));
-        if (properties.getProperty(EntityProperty.SILENT)) data.add(MetadataFactory.get().silent());
-        if (properties.hasProperty(EntityProperty.NAME)) data.addAll(MetadataFactory.get().name(properties.getProperty(EntityProperty.NAME)));
+        if (properties.getProperty(EntityPropertyImpl.SILENT)) data.add(MetadataFactory.get().silent());
+        if (properties.hasProperty(EntityPropertyImpl.NAME)) data.addAll(MetadataFactory.get().name(properties.getProperty(EntityPropertyImpl.NAME)));
         sendMetadata(player, entity, data);
     }
 
@@ -128,8 +128,8 @@ public class V1_8Factory implements PacketFactory {
     }
 
     protected CompletableFuture<UserProfile> skinned(Player player, PropertyHolder properties, UserProfile profile) {
-        if (!properties.hasProperty(EntityProperty.SKIN)) return CompletableFuture.completedFuture(profile);
-        BaseSkinDescriptor descriptor = (BaseSkinDescriptor) properties.getProperty(EntityProperty.SKIN);
+        if (!properties.hasProperty(EntityPropertyImpl.SKIN)) return CompletableFuture.completedFuture(profile);
+        BaseSkinDescriptor descriptor = (BaseSkinDescriptor) properties.getProperty(EntityPropertyImpl.SKIN);
         if (descriptor.supportsInstant(player)) {
             descriptor.fetchInstant(player).apply(profile);
             return CompletableFuture.completedFuture(profile);

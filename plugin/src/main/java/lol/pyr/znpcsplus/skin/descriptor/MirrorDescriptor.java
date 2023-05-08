@@ -26,4 +26,9 @@ public class MirrorDescriptor implements BaseSkinDescriptor, SkinDescriptor {
     public boolean supportsInstant(Player player) {
         return true;
     }
+
+    @Override
+    public String serialize() {
+        return "mirror";
+    }
 }

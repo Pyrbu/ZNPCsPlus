@@ -36,4 +36,13 @@ public class FetchingDescriptor implements BaseSkinDescriptor, SkinDescriptor {
         if (ZNpcsPlus.PLACEHOLDERS_SUPPORTED) return PlaceholderAPI.setPlaceholders(player, name);
         return name;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String serialize() {
+        return "fetching;" + name;
+    }
 }

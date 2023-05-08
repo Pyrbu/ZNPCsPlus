@@ -36,6 +36,10 @@ public class HologramImpl extends Viewable implements Hologram {
         relocateLines();
     }
 
+    public List<HologramLine> getLines() {
+        return Collections.unmodifiableList(lines);
+    }
+
     public void clearLines() {
         UNSAFE_hideAll();
         lines.clear();

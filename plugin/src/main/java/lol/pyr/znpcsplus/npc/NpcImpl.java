@@ -1,8 +1,8 @@
 package lol.pyr.znpcsplus.npc;
 
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
-import lol.pyr.znpcsplus.api.npc.NpcType;
 import lol.pyr.znpcsplus.api.npc.Npc;
+import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.hologram.HologramImpl;
 import lol.pyr.znpcsplus.interaction.NpcAction;
@@ -19,28 +19,33 @@ public class NpcImpl extends Viewable implements Npc {
     private final String worldName;
     private PacketEntity entity;
     private ZLocation location;
-    private NpcType type;
+    private NpcTypeImpl type;
     private final HologramImpl hologram;
 
-    private final Map<EntityProperty<?>, Object> propertyMap = new HashMap<>();
+    private final Map<EntityPropertyImpl<?>, Object> propertyMap = new HashMap<>();
     private final Set<NpcAction> actions = new HashSet<>();
 
-    protected NpcImpl(World world, NpcType type, ZLocation location) {
-        this.worldName = world.getName();
+    protected NpcImpl(World world, NpcTypeImpl type, ZLocation location) {
+        this(world.getName(), type, location);
+    }
+
+    public NpcImpl(String world, NpcTypeImpl type, ZLocation location) {
+        this.worldName = world;
         this.type = type;
         this.location = location;
         entity = new PacketEntity(this, type.getType(), location);
         hologram = new HologramImpl(location.withY(location.getY() + type.getHologramOffset()));
     }
 
-    public void setType(NpcType type) {
+
+    public void setType(NpcTypeImpl type) {
         UNSAFE_hideAll();
         this.type = type;
         entity = new PacketEntity(this, type.getType(), entity.getLocation());
         UNSAFE_showAll();
     }
 
-    public NpcType getType() {
+    public NpcTypeImpl getType() {
         return type;
     }
 
@@ -66,6 +71,10 @@ public class NpcImpl extends Viewable implements Npc {
         return Bukkit.getWorld(worldName);
     }
 
+    public String getWorldName() {
+        return worldName;
+    }
+
     @Override
     protected void _show(Player player) {
         entity.spawn(player);
@@ -84,14 +93,14 @@ public class NpcImpl extends Viewable implements Npc {
 
     @SuppressWarnings("unchecked")
     public <T> T getProperty(EntityProperty<T> key) {
-        return hasProperty(key) ? (T) propertyMap.get(key) : key.getDefaultValue();
+        return hasProperty(key) ? (T) propertyMap.get((EntityPropertyImpl<?>) key) : key.getDefaultValue();
     }
 
     public boolean hasProperty(EntityProperty<?> key) {
-        return propertyMap.containsKey(key);
+        return propertyMap.containsKey((EntityPropertyImpl<?>) key);
     }
 
-    public <T> void setProperty(EntityProperty<T> key, T value) {
+    public <T> void setProperty(EntityPropertyImpl<T> key, T value) {
         if (value.equals(key.getDefaultValue())) removeProperty(key);
         else {
             propertyMap.put(key, value);
@@ -99,9 +108,13 @@ public class NpcImpl extends Viewable implements Npc {
         }
     }
 
-    public void removeProperty(EntityProperty<?> key) {
+    public void removeProperty(EntityPropertyImpl<?> key) {
         propertyMap.remove(key);
         _refreshMeta();
+    }
+
+    public Set<EntityPropertyImpl<?>> getAppliedProperties() {
+        return Collections.unmodifiableSet(propertyMap.keySet());
     }
 
     public Collection<NpcAction> getActions() {

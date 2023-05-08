@@ -3,13 +3,15 @@ package lol.pyr.znpcsplus.npc;
 import lol.pyr.znpcsplus.api.npc.NpcEntry;
 
 public class NpcEntryImpl implements NpcEntry {
+    private final String id;
     private final NpcImpl npc;
 
     private boolean process = false;
     private boolean save = false;
     private boolean modify = false;
 
-    public NpcEntryImpl(NpcImpl npc) {
+    public NpcEntryImpl(String id, NpcImpl npc) {
+        this.id = id.toLowerCase();
         this.npc = npc;
     }
 
@@ -53,5 +55,9 @@ public class NpcEntryImpl implements NpcEntry {
         setSave(true);
         setProcessed(true);
         setAllowCommandModification(true);
+    }
+
+    public String getId() {
+        return id;
     }
 }
