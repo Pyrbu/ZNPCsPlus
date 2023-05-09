@@ -7,6 +7,7 @@ import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder
 import lol.pyr.director.adventure.command.CommandManager;
 import lol.pyr.director.adventure.command.MultiCommand;
 import lol.pyr.znpcsplus.api.ZApiProvider;
+import lol.pyr.znpcsplus.commands.*;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.npc.NpcTypeImpl;
 import lol.pyr.znpcsplus.config.Configs;
@@ -57,6 +58,7 @@ public class ZNpcsPlus extends JavaPlugin {
     public static boolean PLACEHOLDERS_SUPPORTED;
 
     private boolean enabled = false;
+    public static final String DEBUG_NPC_PREFIX = "debug_npc";
 
     public static void debug(String str) {
         if (!Configs.config().debugEnabled()) return;
@@ -144,7 +146,7 @@ public class ZNpcsPlus extends JavaPlugin {
             World world = Bukkit.getWorld("world");
             if (world == null) world = Bukkit.getWorlds().get(0);
             for (NpcTypeImpl type : NpcTypeImpl.values()) {
-                NpcEntryImpl entry = NpcRegistryImpl.get().create("debug_npc" + (z * wrap + x), world, type, new ZLocation(x * 3, 200, z * 3, 0, 0));
+                NpcEntryImpl entry = NpcRegistryImpl.get().create(ZNpcsPlus.DEBUG_NPC_PREFIX + (z * wrap + x), world, type, new ZLocation(x * 3, 200, z * 3, 0, 0));
                 entry.setProcessed(true);
                 NpcImpl npc = entry.getNpc();
                 if (type.getType() == EntityTypes.PLAYER) {
@@ -159,13 +161,13 @@ public class ZNpcsPlus extends JavaPlugin {
                     z++;
                 }
             }
-            NpcEntryImpl entry = NpcRegistryImpl.get().create("debug_npc" + (z * wrap + x), world, NpcTypeImpl.byName("player"), new ZLocation(x * 3, 200, z * 3, 0, 0));
+            NpcEntryImpl entry = NpcRegistryImpl.get().create(ZNpcsPlus.DEBUG_NPC_PREFIX + (z * wrap + x), world, NpcTypeImpl.byName("player"), new ZLocation(x * 3, 200, z * 3, 0, 0));
             entry.setProcessed(true);
             NpcImpl npc = entry.getNpc();
             npc.setProperty(EntityPropertyImpl.SKIN, new FetchingDescriptor("jeb_"));
             npc.addAction(new MessageAction(1000L, "<red>Hi, I'm jeb!"));
             x++;
-            entry = NpcRegistryImpl.get().create("debug_npc" + (z * wrap + x), world, NpcTypeImpl.byName("player"), new ZLocation(x * 3, 200, z * 3, 0, 0));
+            entry = NpcRegistryImpl.get().create(ZNpcsPlus.DEBUG_NPC_PREFIX + (z * wrap + x), world, NpcTypeImpl.byName("player"), new ZLocation(x * 3, 200, z * 3, 0, 0));
             entry.setProcessed(true);
             npc = entry.getNpc();
             npc.setProperty(EntityPropertyImpl.SKIN, new MirrorDescriptor());
@@ -184,6 +186,23 @@ public class ZNpcsPlus extends JavaPlugin {
 
     private void registerCommands() {
         CommandManager manager = new CommandManager(this, ADVENTURE, context -> {});
-        manager.registerCommand("npc", new MultiCommand());
+        manager.registerCommand("npc", new MultiCommand()
+                .addSubcommand("action", new ActionCommand())
+                .addSubcommand("conversations", new ConversationsCommand())
+                .addSubcommand("create", new CreateCommand())
+                .addSubcommand("delete", new DeleteCommand())
+                .addSubcommand("holo", new MultiCommand()
+                        .addSubcommand("add", new HoloAddCommand())
+                        .addSubcommand("delete", new HoloDeleteCommand())
+                        .addSubcommand("info", new HoloInfoCommand())
+                        .addSubcommand("insert", new HoloInsertCommand())
+                        .addSubcommand("set", new HoloSetCommand())
+                )
+                .addSubcommand("list", new ListCommand())
+                .addSubcommand("move", new MoveCommand())
+                .addSubcommand("path", new PathCommand())
+                .addSubcommand("properties", new PropertiesCommand())
+                .addSubcommand("teleport", new TeleportCommand())
+        );
     }
 }

@@ -28,7 +28,7 @@ dependencies {
     implementation "com.github.retrooper.packetevents:spigot:2.0.0-SNAPSHOT"
     implementation "space.arim.dazzleconf:dazzleconf-ext-snakeyaml:1.2.1"
 
-    implementation "lol.pyr:director-adventure:2.0.2"
+    implementation "lol.pyr:director-adventure:2.0.4"
     implementation project(":api")
 }
 
