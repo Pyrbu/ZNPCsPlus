@@ -4,9 +4,11 @@ import com.mojang.authlib.GameProfile;
 import lol.pyr.znpcsplus.reflection.types.ClassReflection;
 import lol.pyr.znpcsplus.reflection.types.FieldReflection;
 import lol.pyr.znpcsplus.reflection.types.MethodReflection;
-import lol.pyr.znpcsplus.util.VersionUtil;
 import lol.pyr.znpcsplus.util.FoliaUtil;
+import lol.pyr.znpcsplus.util.VersionUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Method;
@@ -88,5 +90,11 @@ public final class Reflections {
                     .withMethodName("runAtFixedRate")
                     .withParameterTypes(Plugin.class, Consumer.class, long.class, long.class, TimeUnit.class)
                     .withExpectResult(SCHEDULED_TASK_CLASS)
+                    .setStrict(FoliaUtil.isFolia()));
+
+    public static final ReflectionLazyLoader<Method> FOLIA_TELEPORT_ASYNC = new MethodReflection(
+            new ReflectionBuilder(Entity.class)
+                    .withMethodName("teleportAsync")
+                    .withParameterTypes(Location.class)
                     .setStrict(FoliaUtil.isFolia()));
 }
