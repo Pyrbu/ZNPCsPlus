@@ -72,7 +72,6 @@ public class YamlStorage implements NpcStorage {
         npc.setProperty((EntityPropertyImpl<T>) property, (T) value);
     }
 
-
     @Override
     public void saveNpcs(Collection<NpcEntryImpl> npcs) {
         for (NpcEntryImpl entry : npcs) if (entry.isSave()) try {

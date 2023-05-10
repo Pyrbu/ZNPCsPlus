@@ -4,6 +4,7 @@ import com.github.retrooper.packetevents.protocol.player.TextureProperty;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.skin.BaseSkinDescriptor;
 import lol.pyr.znpcsplus.skin.Skin;
+import lol.pyr.znpcsplus.skin.cache.SkinCache;
 import org.bukkit.entity.Player;
 
 import java.util.concurrent.CompletableFuture;
@@ -13,6 +14,10 @@ public class PrefetchedDescriptor implements BaseSkinDescriptor, SkinDescriptor 
 
     public PrefetchedDescriptor(Skin skin) {
         this.skin = skin;
+    }
+
+    public static CompletableFuture<PrefetchedDescriptor> forPlayer(String name) {
+        return CompletableFuture.supplyAsync(() -> new PrefetchedDescriptor(SkinCache.fetchByName(name).join()));
     }
 
     @Override

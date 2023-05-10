@@ -37,7 +37,7 @@ public class Skin {
     public Skin(JsonObject obj) {
         for (JsonElement e : obj.get("properties").getAsJsonArray()) {
             JsonObject o = e.getAsJsonObject();
-            properties.add(new TextureProperty(o.get("getName").getAsString(), o.get("value").getAsString(), o.has("signature") ? o.get("signature").getAsString() : null));
+            properties.add(new TextureProperty(o.get("name").getAsString(), o.get("value").getAsString(), o.has("signature") ? o.get("signature").getAsString() : null));
         }
     }
 

@@ -22,11 +22,11 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SkinCache {
-    private final static Map<String, lol.pyr.znpcsplus.skin.Skin> cache = new ConcurrentHashMap<>();
+    private final static Map<String, Skin> cache = new ConcurrentHashMap<>();
     private final static Map<String, CachedId> idCache = new ConcurrentHashMap<>();
 
     public static void cleanCache() {
-        for (Map.Entry<String, lol.pyr.znpcsplus.skin.Skin> entry : cache.entrySet()) if (entry.getValue().isExpired()) cache.remove(entry.getKey());
+        for (Map.Entry<String, Skin> entry : cache.entrySet()) if (entry.getValue().isExpired()) cache.remove(entry.getKey());
         for (Map.Entry<String, CachedId> entry : idCache.entrySet()) if (entry.getValue().isExpired()) cache.remove(entry.getKey());
     }
 
@@ -68,16 +68,16 @@ public class SkinCache {
         if (!idCache.containsKey(name)) return false;
         CachedId id = idCache.get(name);
         if (id.isExpired() || !cache.containsKey(id.getId())) return false;
-        lol.pyr.znpcsplus.skin.Skin skin = cache.get(id.getId());
+        Skin skin = cache.get(id.getId());
         return !skin.isExpired();
     }
 
-    public static lol.pyr.znpcsplus.skin.Skin getFullyCachedByName(String s) {
+    public static Skin getFullyCachedByName(String s) {
         String name = s.toLowerCase();
         if (!idCache.containsKey(name)) return null;
         CachedId id = idCache.get(name);
         if (id.isExpired() || !cache.containsKey(id.getId())) return null;
-        lol.pyr.znpcsplus.skin.Skin skin = cache.get(id.getId());
+        Skin skin = cache.get(id.getId());
         if (skin.isExpired()) return null;
         return skin;
     }
@@ -87,7 +87,7 @@ public class SkinCache {
         if (player != null && player.isOnline()) return CompletableFuture.completedFuture(getFromPlayer(player));
 
         if (cache.containsKey(uuid)) {
-            lol.pyr.znpcsplus.skin.Skin skin = cache.get(uuid);
+            Skin skin = cache.get(uuid);
             if (!skin.isExpired()) return CompletableFuture.completedFuture(skin);
         }
 
@@ -96,9 +96,11 @@ public class SkinCache {
             HttpURLConnection connection = null;
             try {
                 connection = (HttpURLConnection) url.openConnection();
+
                 connection.setRequestMethod("GET");
                 try (Reader reader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {
-                    lol.pyr.znpcsplus.skin.Skin skin = new lol.pyr.znpcsplus.skin.Skin(JsonParser.parseReader(reader).getAsJsonObject());
+                    JsonObject obj = JsonParser.parseReader(reader).getAsJsonObject();
+                    Skin skin = new Skin(obj);
                     cache.put(uuid, skin);
                     return skin;
                 }
@@ -107,6 +109,7 @@ public class SkinCache {
             } finally {
                 if (connection != null) connection.disconnect();
             }
+            Bukkit.broadcastMessage("failed");
             return null;
         });
     }
@@ -115,7 +118,7 @@ public class SkinCache {
         try {
             Object playerHandle = Reflections.GET_HANDLE_PLAYER_METHOD.get().invoke(player);
             GameProfile gameProfile = (GameProfile) Reflections.GET_PROFILE_METHOD.get().invoke(playerHandle, new Object[0]);
-            return new lol.pyr.znpcsplus.skin.Skin(gameProfile.getProperties());
+            return new Skin(gameProfile.getProperties());
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }

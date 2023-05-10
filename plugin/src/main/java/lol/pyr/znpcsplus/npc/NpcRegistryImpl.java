@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class NpcRegistryImpl implements NpcRegistry {
     private final static NpcRegistryImpl registry = new NpcRegistryImpl();
@@ -37,6 +38,13 @@ public class NpcRegistryImpl implements NpcRegistry {
 
     public Collection<String> ids() {
         return Collections.unmodifiableSet(npcMap.keySet());
+    }
+
+    public Collection<String> modifiableIds() {
+        return Collections.unmodifiableSet(npcMap.entrySet().stream()
+                .filter(entry -> entry.getValue().isAllowCommandModification())
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toSet()));
     }
 
     public NpcEntryImpl create(String id, World world, NpcType type, ZLocation location) {

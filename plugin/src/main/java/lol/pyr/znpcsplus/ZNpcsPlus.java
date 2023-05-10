@@ -8,19 +8,19 @@ import lol.pyr.director.adventure.command.CommandManager;
 import lol.pyr.director.adventure.command.MultiCommand;
 import lol.pyr.znpcsplus.api.ZApiProvider;
 import lol.pyr.znpcsplus.commands.*;
-import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
-import lol.pyr.znpcsplus.npc.NpcTypeImpl;
+import lol.pyr.znpcsplus.commands.hologram.*;
 import lol.pyr.znpcsplus.config.Configs;
+import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
 import lol.pyr.znpcsplus.interaction.types.ConsoleCommandAction;
 import lol.pyr.znpcsplus.interaction.types.MessageAction;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
+import lol.pyr.znpcsplus.npc.NpcTypeImpl;
 import lol.pyr.znpcsplus.scheduling.FoliaScheduler;
 import lol.pyr.znpcsplus.scheduling.SpigotScheduler;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
-import lol.pyr.znpcsplus.skin.cache.SkinCache;
 import lol.pyr.znpcsplus.skin.cache.SkinCacheCleanTask;
 import lol.pyr.znpcsplus.skin.descriptor.FetchingDescriptor;
 import lol.pyr.znpcsplus.skin.descriptor.MirrorDescriptor;
@@ -150,7 +150,7 @@ public class ZNpcsPlus extends JavaPlugin {
                 entry.setProcessed(true);
                 NpcImpl npc = entry.getNpc();
                 if (type.getType() == EntityTypes.PLAYER) {
-                    SkinCache.fetchByName("Notch").thenAccept(skin -> npc.setProperty(EntityPropertyImpl.SKIN, new PrefetchedDescriptor(skin)));
+                    PrefetchedDescriptor.forPlayer("Notch").thenAccept(skin -> npc.setProperty(EntityPropertyImpl.SKIN, skin));
                     npc.setProperty(EntityPropertyImpl.INVISIBLE, true);
                 }
                 npc.setProperty(EntityPropertyImpl.GLOW, NamedTextColor.RED);
