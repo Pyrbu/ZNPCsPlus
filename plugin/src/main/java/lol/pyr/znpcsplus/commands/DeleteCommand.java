@@ -15,18 +15,10 @@ import java.util.List;
 public class DeleteCommand implements CommandHandler {
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
-        if (context.argSize() != 1) {
-            ZNpcsPlus.ADVENTURE.sender(context.getSender()).sendMessage(Component.text("Usage: /npc delete <npc_id>", NamedTextColor.RED));
-            return;
-        }
-        String id = context.popString();
-        NpcEntryImpl npcEntry = NpcRegistryImpl.get().get(id);
-        if (npcEntry == null) {
-            ZNpcsPlus.ADVENTURE.sender(context.getSender()).sendMessage(Component.text("NPC not found!", NamedTextColor.RED));
-            return;
-        }
-        NpcRegistryImpl.get().delete(id);
-        ZNpcsPlus.ADVENTURE.sender(context.getSender()).sendMessage(Component.text("Deleted NPC with ID: " + id, NamedTextColor.GREEN));
+        context.setUsage(context.getLabel() + " delete <npc_id>");
+        NpcEntryImpl entry = context.parse(NpcEntryImpl.class);
+        NpcRegistryImpl.get().delete(entry.getId());
+        ZNpcsPlus.ADVENTURE.sender(context.getSender()).sendMessage(Component.text("Deleted NPC with ID: " + entry.getId(), NamedTextColor.GREEN));
     }
 
     @Override

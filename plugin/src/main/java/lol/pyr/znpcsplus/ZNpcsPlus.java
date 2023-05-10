@@ -6,9 +6,12 @@ import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import lol.pyr.director.adventure.command.CommandManager;
 import lol.pyr.director.adventure.command.MultiCommand;
+import lol.pyr.director.adventure.parse.primitive.IntegerParser;
 import lol.pyr.znpcsplus.api.ZApiProvider;
 import lol.pyr.znpcsplus.commands.*;
 import lol.pyr.znpcsplus.commands.hologram.*;
+import lol.pyr.znpcsplus.commands.parsers.NpcEntryParser;
+import lol.pyr.znpcsplus.commands.parsers.NpcTypeParser;
 import lol.pyr.znpcsplus.config.Configs;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
@@ -185,7 +188,12 @@ public class ZNpcsPlus extends JavaPlugin {
     }
 
     private void registerCommands() {
+        // TODO: Messages in here
         CommandManager manager = new CommandManager(this, ADVENTURE, context -> {});
+        manager.registerParser(NpcTypeImpl.class, new NpcTypeParser(context -> {}));
+        manager.registerParser(NpcEntryImpl.class, new NpcEntryParser(context -> {}));
+        manager.registerParser(Integer.class, new IntegerParser(context -> {}));
+
         manager.registerCommand("npc", new MultiCommand()
                 .addSubcommand("action", new ActionCommand())
                 .addSubcommand("conversations", new ConversationsCommand())
