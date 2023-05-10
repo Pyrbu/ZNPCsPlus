@@ -28,12 +28,24 @@ public class ZLocation {
         return this.x;
     }
 
+    public int getBlockX() {
+        return (int) getX();
+    }
+
     public double getY() {
         return this.y;
     }
 
+    public int getBlockY() {
+        return (int) getY();
+    }
+
     public double getZ() {
         return this.z;
+    }
+
+    public int getBlockZ() {
+        return (int) getZ();
     }
 
     public float getYaw() {
