@@ -15,8 +15,8 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CreateCommand implements CommandHandler {
     @Override
@@ -58,15 +58,8 @@ public class CreateCommand implements CommandHandler {
 
     @Override
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
-        if (context.argSize() == 1) {
-            return context.suggestLiteral("<npc_id>");
-        }
-        if (context.argSize() == 2) {
-            return context.suggestCollection(NpcTypeImpl.values().stream().map(NpcTypeImpl::getName).collect(Collectors.toList()));
-        }
-        if (context.argSize() == 3) {
-            return context.suggestLiteral("<npc_name>");
-        }
-        return CommandHandler.super.suggest(context);
+        if (context.argSize() == 1) return context.suggestCollection(NpcRegistryImpl.get().modifiableIds());
+        if (context.argSize() == 2) return context.suggestStream(NpcTypeImpl.values().stream().map(NpcTypeImpl::getName));
+        return Collections.emptyList();
     }
 }

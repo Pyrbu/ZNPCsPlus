@@ -9,8 +9,8 @@ import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class DeleteCommand implements CommandHandler {
     @Override
@@ -31,9 +31,7 @@ public class DeleteCommand implements CommandHandler {
 
     @Override
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
-        if (context.argSize() == 1) {
-            return context.suggestCollection(NpcRegistryImpl.get().ids().stream().filter(s -> !s.startsWith(ZNpcsPlus.DEBUG_NPC_PREFIX)).collect(Collectors.toList()));
-        }
-        return CommandHandler.super.suggest(context);
+        if (context.argSize() == 1) return context.suggestCollection(NpcRegistryImpl.get().modifiableIds());
+        return Collections.emptyList();
     }
 }

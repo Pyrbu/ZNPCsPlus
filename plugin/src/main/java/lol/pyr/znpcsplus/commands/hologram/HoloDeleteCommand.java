@@ -1,4 +1,4 @@
-package lol.pyr.znpcsplus.commands;
+package lol.pyr.znpcsplus.commands.hologram;
 
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;

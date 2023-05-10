@@ -1,4 +1,4 @@
-package lol.pyr.znpcsplus.commands;
+package lol.pyr.znpcsplus.commands.hologram;
 
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class HoloInsertCommand implements CommandHandler {
+public class HoloSetCommand implements CommandHandler {
     @Override
     public void run(CommandContext commandContext) throws CommandExecutionException {
-        if (commandContext.argSize() < 3) {
-            ZNpcsPlus.ADVENTURE.sender(commandContext.getSender()).sendMessage(Component.text("Usage: /npc holo insert <npc_id> <line> <text>", NamedTextColor.RED));
+        if (commandContext.argSize() < 2) {
+            ZNpcsPlus.ADVENTURE.sender(commandContext.getSender()).sendMessage(Component.text("Usage: /npc holo set <npc_id> <line> <text>", NamedTextColor.RED));
             return;
         }
         String id = commandContext.popString();
@@ -36,8 +36,9 @@ public class HoloInsertCommand implements CommandHandler {
         if (line < 0 || line >= npcEntry.getNpc().getHologram().getLines().size()) {
             ZNpcsPlus.ADVENTURE.sender(commandContext.getSender()).sendMessage(Component.text("Invalid line number!", NamedTextColor.RED));
         }
+        npcEntry.getNpc().getHologram().removeLine(line);
         npcEntry.getNpc().getHologram().insertLine(line, Component.text(commandContext.dumpAllArgs()));
-        ZNpcsPlus.ADVENTURE.sender(commandContext.getSender()).sendMessage(Component.text("NPC line inserted!", NamedTextColor.GREEN));
+        ZNpcsPlus.ADVENTURE.sender(commandContext.getSender()).sendMessage(Component.text("NPC line set!", NamedTextColor.GREEN));
     }
 
     @Override
