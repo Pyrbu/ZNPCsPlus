@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class ListCommand implements CommandHandler {
-
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
         TextComponent.Builder component = Component.text("Npc's:\n").color(NamedTextColor.GOLD).toBuilder();

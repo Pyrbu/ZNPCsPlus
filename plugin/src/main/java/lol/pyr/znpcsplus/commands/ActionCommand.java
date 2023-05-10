@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class ActionCommand implements CommandHandler {
-
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
         context.send("Not implemented yet.");
