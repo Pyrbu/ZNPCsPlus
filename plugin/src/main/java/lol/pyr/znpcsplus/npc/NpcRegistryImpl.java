@@ -32,6 +32,12 @@ public class NpcRegistryImpl implements NpcRegistry {
         return Collections.unmodifiableCollection(npcMap.values());
     }
 
+    public Collection<NpcEntryImpl> allModifiable() {
+        return Collections.unmodifiableCollection(npcMap.values().stream()
+                .filter(NpcEntryImpl::isAllowCommandModification)
+                .collect(Collectors.toList()));
+    }
+
     public NpcEntryImpl getByEntityId(int id) {
         return all().stream().filter(entry -> entry.getNpc().getEntity().getEntityId() == id).findFirst().orElse(null);
     }

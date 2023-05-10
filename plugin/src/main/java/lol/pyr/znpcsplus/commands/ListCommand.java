@@ -11,9 +11,6 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 
-import java.util.Collections;
-import java.util.List;
-
 public class ListCommand implements CommandHandler {
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
@@ -35,10 +32,5 @@ public class ListCommand implements CommandHandler {
                     .append(Component.text("\n", NamedTextColor.GRAY));
         }
         context.send(component.build());
-    }
-
-    @Override
-    public List<String> suggest(CommandContext context) throws CommandExecutionException {
-        return Collections.emptyList();
     }
 }

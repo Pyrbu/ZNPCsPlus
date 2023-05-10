@@ -204,12 +204,14 @@ public class ZNpcsPlus extends JavaPlugin {
                 .addSubcommand("properties", new PropertiesCommand())
                 .addSubcommand("teleport", new TeleportCommand())
                 .addSubcommand("list", new ListCommand())
+                .addSubcommand("near", new NearCommand())
                 .addSubcommand("holo", new MultiCommand()
                         .addSubcommand("add", new HoloAddCommand())
                         .addSubcommand("delete", new HoloDeleteCommand())
                         .addSubcommand("info", new HoloInfoCommand())
                         .addSubcommand("insert", new HoloInsertCommand())
-                        .addSubcommand("set", new HoloSetCommand()))
+                        .addSubcommand("set", new HoloSetCommand())
+                )
         );
     }
 }
