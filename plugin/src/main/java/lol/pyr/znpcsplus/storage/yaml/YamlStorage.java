@@ -26,7 +26,7 @@ public class YamlStorage implements NpcStorage {
 
     public YamlStorage() {
         npcsFolder = new File(ZNpcsPlus.PLUGIN_FOLDER, "npcs");
-        if (npcsFolder.exists()) npcsFolder.mkdirs();
+        if (!npcsFolder.exists()) npcsFolder.mkdirs();
     }
 
     @SuppressWarnings("ConstantConditions")
