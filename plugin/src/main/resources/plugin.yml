@@ -1,6 +1,7 @@
 name: ZNPCsPlus
 authors:
   - Pyr (Pyr#6969)
+  - D3v1s0m (D3v1s0m#1372)
 
 main: lol.pyr.znpcsplus.ZNpcsPlus
 load: POSTWORLD
