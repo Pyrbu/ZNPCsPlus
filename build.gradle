@@ -75,7 +75,6 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
-
             pom {
                 name.set("znpcsplus")
                 description.set("A fork of the ZNPCs plugin")
@@ -85,10 +84,10 @@ publishing {
     }
     repositories {
         maven {
-            if (properties.containsKey("DIST_USERNAME") && properties.containsKey("DIST_PASSWORD")) {
+            if (project.properties.containsKey("DIST_USERNAME") && project.properties.containsKey("DIST_PASSWORD")) {
                 credentials {
-                    username properties.get("DIST_USERNAME")
-                    password properties.get("DIST_PASSWORD")
+                    username project.properties.get("DIST_USERNAME")
+                    password project.properties.get("DIST_PASSWORD")
                 }
             }
             url = uri("https://repo.pyr.lol/releases/")
