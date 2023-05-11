@@ -3,6 +3,8 @@ package lol.pyr.znpcsplus.skin.cache;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
+import lol.pyr.znpcsplus.ZNpcsPlus;
+import lol.pyr.znpcsplus.config.Configs;
 import lol.pyr.znpcsplus.reflection.Reflections;
 import lol.pyr.znpcsplus.skin.Skin;
 import org.bukkit.Bukkit;
@@ -36,8 +38,7 @@ public class SkinCache {
 
         if (cache.containsKey(name.toLowerCase())) return fetchByUUID(idCache.get(name.toLowerCase()).getId());
 
-        CompletableFuture<Skin> future = new CompletableFuture<>();
-        CompletableFuture.runAsync(() -> {
+        return CompletableFuture.supplyAsync(() -> {
             URL url = parseUrl("https://api.mojang.com/users/profiles/minecraft/" + name);
             HttpURLConnection connection = null;
             try {
@@ -45,18 +46,21 @@ public class SkinCache {
                 connection.setRequestMethod("GET");
                 try (Reader reader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {
                     JsonObject obj = JsonParser.parseReader(reader).getAsJsonObject();
-                    if (obj.has("errorMessage")) future.complete(null);
+                    if (obj.has("errorMessage")) return null;
                     String id = obj.get("id").getAsString();
                     idCache.put(name.toLowerCase(), new CachedId(id));
-                    fetchByUUID(id).thenAccept(future::complete);
+                    return fetchByUUID(id).join();
                 }
             } catch (IOException exception) {
-                exception.printStackTrace();
+                if (!Configs.config().disableSkinFetcherWarnings()) {
+                    ZNpcsPlus.LOGGER.warning("Failed to uuid from player name:");
+                    exception.printStackTrace();
+                }
             } finally {
                 if (connection != null) connection.disconnect();
             }
+            return null;
         });
-        return future;
     }
 
     public static CompletableFuture<Skin> fetchByUUID(UUID uuid) {
@@ -96,7 +100,6 @@ public class SkinCache {
             HttpURLConnection connection = null;
             try {
                 connection = (HttpURLConnection) url.openConnection();
-
                 connection.setRequestMethod("GET");
                 try (Reader reader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {
                     JsonObject obj = JsonParser.parseReader(reader).getAsJsonObject();
@@ -105,11 +108,13 @@ public class SkinCache {
                     return skin;
                 }
             } catch (IOException exception) {
-                exception.printStackTrace();
+                if (!Configs.config().disableSkinFetcherWarnings()) {
+                    ZNpcsPlus.LOGGER.warning("Failed to fetch skin:");
+                    exception.printStackTrace();
+                }
             } finally {
                 if (connection != null) connection.disconnect();
             }
-            Bukkit.broadcastMessage("failed");
             return null;
         });
     }

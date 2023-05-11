@@ -31,4 +31,9 @@ public interface MainConfig {
     @ConfComments("The storage type to use. Available storage types: YAML")
     @DefaultString("YAML")
     NpcStorageType storageType();
+
+    @ConfKey("disable-skin-fetcher-warnings")
+    @ConfComments("Set this to true if you don't want to be warned in the console when a skin fails to resolve")
+    @DefaultBoolean(false)
+    boolean disableSkinFetcherWarnings();
 }

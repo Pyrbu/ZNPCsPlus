@@ -21,6 +21,7 @@ public class HoloSetCommand implements CommandHandler {
         HologramImpl hologram = context.parse(NpcEntryImpl.class).getNpc().getHologram();
         int line = context.parse(Integer.class);
         if (line < 0 || line >= hologram.getLines().size()) context.halt(Component.text("Invalid line number!", NamedTextColor.RED));
+        context.ensureArgsNotEmpty();
         hologram.removeLine(line);
         hologram.insertLine(line, ZNpcsPlus.LEGACY_AMPERSAND_SERIALIZER.deserialize(context.dumpAllArgs()));
         context.send(Component.text("NPC line set!", NamedTextColor.GREEN));

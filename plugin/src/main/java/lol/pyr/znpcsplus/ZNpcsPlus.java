@@ -190,6 +190,7 @@ public class ZNpcsPlus extends JavaPlugin {
         manager.registerCommand("npc", new MultiCommand()
                 .addSubcommand("action", new ActionCommand())
                 .addSubcommand("create", new CreateCommand())
+                .addSubcommand("skin", new SkinCommand())
                 .addSubcommand("delete", new DeleteCommand())
                 .addSubcommand("move", new MoveCommand())
                 .addSubcommand("properties", new PropertiesCommand())
