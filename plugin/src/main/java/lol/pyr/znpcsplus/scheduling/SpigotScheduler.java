@@ -9,8 +9,8 @@ public class SpigotScheduler extends TaskScheduler {
     }
 
     @Override
-    public void runAsync(Runnable runnable) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, runnable);
+    public void runSync(Runnable runnable) {
+        Bukkit.getScheduler().runTask(plugin, runnable);
     }
 
     @Override

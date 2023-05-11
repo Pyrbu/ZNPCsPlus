@@ -9,7 +9,7 @@ public abstract class TaskScheduler {
         this.plugin = plugin;
     }
 
-    public abstract void runAsync(Runnable runnable);
+    public abstract void runSync(Runnable runnable);
 
     public abstract void runLaterAsync(Runnable runnable, long ticks);
 

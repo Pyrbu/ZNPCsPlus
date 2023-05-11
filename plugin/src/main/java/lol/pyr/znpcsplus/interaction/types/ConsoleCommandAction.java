@@ -15,7 +15,7 @@ public class ConsoleCommandAction extends NpcAction {
     @Override
     public void run(Player player) {
         String cmd = argument.replace("{player}", player.getName()).replace("{uuid}", player.getUniqueId().toString());
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ZNpcsPlus.PLACEHOLDERS_SUPPORTED ? PlaceholderAPI.setPlaceholders(player, cmd) : cmd);
+        ZNpcsPlus.SCHEDULER.runSync(() -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ZNpcsPlus.PLACEHOLDERS_SUPPORTED ? PlaceholderAPI.setPlaceholders(player, cmd) : cmd));
     }
 
     @Override
