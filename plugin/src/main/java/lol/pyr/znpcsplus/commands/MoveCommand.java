@@ -17,7 +17,7 @@ import java.util.List;
 public class MoveCommand implements CommandHandler {
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
-        context.setUsage(context.getLabel() + " move <npc_id>");
+        context.setUsage(context.getLabel() + " move <id>");
         Player player = context.ensureSenderIsPlayer();
         NpcImpl npc = context.parse(NpcEntryImpl.class).getNpc();
         npc.setLocation(new ZLocation(player.getLocation()));

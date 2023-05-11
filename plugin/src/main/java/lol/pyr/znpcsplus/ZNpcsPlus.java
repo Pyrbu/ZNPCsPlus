@@ -2,7 +2,6 @@ package lol.pyr.znpcsplus;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
-import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import lol.pyr.director.adventure.command.CommandManager;
 import lol.pyr.director.adventure.command.MultiCommand;
@@ -12,13 +11,12 @@ import lol.pyr.znpcsplus.api.ZApiProvider;
 import lol.pyr.znpcsplus.commands.*;
 import lol.pyr.znpcsplus.commands.hologram.*;
 import lol.pyr.znpcsplus.commands.parsers.EntityPropertyParser;
+import lol.pyr.znpcsplus.commands.parsers.NamedTextColorParser;
 import lol.pyr.znpcsplus.commands.parsers.NpcEntryParser;
 import lol.pyr.znpcsplus.commands.parsers.NpcTypeParser;
 import lol.pyr.znpcsplus.config.Configs;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
-import lol.pyr.znpcsplus.interaction.types.ConsoleCommandAction;
-import lol.pyr.znpcsplus.interaction.types.MessageAction;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
@@ -27,9 +25,6 @@ import lol.pyr.znpcsplus.scheduling.FoliaScheduler;
 import lol.pyr.znpcsplus.scheduling.SpigotScheduler;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.skin.cache.SkinCacheCleanTask;
-import lol.pyr.znpcsplus.skin.descriptor.FetchingDescriptor;
-import lol.pyr.znpcsplus.skin.descriptor.MirrorDescriptor;
-import lol.pyr.znpcsplus.skin.descriptor.PrefetchedDescriptor;
 import lol.pyr.znpcsplus.tasks.NpcVisibilityTask;
 import lol.pyr.znpcsplus.updater.UpdateChecker;
 import lol.pyr.znpcsplus.updater.UpdateNotificationListener;
@@ -124,13 +119,16 @@ public class ZNpcsPlus extends JavaPlugin {
         PacketEvents.getAPI().init();
 
         PLACEHOLDERS_SUPPORTED = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
-        if (PLACEHOLDERS_SUPPORTED) log(ChatColor.WHITE + " * Enabling PlaceholderAPI Support...");
+        if (PLACEHOLDERS_SUPPORTED) log(ChatColor.WHITE + " * Enabling PlaceholderAPI support...");
 
         PLUGIN_FOLDER.mkdirs();
         PATH_FOLDER.mkdirs();
 
         log(ChatColor.WHITE + " * Loading configurations...");
         Configs.init(PLUGIN_FOLDER);
+
+        log(ChatColor.WHITE + " * Defining NPC types...");
+        NpcTypeImpl.defineTypes();
 
         log(ChatColor.WHITE + " * Registering components...");
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
@@ -155,37 +153,16 @@ public class ZNpcsPlus extends JavaPlugin {
         log("");
 
         if (Configs.config().debugEnabled()) {
-            int wrap = 20;
-            int x = 0;
-            int z = 0;
             World world = Bukkit.getWorld("world");
             if (world == null) world = Bukkit.getWorlds().get(0);
+            int i = 0;
             for (NpcTypeImpl type : NpcTypeImpl.values()) {
-                NpcEntryImpl entry = NpcRegistryImpl.get().create(ZNpcsPlus.DEBUG_NPC_PREFIX + (z * wrap + x), world, type, new ZLocation(x * 3, 200, z * 3, 0, 0));
+                NpcEntryImpl entry = NpcRegistryImpl.get().create(ZNpcsPlus.DEBUG_NPC_PREFIX + i, world, type, new ZLocation(i * 3, 200, 0, 0, 0));
                 entry.setProcessed(true);
                 NpcImpl npc = entry.getNpc();
-                if (type.getType() == EntityTypes.PLAYER) {
-                    PrefetchedDescriptor.forPlayer("Notch").thenAccept(skin -> npc.setProperty(EntityPropertyImpl.SKIN, skin));
-                    npc.setProperty(EntityPropertyImpl.INVISIBLE, true);
-                }
-                npc.setProperty(EntityPropertyImpl.GLOW, NamedTextColor.RED);
                 npc.getHologram().addLine(Component.text("Hello, World!"));
-                if (x++ > wrap) {
-                    x = 0;
-                    z++;
-                }
+                i++;
             }
-            NpcEntryImpl entry = NpcRegistryImpl.get().create(ZNpcsPlus.DEBUG_NPC_PREFIX + (z * wrap + x), world, NpcTypeImpl.byName("player"), new ZLocation(x * 3, 200, z * 3, 0, 0));
-            entry.setProcessed(true);
-            NpcImpl npc = entry.getNpc();
-            npc.setProperty(EntityPropertyImpl.SKIN, new FetchingDescriptor("jeb_"));
-            npc.addAction(new MessageAction(1000L, "<red>Hi, I'm jeb!"));
-            x++;
-            entry = NpcRegistryImpl.get().create(ZNpcsPlus.DEBUG_NPC_PREFIX + (z * wrap + x), world, NpcTypeImpl.byName("player"), new ZLocation(x * 3, 200, z * 3, 0, 0));
-            entry.setProcessed(true);
-            npc = entry.getNpc();
-            npc.setProperty(EntityPropertyImpl.SKIN, new MirrorDescriptor());
-            npc.addAction(new ConsoleCommandAction(1000L, "kick {player}"));
         }
     }
 
@@ -202,11 +179,13 @@ public class ZNpcsPlus extends JavaPlugin {
     private void registerCommands() {
         // TODO: Messages in here
         CommandManager manager = new CommandManager(this, ADVENTURE, context -> {});
+
         manager.registerParser(NpcTypeImpl.class, new NpcTypeParser(context -> {}));
         manager.registerParser(NpcEntryImpl.class, new NpcEntryParser(context -> {}));
         manager.registerParser(EntityPropertyImpl.class, new EntityPropertyParser(context -> {}));
         manager.registerParser(Integer.class, new IntegerParser(context -> {}));
         manager.registerParser(Boolean.class, new BooleanParser(context -> {}));
+        manager.registerParser(NamedTextColor.class, new NamedTextColorParser(context -> {}));
 
         manager.registerCommand("npc", new MultiCommand()
                 .addSubcommand("action", new ActionCommand())

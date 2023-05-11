@@ -21,10 +21,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public class V1_8Factory implements PacketFactory {
@@ -107,13 +104,18 @@ public class V1_8Factory implements PacketFactory {
     }
 
     @Override
+    public Map<Integer, EntityData> generateMetadata(Player player, PacketEntity entity, PropertyHolder properties) {
+        HashMap<Integer, EntityData> data = new HashMap<>();
+        if (entity.getType() == EntityTypes.PLAYER) add(data, MetadataFactory.get().skinLayers(properties.getProperty(EntityPropertyImpl.SKIN_LAYERS)));
+        add(data, MetadataFactory.get().effects(properties.getProperty(EntityPropertyImpl.FIRE), false, properties.getProperty(EntityPropertyImpl.INVISIBLE)));
+        add(data, MetadataFactory.get().silent(properties.getProperty(EntityPropertyImpl.SILENT)));
+        if (properties.hasProperty(EntityPropertyImpl.NAME)) addAll(data, MetadataFactory.get().name(properties.getProperty(EntityPropertyImpl.NAME)));
+        return data;
+    }
+
+    @Override
     public void sendAllMetadata(Player player, PacketEntity entity, PropertyHolder properties) {
-        ArrayList<EntityData> data = new ArrayList<>();
-        if (entity.getType() == EntityTypes.PLAYER) data.add(MetadataFactory.get().skinLayers(properties.getProperty(EntityPropertyImpl.SKIN_LAYERS)));
-        data.add(MetadataFactory.get().effects(properties.getProperty(EntityPropertyImpl.FIRE), false, properties.getProperty(EntityPropertyImpl.INVISIBLE)));
-        data.add(MetadataFactory.get().silent(properties.getProperty(EntityPropertyImpl.SILENT)));
-        if (properties.hasProperty(EntityPropertyImpl.NAME)) data.addAll(MetadataFactory.get().name(properties.getProperty(EntityPropertyImpl.NAME)));
-        sendMetadata(player, entity, data);
+        sendMetadata(player, entity, new ArrayList<>(generateMetadata(player, entity, properties).values()));
     }
 
     @Override
@@ -138,5 +140,13 @@ public class V1_8Factory implements PacketFactory {
             future.complete(profile);
         });
         return future;
+    }
+
+    protected void add(Map<Integer, EntityData> map, EntityData data) {
+        map.put(data.getIndex(), data);
+    }
+
+    protected void addAll(Map<Integer, EntityData> map, Collection<EntityData> data) {
+        for (EntityData d : data) add(map, d);
     }
 }

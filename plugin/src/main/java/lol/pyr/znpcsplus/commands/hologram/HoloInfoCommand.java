@@ -16,7 +16,7 @@ import java.util.List;
 public class HoloInfoCommand implements CommandHandler {
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
-        context.setUsage(context.getLabel() + " holo info <npc_id>");
+        context.setUsage(context.getLabel() + " holo info <id>");
         NpcEntryImpl entry = context.parse(NpcEntryImpl.class);
         HologramImpl hologram = entry.getNpc().getHologram();
         Component component = Component.text("NPC Hologram Info of ID " + entry.getId() + ":", NamedTextColor.GREEN).appendNewline();

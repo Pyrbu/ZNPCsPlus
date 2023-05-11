@@ -15,7 +15,7 @@ import java.util.List;
 public class DeleteCommand implements CommandHandler {
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
-        context.setUsage(context.getLabel() + " delete <npc_id>");
+        context.setUsage(context.getLabel() + " delete <id>");
         NpcEntryImpl entry = context.parse(NpcEntryImpl.class);
         NpcRegistryImpl.get().delete(entry.getId());
         ZNpcsPlus.ADVENTURE.sender(context.getSender()).sendMessage(Component.text("Deleted NPC with ID: " + entry.getId(), NamedTextColor.GREEN));

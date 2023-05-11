@@ -73,7 +73,7 @@ public class HologramImpl extends Viewable implements Hologram {
 
     private void relocateLines(HologramLine newLine) {
         final double lineSpacing = Configs.config().lineSpacing();
-        double height = location.getY() + lines.size() * lineSpacing;
+        double height = location.getY() + (lines.size() - 1) * lineSpacing;
         for (HologramLine line : lines) {
             line.setLocation(location.withY(height), line == newLine ? Collections.emptySet() : getViewers());
             height -= lineSpacing;

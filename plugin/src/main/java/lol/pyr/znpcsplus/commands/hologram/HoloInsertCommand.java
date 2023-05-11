@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 public class HoloInsertCommand implements CommandHandler {
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
-        context.setUsage(context.getLabel() + " holo insert <npc_id> <line> <text>");
+        context.setUsage(context.getLabel() + " holo insert <id> <line> <text>");
         HologramImpl hologram = context.parse(NpcEntryImpl.class).getNpc().getHologram();
         int line = context.parse(Integer.class);
         if (line < 0 || line >= hologram.getLines().size()) context.halt(Component.text("Invalid line number!", NamedTextColor.RED));

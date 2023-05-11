@@ -9,7 +9,7 @@ import net.kyori.adventure.text.Component;
 import java.util.Collection;
 import java.util.Optional;
 
-public class V1_13Factory extends V1_9Factory {
+public class V1_13Factory extends V1_10Factory {
     @Override
     public Collection<EntityData> name(Component name) {
         return ListUtil.immutableList(

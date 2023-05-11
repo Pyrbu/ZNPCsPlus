@@ -17,7 +17,7 @@ import java.util.List;
 public class TeleportCommand implements CommandHandler {
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
-        context.setUsage(context.getLabel() + " teleport <npc_id>");
+        context.setUsage(context.getLabel() + " teleport <id>");
         Player player = context.ensureSenderIsPlayer();
         NpcImpl npc = context.parse(NpcEntryImpl.class).getNpc();
         FoliaUtil.teleport(player, npc.getBukkitLocation());

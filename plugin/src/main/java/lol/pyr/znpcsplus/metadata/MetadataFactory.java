@@ -28,8 +28,9 @@ import java.util.Map;
 public interface MetadataFactory {
     EntityData skinLayers(boolean enabled);
     EntityData effects(boolean onFire, boolean glowing, boolean invisible);
-    Collection<EntityData> name(Component name);
     EntityData silent(boolean enabled);
+    Collection<EntityData> name(Component name);
+    EntityData noGravity();
 
     MetadataFactory factory = get();
 
@@ -52,6 +53,7 @@ public interface MetadataFactory {
         HashMap<ServerVersion, LazyLoader<? extends MetadataFactory>> map = new HashMap<>();
         map.put(ServerVersion.V_1_8, LazyLoader.of(V1_8Factory::new));
         map.put(ServerVersion.V_1_9, LazyLoader.of(V1_9Factory::new));
+        map.put(ServerVersion.V_1_10, LazyLoader.of(V1_10Factory::new));
         map.put(ServerVersion.V_1_13, LazyLoader.of(V1_13Factory::new));
         map.put(ServerVersion.V_1_14, LazyLoader.of(V1_14Factory::new));
         map.put(ServerVersion.V_1_16, LazyLoader.of(V1_16Factory::new));

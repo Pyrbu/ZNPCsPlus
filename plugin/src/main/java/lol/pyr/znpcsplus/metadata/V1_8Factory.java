@@ -28,6 +28,11 @@ public class V1_8Factory implements MetadataFactory {
     }
 
     @Override
+    public EntityData noGravity() {
+        throw new UnsupportedOperationException("The gravity entity data isn't supported on this version");
+    }
+
+    @Override
     public EntityData silent(boolean enabled) {
         return new EntityData(4, EntityDataTypes.BYTE, enabled ? 1 : 0);
     }

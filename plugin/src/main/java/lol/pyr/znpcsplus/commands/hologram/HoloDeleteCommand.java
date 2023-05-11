@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 public class HoloDeleteCommand implements CommandHandler {
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
-        context.setUsage(context.getLabel() + " holo delete <npc_id> <line>");
+        context.setUsage(context.getLabel() + " holo delete <id> <line>");
         HologramImpl hologram = context.parse(NpcEntryImpl.class).getNpc().getHologram();
         int line = context.parse(Integer.class);
         if (line < 0 || line >= hologram.getLines().size()) context.halt(Component.text("Invalid line number!", NamedTextColor.RED));

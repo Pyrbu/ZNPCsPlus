@@ -56,22 +56,114 @@ public class NpcTypeImpl {
         return type;
     }
 
-    public static final NpcTypeImpl PLAYER = define(
-            new Builder("player", EntityTypes.PLAYER)
-                    .addProperties(EntityPropertyImpl.SKIN, EntityPropertyImpl.SKIN_LAYERS)
-                    .setHologramOffset(-0.45D));
+    private static boolean defined = false;
+    public static void defineTypes() {
+        if (defined) return;
+        defined = true;
+        ServerVersion version = PacketEvents.getAPI().getServerManager().getVersion();
 
-    public static final NpcTypeImpl CREEPER = define(
-            new Builder("creeper", EntityTypes.CREEPER)
-                    .setHologramOffset(-0.6D));
+        define(new Builder("player", EntityTypes.PLAYER).setHologramOffset(-0.15D)
+                        .addProperties(EntityPropertyImpl.SKIN, EntityPropertyImpl.SKIN_LAYERS));
 
-    public static final NpcTypeImpl ZOMBIE = define(
-            new Builder("zombie", EntityTypes.ZOMBIE)
-                    .setHologramOffset(-0.3D));
+        define(new Builder("armor_stand", EntityTypes.ARMOR_STAND));
+        define(new Builder("bat", EntityTypes.BAT).setHologramOffset(-1.365));
+        define(new Builder("blaze", EntityTypes.BLAZE));
+        define(new Builder("cat", EntityTypes.CAT));
+        define(new Builder("cave_spider", EntityTypes.CAVE_SPIDER));
+        define(new Builder("chicken", EntityTypes.CHICKEN));
+        define(new Builder("cow", EntityTypes.COW));
+        define(new Builder("creeper", EntityTypes.CREEPER).setHologramOffset(-0.3D));
+        define(new Builder("donkey", EntityTypes.DONKEY));
+        define(new Builder("elder_guardian", EntityTypes.ELDER_GUARDIAN));
+        define(new Builder("ender_dragon", EntityTypes.ENDER_DRAGON));
+        define(new Builder("enderman", EntityTypes.ENDERMAN));
+        define(new Builder("endermite", EntityTypes.ENDERMITE));
+        define(new Builder("ghast", EntityTypes.GHAST));
+        define(new Builder("giant", EntityTypes.GIANT));
+        define(new Builder("guardian", EntityTypes.GUARDIAN));
+        define(new Builder("horse", EntityTypes.HORSE));
+        define(new Builder("iron_golem", EntityTypes.IRON_GOLEM));
+        define(new Builder("magma_cube", EntityTypes.MAGMA_CUBE));
+        define(new Builder("mooshroom", EntityTypes.MOOSHROOM));
+        define(new Builder("mule", EntityTypes.MULE));
+        define(new Builder("ocelot", EntityTypes.OCELOT));
+        define(new Builder("pig", EntityTypes.PIG));
+        define(new Builder("rabbit", EntityTypes.RABBIT));
+        define(new Builder("sheep", EntityTypes.SHEEP));
+        define(new Builder("silverfish", EntityTypes.SILVERFISH));
+        define(new Builder("skeleton", EntityTypes.SKELETON));
+        define(new Builder("skeleton_horse", EntityTypes.SKELETON_HORSE));
+        define(new Builder("slime", EntityTypes.SLIME));
+        define(new Builder("snow_golem", EntityTypes.SNOW_GOLEM));
+        define(new Builder("spider", EntityTypes.SPIDER));
+        define(new Builder("squid", EntityTypes.SQUID));
+        define(new Builder("villager", EntityTypes.VILLAGER));
+        define(new Builder("witch", EntityTypes.WITCH));
+        define(new Builder("wither", EntityTypes.WITHER));
+        define(new Builder("wither_skeleton", EntityTypes.WITHER_SKELETON));
+        define(new Builder("wolf", EntityTypes.WOLF));
+        define(new Builder("zombie", EntityTypes.ZOMBIE));
+        define(new Builder("zombie_horse", EntityTypes.ZOMBIE_HORSE));
+        define(new Builder("zombie_villager", EntityTypes.ZOMBIE_VILLAGER));
 
-    public static final NpcTypeImpl SKELETON = define(
-            new Builder("skeleton", EntityTypes.SKELETON)
-                    .setHologramOffset(-0.3D));
+        if (!version.isNewerThanOrEquals(ServerVersion.V_1_9)) return;
+        define(new Builder("shulker", EntityTypes.SHULKER));
+
+        if (!version.isNewerThanOrEquals(ServerVersion.V_1_10)) return;
+        define(new Builder("husk", EntityTypes.HUSK));
+        define(new Builder("polar_bear", EntityTypes.POLAR_BEAR));
+        define(new Builder("stray", EntityTypes.STRAY));
+
+        if (!version.isNewerThanOrEquals(ServerVersion.V_1_11)) return;
+        define(new Builder("evoker", EntityTypes.EVOKER));
+        define(new Builder("llama", EntityTypes.LLAMA));
+        define(new Builder("vex", EntityTypes.VEX));
+        define(new Builder("vindicator", EntityTypes.VINDICATOR));
+
+        if (!version.isNewerThanOrEquals(ServerVersion.V_1_12)) return;
+        define(new Builder("illusioner", EntityTypes.ILLUSIONER));
+        define(new Builder("parrot", EntityTypes.PARROT));
+
+        if (!version.isNewerThanOrEquals(ServerVersion.V_1_13)) return;
+        define(new Builder("cod", EntityTypes.COD));
+        define(new Builder("dolphin", EntityTypes.DOLPHIN));
+        define(new Builder("drowned", EntityTypes.DROWNED));
+        define(new Builder("phantom", EntityTypes.PHANTOM));
+        define(new Builder("pufferfish", EntityTypes.PUFFERFISH));
+        define(new Builder("salmon", EntityTypes.SALMON));
+        define(new Builder("tropical_fish", EntityTypes.TROPICAL_FISH));
+        define(new Builder("turtle", EntityTypes.TURTLE));
+
+        if (!version.isNewerThanOrEquals(ServerVersion.V_1_14)) return;
+        define(new Builder("fox", EntityTypes.FOX));
+        define(new Builder("panda", EntityTypes.PANDA));
+        define(new Builder("pillager", EntityTypes.PILLAGER));
+        define(new Builder("ravager", EntityTypes.RAVAGER));
+        define(new Builder("trader_llama", EntityTypes.TRADER_LLAMA));
+        define(new Builder("wandering_trader", EntityTypes.WANDERING_TRADER));
+
+        if (!version.isNewerThanOrEquals(ServerVersion.V_1_15)) return;
+        define(new Builder("bee", EntityTypes.BEE));
+
+        if (!version.isNewerThanOrEquals(ServerVersion.V_1_16)) return;
+        define(new Builder("hoglin", EntityTypes.HOGLIN));
+        define(new Builder("piglin", EntityTypes.PIGLIN));
+        define(new Builder("piglin_brute", EntityTypes.PIGLIN_BRUTE));
+        define(new Builder("strider", EntityTypes.STRIDER));
+        define(new Builder("zoglin", EntityTypes.ZOGLIN));
+        define(new Builder("zombified_piglin", EntityTypes.ZOMBIFIED_PIGLIN));
+
+        if (!version.isNewerThanOrEquals(ServerVersion.V_1_17)) return;
+        define(new Builder("axolotl", EntityTypes.AXOLOTL));
+        define(new Builder("glow_squid", EntityTypes.GLOW_SQUID));
+        define(new Builder("goat", EntityTypes.GOAT));
+
+        if (!version.isNewerThanOrEquals(ServerVersion.V_1_19)) return;
+        define(new Builder("allay", EntityTypes.ALLAY));
+        define(new Builder("frog", EntityTypes.FROG));
+        define(new Builder("tadpole", EntityTypes.TADPOLE));
+        define(new Builder("warden", EntityTypes.WARDEN));
+    }
 
     private static final class Builder {
         private final String name;
