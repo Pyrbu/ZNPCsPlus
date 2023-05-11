@@ -60,6 +60,11 @@ public final class Reflections {
                     .withClassName("AsyncScheduler")
                     .setStrict(FoliaUtil.isFolia())).get();
 
+    public static final Class<?> GLOBAL_REGION_SCHEDULER_CLASS = new ClassReflection(
+            new ReflectionBuilder("io.papermc.paper.threadedregions.scheduler")
+                    .withClassName("GlobalRegionScheduler")
+                    .setStrict(FoliaUtil.isFolia())).get();
+
     public static final Class<?> SCHEDULED_TASK_CLASS = new ClassReflection(
             new ReflectionBuilder("io.papermc.paper.threadedregions.scheduler")
                     .withClassName("ScheduledTask")
@@ -69,6 +74,12 @@ public final class Reflections {
             new ReflectionBuilder(Bukkit.class)
                     .withMethodName("getAsyncScheduler")
                     .withExpectResult(ASYNC_SCHEDULER_CLASS)
+                    .setStrict(FoliaUtil.isFolia()));
+
+    public static final ReflectionLazyLoader<Method> FOLIA_GET_GLOBAL_REGION_SCHEDULER = new MethodReflection(
+            new ReflectionBuilder(Bukkit.class)
+                    .withMethodName("getGlobalRegionScheduler")
+                    .withExpectResult(GLOBAL_REGION_SCHEDULER_CLASS)
                     .setStrict(FoliaUtil.isFolia()));
 
     public static final ReflectionLazyLoader<Method> FOLIA_RUN_NOW = new MethodReflection(
@@ -89,6 +100,13 @@ public final class Reflections {
             new ReflectionBuilder(ASYNC_SCHEDULER_CLASS)
                     .withMethodName("runAtFixedRate")
                     .withParameterTypes(Plugin.class, Consumer.class, long.class, long.class, TimeUnit.class)
+                    .withExpectResult(SCHEDULED_TASK_CLASS)
+                    .setStrict(FoliaUtil.isFolia()));
+
+    public static final ReflectionLazyLoader<Method> FOLIA_RUN_NOW_GLOBAL = new MethodReflection(
+            new ReflectionBuilder(GLOBAL_REGION_SCHEDULER_CLASS)
+                    .withMethodName("runNow")
+                    .withParameterTypes(Plugin.class, Consumer.class)
                     .withExpectResult(SCHEDULED_TASK_CLASS)
                     .setStrict(FoliaUtil.isFolia()));
 
