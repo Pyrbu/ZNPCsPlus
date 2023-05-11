@@ -10,8 +10,8 @@ import java.util.Collection;
 
 public class V1_8Factory implements MetadataFactory {
     @Override
-    public EntityData skinLayers() {
-        return createSkinLayers(12);
+    public EntityData skinLayers(boolean enabled) {
+        return createSkinLayers(12, enabled);
     }
 
     @Override
@@ -28,11 +28,11 @@ public class V1_8Factory implements MetadataFactory {
     }
 
     @Override
-    public EntityData silent() {
-        return new EntityData(4, EntityDataTypes.BYTE, 1);
+    public EntityData silent(boolean enabled) {
+        return new EntityData(4, EntityDataTypes.BYTE, enabled ? 1 : 0);
     }
 
-    protected EntityData createSkinLayers(int index) {
-        return new EntityData(index, EntityDataTypes.BYTE, Byte.MAX_VALUE);
+    protected EntityData createSkinLayers(int index, boolean enabled) {
+        return new EntityData(index, EntityDataTypes.BYTE, enabled ? Byte.MAX_VALUE : 0);
     }
 }

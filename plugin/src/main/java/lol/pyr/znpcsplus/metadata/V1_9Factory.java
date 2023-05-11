@@ -10,8 +10,8 @@ import java.util.Collection;
 
 public class V1_9Factory extends V1_8Factory {
     @Override
-    public EntityData skinLayers() {
-        return createSkinLayers(13);
+    public EntityData skinLayers(boolean enabled) {
+        return createSkinLayers(13, enabled);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class V1_9Factory extends V1_8Factory {
     }
 
     @Override
-    public EntityData silent() {
-        return new EntityData(4, EntityDataTypes.BOOLEAN, true);
+    public EntityData silent(boolean enabled) {
+        return new EntityData(4, EntityDataTypes.BOOLEAN, enabled);
     }
 }
