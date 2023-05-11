@@ -8,6 +8,7 @@ import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +22,7 @@ public class HoloSetCommand implements CommandHandler {
         int line = context.parse(Integer.class);
         if (line < 0 || line >= hologram.getLines().size()) context.halt(Component.text("Invalid line number!", NamedTextColor.RED));
         hologram.removeLine(line);
-        hologram.insertLine(line, Component.text(context.dumpAllArgs()));
+        hologram.insertLine(line, LegacyComponentSerializer.legacyAmpersand().deserialize(context.dumpAllArgs()));
         context.send(Component.text("NPC line set!", NamedTextColor.GREEN));
     }
 
