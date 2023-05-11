@@ -239,7 +239,7 @@ public class NPC {
                 ServerVersion version = PacketEvents.getAPI().getServerManager().getVersion();
                 EntityType type = SpigotConversionUtil.fromBukkitEntityType(((Entity) bukkitEntity).getType());
                 if (version.isNewerThanOrEquals(ServerVersion.V_1_14)) PacketEvents.getAPI().getPlayerManager().sendPacket(
-                        player, new WrapperPlayServerSpawnEntity(entityID, Optional.of(uuid), type, location.toVector3d(),
+                        player, new WrapperPlayServerSpawnEntity(entityID, Optional.ofNullable(uuid), type, location.toVector3d(),
                                 location.getPitch(), location.getYaw(), location.getYaw(), 0, Optional.empty()));
                 else PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerSpawnLivingEntity(
                         entityID, uuid, type, location.toVector3d(), location.getYaw(), location.getPitch(),
