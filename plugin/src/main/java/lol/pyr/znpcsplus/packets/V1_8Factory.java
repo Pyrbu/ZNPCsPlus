@@ -32,6 +32,7 @@ public class V1_8Factory implements PacketFactory {
             ZLocation location = entity.getLocation();
             sendPacket(player, new WrapperPlayServerSpawnPlayer(entity.getEntityId(),
                     entity.getUuid(), location.toVector3d(), location.getYaw(), location.getPitch(), Collections.emptyList()));
+            sendPacket(player, new WrapperPlayServerEntityHeadLook(entity.getEntityId(), location.getYaw()));
             sendAllMetadata(player, entity, properties);
             ZNpcsPlus.SCHEDULER.runLaterAsync(() -> removeTabPlayer(player, entity), 60);
         });
@@ -60,8 +61,7 @@ public class V1_8Factory implements PacketFactory {
     @Override
     public void teleportEntity(Player player, PacketEntity entity) {
         ZLocation location = entity.getLocation();
-        sendPacket(player, new WrapperPlayServerEntityTeleport(entity.getEntityId(),
-                location.toVector3d(), location.getYaw(), location.getPitch(), true));
+        sendPacket(player, new WrapperPlayServerEntityTeleport(entity.getEntityId(), location.toVector3d(), location.getYaw(), location.getPitch(), true));
     }
 
     @Override
