@@ -53,14 +53,16 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 public class ZNpcsPlus extends JavaPlugin {
+    private static final int PLUGIN_ID = 18244;
+    public static boolean PLACEHOLDERS_SUPPORTED;
+
     public static Logger LOGGER;
     public static File PLUGIN_FOLDER;
     public static File PATH_FOLDER;
-    private static final int PLUGIN_ID = 18244;
+
     public static TaskScheduler SCHEDULER;
-    public static BungeeUtil BUNGEE_UTILS;
+    public static BungeeUtil BUNGEE_UTIL;
     public static BukkitAudiences ADVENTURE;
-    public static boolean PLACEHOLDERS_SUPPORTED;
 
     private boolean enabled = false;
     public static final String DEBUG_NPC_PREFIX = "debug_npc";
@@ -129,7 +131,7 @@ public class ZNpcsPlus extends JavaPlugin {
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         new Metrics(this, PLUGIN_ID);
         SCHEDULER = FoliaUtil.isFolia() ? new FoliaScheduler(this) : new SpigotScheduler(this);
-        BUNGEE_UTILS = new BungeeUtil(this);
+        BUNGEE_UTIL = new BungeeUtil(this);
         Bukkit.getOnlinePlayers().forEach(User::get);
         registerCommands();
 
@@ -138,6 +140,9 @@ public class ZNpcsPlus extends JavaPlugin {
         new SkinCacheCleanTask();
         new UserListener(this);
         if (Configs.config().checkForUpdates()) new UpdateNotificationListener(this, new UpdateChecker(this));
+
+        log(ChatColor.WHITE+  " * Loading NPCs...");
+        NpcRegistryImpl.get().reload();
 
         ZApiProvider.register(new ZNpcsApi());
         enabled = true;
@@ -159,7 +164,6 @@ public class ZNpcsPlus extends JavaPlugin {
                     npc.setProperty(EntityPropertyImpl.INVISIBLE, true);
                 }
                 npc.setProperty(EntityPropertyImpl.GLOW, NamedTextColor.RED);
-                // npc.setProperty(EntityProperty.FIRE, true);
                 npc.getHologram().addLine(Component.text("Hello, World!"));
                 if (x++ > wrap) {
                     x = 0;
@@ -183,6 +187,7 @@ public class ZNpcsPlus extends JavaPlugin {
     @Override
     public void onDisable() {
         if (!enabled) return;
+        NpcRegistryImpl.get().save();
         ZApiProvider.unregister();
         Bukkit.getOnlinePlayers().forEach(User::remove);
         ADVENTURE.close();

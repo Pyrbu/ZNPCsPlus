@@ -1,5 +1,6 @@
 package lol.pyr.znpcsplus.config;
 
+import lol.pyr.znpcsplus.storage.NpcStorageType;
 import space.arim.dazzleconf.annote.ConfComments;
 import space.arim.dazzleconf.annote.ConfKey;
 
@@ -25,4 +26,9 @@ public interface MainConfig {
     @ConfComments({"Should debug mode be enabled?", "This is used in development to test various things, you probably don't want to enable this"})
     @DefaultBoolean(false)
     boolean debugEnabled();
+
+    @ConfKey("storage-type")
+    @ConfComments("The storage type to use. Available storage types: YAML")
+    @DefaultString("YAML")
+    NpcStorageType storageType();
 }

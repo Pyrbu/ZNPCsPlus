@@ -12,7 +12,7 @@ public class SwitchServerAction extends NpcAction {
 
     @Override
     public void run(Player player) {
-        ZNpcsPlus.BUNGEE_UTILS.sendPlayerToServer(player, argument);
+        ZNpcsPlus.BUNGEE_UTIL.sendPlayerToServer(player, argument);
     }
 
     @Override

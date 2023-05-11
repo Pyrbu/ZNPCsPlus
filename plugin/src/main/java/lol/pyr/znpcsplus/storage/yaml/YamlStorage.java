@@ -69,7 +69,9 @@ public class YamlStorage implements NpcStorage {
 
     @Override
     public void saveNpcs(Collection<NpcEntryImpl> npcs) {
-        for (NpcEntryImpl entry : npcs) if (entry.isSave()) try {
+        File[] files = npcsFolder.listFiles();
+        if (files != null && files.length != 0) for (File file : files) file.delete();
+        for (NpcEntryImpl entry : npcs) try {
             YamlConfiguration config = new YamlConfiguration();
             config.set("id", entry.getId());
             config.set("is-processed", entry.isProcessed());
@@ -99,7 +101,7 @@ public class YamlStorage implements NpcStorage {
             }
             config.set("action-amount", i);
 
-            config.save(new File(entry.getId() + ".yml"));
+            config.save(new File(npcsFolder, entry.getId() + ".yml"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
