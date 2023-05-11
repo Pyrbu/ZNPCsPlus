@@ -31,6 +31,7 @@ import org.bukkit.entity.Player;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 
 public class NPC {
     private static final ConcurrentMap<Integer, NPC> NPC_MAP = new ConcurrentHashMap<>();
@@ -231,7 +232,7 @@ public class NPC {
                     PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerSpawnPlayer(entityID,
                             this.gameProfile.getId(), SpigotConversionUtil.fromBukkitLocation(location.toBukkitLocation())));
                     PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerEntityMetadata(entityID,
-                            List.of(new EntityData(NPCSkin.SkinLayerValues.findLayerByVersion(), EntityDataTypes.BYTE, Byte.MAX_VALUE))));
+                            Collections.singletonList(new EntityData(NPCSkin.SkinLayerValues.findLayerByVersion(), EntityDataTypes.BYTE, Byte.MAX_VALUE))));
                     PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerEntityHeadLook(entityID, location.getYaw()));
                 });
             }
@@ -243,7 +244,7 @@ public class NPC {
                                 location.getPitch(), location.getYaw(), location.getYaw(), 0, Optional.empty()));
                 else PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerSpawnLivingEntity(
                         entityID, uuid, type, location.toVector3d(), location.getYaw(), location.getPitch(),
-                        location.getPitch(), new Vector3d(), List.of()));
+                        location.getPitch(), new Vector3d(), Collections.emptyList()));
             }
 
             if (FunctionFactory.isTrue(this, "holo")) this.hologram.spawn(user);
@@ -327,10 +328,10 @@ public class NPC {
                 .filter(entry -> Objects.nonNull(entry.getKey()))
                 .filter(entry -> Objects.nonNull(entry.getValue()))
                 .map(entry -> new Equipment(entry.getKey(), SpigotConversionUtil.fromBukkitItemStack(entry.getValue())))
-                .toList();
+                .collect(Collectors.toList());
         if (equipment.size() == 0) return;
         if (Utils.versionNewer(16)) PacketEvents.getAPI().getPlayerManager().sendPacket(zUser.toPlayer(), new WrapperPlayServerEntityEquipment(entityID, equipment));
-        else for (Equipment e : equipment) PacketEvents.getAPI().getPlayerManager().sendPacket(zUser.toPlayer(), new WrapperPlayServerEntityEquipment(entityID, List.of(e)));
+        else for (Equipment e : equipment) PacketEvents.getAPI().getPlayerManager().sendPacket(zUser.toPlayer(), new WrapperPlayServerEntityEquipment(entityID, Collections.singletonList(e)));
     }
 
     public void setPath(NPCPath.AbstractTypeWriter typeWriter) {

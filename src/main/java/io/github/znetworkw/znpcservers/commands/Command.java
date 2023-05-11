@@ -70,7 +70,7 @@ public class Command extends BukkitCommand {
 
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
         Optional<Map.Entry<CommandInformation, CommandInvoker>> subCommandOptional = this.subCommands.entrySet().stream().filter(command -> command.getKey().name().contentEquals((args.length > 0) ? args[0] : "")).findFirst();
-        if (subCommandOptional.isEmpty()) {
+        if (subCommandOptional.isPresent()) {
             sender.sendMessage(ChatColor.RED + "Unable to locate the following command: " + commandLabel + ".");
             return false;
         }
@@ -90,7 +90,7 @@ public class Command extends BukkitCommand {
 
     public @NotNull List<String> tabComplete(CommandSender sender, String commandLabel, String[] args) {
         Optional<Map.Entry<CommandTabInformation, CommandTabInvoker>> subCommandOptional = this.subCommandsTab.entrySet().stream().filter(command -> command.getKey().name().contentEquals((args.length > 0) ? args[0] : "")).findFirst();
-        if (subCommandOptional.isEmpty()) {
+        if (subCommandOptional.isPresent()) {
             List<String> collect = getCommands().stream().map(CommandInformation::name).collect(Collectors.toList());
             if (args.length == 0) {
                 return collect;
@@ -104,7 +104,7 @@ public class Command extends BukkitCommand {
             }
             return subCommand.getValue().tabComplete(new io.github.znetworkw.znpcservers.commands.CommandSender(sender), Arrays.copyOfRange(args, 1, args.length));
         } catch (CommandException e) {
-            return List.of();
+            return Collections.emptyList();
         }
     }
 }

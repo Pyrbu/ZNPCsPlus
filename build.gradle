@@ -28,8 +28,8 @@ dependencies {
     compileOnly "org.spigotmc:spigot-api:1.19.4-R0.1-SNAPSHOT"
     compileOnly "me.clip:placeholderapi:2.11.1"
 
-    compileOnly "com.mojang:authlib:3.4.40"
-    compileOnly "com.mojang:datafixerupper:6.0.8"
+    compileOnly "com.mojang:authlib:2.1.28"
+    compileOnly "com.mojang:datafixerupper:3.0.25"
 
     implementation "commons-io:commons-io:2.11.0"
     implementation "com.google.code.gson:gson:2.10.1"
@@ -41,10 +41,8 @@ dependencies {
 
 group "lol.pyr"
 version "1.0.6"
-
-compileJava {
-    options.release.set(17)
-}
+sourceCompatibility 1.8
+targetCompatibility 1.8
 
 shadowJar {
     archiveClassifier.set ""

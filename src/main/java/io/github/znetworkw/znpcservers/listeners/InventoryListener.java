@@ -15,9 +15,11 @@ public class InventoryListener implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player player)) return;
+        if (!(event.getWhoClicked() instanceof Player)) return;
+        final Player player = (Player) event.getWhoClicked();
         if (event.getCurrentItem() == null) return;
-        if (!(event.getInventory().getHolder() instanceof ZInventoryHolder holder)) return;
+        if (!(event.getInventory().getHolder() instanceof ZInventoryHolder)) return;
+        final ZInventoryHolder holder = (ZInventoryHolder) event.getInventory().getHolder();
         event.setCancelled(true);
 
         ZInventoryPage page = holder.getzInventory().getPage();
