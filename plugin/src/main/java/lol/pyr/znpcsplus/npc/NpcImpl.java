@@ -95,6 +95,10 @@ public class NpcImpl extends Viewable implements Npc {
         for (Player viewer : getViewers()) entity.refreshMeta(viewer);
     }
 
+    private void _remakeTeam() {
+        for (Player viewer : getViewers()) entity.remakeTeam(viewer);
+    }
+
     @SuppressWarnings("unchecked")
     public <T> T getProperty(EntityProperty<T> key) {
         return hasProperty(key) ? (T) propertyMap.get((EntityPropertyImpl<?>) key) : key.getDefaultValue();
@@ -108,6 +112,7 @@ public class NpcImpl extends Viewable implements Npc {
         if (value.equals(key.getDefaultValue())) removeProperty(key);
         else propertyMap.put(key, value);
         _refreshMeta();
+        if (key == EntityPropertyImpl.GLOW) _remakeTeam();
     }
 
     @SuppressWarnings("unchecked")
@@ -118,6 +123,7 @@ public class NpcImpl extends Viewable implements Npc {
     public void removeProperty(EntityPropertyImpl<?> key) {
         propertyMap.remove(key);
         _refreshMeta();
+        if (key == EntityPropertyImpl.GLOW) _remakeTeam();
     }
 
     public Set<EntityPropertyImpl<?>> getAppliedProperties() {

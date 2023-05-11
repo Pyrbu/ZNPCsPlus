@@ -22,7 +22,6 @@ public class PropertiesCommand implements CommandHandler {
 
         if (!npc.getType().getAllowedProperties().contains(property)) context.halt(Component.text("Property " + property.getName() + " not allowed for npc type " + npc.getType().getName()));
 
-        // TODO: implement all the parsers for the types used in EntityPropertyImpl
         Object value = context.parse(property.getType());
         npc.UNSAFE_setProperty(property, value);
         context.send(Component.text("Set property " + property.getName() + " for NPC " + entry.getId() + " to " + value.toString(), NamedTextColor.GREEN));
@@ -33,6 +32,12 @@ public class PropertiesCommand implements CommandHandler {
         if (context.argSize() == 1) return context.suggestCollection(NpcRegistryImpl.get().modifiableIds());
         if (context.argSize() == 2) return context.suggestStream(context.suggestionParse(0, NpcEntryImpl.class)
                     .getNpc().getType().getAllowedProperties().stream().map(EntityPropertyImpl::getName));
+        if (context.argSize() == 3) {
+            EntityPropertyImpl<?> property = context.suggestionParse(1, EntityPropertyImpl.class);
+            Class<?> type = property.getType();
+            if (type == Boolean.class) return context.suggestLiteral("true", "false");
+            if (type == NamedTextColor.class) return context.suggestCollection(NamedTextColor.NAMES.keys());
+        }
         return Collections.emptyList();
     }
 }

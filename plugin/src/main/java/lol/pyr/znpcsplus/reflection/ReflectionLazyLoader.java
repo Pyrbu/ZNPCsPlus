@@ -34,7 +34,7 @@ public abstract class ReflectionLazyLoader<T> {
             if (eval == null) throw new RuntimeException("Returned value is null");
         } catch (Throwable throwable) {
             if (strict) {
-                warn(" ----- REFLECTION FAILURE DEBUG INFORMATION, REPORT THIS ON OUR GITHUB ----- ");
+                warn(" ----- REFLECTION FAILURE DEBUG INFORMATION, REPORT THIS ON THE ZNPCSPLUS GITHUB ----- ");
                 warn(getClass().getSimpleName() + " failed!");
                 warn("Class Names: " + possibleClassNames);
                 warn("Reflection Type: " + getClass().getCanonicalName());
@@ -42,7 +42,7 @@ public abstract class ReflectionLazyLoader<T> {
                 printDebugInfo(this::warn);
                 warn("Exception:");
                 throwable.printStackTrace();
-                warn(" ----- REFLECTION FAILURE DEBUG INFORMATION, REPORT THIS ON OUR GITHUB ----- ");
+                warn(" ----- REFLECTION FAILURE DEBUG INFORMATION, REPORT THIS ON THE ZNPCSPLUS GITHUB ----- ");
             }
         }
         this.loaded = true;

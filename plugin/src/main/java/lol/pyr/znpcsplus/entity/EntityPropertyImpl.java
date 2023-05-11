@@ -91,11 +91,12 @@ public class EntityPropertyImpl<T> implements EntityProperty<T> {
     private final static PropertySerializer<SkinDescriptor> DESCRIPTOR_SERIALIZER = descriptor -> ((BaseSkinDescriptor) descriptor).serialize();
     private final static PropertyDeserializer<SkinDescriptor> DESCRIPTOR_DESERIALIZER = BaseSkinDescriptor::deserialize;
 
-    public static EntityPropertyImpl<Boolean> SKIN_LAYERS = new EntityPropertyImpl<>("skin_layers", true, BOOLEAN_SERIALIZER, BOOLEAN_DESERIALIZER);
-    public static EntityPropertyImpl<SkinDescriptor> SKIN = new EntityPropertyImpl<>("skin", SkinDescriptor.class, DESCRIPTOR_SERIALIZER, DESCRIPTOR_DESERIALIZER);
     public static EntityPropertyImpl<NamedTextColor> GLOW = new EntityPropertyImpl<>("glow", NamedTextColor.class, COLOR_SERIALIZER, COLOR_DESERIALIZER);
+    public static EntityPropertyImpl<Boolean> SKIN_LAYERS = new EntityPropertyImpl<>("skin_layers", true, BOOLEAN_SERIALIZER, BOOLEAN_DESERIALIZER);
     public static EntityPropertyImpl<Boolean> FIRE = new EntityPropertyImpl<>("fire", false, BOOLEAN_SERIALIZER, BOOLEAN_DESERIALIZER);
     public static EntityPropertyImpl<Boolean> INVISIBLE = new EntityPropertyImpl<>("invisible", false, BOOLEAN_SERIALIZER, BOOLEAN_DESERIALIZER);
     public static EntityPropertyImpl<Boolean> SILENT = new EntityPropertyImpl<>("silent", false, BOOLEAN_SERIALIZER, BOOLEAN_DESERIALIZER);
+
+    public static EntityPropertyImpl<SkinDescriptor> SKIN = new EntityPropertyImpl<>("skin", SkinDescriptor.class, DESCRIPTOR_SERIALIZER, DESCRIPTOR_DESERIALIZER);
     public static EntityPropertyImpl<Component> NAME = new EntityPropertyImpl<>("name", Component.class, COMPONENT_SERIALIZER, COMPONENT_DESERIALIZER);
 }
