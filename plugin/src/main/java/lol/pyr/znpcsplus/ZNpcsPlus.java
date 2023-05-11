@@ -41,6 +41,7 @@ import lol.pyr.znpcsplus.util.ZLocation;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.apache.commons.io.FileUtils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -63,6 +64,10 @@ public class ZNpcsPlus extends JavaPlugin {
     public static TaskScheduler SCHEDULER;
     public static BungeeUtil BUNGEE_UTIL;
     public static BukkitAudiences ADVENTURE;
+    public static LegacyComponentSerializer LEGACY_AMPERSAND_SERIALIZER = LegacyComponentSerializer.builder()
+            .character('&')
+            .hexCharacter('#')
+            .hexColors().build();
 
     private boolean enabled = false;
     public static final String DEBUG_NPC_PREFIX = "debug_npc";
@@ -205,11 +210,9 @@ public class ZNpcsPlus extends JavaPlugin {
 
         manager.registerCommand("npc", new MultiCommand()
                 .addSubcommand("action", new ActionCommand())
-                .addSubcommand("conversations", new ConversationsCommand())
                 .addSubcommand("create", new CreateCommand())
                 .addSubcommand("delete", new DeleteCommand())
                 .addSubcommand("move", new MoveCommand())
-                .addSubcommand("path", new PathCommand())
                 .addSubcommand("properties", new PropertiesCommand())
                 .addSubcommand("teleport", new TeleportCommand())
                 .addSubcommand("list", new ListCommand())

@@ -28,7 +28,7 @@ public class HoloDeleteCommand implements CommandHandler {
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
         if (context.argSize() == 1) return context.suggestCollection(NpcRegistryImpl.get().modifiableIds());
         if (context.argSize() == 2) return context.suggestStream(Stream.iterate(0, n -> n + 1)
-                .limit(context.suggestionParse(1, NpcEntryImpl.class).getNpc().getHologram().getLines().size())
+                .limit(context.suggestionParse(0, NpcEntryImpl.class).getNpc().getHologram().getLines().size())
                 .map(String::valueOf));
         return Collections.emptyList();
     }
