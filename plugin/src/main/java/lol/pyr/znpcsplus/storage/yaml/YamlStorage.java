@@ -41,9 +41,11 @@ public class YamlStorage implements NpcStorage {
                     deserializeLocation(config.getConfigurationSection("location")));
 
             ConfigurationSection properties = config.getConfigurationSection("properties");
-            for (String key : properties.getKeys(false)) {
-                EntityPropertyImpl<?> property = EntityPropertyImpl.getByName(key);
-                npc.UNSAFE_setProperty(property, property.deserialize(properties.getString(key)));
+            if (properties != null) {
+                for (String key : properties.getKeys(false)) {
+                    EntityPropertyImpl<?> property = EntityPropertyImpl.getByName(key);
+                    npc.UNSAFE_setProperty(property, property.deserialize(properties.getString(key)));
+                }
             }
 
             for (String line : config.getStringList("hologram")) {
