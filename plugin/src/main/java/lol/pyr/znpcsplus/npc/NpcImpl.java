@@ -9,13 +9,13 @@ import lol.pyr.znpcsplus.interaction.NpcAction;
 import lol.pyr.znpcsplus.util.Viewable;
 import lol.pyr.znpcsplus.util.ZLocation;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.*;
 
 public class NpcImpl extends Viewable implements Npc {
-    private final Set<Player> viewers = new HashSet<>();
     private final String worldName;
     private PacketEntity entity;
     private ZLocation location;
@@ -57,9 +57,13 @@ public class NpcImpl extends Viewable implements Npc {
         return location;
     }
 
+    public Location getBukkitLocation() {
+        return location.toBukkitLocation(getWorld());
+    }
+
     public void setLocation(ZLocation location) {
         this.location = location;
-        entity.setLocation(location, viewers);
+        entity.setLocation(location, getViewers());
         hologram.setLocation(location.withY(location.getY() + type.getHologramOffset()));
     }
 
@@ -88,7 +92,7 @@ public class NpcImpl extends Viewable implements Npc {
     }
 
     private void _refreshMeta() {
-        for (Player viewer : viewers) entity.refreshMeta(viewer);
+        for (Player viewer : getViewers()) entity.refreshMeta(viewer);
     }
 
     @SuppressWarnings("unchecked")
@@ -102,10 +106,13 @@ public class NpcImpl extends Viewable implements Npc {
 
     public <T> void setProperty(EntityPropertyImpl<T> key, T value) {
         if (value.equals(key.getDefaultValue())) removeProperty(key);
-        else {
-            propertyMap.put(key, value);
-            _refreshMeta();
-        }
+        else propertyMap.put(key, value);
+        _refreshMeta();
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> void UNSAFE_setProperty(EntityPropertyImpl<?> property, Object value) {
+        setProperty((EntityPropertyImpl<T>) property, (T) value);
     }
 
     public void removeProperty(EntityPropertyImpl<?> key) {

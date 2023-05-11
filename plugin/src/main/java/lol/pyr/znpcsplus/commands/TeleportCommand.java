@@ -20,7 +20,7 @@ public class TeleportCommand implements CommandHandler {
         context.setUsage(context.getLabel() + " teleport <npc_id>");
         Player player = context.ensureSenderIsPlayer();
         NpcImpl npc = context.parse(NpcEntryImpl.class).getNpc();
-        FoliaUtil.teleport(player, npc.getLocation().toBukkitLocation(npc.getWorld()));
+        FoliaUtil.teleport(player, npc.getBukkitLocation());
         context.send(Component.text("Teleported to NPC!", NamedTextColor.GREEN));
     }
 

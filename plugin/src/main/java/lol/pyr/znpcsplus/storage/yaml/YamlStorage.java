@@ -43,7 +43,7 @@ public class YamlStorage implements NpcStorage {
             ConfigurationSection properties = config.getConfigurationSection("properties");
             for (String key : properties.getKeys(false)) {
                 EntityPropertyImpl<?> property = EntityPropertyImpl.getByName(key);
-                _setProperty(npc, property, property.deserialize(properties.getString(key)));
+                npc.UNSAFE_setProperty(property, property.deserialize(properties.getString(key)));
             }
 
             for (String line : config.getStringList("hologram")) {
@@ -65,11 +65,6 @@ public class YamlStorage implements NpcStorage {
             npcs.add(entry);
         }
         return npcs;
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T> void _setProperty(NpcImpl npc, EntityPropertyImpl<?> property, Object value) {
-        npc.setProperty((EntityPropertyImpl<T>) property, (T) value);
     }
 
     @Override

@@ -21,7 +21,7 @@ public class NpcVisibilityTask extends BukkitRunnable {
             if (!entry.isProcessed()) continue;
             NpcImpl npc = entry.getNpc();
             for (Player player : Bukkit.getOnlinePlayers()) {
-                boolean inRange = (player.getWorld() == npc.getWorld() && player.getLocation().distanceSquared(npc.getLocation().toBukkitLocation(npc.getWorld())) <= distSq);
+                boolean inRange = (player.getWorld() == npc.getWorld() && player.getLocation().distanceSquared(npc.getBukkitLocation()) <= distSq);
                 if (!inRange && npc.isShown(player)) npc.hide(player);
                 if (inRange && !npc.isShown(player)) npc.show(player);
             }

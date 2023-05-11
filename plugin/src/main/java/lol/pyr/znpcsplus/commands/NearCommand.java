@@ -15,16 +15,16 @@ public class NearCommand implements CommandHandler {
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
         Player player = context.ensureSenderIsPlayer();
-        double radius = Math.pow(context.parse(Integer.class), 2);
+        int raw = context.parse(Integer.class);
+        double radius = Math.pow(raw, 2);
 
         String npcs = NpcRegistryImpl.get().allModifiable().stream()
-                        .filter(entry -> entry.getNpc().getLocation().toBukkitLocation(entry.getNpc().getWorld()).distanceSquared(player.getLocation()) < radius)
+                        .filter(entry -> entry.getNpc().getBukkitLocation().distanceSquared(player.getLocation()) < radius)
                         .map(NpcEntryImpl::getId)
                         .collect(Collectors.joining(", "));
 
-        if (npcs.length() == 0) context.halt(Component.text("There are no npcs within " + ((int) radius) + " blocks around you.", NamedTextColor.RED));
-        context.send(Component.text("All NPCs that are within " + radius + " blocks from you:", NamedTextColor.GREEN).appendNewline()
+        if (npcs.length() == 0) context.halt(Component.text("There are no npcs within " + raw + " blocks around you.", NamedTextColor.RED));
+        context.send(Component.text("All NPCs that are within " + raw + " blocks from you:", NamedTextColor.GREEN).appendNewline()
                 .append(Component.text(npcs, NamedTextColor.GREEN)));
-
     }
 }

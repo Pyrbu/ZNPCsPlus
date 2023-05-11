@@ -53,6 +53,10 @@ public abstract class Viewable {
         return Collections.unmodifiableSet(viewers);
     }
 
+    public boolean isVisibleTo(Player player) {
+        return viewers.contains(player);
+    }
+
     protected abstract void _show(Player player);
 
     protected abstract void _hide(Player player);
