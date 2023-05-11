@@ -26,10 +26,10 @@ import java.util.Map;
  * 1.19 https://wiki.vg/index.php?title=Entity_metadata
  */
 public interface MetadataFactory {
-    EntityData skinLayers();
+    EntityData skinLayers(boolean enabled);
     EntityData effects(boolean onFire, boolean glowing, boolean invisible);
     Collection<EntityData> name(Component name);
-    EntityData silent();
+    EntityData silent(boolean enabled);
 
     MetadataFactory factory = get();
 

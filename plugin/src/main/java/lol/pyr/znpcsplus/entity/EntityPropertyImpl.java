@@ -14,17 +14,24 @@ import java.util.Map;
 public class EntityPropertyImpl<T> implements EntityProperty<T> {
     private final String name;
     private final T defaultValue;
+    private final Class<T> clazz;
 
     private final PropertySerializer<T> serializer;
     private final PropertyDeserializer<T> deserializer;
 
-    public EntityPropertyImpl(String name, PropertySerializer<T> serializer, PropertyDeserializer<T> deserializer) {
-        this(name, null, serializer, deserializer);
+    public EntityPropertyImpl(String name, Class<T> type, PropertySerializer<T> serializer, PropertyDeserializer<T> deserializer) {
+        this(name, null, type, serializer, deserializer);
     }
 
+    @SuppressWarnings("unchecked")
     public EntityPropertyImpl(String name, T defaultValue, PropertySerializer<T> serializer, PropertyDeserializer<T> deserializer) {
+        this(name, defaultValue, (Class<T>) defaultValue.getClass(), serializer, deserializer);
+    }
+
+    private EntityPropertyImpl(String name, T defaultValue, Class<T> clazz, PropertySerializer<T> serializer, PropertyDeserializer<T> deserializer) {
         this.name = name.toUpperCase();
         this.defaultValue = defaultValue;
+        this.clazz = clazz;
         this.serializer = serializer;
         this.deserializer = deserializer;
         BY_NAME.put(this.name, this);
@@ -49,6 +56,10 @@ public class EntityPropertyImpl<T> implements EntityProperty<T> {
     @Override
     public T getDefaultValue() {
         return defaultValue;
+    }
+
+    public Class<T> getType() {
+        return clazz;
     }
 
     private final static Map<String, EntityPropertyImpl<?>> BY_NAME = new HashMap<>();
@@ -81,10 +92,10 @@ public class EntityPropertyImpl<T> implements EntityProperty<T> {
     private final static PropertyDeserializer<SkinDescriptor> DESCRIPTOR_DESERIALIZER = BaseSkinDescriptor::deserialize;
 
     public static EntityPropertyImpl<Boolean> SKIN_LAYERS = new EntityPropertyImpl<>("skin_layers", true, BOOLEAN_SERIALIZER, BOOLEAN_DESERIALIZER);
-    public static EntityPropertyImpl<SkinDescriptor> SKIN = new EntityPropertyImpl<>("skin", DESCRIPTOR_SERIALIZER, DESCRIPTOR_DESERIALIZER);
-    public static EntityPropertyImpl<NamedTextColor> GLOW = new EntityPropertyImpl<>("glow", COLOR_SERIALIZER, COLOR_DESERIALIZER);
+    public static EntityPropertyImpl<SkinDescriptor> SKIN = new EntityPropertyImpl<>("skin", SkinDescriptor.class, DESCRIPTOR_SERIALIZER, DESCRIPTOR_DESERIALIZER);
+    public static EntityPropertyImpl<NamedTextColor> GLOW = new EntityPropertyImpl<>("glow", NamedTextColor.class, COLOR_SERIALIZER, COLOR_DESERIALIZER);
     public static EntityPropertyImpl<Boolean> FIRE = new EntityPropertyImpl<>("fire", false, BOOLEAN_SERIALIZER, BOOLEAN_DESERIALIZER);
     public static EntityPropertyImpl<Boolean> INVISIBLE = new EntityPropertyImpl<>("invisible", false, BOOLEAN_SERIALIZER, BOOLEAN_DESERIALIZER);
     public static EntityPropertyImpl<Boolean> SILENT = new EntityPropertyImpl<>("silent", false, BOOLEAN_SERIALIZER, BOOLEAN_DESERIALIZER);
-    public static EntityPropertyImpl<Component> NAME = new EntityPropertyImpl<>("name", COMPONENT_SERIALIZER, COMPONENT_DESERIALIZER);
+    public static EntityPropertyImpl<Component> NAME = new EntityPropertyImpl<>("name", Component.class, COMPONENT_SERIALIZER, COMPONENT_DESERIALIZER);
 }
