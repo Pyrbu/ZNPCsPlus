@@ -14,6 +14,8 @@ import lol.pyr.znpcsplus.commands.parsers.EntityPropertyParser;
 import lol.pyr.znpcsplus.commands.parsers.NamedTextColorParser;
 import lol.pyr.znpcsplus.commands.parsers.NpcEntryParser;
 import lol.pyr.znpcsplus.commands.parsers.NpcTypeParser;
+import lol.pyr.znpcsplus.commands.storage.LoadAllCommand;
+import lol.pyr.znpcsplus.commands.storage.SaveAllCommand;
 import lol.pyr.znpcsplus.config.Configs;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
@@ -197,6 +199,9 @@ public class ZNpcsPlus extends JavaPlugin {
                 .addSubcommand("teleport", new TeleportCommand())
                 .addSubcommand("list", new ListCommand())
                 .addSubcommand("near", new NearCommand())
+                .addSubcommand("storage", new MultiCommand()
+                        .addSubcommand("save", new SaveAllCommand())
+                        .addSubcommand("load", new LoadAllCommand()))
                 .addSubcommand("holo", new MultiCommand()
                         .addSubcommand("add", new HoloAddCommand())
                         .addSubcommand("delete", new HoloDeleteCommand())
