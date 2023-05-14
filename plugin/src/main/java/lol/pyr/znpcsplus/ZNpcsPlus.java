@@ -199,6 +199,7 @@ public class ZNpcsPlus extends JavaPlugin {
                 .addSubcommand("teleport", new TeleportCommand())
                 .addSubcommand("list", new ListCommand())
                 .addSubcommand("near", new NearCommand())
+                .addSubcommand("type", new TypeCommand())
                 .addSubcommand("storage", new MultiCommand()
                         .addSubcommand("save", new SaveAllCommand())
                         .addSubcommand("load", new LoadAllCommand()))
