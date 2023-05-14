@@ -31,7 +31,7 @@ public class SkinFetcher {
                 if (this.builder.isUrlType()) {
                     connection.setDoOutput(true);
                     try (DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream())) {
-                        outputStream.writeBytes("url=" + URLEncoder.encode(this.builder.getData(), StandardCharsets.UTF_8));
+                        outputStream.writeBytes("url=" + URLEncoder.encode(this.builder.getData(), "UTF-8"));
                     }
                 }
                 try (Reader reader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {

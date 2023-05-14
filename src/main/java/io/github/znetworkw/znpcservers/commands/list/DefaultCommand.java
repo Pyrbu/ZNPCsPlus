@@ -430,10 +430,9 @@ public class DefaultCommand extends Command {
         }
 
         switch (args[0].toLowerCase()) {
-            default -> {
+            default:
                 return Lists.newArrayList();
-            }
-            case "add" -> {
+            case "add":
                 if (args.length == 2) {
                     return Lists.newArrayList("<npc_id>");
                 }
@@ -443,36 +442,28 @@ public class DefaultCommand extends Command {
                 if (args.length == 4) {
                     NPCAction.ActionType actionType = NPCAction.ActionType.valueOf(args[2].toUpperCase());
                     switch (actionType) {
-                        default -> {
+                        default:
                             return Lists.newArrayList();
-                        }
-                        case MESSAGE -> {
+                        case MESSAGE:
                             return Lists.newArrayList("<message>");
-                        }
-                        case CMD -> {
+                        case CMD:
                             return Lists.newArrayList("<command>");
-                        }
-                        case CONSOLE -> {
+                        case CONSOLE:
                             return Lists.newArrayList("<console command>");
-                        }
-                        case CHAT -> {
+                        case CHAT:
                             return Lists.newArrayList("<chat>");
-                        }
-                        case SERVER -> {
+                        case SERVER:
                             return Lists.newArrayList("<server>");
-                        }
                     }
                 }
-            }
-            case "remove" -> {
+            case "remove":
                 if (args.length == 2) {
                     return Lists.newArrayList("<npc_id>");
                 }
                 if (args.length == 3) {
                     return Lists.newArrayList("<action_id>");
                 }
-            }
-            case "cooldown" -> {
+            case "cooldown":
                 if (args.length == 2) {
                     return Lists.newArrayList("<npc_id>");
                 }
@@ -482,12 +473,10 @@ public class DefaultCommand extends Command {
                 if (args.length == 4) {
                     return Lists.newArrayList("<delay_in_seconds>");
                 }
-            }
-            case "list" -> {
+            case "list":
                 if (args.length == 2) {
                     return Lists.newArrayList("<npc_id>");
                 }
-            }
         }
         return Lists.newArrayList();
     }
@@ -594,7 +583,7 @@ public class DefaultCommand extends Command {
             if (foundNPC == null)
                 return Lists.newArrayList();
             NPCType npcType = foundNPC.getNpcPojo().getNpcType();
-            return partialTabCompleteOptions(args[1], npcType.getCustomizationLoader().getMethods().keySet().stream().toList());
+            return partialTabCompleteOptions(args[1], new ArrayList<>(npcType.getCustomizationLoader().getMethods().keySet()));
         }
         if (args.length == 3) {
             NPC foundNPC = NPC.find(Integer.parseInt(args[1]));
@@ -819,11 +808,11 @@ public class DefaultCommand extends Command {
             if (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("set")) {
                 Integer id = Ints.tryParse(args[1]);
                 if (id == null) {
-                    return List.of();
+                    return Collections.emptyList();
                 }
                 NPC npc = NPC.find(id);
                 if (npc == null) {
-                    return List.of();
+                    return Collections.emptyList();
                 }
 
                 return Lists.newArrayList(npc.getNpcPojo().getConversation() == null ? "null" : npc.getNpcPojo().getConversation().getConversationName());
