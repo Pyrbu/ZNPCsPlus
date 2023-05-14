@@ -5,7 +5,7 @@ gonalez/ZNetwork. This fork was made because the original maintainer of the plug
 in the original project's [official discord server](https://discord.com/invite/RhNMH4T).
 
 ### Dependencies
-- Java 17
+- Java 8
 - Spigot 1.8 - 1.19.4
 - PlaceholderAPI (OPTIONAL)
 
