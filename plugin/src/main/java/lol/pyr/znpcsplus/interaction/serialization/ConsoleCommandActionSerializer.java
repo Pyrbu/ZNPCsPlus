@@ -1,5 +1,6 @@
-package lol.pyr.znpcsplus.interaction.types;
+package lol.pyr.znpcsplus.interaction.serialization;
 
+import lol.pyr.znpcsplus.interaction.types.ConsoleCommandAction;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.util.StringSerializer;
 

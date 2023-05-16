@@ -1,5 +1,9 @@
 package lol.pyr.znpcsplus.interaction;
 
+import lol.pyr.znpcsplus.interaction.serialization.ConsoleCommandActionSerializer;
+import lol.pyr.znpcsplus.interaction.serialization.MessageActionSerializer;
+import lol.pyr.znpcsplus.interaction.serialization.PlayerCommandActionSerializer;
+import lol.pyr.znpcsplus.interaction.serialization.SwitchServerActionSerializer;
 import lol.pyr.znpcsplus.interaction.types.*;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.util.BungeeUtil;

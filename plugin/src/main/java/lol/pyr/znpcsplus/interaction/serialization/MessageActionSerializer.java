@@ -1,5 +1,6 @@
-package lol.pyr.znpcsplus.interaction.types;
+package lol.pyr.znpcsplus.interaction.serialization;
 
+import lol.pyr.znpcsplus.interaction.types.MessageAction;
 import lol.pyr.znpcsplus.util.StringSerializer;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;

@@ -1,5 +1,6 @@
-package lol.pyr.znpcsplus.interaction.types;
+package lol.pyr.znpcsplus.interaction.serialization;
 
+import lol.pyr.znpcsplus.interaction.types.SwitchServerAction;
 import lol.pyr.znpcsplus.util.BungeeUtil;
 import lol.pyr.znpcsplus.util.StringSerializer;
 
