@@ -1,6 +1,9 @@
 package lol.pyr.znpcsplus.reflection;
 
 import com.google.common.collect.ImmutableList;
+import lol.pyr.znpcsplus.reflection.types.ClassReflection;
+import lol.pyr.znpcsplus.reflection.types.FieldReflection;
+import lol.pyr.znpcsplus.reflection.types.MethodReflection;
 import lol.pyr.znpcsplus.util.VersionUtil;
 
 import java.util.ArrayList;
@@ -32,7 +35,7 @@ public class ReflectionBuilder {
     }
 
     public ReflectionBuilder withClassName(String className) {
-        this.className.add(ReflectionPackage.join(reflectionPackage, VersionUtil.isNewerThan(17) ? additionalData : "", className));
+        this.className.add(ReflectionPackage.joinWithDot(reflectionPackage, VersionUtil.isNewerThan(17) ? additionalData : "", className));
         return this;
     }
 
@@ -97,5 +100,17 @@ public class ReflectionBuilder {
 
     public String getFieldName() {
         return fieldName;
+    }
+
+    public MethodReflection toMethodReflection() {
+        return new MethodReflection(this);
+    }
+
+    public ClassReflection toClassReflection() {
+        return new ClassReflection(this);
+    }
+
+    public FieldReflection toFieldReflection() {
+        return new FieldReflection(this);
     }
 }

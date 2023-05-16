@@ -11,10 +11,10 @@ public class FieldReflection extends ReflectionLazyLoader<Field> {
     private final String fieldName;
     private final Class<?> expectType;
 
-    public FieldReflection(ReflectionBuilder reflectionBuilder) {
-        super(reflectionBuilder);
-        this.fieldName = reflectionBuilder.getFieldName();
-        this.expectType = reflectionBuilder.getExpectType();
+    public FieldReflection(ReflectionBuilder builder) {
+        super(builder);
+        this.fieldName = builder.getFieldName();
+        this.expectType = builder.getExpectType();
     }
 
     protected Field load() {
@@ -53,27 +53,27 @@ public class FieldReflection extends ReflectionLazyLoader<Field> {
         logger.accept("Field Type: " + expectType);
     }
 
-    public ValueReflection<Object> staticValueLoader() {
-        return staticValueLoader(Object.class);
+    public ValueReflection<Object> toStaticValueLoader() {
+        return toStaticValueLoader(Object.class);
     }
 
     @SuppressWarnings("unused")
-    public <T> ValueReflection<T> staticValueLoader(Class<T> valueType) {
+    public <T> ValueReflection<T> toStaticValueLoader(Class<T> valueType) {
         return new ValueReflection<>(this, possibleClassNames, null, strict);
     }
 
     @SuppressWarnings("unused")
-    public <T> ValueReflection<T> valueLoader(Object obj, Class<T> valueType) {
+    public <T> ValueReflection<T> toValueLoader(Object obj, Class<T> valueType) {
         return new ValueReflection<>(this, possibleClassNames, obj, strict);
     }
 
     @SuppressWarnings("unused")
-    public <T> ValueModifier<T> staticValueModifier(Class<T> valueType) {
+    public <T> ValueModifier<T> toStaticValueModifier(Class<T> valueType) {
         return new ValueModifier<>(this, possibleClassNames, null, strict);
     }
 
     @SuppressWarnings("unused")
-    public <T> ValueModifier<T> valueModifier(Object obj, Class<T> valueType) {
+    public <T> ValueModifier<T> toValueModifier(Object obj, Class<T> valueType) {
         return new ValueModifier<>(this, possibleClassNames, obj, strict);
     }
 
