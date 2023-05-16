@@ -1,13 +1,13 @@
 package lol.pyr.znpcsplus.storage.yaml;
 
-import lol.pyr.znpcsplus.ZNpcsPlus;
+import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.hologram.HologramLine;
-import lol.pyr.znpcsplus.interaction.NpcAction;
-import lol.pyr.znpcsplus.interaction.NpcActionType;
+import lol.pyr.znpcsplus.interaction.ActionRegistry;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcTypeImpl;
+import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.storage.NpcStorage;
 import lol.pyr.znpcsplus.util.ZLocation;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -16,28 +16,32 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class YamlStorage implements NpcStorage {
-    private final File npcsFolder;
+    private final PacketFactory packetFactory;
+    private final ConfigManager configManager;
+    private final ActionRegistry actionRegistry;
+    private final File folder;
 
-    public YamlStorage() {
-        npcsFolder = new File(ZNpcsPlus.PLUGIN_FOLDER, "npcs");
-        if (!npcsFolder.exists()) npcsFolder.mkdirs();
+    public YamlStorage(PacketFactory packetFactory, ConfigManager configManager, ActionRegistry actionRegistry, File folder) {
+        this.packetFactory = packetFactory;
+        this.configManager = configManager;
+        this.actionRegistry = actionRegistry;
+        this.folder = folder;
+        if (!this.folder.exists()) this.folder.mkdirs();
     }
 
     @SuppressWarnings("ConstantConditions")
     @Override
     public Collection<NpcEntryImpl> loadNpcs() {
-        File[] files = npcsFolder.listFiles();
+        File[] files = folder.listFiles();
         if (files == null || files.length == 0) return Collections.emptyList();
         List<NpcEntryImpl> npcs = new ArrayList<>();
         for (File file : files) if (file.isFile() && file.getName().toLowerCase().endsWith(".yml")) {
             YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-            NpcImpl npc = new NpcImpl(config.getString("world"), NpcTypeImpl.byName(config.getString("type")),
+            NpcImpl npc = new NpcImpl(configManager, packetFactory, config.getString("world"), NpcTypeImpl.byName(config.getString("type")),
                     deserializeLocation(config.getConfigurationSection("location")));
 
             ConfigurationSection properties = config.getConfigurationSection("properties");
@@ -48,16 +52,8 @@ public class YamlStorage implements NpcStorage {
                 }
             }
 
-            for (String line : config.getStringList("hologram")) {
-                npc.getHologram().addLine(MiniMessage.miniMessage().deserialize(line));
-            }
-
-            int amt = config.getInt("action-amount");
-            for (int i = 1; i <= amt; i++) {
-                String key = "actions." + i;
-                npc.addAction(NpcActionType.valueOf(config.getString(key + ".type"))
-                        .deserialize(config.getInt(key + ".cooldown"), config.getString(key + ".argument")));
-            }
+            for (String line : config.getStringList("hologram")) npc.getHologram().addLine(MiniMessage.miniMessage().deserialize(line));
+            for (String s : config.getStringList("actions")) npc.addAction(actionRegistry.deserialize(s));
 
             NpcEntryImpl entry = new NpcEntryImpl(config.getString("id"), npc);
             entry.setProcessed(config.getBoolean("is-processed"));
@@ -71,7 +67,7 @@ public class YamlStorage implements NpcStorage {
 
     @Override
     public void saveNpcs(Collection<NpcEntryImpl> npcs) {
-        File[] files = npcsFolder.listFiles();
+        File[] files = folder.listFiles();
         if (files != null && files.length != 0) for (File file : files) file.delete();
         for (NpcEntryImpl entry : npcs) try {
             YamlConfiguration config = new YamlConfiguration();
@@ -93,17 +89,12 @@ public class YamlStorage implements NpcStorage {
                 lines.add(MiniMessage.miniMessage().serialize(line.getText()));
             }
             config.set("hologram", lines);
+            config.set("actions", npc.getActions().stream()
+                    .map(actionRegistry::serialize)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList()));
 
-            int i = 0;
-            for (NpcAction action : npc.getActions()) { i++;
-                String key = "actions." + i;
-                config.set(key + ".type", action.getType().name());
-                config.set(key + ".cooldown", action.getCooldown());
-                config.set(key + ".argument", action.getArgument());
-            }
-            config.set("action-amount", i);
-
-            config.save(new File(npcsFolder, entry.getId() + ".yml"));
+            config.save(new File(folder, entry.getId() + ".yml"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

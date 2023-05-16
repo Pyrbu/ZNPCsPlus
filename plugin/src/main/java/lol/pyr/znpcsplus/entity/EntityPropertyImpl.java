@@ -89,7 +89,7 @@ public class EntityPropertyImpl<T> implements EntityProperty<T> {
     private final static PropertyDeserializer<Component> COMPONENT_DESERIALIZER = str -> MiniMessage.miniMessage().deserialize(str);
 
     private final static PropertySerializer<SkinDescriptor> DESCRIPTOR_SERIALIZER = descriptor -> ((BaseSkinDescriptor) descriptor).serialize();
-    private final static PropertyDeserializer<SkinDescriptor> DESCRIPTOR_DESERIALIZER = BaseSkinDescriptor::deserialize;
+    private final static PropertyDeserializer<SkinDescriptor> DESCRIPTOR_DESERIALIZER = property -> null; // TODO: An actual property registry // BaseSkinDescriptor::deserialize;
 
     public static EntityPropertyImpl<NamedTextColor> GLOW = new EntityPropertyImpl<>("glow", NamedTextColor.class, COLOR_SERIALIZER, COLOR_DESERIALIZER);
     public static EntityPropertyImpl<Boolean> SKIN_LAYERS = new EntityPropertyImpl<>("skin_layers", true, BOOLEAN_SERIALIZER, BOOLEAN_DESERIALIZER);

@@ -8,36 +8,27 @@ import net.kyori.adventure.text.Component;
 
 import java.util.Collection;
 
-public class V1_8Factory implements MetadataFactory {
+public class V1_9MetadataFactory extends V1_8MetadataFactory {
     @Override
     public EntityData skinLayers(boolean enabled) {
-        return createSkinLayers(12, enabled);
+        return createSkinLayers(13, enabled);
     }
 
     @Override
     public EntityData effects(boolean onFire, boolean glowing, boolean invisible) {
-        return new EntityData(0, EntityDataTypes.BYTE, (byte) ((onFire ? 0x01 : 0) | (invisible ? 0x20 : 0)));
+        return new EntityData(0, EntityDataTypes.BYTE, (byte) ((onFire ? 0x01 : 0) | (invisible ? 0x20 : 0) | (glowing ? 0x40 : 0)));
     }
 
     @Override
     public Collection<EntityData> name(Component name) {
         return ListUtil.immutableList(
                 new EntityData(2, EntityDataTypes.STRING, AdventureSerializer.getGsonSerializer().serialize(name)),
-                new EntityData(3, EntityDataTypes.BYTE, 1)
+                new EntityData(3, EntityDataTypes.BOOLEAN, true)
         );
     }
 
     @Override
-    public EntityData noGravity() {
-        throw new UnsupportedOperationException("The gravity entity data isn't supported on this version");
-    }
-
-    @Override
     public EntityData silent(boolean enabled) {
-        return new EntityData(4, EntityDataTypes.BYTE, enabled ? 1 : 0);
-    }
-
-    protected EntityData createSkinLayers(int index, boolean enabled) {
-        return new EntityData(index, EntityDataTypes.BYTE, enabled ? Byte.MAX_VALUE : 0);
+        return new EntityData(4, EntityDataTypes.BOOLEAN, enabled);
     }
 }

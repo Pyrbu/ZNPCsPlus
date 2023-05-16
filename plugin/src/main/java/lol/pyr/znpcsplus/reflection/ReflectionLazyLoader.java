@@ -1,13 +1,14 @@
 package lol.pyr.znpcsplus.reflection;
 
 import lol.pyr.znpcsplus.util.VersionUtil;
-import lol.pyr.znpcsplus.ZNpcsPlus;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 public abstract class ReflectionLazyLoader<T> {
+    private final static Logger logger = Logger.getLogger("ZNPCsPlus Reflection");
     protected final List<String> possibleClassNames;
     protected List<Class<?>> reflectionClasses = new ArrayList<>();
     protected final boolean strict;
@@ -34,23 +35,19 @@ public abstract class ReflectionLazyLoader<T> {
             if (eval == null) throw new RuntimeException("Returned value is null");
         } catch (Throwable throwable) {
             if (strict) {
-                warn(" ----- REFLECTION FAILURE DEBUG INFORMATION, REPORT THIS ON THE ZNPCSPLUS GITHUB ----- ");
-                warn(getClass().getSimpleName() + " failed!");
-                warn("Class Names: " + possibleClassNames);
-                warn("Reflection Type: " + getClass().getCanonicalName());
-                warn("Bukkit Version: " + VersionUtil.BUKKIT_VERSION + " (" + VersionUtil.getBukkitPackage() + ")");
-                printDebugInfo(this::warn);
-                warn("Exception:");
+                logger.warning(" ----- REFLECTION FAILURE DEBUG INFORMATION, REPORT THIS ON THE ZNPCSPLUS GITHUB ----- ");
+                logger.warning(getClass().getSimpleName() + " failed!");
+                logger.warning("Class Names: " + possibleClassNames);
+                logger.warning("Reflection Type: " + getClass().getCanonicalName());
+                logger.warning("Bukkit Version: " + VersionUtil.BUKKIT_VERSION + " (" + VersionUtil.getBukkitPackage() + ")");
+                printDebugInfo(logger::warning);
+                logger.warning("Exception:");
                 throwable.printStackTrace();
-                warn(" ----- REFLECTION FAILURE DEBUG INFORMATION, REPORT THIS ON THE ZNPCSPLUS GITHUB ----- ");
+                logger.warning(" ----- REFLECTION FAILURE DEBUG INFORMATION, REPORT THIS ON THE ZNPCSPLUS GITHUB ----- ");
             }
         }
         this.loaded = true;
         return this.cached;
-    }
-
-    private void warn(String message) {
-        ZNpcsPlus.LOGGER.warning("[Reflection] " + message);
     }
 
     protected abstract T load() throws Exception;

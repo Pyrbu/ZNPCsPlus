@@ -12,10 +12,16 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class SaveAllCommand implements CommandHandler {
+    private final NpcRegistryImpl npcRegistry;
+
+    public SaveAllCommand(NpcRegistryImpl npcRegistry) {
+        this.npcRegistry = npcRegistry;
+    }
+
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
         CompletableFuture.runAsync(() -> {
-            NpcRegistryImpl.get().save();
+            npcRegistry.save();
             context.send(Component.text("All NPCs have been saved to storage", NamedTextColor.GREEN));
         });
     }

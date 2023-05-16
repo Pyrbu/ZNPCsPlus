@@ -14,6 +14,12 @@ import java.util.Collections;
 import java.util.List;
 
 public class PropertiesCommand implements CommandHandler {
+    private final NpcRegistryImpl npcRegistry;
+
+    public PropertiesCommand(NpcRegistryImpl npcRegistry) {
+        this.npcRegistry = npcRegistry;
+    }
+
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
         NpcEntryImpl entry = context.parse(NpcEntryImpl.class);
@@ -29,7 +35,7 @@ public class PropertiesCommand implements CommandHandler {
 
     @Override
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
-        if (context.argSize() == 1) return context.suggestCollection(NpcRegistryImpl.get().modifiableIds());
+        if (context.argSize() == 1) return context.suggestCollection(npcRegistry.modifiableIds());
         if (context.argSize() == 2) return context.suggestStream(context.suggestionParse(0, NpcEntryImpl.class)
                     .getNpc().getType().getAllowedProperties().stream().map(EntityPropertyImpl::getName));
         if (context.argSize() == 3) {

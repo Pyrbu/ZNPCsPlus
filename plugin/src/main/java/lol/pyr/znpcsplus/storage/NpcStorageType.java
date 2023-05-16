@@ -1,14 +1,20 @@
 package lol.pyr.znpcsplus.storage;
 
+import lol.pyr.znpcsplus.ZNpcsPlus;
+import lol.pyr.znpcsplus.config.ConfigManager;
+import lol.pyr.znpcsplus.interaction.ActionRegistry;
+import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.storage.yaml.YamlStorage;
+
+import java.io.File;
 
 public enum NpcStorageType {
     YAML {
         @Override
-        public NpcStorage create() {
-            return new YamlStorage();
+        public NpcStorage create(ConfigManager configManager, ZNpcsPlus plugin, PacketFactory packetFactory, ActionRegistry actionRegistry) {
+            return new YamlStorage(packetFactory, configManager, actionRegistry, new File(plugin.getDataFolder(), "data"));
         }
     };
 
-    public abstract NpcStorage create();
+    public abstract NpcStorage create(ConfigManager configManager, ZNpcsPlus plugin, PacketFactory packetFactory, ActionRegistry actionRegistry);
 }

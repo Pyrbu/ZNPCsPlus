@@ -14,6 +14,12 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class HoloDeleteCommand implements CommandHandler {
+    private final NpcRegistryImpl npcRegistry;
+
+    public HoloDeleteCommand(NpcRegistryImpl npcRegistry) {
+        this.npcRegistry = npcRegistry;
+    }
+
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
         context.setUsage(context.getLabel() + " holo delete <id> <line>");
@@ -26,7 +32,7 @@ public class HoloDeleteCommand implements CommandHandler {
 
     @Override
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
-        if (context.argSize() == 1) return context.suggestCollection(NpcRegistryImpl.get().modifiableIds());
+        if (context.argSize() == 1) return context.suggestCollection(npcRegistry.modifiableIds());
         if (context.argSize() == 2) return context.suggestStream(Stream.iterate(0, n -> n + 1)
                 .limit(context.suggestionParse(0, NpcEntryImpl.class).getNpc().getHologram().getLines().size())
                 .map(String::valueOf));

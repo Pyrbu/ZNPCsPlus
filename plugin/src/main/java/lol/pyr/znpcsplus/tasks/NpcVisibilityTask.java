@@ -1,7 +1,6 @@
 package lol.pyr.znpcsplus.tasks;
 
-import lol.pyr.znpcsplus.ZNpcsPlus;
-import lol.pyr.znpcsplus.config.Configs;
+import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
@@ -11,13 +10,17 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.NumberConversions;
 
 public class NpcVisibilityTask extends BukkitRunnable {
-    public NpcVisibilityTask() {
-        ZNpcsPlus.SCHEDULER.runDelayedTimerAsync(this, 60L, 10L);
+    private final NpcRegistryImpl npcRegistry;
+    private final ConfigManager configManager;
+
+    public NpcVisibilityTask(NpcRegistryImpl npcRegistry, ConfigManager configManager) {
+        this.npcRegistry = npcRegistry;
+        this.configManager = configManager;
     }
 
     public void run() {
-        double distSq = NumberConversions.square(Configs.config().viewDistance());
-        for (NpcEntryImpl entry : NpcRegistryImpl.get().all()) {
+        double distSq = NumberConversions.square(configManager.getConfig().viewDistance());
+        for (NpcEntryImpl entry : npcRegistry.all()) {
             if (!entry.isProcessed()) continue;
             NpcImpl npc = entry.getNpc();
             for (Player player : Bukkit.getOnlinePlayers()) {

@@ -1,7 +1,8 @@
 package lol.pyr.znpcsplus.hologram;
 
 import lol.pyr.znpcsplus.api.hologram.Hologram;
-import lol.pyr.znpcsplus.config.Configs;
+import lol.pyr.znpcsplus.config.ConfigManager;
+import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.util.Viewable;
 import lol.pyr.znpcsplus.util.ZLocation;
 import net.kyori.adventure.text.Component;
@@ -12,15 +13,20 @@ import java.util.Collections;
 import java.util.List;
 
 public class HologramImpl extends Viewable implements Hologram {
+    private final ConfigManager configManager;
+    private final PacketFactory packetFactory;
+
     private ZLocation location;
     private final List<HologramLine> lines = new ArrayList<>();
 
-    public HologramImpl(ZLocation location) {
+    public HologramImpl(ConfigManager configManager, PacketFactory packetFactory, ZLocation location) {
+        this.configManager = configManager;
+        this.packetFactory = packetFactory;
         this.location = location;
     }
 
     public void addLine(Component line) {
-        HologramLine newLine = new HologramLine(null, line);
+        HologramLine newLine = new HologramLine(packetFactory, null, line);
         lines.add(newLine);
         relocateLines();
         for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
@@ -46,7 +52,7 @@ public class HologramImpl extends Viewable implements Hologram {
     }
 
     public void insertLine(int index, Component line) {
-        HologramLine newLine = new HologramLine(null, line);
+        HologramLine newLine = new HologramLine(packetFactory, null, line);
         lines.add(index, newLine);
         relocateLines();
         for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
@@ -72,7 +78,7 @@ public class HologramImpl extends Viewable implements Hologram {
     }
 
     private void relocateLines(HologramLine newLine) {
-        final double lineSpacing = Configs.config().lineSpacing();
+        final double lineSpacing = configManager.getConfig().lineSpacing();
         double height = location.getY() + (lines.size() - 1) * lineSpacing;
         for (HologramLine line : lines) {
             line.setLocation(location.withY(height), line == newLine ? Collections.emptySet() : getViewers());

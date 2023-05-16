@@ -10,13 +10,16 @@ import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import java.util.Deque;
 
 public class NpcEntryParser extends ParserType<NpcEntryImpl> {
-    public NpcEntryParser(Message<CommandContext> message) {
+    private final NpcRegistryImpl npcRegistry;
+
+    public NpcEntryParser(NpcRegistryImpl npcRegistry, Message<CommandContext> message) {
         super(message);
+        this.npcRegistry = npcRegistry;
     }
 
     @Override
     public NpcEntryImpl parse(Deque<String> deque) throws CommandExecutionException {
-        NpcEntryImpl entry = NpcRegistryImpl.get().get(deque.pop());
+        NpcEntryImpl entry = npcRegistry.get(deque.pop());
         if (entry == null || !entry.isAllowCommandModification()) throw new CommandExecutionException();
         return entry;
     }

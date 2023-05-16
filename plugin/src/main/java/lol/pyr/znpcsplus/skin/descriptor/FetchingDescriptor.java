@@ -1,40 +1,36 @@
 package lol.pyr.znpcsplus.skin.descriptor;
 
-import lol.pyr.znpcsplus.ZNpcsPlus;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.skin.BaseSkinDescriptor;
 import lol.pyr.znpcsplus.skin.Skin;
 import lol.pyr.znpcsplus.skin.cache.SkinCache;
-import me.clip.placeholderapi.PlaceholderAPI;
+import lol.pyr.znpcsplus.util.PapiUtil;
 import org.bukkit.entity.Player;
 
 import java.util.concurrent.CompletableFuture;
 
 public class FetchingDescriptor implements BaseSkinDescriptor, SkinDescriptor {
+    private final SkinCache skinCache;
     private final String name;
 
-    public FetchingDescriptor(String name) {
+    public FetchingDescriptor(SkinCache skinCache, String name) {
+        this.skinCache = skinCache;
         this.name = name;
     }
 
     @Override
     public CompletableFuture<Skin> fetch(Player player) {
-        return SkinCache.fetchByName(papi(player));
+        return skinCache.fetchByName(PapiUtil.set(player, name));
     }
 
     @Override
     public Skin fetchInstant(Player player) {
-        return SkinCache.getFullyCachedByName(papi(player));
+        return skinCache.getFullyCachedByName(PapiUtil.set(player, name));
     }
 
     @Override
     public boolean supportsInstant(Player player) {
-        return SkinCache.isNameFullyCached(papi(player));
-    }
-
-    private String papi(Player player) {
-        if (ZNpcsPlus.PLACEHOLDERS_SUPPORTED) return PlaceholderAPI.setPlaceholders(player, name);
-        return name;
+        return skinCache.isNameFullyCached(PapiUtil.set(player, name));
     }
 
     public String getName() {

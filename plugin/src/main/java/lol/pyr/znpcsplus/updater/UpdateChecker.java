@@ -1,24 +1,26 @@
 package lol.pyr.znpcsplus.updater;
 
-import lol.pyr.znpcsplus.ZNpcsPlus;
 import me.robertlit.spigotresources.api.Resource;
 import me.robertlit.spigotresources.api.SpigotResourcesAPI;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 public class UpdateChecker extends BukkitRunnable {
-    private final static SpigotResourcesAPI api = new SpigotResourcesAPI(1, TimeUnit.MINUTES);
-    public final static int RESOURCE_ID = 109380;
+    private final static Logger logger = Logger.getLogger("ZNPCsPlus Update Checker");
+    private final static int RESOURCE_ID = 109380;
     public final static String DOWNLOAD_LINK = "https://www.spigotmc.org/resources/znpcsplus.109380/";
 
-    private final ZNpcsPlus plugin;
+    private final SpigotResourcesAPI api = new SpigotResourcesAPI(1, TimeUnit.MINUTES);
+
+    private final PluginDescriptionFile info;
     private Status status = Status.UNKNOWN;
     private String newestVersion = "N/A";
 
-    public UpdateChecker(ZNpcsPlus plugin) {
-        this.plugin = plugin;
-        ZNpcsPlus.SCHEDULER.runDelayedTimerAsync(this, 5L, 6000L);
+    public UpdateChecker(PluginDescriptionFile info) {
+        this.info = info;
     }
 
     public void run() {
@@ -26,7 +28,7 @@ public class UpdateChecker extends BukkitRunnable {
         if (resource == null) return;
         newestVersion = resource.getVersion();
 
-        int current = versionToNumber(plugin.getDescription().getVersion());
+        int current = versionToNumber(info.getVersion());
         int newest = versionToNumber(newestVersion);
 
         status = current >= newest ? Status.LATEST_VERSION : Status.UPDATE_NEEDED;
@@ -34,8 +36,8 @@ public class UpdateChecker extends BukkitRunnable {
     }
 
     private void notifyConsole() {
-        ZNpcsPlus.LOGGER.warning("Version " + getLatestVersion() + " of " + plugin.getDescription().getName() + " is available now!");
-        ZNpcsPlus.LOGGER.warning("Download it at " + UpdateChecker.DOWNLOAD_LINK);
+        logger.warning("Version " + getLatestVersion() + " of " + info.getName() + " is available now!");
+        logger.warning("Download it at " + UpdateChecker.DOWNLOAD_LINK);
     }
 
     private int versionToNumber(String version) {

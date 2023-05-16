@@ -5,6 +5,7 @@ import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
+import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.util.ZLocation;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
@@ -15,9 +16,9 @@ public class HologramLine implements PropertyHolder {
     private Component text;
     private final PacketEntity armorStand;
 
-    public HologramLine(ZLocation location, Component text) {
+    public HologramLine(PacketFactory packetFactory, ZLocation location, Component text) {
         this.text = text;
-        armorStand = new PacketEntity(this, EntityTypes.ARMOR_STAND, location);
+        armorStand = new PacketEntity(packetFactory, this, EntityTypes.ARMOR_STAND, location);
     }
 
     public Component getText() {

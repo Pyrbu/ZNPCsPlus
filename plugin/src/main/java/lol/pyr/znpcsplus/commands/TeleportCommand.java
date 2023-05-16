@@ -15,6 +15,12 @@ import java.util.Collections;
 import java.util.List;
 
 public class TeleportCommand implements CommandHandler {
+    private final NpcRegistryImpl npcRegistry;
+
+    public TeleportCommand(NpcRegistryImpl npcRegistry) {
+        this.npcRegistry = npcRegistry;
+    }
+
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
         context.setUsage(context.getLabel() + " teleport <id>");
@@ -26,7 +32,7 @@ public class TeleportCommand implements CommandHandler {
 
     @Override
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
-        if (context.argSize() == 1) return context.suggestCollection(NpcRegistryImpl.get().modifiableIds());
+        if (context.argSize() == 1) return context.suggestCollection(npcRegistry.modifiableIds());
         return Collections.emptyList();
     }
 }

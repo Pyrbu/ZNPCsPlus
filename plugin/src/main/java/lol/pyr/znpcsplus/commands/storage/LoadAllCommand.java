@@ -12,10 +12,16 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class LoadAllCommand implements CommandHandler {
+    private final NpcRegistryImpl npcRegistry;
+
+    public LoadAllCommand(NpcRegistryImpl npcRegistry) {
+        this.npcRegistry = npcRegistry;
+    }
+
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
         CompletableFuture.runAsync(() -> {
-            NpcRegistryImpl.get().reload();
+            npcRegistry.reload();
             context.send(Component.text("All NPCs have been re-loaded from storage", NamedTextColor.GREEN));
         });
     }

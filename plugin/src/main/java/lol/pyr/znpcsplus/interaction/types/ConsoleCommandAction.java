@@ -1,25 +1,28 @@
 package lol.pyr.znpcsplus.interaction.types;
 
-import lol.pyr.znpcsplus.ZNpcsPlus;
-import lol.pyr.znpcsplus.interaction.NpcAction;
-import lol.pyr.znpcsplus.interaction.NpcActionType;
-import me.clip.placeholderapi.PlaceholderAPI;
+import lol.pyr.znpcsplus.interaction.InteractionAction;
+import lol.pyr.znpcsplus.scheduling.TaskScheduler;
+import lol.pyr.znpcsplus.util.PapiUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class ConsoleCommandAction extends NpcAction {
-    public ConsoleCommandAction(long delay, String argument) {
-        super(delay, argument);
+public class ConsoleCommandAction extends InteractionAction {
+    private final TaskScheduler scheduler;
+    private final String command;
+
+    public ConsoleCommandAction(TaskScheduler scheduler, String command, long delay) {
+        super(delay);
+        this.scheduler = scheduler;
+        this.command = command;
     }
 
     @Override
     public void run(Player player) {
-        String cmd = argument.replace("{player}", player.getName()).replace("{uuid}", player.getUniqueId().toString());
-        ZNpcsPlus.SCHEDULER.runSync(() -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ZNpcsPlus.PLACEHOLDERS_SUPPORTED ? PlaceholderAPI.setPlaceholders(player, cmd) : cmd));
+        String cmd = command.replace("{player}", player.getName()).replace("{uuid}", player.getUniqueId().toString());
+        scheduler.runSync(() -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), PapiUtil.set(player, cmd)));
     }
 
-    @Override
-    public NpcActionType getType() {
-        return NpcActionType.CONSOLE_CMD;
+    public String getCommand() {
+        return command;
     }
 }

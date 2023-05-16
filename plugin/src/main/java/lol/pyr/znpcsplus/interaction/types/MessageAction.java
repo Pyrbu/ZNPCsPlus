@@ -1,27 +1,26 @@
 package lol.pyr.znpcsplus.interaction.types;
 
-import lol.pyr.znpcsplus.ZNpcsPlus;
-import lol.pyr.znpcsplus.interaction.NpcAction;
-import lol.pyr.znpcsplus.interaction.NpcActionType;
+import lol.pyr.znpcsplus.interaction.InteractionAction;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
 
-public class MessageAction extends NpcAction {
+public class MessageAction extends InteractionAction {
+    private final BukkitAudiences adventure;
     private final Component message;
 
-    public MessageAction(long delay, String argument) {
-        super(delay, argument);
-        message = MiniMessage.miniMessage().deserialize(argument);
+    public MessageAction(BukkitAudiences adventure, Component message, long delay) {
+        super(delay);
+        this.adventure = adventure;
+        this.message = message;
     }
 
     @Override
     public void run(Player player) {
-        ZNpcsPlus.ADVENTURE.player(player).sendMessage(message);
+        adventure.player(player).sendMessage(message);
     }
 
-    @Override
-    public NpcActionType getType() {
-        return NpcActionType.MESSAGE;
+    public Component getMessage() {
+        return message;
     }
 }

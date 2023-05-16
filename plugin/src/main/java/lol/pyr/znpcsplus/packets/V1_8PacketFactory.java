@@ -10,11 +10,11 @@ import com.github.retrooper.packetevents.protocol.player.UserProfile;
 import com.github.retrooper.packetevents.util.Vector3d;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.*;
-import lol.pyr.znpcsplus.ZNpcsPlus;
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.metadata.MetadataFactory;
+import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.skin.BaseSkinDescriptor;
 import lol.pyr.znpcsplus.util.ZLocation;
 import net.kyori.adventure.text.Component;
@@ -24,7 +24,15 @@ import org.bukkit.entity.Player;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-public class V1_8Factory implements PacketFactory {
+public class V1_8PacketFactory implements PacketFactory {
+    protected final TaskScheduler scheduler;
+    protected final MetadataFactory metadataFactory;
+
+    public V1_8PacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory) {
+        this.scheduler = scheduler;
+        this.metadataFactory = metadataFactory;
+    }
+
     @Override
     public void spawnPlayer(Player player, PacketEntity entity, PropertyHolder properties) {
         addTabPlayer(player, entity, properties).thenAccept(ignored -> {
@@ -34,7 +42,7 @@ public class V1_8Factory implements PacketFactory {
                     entity.getUuid(), location.toVector3d(), location.getYaw(), location.getPitch(), Collections.emptyList()));
             sendPacket(player, new WrapperPlayServerEntityHeadLook(entity.getEntityId(), location.getYaw()));
             sendAllMetadata(player, entity, properties);
-            ZNpcsPlus.SCHEDULER.runLaterAsync(() -> removeTabPlayer(player, entity), 60);
+            scheduler.runLaterAsync(() -> removeTabPlayer(player, entity), 60);
         });
     }
 
@@ -106,10 +114,10 @@ public class V1_8Factory implements PacketFactory {
     @Override
     public Map<Integer, EntityData> generateMetadata(Player player, PacketEntity entity, PropertyHolder properties) {
         HashMap<Integer, EntityData> data = new HashMap<>();
-        if (entity.getType() == EntityTypes.PLAYER) add(data, MetadataFactory.get().skinLayers(properties.getProperty(EntityPropertyImpl.SKIN_LAYERS)));
-        add(data, MetadataFactory.get().effects(properties.getProperty(EntityPropertyImpl.FIRE), false, properties.getProperty(EntityPropertyImpl.INVISIBLE)));
-        add(data, MetadataFactory.get().silent(properties.getProperty(EntityPropertyImpl.SILENT)));
-        if (properties.hasProperty(EntityPropertyImpl.NAME)) addAll(data, MetadataFactory.get().name(properties.getProperty(EntityPropertyImpl.NAME)));
+        if (entity.getType() == EntityTypes.PLAYER) add(data, metadataFactory.skinLayers(properties.getProperty(EntityPropertyImpl.SKIN_LAYERS)));
+        add(data, metadataFactory.effects(properties.getProperty(EntityPropertyImpl.FIRE), false, properties.getProperty(EntityPropertyImpl.INVISIBLE)));
+        add(data, metadataFactory.silent(properties.getProperty(EntityPropertyImpl.SILENT)));
+        if (properties.hasProperty(EntityPropertyImpl.NAME)) addAll(data, metadataFactory.name(properties.getProperty(EntityPropertyImpl.NAME)));
         return data;
     }
 

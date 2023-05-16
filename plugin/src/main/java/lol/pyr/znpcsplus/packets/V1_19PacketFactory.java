@@ -7,13 +7,19 @@ import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPl
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPlayerInfoUpdate;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
+import lol.pyr.znpcsplus.metadata.MetadataFactory;
+import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
 import java.util.EnumSet;
 import java.util.concurrent.CompletableFuture;
 
-public class V1_19Factory extends V1_14Factory {
+public class V1_19PacketFactory extends V1_14PacketFactory {
+    public V1_19PacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory) {
+        super(scheduler, metadataFactory);
+    }
+
     @Override
     public CompletableFuture<Void> addTabPlayer(Player player, PacketEntity entity, PropertyHolder properties) {
         if (entity.getType() != EntityTypes.PLAYER) return CompletableFuture.completedFuture(null);

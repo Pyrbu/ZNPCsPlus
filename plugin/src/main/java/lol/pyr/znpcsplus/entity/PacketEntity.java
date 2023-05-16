@@ -13,6 +13,8 @@ import java.util.Collection;
 import java.util.UUID;
 
 public class PacketEntity {
+    private final PacketFactory packetFactory;
+
     private final PropertyHolder properties;
     private final int entityId;
     private final UUID uuid;
@@ -20,7 +22,8 @@ public class PacketEntity {
     private final EntityType type;
     private ZLocation location;
 
-    public PacketEntity(PropertyHolder properties, EntityType type, ZLocation location) {
+    public PacketEntity(PacketFactory packetFactory, PropertyHolder properties, EntityType type, ZLocation location) {
+        this.packetFactory = packetFactory;
         this.properties = properties;
         this.entityId = reserveEntityID();
         this.uuid = UUID.randomUUID();
@@ -46,25 +49,25 @@ public class PacketEntity {
 
     public void setLocation(ZLocation location, Collection<Player> viewers) {
         this.location = location;
-        for (Player viewer : viewers) PacketFactory.get().teleportEntity(viewer, this);
+        for (Player viewer : viewers) packetFactory.teleportEntity(viewer, this);
     }
 
     public void spawn(Player player) {
-        if (type == EntityTypes.PLAYER) PacketFactory.get().spawnPlayer(player, this, properties);
-        else PacketFactory.get().spawnEntity(player, this, properties);
+        if (type == EntityTypes.PLAYER) packetFactory.spawnPlayer(player, this, properties);
+        else packetFactory.spawnEntity(player, this, properties);
     }
 
     public void despawn(Player player) {
-        PacketFactory.get().destroyEntity(player, this, properties);
+        packetFactory.destroyEntity(player, this, properties);
     }
 
     public void refreshMeta(Player player) {
-        PacketFactory.get().sendAllMetadata(player, this, properties);
+        packetFactory.sendAllMetadata(player, this, properties);
     }
 
     public void remakeTeam(Player player) {
-        PacketFactory.get().removeTeam(player, this);
-        PacketFactory.get().createTeam(player, this, properties);
+        packetFactory.removeTeam(player, this);
+        packetFactory.createTeam(player, this, properties);
     }
 
     private static int reserveEntityID() {

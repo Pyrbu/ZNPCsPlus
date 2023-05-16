@@ -12,13 +12,19 @@ import org.bukkit.entity.Player;
 import java.util.stream.Collectors;
 
 public class NearCommand implements CommandHandler {
+    private final NpcRegistryImpl npcRegistry;
+
+    public NearCommand(NpcRegistryImpl npcRegistry) {
+        this.npcRegistry = npcRegistry;
+    }
+
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
         Player player = context.ensureSenderIsPlayer();
         int raw = context.parse(Integer.class);
         double radius = Math.pow(raw, 2);
 
-        String npcs = NpcRegistryImpl.get().allModifiable().stream()
+        String npcs = npcRegistry.allModifiable().stream()
                         .filter(entry -> entry.getNpc().getBukkitLocation().distanceSquared(player.getLocation()) < radius)
                         .map(NpcEntryImpl::getId)
                         .collect(Collectors.joining(", "));

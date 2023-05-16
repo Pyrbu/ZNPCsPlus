@@ -9,17 +9,20 @@ import org.bukkit.entity.Player;
 import java.util.concurrent.CompletableFuture;
 
 public class MirrorDescriptor implements BaseSkinDescriptor, SkinDescriptor {
+    private final SkinCache skinCache;
 
-    public MirrorDescriptor() {}
+    public MirrorDescriptor(SkinCache skinCache) {
+        this.skinCache = skinCache;
+    }
 
     @Override
     public CompletableFuture<Skin> fetch(Player player) {
-        return CompletableFuture.completedFuture(SkinCache.getFromPlayer(player));
+        return CompletableFuture.completedFuture(skinCache.getFromPlayer(player));
     }
 
     @Override
     public Skin fetchInstant(Player player) {
-        return SkinCache.getFromPlayer(player);
+        return skinCache.getFromPlayer(player);
     }
 
     @Override

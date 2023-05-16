@@ -15,16 +15,22 @@ import java.util.Collections;
 import java.util.List;
 
 public class CreateCommand implements CommandHandler {
+    private final NpcRegistryImpl npcRegistry;
+
+    public CreateCommand(NpcRegistryImpl npcRegistry) {
+        this.npcRegistry = npcRegistry;
+    }
+
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
         context.setUsage(context.getLabel() + " create <id> <type>");
         Player player = context.ensureSenderIsPlayer();
         
         String id = context.popString();
-        if (NpcRegistryImpl.get().get(id) != null) context.halt(Component.text("NPC with that ID already exists.", NamedTextColor.RED));
+        if (npcRegistry.get(id) != null) context.halt(Component.text("NPC with that ID already exists.", NamedTextColor.RED));
         NpcTypeImpl type = context.parse(NpcTypeImpl.class);
 
-        NpcEntryImpl entry = NpcRegistryImpl.get().create(id, player.getWorld(), type, new ZLocation(player.getLocation()));
+        NpcEntryImpl entry = npcRegistry.create(id, player.getWorld(), type, new ZLocation(player.getLocation()));
         entry.enableEverything();
 
         context.send(Component.text("Created a " + type.getName() + " NPC with ID " + id + ".", NamedTextColor.GREEN));
@@ -32,7 +38,7 @@ public class CreateCommand implements CommandHandler {
 
     @Override
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
-        if (context.argSize() == 1) return context.suggestCollection(NpcRegistryImpl.get().modifiableIds());
+        if (context.argSize() == 1) return context.suggestCollection(npcRegistry.modifiableIds());
         if (context.argSize() == 2) return context.suggestStream(NpcTypeImpl.values().stream().map(NpcTypeImpl::getName));
         return Collections.emptyList();
     }

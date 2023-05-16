@@ -16,8 +16,8 @@ public class PrefetchedDescriptor implements BaseSkinDescriptor, SkinDescriptor 
         this.skin = skin;
     }
 
-    public static CompletableFuture<PrefetchedDescriptor> forPlayer(String name) {
-        return CompletableFuture.supplyAsync(() -> new PrefetchedDescriptor(SkinCache.fetchByName(name).join()));
+    public static CompletableFuture<PrefetchedDescriptor> forPlayer(SkinCache cache, String name) {
+        return CompletableFuture.supplyAsync(() -> new PrefetchedDescriptor(cache.fetchByName(name).join()));
     }
 
     @Override

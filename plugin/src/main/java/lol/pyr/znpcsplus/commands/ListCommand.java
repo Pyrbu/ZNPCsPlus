@@ -12,11 +12,17 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 public class ListCommand implements CommandHandler {
+    private final NpcRegistryImpl npcRegistry;
+
+    public ListCommand(NpcRegistryImpl npcRegistry) {
+        this.npcRegistry = npcRegistry;
+    }
+
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
         TextComponent.Builder component = Component.text("Npc's:\n").color(NamedTextColor.GOLD).toBuilder();
-        for (String id : NpcRegistryImpl.get().modifiableIds()) {
-            NpcImpl npc = NpcRegistryImpl.get().get(id).getNpc();
+        for (String id : npcRegistry.modifiableIds()) {
+            NpcImpl npc = npcRegistry.get(id).getNpc();
             ZLocation location = npc.getLocation();
             component.append(Component.text("ID: " + id, NamedTextColor.GREEN))
                     .append(Component.text(" | ", NamedTextColor.GRAY))

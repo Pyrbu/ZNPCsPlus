@@ -14,6 +14,12 @@ import java.util.Collections;
 import java.util.List;
 
 public class TypeCommand implements CommandHandler {
+    private final NpcRegistryImpl registry;
+
+    public TypeCommand(NpcRegistryImpl registry) {
+        this.registry = registry;
+    }
+
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
         context.setUsage(context.getLabel() + " type <id> <type>");
@@ -25,7 +31,7 @@ public class TypeCommand implements CommandHandler {
 
     @Override
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
-        if (context.argSize() == 1) return context.suggestCollection(NpcRegistryImpl.get().modifiableIds());
+        if (context.argSize() == 1) return context.suggestCollection(registry.modifiableIds());
         if (context.argSize() == 2) return context.suggestStream(NpcTypeImpl.values().stream().map(NpcTypeImpl::getName));
         return Collections.emptyList();
     }

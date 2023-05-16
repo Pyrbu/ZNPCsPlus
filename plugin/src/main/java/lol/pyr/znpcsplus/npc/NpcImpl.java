@@ -2,10 +2,12 @@ package lol.pyr.znpcsplus.npc;
 
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.npc.Npc;
+import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.hologram.HologramImpl;
-import lol.pyr.znpcsplus.interaction.NpcAction;
+import lol.pyr.znpcsplus.interaction.InteractionAction;
+import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.util.Viewable;
 import lol.pyr.znpcsplus.util.ZLocation;
 import org.bukkit.Bukkit;
@@ -16,6 +18,7 @@ import org.bukkit.entity.Player;
 import java.util.*;
 
 public class NpcImpl extends Viewable implements Npc {
+    private final PacketFactory packetFactory;
     private final String worldName;
     private PacketEntity entity;
     private ZLocation location;
@@ -23,25 +26,26 @@ public class NpcImpl extends Viewable implements Npc {
     private final HologramImpl hologram;
 
     private final Map<EntityPropertyImpl<?>, Object> propertyMap = new HashMap<>();
-    private final Set<NpcAction> actions = new HashSet<>();
+    private final Set<InteractionAction> actions = new HashSet<>();
 
-    protected NpcImpl(World world, NpcTypeImpl type, ZLocation location) {
-        this(world.getName(), type, location);
+    protected NpcImpl(ConfigManager configManager, World world, NpcTypeImpl type, ZLocation location, PacketFactory packetFactory) {
+        this(configManager, packetFactory, world.getName(), type, location);
     }
 
-    public NpcImpl(String world, NpcTypeImpl type, ZLocation location) {
+    public NpcImpl(ConfigManager configManager, PacketFactory packetFactory, String world, NpcTypeImpl type, ZLocation location) {
+        this.packetFactory = packetFactory;
         this.worldName = world;
         this.type = type;
         this.location = location;
-        entity = new PacketEntity(this, type.getType(), location);
-        hologram = new HologramImpl(location.withY(location.getY() + type.getHologramOffset()));
+        entity = new PacketEntity(packetFactory, this, type.getType(), location);
+        hologram = new HologramImpl(configManager, packetFactory, location.withY(location.getY() + type.getHologramOffset()));
     }
 
 
     public void setType(NpcTypeImpl type) {
         UNSAFE_hideAll();
         this.type = type;
-        entity = new PacketEntity(this, type.getType(), entity.getLocation());
+        entity = new PacketEntity(packetFactory, this, type.getType(), entity.getLocation());
         UNSAFE_showAll();
     }
 
@@ -130,11 +134,11 @@ public class NpcImpl extends Viewable implements Npc {
         return Collections.unmodifiableSet(propertyMap.keySet());
     }
 
-    public Collection<NpcAction> getActions() {
+    public Collection<InteractionAction> getActions() {
         return Collections.unmodifiableSet(actions);
     }
 
-    public void addAction(NpcAction action) {
+    public void addAction(InteractionAction action) {
         actions.add(action);
     }
 }

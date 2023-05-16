@@ -1,6 +1,5 @@
 package lol.pyr.znpcsplus.config;
 
-import lol.pyr.znpcsplus.ZNpcsPlus;
 import space.arim.dazzleconf.ConfigurationFactory;
 import space.arim.dazzleconf.ConfigurationOptions;
 import space.arim.dazzleconf.error.ConfigFormatSyntaxException;
@@ -13,13 +12,22 @@ import space.arim.dazzleconf.serialiser.ValueSerialiser;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Logger;
 
-public class Configs {
-    private volatile static MainConfig config;
-    private static ConfigurationHelper<MainConfig> configHelper;
+public class ConfigManager {
+    private final static Logger logger = Logger.getLogger("ZNPCsPlus Configuration Manager");
 
-    private volatile static MessageConfig messages;
-    private static ConfigurationHelper<MessageConfig> messagesHelper;
+    private volatile MainConfig config;
+    private final ConfigurationHelper<MainConfig> configHelper;
+
+    private volatile MessageConfig messages;
+    private final ConfigurationHelper<MessageConfig> messagesHelper;
+
+    public ConfigManager(File pluginFolder) {
+        configHelper = createHelper(MainConfig.class, new File(pluginFolder, "config.yaml"));
+        messagesHelper = createHelper(MessageConfig.class, new File(pluginFolder, "messages.yaml"), new ComponentSerializer());
+        reload();
+    }
 
     private static <T> ConfigurationHelper<T> createHelper(Class<T> configClass, File file, ValueSerialiser<?>... serialisers) {
         SnakeYamlOptions yamlOptions = new SnakeYamlOptions.Builder().commentMode(CommentMode.fullComments()).build();
@@ -29,33 +37,27 @@ public class Configs {
         return new ConfigurationHelper<>(file.getParentFile().toPath(), file.getName(), configFactory);
     }
 
-    public static void init(File pluginFolder) {
-        configHelper = createHelper(MainConfig.class, new File(pluginFolder, "config.yaml"));
-        messagesHelper = createHelper(MessageConfig.class, new File(pluginFolder, "messages.yaml"), new ComponentSerializer());
-        load();
-    }
-
-    public static void load() {
+    public void reload() {
         try {
             config = configHelper.reloadConfigData();
             messages = messagesHelper.reloadConfigData();
         } catch (IOException e) {
-            ZNpcsPlus.LOGGER.severe("Couldn't open config file!");
+            logger.severe("Couldn't open config file!");
             e.printStackTrace();
         } catch (ConfigFormatSyntaxException e) {
-            ZNpcsPlus.LOGGER.severe("Invalid config syntax!");
+            logger.severe("Invalid config syntax!");
             e.printStackTrace();
         } catch (InvalidConfigException e) {
-            ZNpcsPlus.LOGGER.severe("Invalid config value!");
+            logger.severe("Invalid config value!");
             e.printStackTrace();
         }
     }
 
-    public static MainConfig config() {
+    public MainConfig getConfig() {
         return config;
     }
 
-    public static MessageConfig messages() {
+    public MessageConfig getMessages() {
         return messages;
     }
 }

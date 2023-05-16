@@ -1,6 +1,5 @@
 package lol.pyr.znpcsplus.util;
 
-import lol.pyr.znpcsplus.ZNpcsPlus;
 import lol.pyr.znpcsplus.reflection.Reflections;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -24,7 +23,7 @@ public class FoliaUtil {
         else try {
             Reflections.FOLIA_TELEPORT_ASYNC.get().invoke(entity, location);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            ZNpcsPlus.LOGGER.severe("Error while teleporting entity:");
+            System.err.println("Error while teleporting entity:");
             e.printStackTrace();
         }
     }

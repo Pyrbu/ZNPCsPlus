@@ -2,6 +2,7 @@ package lol.pyr.znpcsplus.skin;
 
 import com.github.retrooper.packetevents.protocol.player.TextureProperty;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
+import lol.pyr.znpcsplus.skin.cache.SkinCache;
 import lol.pyr.znpcsplus.skin.descriptor.FetchingDescriptor;
 import lol.pyr.znpcsplus.skin.descriptor.MirrorDescriptor;
 import lol.pyr.znpcsplus.skin.descriptor.PrefetchedDescriptor;
@@ -17,10 +18,10 @@ public interface BaseSkinDescriptor extends SkinDescriptor {
     boolean supportsInstant(Player player);
     String serialize();
 
-    static BaseSkinDescriptor deserialize(String str) {
+    static BaseSkinDescriptor deserialize(SkinCache skinCache, String str) {
         String[] arr = str.split(";");
-        if (arr[0].equalsIgnoreCase("mirror")) return new MirrorDescriptor();
-        else if (arr[0].equalsIgnoreCase("fetching")) return new FetchingDescriptor(arr[1]);
+        if (arr[0].equalsIgnoreCase("mirror")) return new MirrorDescriptor(skinCache);
+        else if (arr[0].equalsIgnoreCase("fetching")) return new FetchingDescriptor(skinCache, arr[1]);
         else if (arr[0].equalsIgnoreCase("prefetched")) {
             List<TextureProperty> properties = new ArrayList<>();
             for (int i = 0; i < (arr.length - 1) / 3; i++) {

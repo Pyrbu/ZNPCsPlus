@@ -1,8 +1,11 @@
 package lol.pyr.znpcsplus.npc;
 
+import lol.pyr.znpcsplus.ZNpcsPlus;
 import lol.pyr.znpcsplus.api.npc.NpcRegistry;
 import lol.pyr.znpcsplus.api.npc.NpcType;
-import lol.pyr.znpcsplus.config.Configs;
+import lol.pyr.znpcsplus.config.ConfigManager;
+import lol.pyr.znpcsplus.interaction.ActionRegistry;
+import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.storage.NpcStorage;
 import lol.pyr.znpcsplus.util.ZLocation;
 import org.bukkit.World;
@@ -14,25 +17,23 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class NpcRegistryImpl implements NpcRegistry {
-    private final static NpcRegistryImpl registry = new NpcRegistryImpl();
-    public static NpcRegistryImpl get() {
-        return registry;
-    }
+    private final NpcStorage storage;
+    private final PacketFactory packetFactory;
+    private final ConfigManager configManager;
 
-    private final NpcStorage STORAGE;
-
-    private NpcRegistryImpl() {
-        if (registry != null) throw new UnsupportedOperationException("This class can only be instanciated once!");
-        STORAGE = Configs.config().storageType().create();
+    public NpcRegistryImpl(ConfigManager configManager, ZNpcsPlus plugin, PacketFactory packetFactory, ActionRegistry actionRegistry) {
+        storage = configManager.getConfig().storageType().create(configManager, plugin, packetFactory, actionRegistry);
+        this.packetFactory = packetFactory;
+        this.configManager = configManager;
     }
 
     public void reload() {
         npcMap.clear();
-        for (NpcEntryImpl entry : STORAGE.loadNpcs()) npcMap.put(entry.getId(), entry);
+        for (NpcEntryImpl entry : storage.loadNpcs()) npcMap.put(entry.getId(), entry);
     }
 
     public void save() {
-        STORAGE.saveNpcs(npcMap.values().stream().filter(NpcEntryImpl::isSave).collect(Collectors.toList()));
+        storage.saveNpcs(npcMap.values().stream().filter(NpcEntryImpl::isSave).collect(Collectors.toList()));
     }
 
     private final Map<String, NpcEntryImpl> npcMap = new HashMap<>();
@@ -73,7 +74,7 @@ public class NpcRegistryImpl implements NpcRegistry {
     public NpcEntryImpl create(String id, World world, NpcTypeImpl type, ZLocation location) {
         id = id.toLowerCase();
         if (npcMap.containsKey(id)) throw new IllegalArgumentException("An npc with the id " + id + " already exists!");
-        NpcImpl npc = new NpcImpl(world, type, location);
+        NpcImpl npc = new NpcImpl(configManager, world, type, location, packetFactory);
         NpcEntryImpl entry = new NpcEntryImpl(id, npc);
         npcMap.put(id, entry);
         return entry;

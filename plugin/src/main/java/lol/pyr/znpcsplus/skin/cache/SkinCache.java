@@ -3,8 +3,7 @@ package lol.pyr.znpcsplus.skin.cache;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
-import lol.pyr.znpcsplus.ZNpcsPlus;
-import lol.pyr.znpcsplus.config.Configs;
+import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.reflection.Reflections;
 import lol.pyr.znpcsplus.skin.Skin;
 import org.bukkit.Bukkit;
@@ -22,17 +21,26 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 public class SkinCache {
-    private final static Map<String, Skin> cache = new ConcurrentHashMap<>();
-    private final static Map<String, CachedId> idCache = new ConcurrentHashMap<>();
+    private final static Logger logger = Logger.getLogger("ZNPCsPlus Skin Cache");
 
-    public static void cleanCache() {
+    private final ConfigManager configManager;
+
+    private final Map<String, Skin> cache = new ConcurrentHashMap<>();
+    private final Map<String, CachedId> idCache = new ConcurrentHashMap<>();
+
+    public SkinCache(ConfigManager configManager) {
+        this.configManager = configManager;
+    }
+
+    public void cleanCache() {
         for (Map.Entry<String, Skin> entry : cache.entrySet()) if (entry.getValue().isExpired()) cache.remove(entry.getKey());
         for (Map.Entry<String, CachedId> entry : idCache.entrySet()) if (entry.getValue().isExpired()) cache.remove(entry.getKey());
     }
 
-    public static CompletableFuture<Skin> fetchByName(String name) {
+    public CompletableFuture<Skin> fetchByName(String name) {
         Player player = Bukkit.getPlayerExact(name);
         if (player != null && player.isOnline()) return CompletableFuture.completedFuture(getFromPlayer(player));
 
@@ -52,8 +60,8 @@ public class SkinCache {
                     return fetchByUUID(id).join();
                 }
             } catch (IOException exception) {
-                if (!Configs.config().disableSkinFetcherWarnings()) {
-                    ZNpcsPlus.LOGGER.warning("Failed to uuid from player name:");
+                if (!configManager.getConfig().disableSkinFetcherWarnings()) {
+                    logger.warning("Failed to uuid from player name:");
                     exception.printStackTrace();
                 }
             } finally {
@@ -63,11 +71,11 @@ public class SkinCache {
         });
     }
 
-    public static CompletableFuture<Skin> fetchByUUID(UUID uuid) {
+    public CompletableFuture<Skin> fetchByUUID(UUID uuid) {
         return fetchByUUID(uuid.toString().replace("-", ""));
     }
 
-    public static boolean isNameFullyCached(String s) {
+    public boolean isNameFullyCached(String s) {
         String name = s.toLowerCase();
         if (!idCache.containsKey(name)) return false;
         CachedId id = idCache.get(name);
@@ -76,7 +84,7 @@ public class SkinCache {
         return !skin.isExpired();
     }
 
-    public static Skin getFullyCachedByName(String s) {
+    public Skin getFullyCachedByName(String s) {
         String name = s.toLowerCase();
         if (!idCache.containsKey(name)) return null;
         CachedId id = idCache.get(name);
@@ -86,7 +94,7 @@ public class SkinCache {
         return skin;
     }
 
-    public static CompletableFuture<Skin> fetchByUUID(String uuid) {
+    public CompletableFuture<Skin> fetchByUUID(String uuid) {
         Player player = Bukkit.getPlayer(uuid);
         if (player != null && player.isOnline()) return CompletableFuture.completedFuture(getFromPlayer(player));
 
@@ -108,8 +116,8 @@ public class SkinCache {
                     return skin;
                 }
             } catch (IOException exception) {
-                if (!Configs.config().disableSkinFetcherWarnings()) {
-                    ZNpcsPlus.LOGGER.warning("Failed to fetch skin:");
+                if (!configManager.getConfig().disableSkinFetcherWarnings()) {
+                    logger.warning("Failed to fetch skin:");
                     exception.printStackTrace();
                 }
             } finally {
@@ -119,7 +127,7 @@ public class SkinCache {
         });
     }
 
-    public static Skin getFromPlayer(Player player) {
+    public Skin getFromPlayer(Player player) {
         try {
             Object playerHandle = Reflections.GET_HANDLE_PLAYER_METHOD.get().invoke(player);
             GameProfile gameProfile = (GameProfile) Reflections.GET_PROFILE_METHOD.get().invoke(playerHandle, new Object[0]);
