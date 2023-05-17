@@ -41,5 +41,21 @@ public class FoliaScheduler extends TaskScheduler {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public void cancelAll() {
+        try {
+            Object asyncScheduler = Reflections.FOLIA_GET_ASYNC_SCHEDULER.get().invoke(null);
+            Reflections.FOLIA_CANCEL_ASYNC_TASKS.get().invoke(asyncScheduler, plugin);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            Object globalScheduler = Reflections.FOLIA_GET_GLOBAL_REGION_SCHEDULER.get().invoke(null);
+            Reflections.FOLIA_CANCEL_GLOBAL_TASKS.get().invoke(globalScheduler, plugin);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
 

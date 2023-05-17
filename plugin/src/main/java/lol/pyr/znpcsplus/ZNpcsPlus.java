@@ -212,6 +212,7 @@ public class ZNpcsPlus extends JavaPlugin implements ZApi {
     @Override
     public void onDisable() {
         if (!enabled) return;
+        scheduler.cancelAll();
         npcRegistry.save();
         ZApiProvider.unregister();
         Bukkit.getOnlinePlayers().forEach(userManager::remove);

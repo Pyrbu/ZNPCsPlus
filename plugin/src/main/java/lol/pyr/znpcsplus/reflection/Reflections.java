@@ -117,6 +117,18 @@ public final class Reflections {
                     .setStrict(FoliaUtil.isFolia())
                     .toMethodReflection();
 
+    public static final ReflectionLazyLoader<Method> FOLIA_CANCEL_ASYNC_TASKS =
+            new ReflectionBuilder(ASYNC_SCHEDULER_CLASS)
+                    .withMethodName("cancelTasks")
+                    .setStrict(FoliaUtil.isFolia())
+                    .toMethodReflection();
+
+    public static final ReflectionLazyLoader<Method> FOLIA_CANCEL_GLOBAL_TASKS =
+            new ReflectionBuilder(GLOBAL_REGION_SCHEDULER_CLASS)
+                    .withMethodName("cancelTasks")
+                    .setStrict(FoliaUtil.isFolia())
+                    .toMethodReflection();
+
     public static final ReflectionLazyLoader<Method> FOLIA_TELEPORT_ASYNC =
             new ReflectionBuilder(Entity.class)
                     .withMethodName("teleportAsync")

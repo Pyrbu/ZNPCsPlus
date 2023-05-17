@@ -14,4 +14,6 @@ public abstract class TaskScheduler {
     public abstract void runLaterAsync(Runnable runnable, long ticks);
 
     public abstract  void runDelayedTimerAsync(Runnable runnable, long delay, long ticks);
+
+    public abstract void cancelAll();
 }
