@@ -23,20 +23,20 @@ public class FoliaScheduler extends TaskScheduler {
     }
 
     @Override
-    public void runLaterAsync(Runnable runnable, long ticks) {
+    public void runLaterAsync(Runnable runnable, long delay) {
         try {
             Object scheduler = Reflections.FOLIA_GET_ASYNC_SCHEDULER.get().invoke(null);
-            Reflections.FOLIA_RUN_DELAYED.get().invoke(scheduler, plugin, (Consumer<Object>) o -> runnable.run(), ticks * 50, TimeUnit.MILLISECONDS);
+            Reflections.FOLIA_RUN_DELAYED.get().invoke(scheduler, plugin, (Consumer<Object>) o -> runnable.run(), delay * 50, TimeUnit.MILLISECONDS);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void runDelayedTimerAsync(Runnable runnable, long delay, long ticks) {
+    public void runDelayedTimerAsync(Runnable runnable, long delay, long interval) {
         try {
             Object scheduler = Reflections.FOLIA_GET_ASYNC_SCHEDULER.get().invoke(null);
-            Reflections.FOLIA_RUN_AT_FIXED_RATE.get().invoke(scheduler, plugin, (Consumer<Object>) o -> runnable.run(), delay * 50, ticks * 50, TimeUnit.MILLISECONDS);
+            Reflections.FOLIA_RUN_AT_FIXED_RATE.get().invoke(scheduler, plugin, (Consumer<Object>) o -> runnable.run(), delay * 50, interval * 50, TimeUnit.MILLISECONDS);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }

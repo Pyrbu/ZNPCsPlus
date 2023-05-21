@@ -36,4 +36,13 @@ public interface MainConfig {
     @ConfComments("Set this to true if you don't want to be warned in the console when a skin fails to resolve")
     @DefaultBoolean(false)
     boolean disableSkinFetcherWarnings();
+
+    @ConfKey("auto-save-interval")
+    @ConfComments("How often to auto-save npcs, set this to -1 to disable. This value will only apply on restart")
+    @DefaultInteger(300)
+    int autoSaveInterval();
+
+    default boolean autoSaveEnabled() {
+        return autoSaveInterval() != -1;
+    }
 }

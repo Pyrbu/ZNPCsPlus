@@ -6,6 +6,7 @@ import lol.pyr.znpcsplus.api.npc.NpcType;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.interaction.ActionRegistry;
 import lol.pyr.znpcsplus.packets.PacketFactory;
+import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.storage.NpcStorage;
 import lol.pyr.znpcsplus.util.ZLocation;
 import org.bukkit.World;
@@ -21,10 +22,15 @@ public class NpcRegistryImpl implements NpcRegistry {
     private final PacketFactory packetFactory;
     private final ConfigManager configManager;
 
-    public NpcRegistryImpl(ConfigManager configManager, ZNpcsPlus plugin, PacketFactory packetFactory, ActionRegistry actionRegistry) {
+    public NpcRegistryImpl(ConfigManager configManager, ZNpcsPlus plugin, PacketFactory packetFactory, ActionRegistry actionRegistry, TaskScheduler scheduler) {
         storage = configManager.getConfig().storageType().create(configManager, plugin, packetFactory, actionRegistry);
         this.packetFactory = packetFactory;
         this.configManager = configManager;
+
+        if (configManager.getConfig().autoSaveEnabled()) {
+            long delay = configManager.getConfig().autoSaveInterval() * 20L;
+            scheduler.runDelayedTimerAsync(this::save, delay, delay);
+        }
     }
 
     public void reload() {

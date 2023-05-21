@@ -113,11 +113,11 @@ public class ZNpcsPlus extends JavaPlugin {
         BungeeConnector bungeeConnector = new BungeeConnector(this);
         ConfigManager configManager = new ConfigManager(getDataFolder());
         ActionRegistry actionRegistry = new ActionRegistry();
-        NpcRegistryImpl npcRegistry = new NpcRegistryImpl(configManager, this, packetFactory, actionRegistry);
+        NpcRegistryImpl npcRegistry = new NpcRegistryImpl(configManager, this, packetFactory, actionRegistry, scheduler);
         UserManager userManager = new UserManager();
         SkinCache skinCache = new SkinCache(configManager);
 
-        log(ChatColor.WHITE+  " * Registerring components...");
+        log(ChatColor.WHITE + " * Registerring components...");
         NpcTypeImpl.defineTypes(packetEvents);
         actionRegistry.registerTypes(npcRegistry, scheduler, adventure, bungeeConnector, textSerializer);
         packetEvents.getEventManager().registerListener(new InteractionPacketListener(userManager, npcRegistry), PacketListenerPriority.MONITOR);
@@ -140,9 +140,9 @@ public class ZNpcsPlus extends JavaPlugin {
         npcRegistry.reload();
 
         shutdownTasks.add(scheduler::cancelAll);
-        shutdownTasks.add(npcRegistry::save);
         shutdownTasks.add(userManager::shutdown);
         shutdownTasks.add(adventure::close);
+        if (configManager.getConfig().autoSaveEnabled()) shutdownTasks.add(npcRegistry::save);
 
         ZApiProvider.register(new ZNPCsPlusApi(npcRegistry));
         enabled = true;
