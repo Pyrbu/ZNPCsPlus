@@ -1,6 +1,6 @@
 package lol.pyr.znpcsplus.packets;
 
-import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.PacketEventsAPI;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
@@ -20,6 +20,7 @@ import lol.pyr.znpcsplus.util.ZLocation;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -27,10 +28,12 @@ import java.util.concurrent.CompletableFuture;
 public class V1_8PacketFactory implements PacketFactory {
     protected final TaskScheduler scheduler;
     protected final MetadataFactory metadataFactory;
+    protected final PacketEventsAPI<Plugin> packetEvents;
 
-    public V1_8PacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory) {
+    public V1_8PacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory, PacketEventsAPI<Plugin> packetEvents) {
         this.scheduler = scheduler;
         this.metadataFactory = metadataFactory;
+        this.packetEvents = packetEvents;
     }
 
     @Override
@@ -50,7 +53,7 @@ public class V1_8PacketFactory implements PacketFactory {
     public void spawnEntity(Player player, PacketEntity entity, PropertyHolder properties) {
         ZLocation location = entity.getLocation();
         EntityType type = entity.getType();
-        ClientVersion clientVersion = PacketEvents.getAPI().getServerManager().getVersion().toClientVersion();
+        ClientVersion clientVersion = packetEvents.getServerManager().getVersion().toClientVersion();
         sendPacket(player, type.getLegacyId(clientVersion) == -1 ?
                 new WrapperPlayServerSpawnLivingEntity(entity.getEntityId(), entity.getUuid(), type, location.toVector3d(),
                         location.getYaw(), location.getPitch(), location.getPitch(), new Vector3d(), Collections.emptyList()) :
@@ -70,6 +73,7 @@ public class V1_8PacketFactory implements PacketFactory {
     public void teleportEntity(Player player, PacketEntity entity) {
         ZLocation location = entity.getLocation();
         sendPacket(player, new WrapperPlayServerEntityTeleport(entity.getEntityId(), location.toVector3d(), location.getYaw(), location.getPitch(), true));
+        if (entity.getType() == EntityTypes.PLAYER) sendPacket(player, new WrapperPlayServerEntityHeadLook(entity.getEntityId(), location.getYaw()));
     }
 
     @Override
@@ -128,11 +132,11 @@ public class V1_8PacketFactory implements PacketFactory {
 
     @Override
     public void sendMetadata(Player player, PacketEntity entity, List<EntityData> data) {
-        PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerEntityMetadata(entity.getEntityId(), data));
+        packetEvents.getPlayerManager().sendPacket(player, new WrapperPlayServerEntityMetadata(entity.getEntityId(), data));
     }
 
     protected void sendPacket(Player player, PacketWrapper<?> packet) {
-        PacketEvents.getAPI().getPlayerManager().sendPacket(player, packet);
+        packetEvents.getPlayerManager().sendPacket(player, packet);
     }
 
     protected CompletableFuture<UserProfile> skinned(Player player, PropertyHolder properties, UserProfile profile) {

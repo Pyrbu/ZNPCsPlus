@@ -1,5 +1,6 @@
 package lol.pyr.znpcsplus.packets;
 
+import com.github.retrooper.packetevents.PacketEventsAPI;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import com.github.retrooper.packetevents.protocol.player.GameMode;
 import com.github.retrooper.packetevents.protocol.player.UserProfile;
@@ -11,13 +12,14 @@ import lol.pyr.znpcsplus.metadata.MetadataFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.util.EnumSet;
 import java.util.concurrent.CompletableFuture;
 
 public class V1_19PacketFactory extends V1_14PacketFactory {
-    public V1_19PacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory) {
-        super(scheduler, metadataFactory);
+    public V1_19PacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory, PacketEventsAPI<Plugin> packetEvents) {
+        super(scheduler, metadataFactory, packetEvents);
     }
 
     @Override
