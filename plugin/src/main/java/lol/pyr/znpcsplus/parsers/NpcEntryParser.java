@@ -1,4 +1,4 @@
-package lol.pyr.znpcsplus.commands.parsers;
+package lol.pyr.znpcsplus.parsers;
 
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.parse.ParserType;
