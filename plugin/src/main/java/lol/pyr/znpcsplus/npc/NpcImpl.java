@@ -8,8 +8,8 @@ import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.hologram.HologramImpl;
 import lol.pyr.znpcsplus.interaction.InteractionAction;
 import lol.pyr.znpcsplus.packets.PacketFactory;
-import lol.pyr.znpcsplus.util.Viewable;
 import lol.pyr.znpcsplus.util.NpcLocation;
+import lol.pyr.znpcsplus.util.Viewable;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -117,7 +117,7 @@ public class NpcImpl extends Viewable implements Npc {
         if (value.equals(key.getDefaultValue())) removeProperty(key);
         else propertyMap.put(key, value);
         UNSAFE_refreshMeta();
-        if (key == EntityPropertyImpl.GLOW) UNSAFE_remakeTeam();
+        if (key.getName().equalsIgnoreCase("glow")) UNSAFE_remakeTeam();
     }
 
     @SuppressWarnings("unchecked")
@@ -128,7 +128,7 @@ public class NpcImpl extends Viewable implements Npc {
     public void removeProperty(EntityPropertyImpl<?> key) {
         propertyMap.remove(key);
         UNSAFE_refreshMeta();
-        if (key == EntityPropertyImpl.GLOW) UNSAFE_remakeTeam();
+        if (key.getName().equalsIgnoreCase("glow")) UNSAFE_remakeTeam();
     }
 
     public Set<EntityPropertyImpl<?>> getAppliedProperties() {

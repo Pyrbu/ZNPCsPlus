@@ -22,6 +22,7 @@ import lol.pyr.znpcsplus.commands.storage.LoadAllCommand;
 import lol.pyr.znpcsplus.commands.storage.SaveAllCommand;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
+import lol.pyr.znpcsplus.entity.EntityPropertyRegistry;
 import lol.pyr.znpcsplus.interaction.ActionRegistry;
 import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
 import lol.pyr.znpcsplus.metadata.*;
@@ -106,23 +107,24 @@ public class ZNpcsPlus extends JavaPlugin {
         log(ChatColor.WHITE + " * Initializing components...");
         TaskScheduler scheduler = FoliaUtil.isFolia() ? new FoliaScheduler(this) : new SpigotScheduler(this);
         MetadataFactory metadataFactory = setupMetadataFactory();
-        PacketFactory packetFactory = setupPacketFactory(scheduler, metadataFactory);
-        BungeeConnector bungeeConnector = new BungeeConnector(this);
         ConfigManager configManager = new ConfigManager(getDataFolder());
+        SkinCache skinCache = new SkinCache(configManager);
+        EntityPropertyRegistry propertyRegistry = new EntityPropertyRegistry(skinCache);
+        PacketFactory packetFactory = setupPacketFactory(scheduler, metadataFactory, propertyRegistry);
+        BungeeConnector bungeeConnector = new BungeeConnector(this);
         ActionRegistry actionRegistry = new ActionRegistry();
         NpcTypeRegistry typeRegistry = new NpcTypeRegistry();
-        NpcRegistryImpl npcRegistry = new NpcRegistryImpl(configManager, this, packetFactory, actionRegistry, scheduler, typeRegistry);
+        NpcRegistryImpl npcRegistry = new NpcRegistryImpl(configManager, this, packetFactory, actionRegistry, scheduler, typeRegistry, propertyRegistry);
         UserManager userManager = new UserManager();
-        SkinCache skinCache = new SkinCache(configManager);
 
         log(ChatColor.WHITE + " * Registerring components...");
-        typeRegistry.registerDefault(packetEvents);
+        typeRegistry.registerDefault(packetEvents, propertyRegistry);
         actionRegistry.registerTypes(npcRegistry, scheduler, adventure, bungeeConnector, textSerializer);
         packetEvents.getEventManager().registerListener(new InteractionPacketListener(userManager, npcRegistry), PacketListenerPriority.MONITOR);
         new Metrics(this, PLUGIN_ID);
         pluginManager.registerEvents(new UserListener(userManager), this);
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        registerCommands(npcRegistry, skinCache, adventure, actionRegistry, typeRegistry);
+        registerCommands(npcRegistry, skinCache, adventure, actionRegistry, typeRegistry, propertyRegistry);
 
         log(ChatColor.WHITE + " * Starting tasks...");
         if (configManager.getConfig().checkForUpdates()) {
@@ -168,13 +170,13 @@ public class ZNpcsPlus extends JavaPlugin {
         for (Runnable runnable : shutdownTasks) runnable.run();
     }
 
-    private PacketFactory setupPacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory) {
+    private PacketFactory setupPacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory, EntityPropertyRegistry propertyRegistry) {
         HashMap<ServerVersion, LazyLoader<? extends PacketFactory>> versions = new HashMap<>();
-        versions.put(ServerVersion.V_1_8, LazyLoader.of(() -> new V1_8PacketFactory(scheduler, metadataFactory, packetEvents)));
-        versions.put(ServerVersion.V_1_9, LazyLoader.of(() -> new V1_9PacketFactory(scheduler, metadataFactory, packetEvents)));
-        versions.put(ServerVersion.V_1_10, LazyLoader.of(() -> new V1_10PacketFactory(scheduler, metadataFactory, packetEvents)));
-        versions.put(ServerVersion.V_1_14, LazyLoader.of(() -> new V1_14PacketFactory(scheduler, metadataFactory, packetEvents)));
-        versions.put(ServerVersion.V_1_19, LazyLoader.of(() -> new V1_19PacketFactory(scheduler, metadataFactory, packetEvents)));
+        versions.put(ServerVersion.V_1_8, LazyLoader.of(() -> new V1_8PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry)));
+        versions.put(ServerVersion.V_1_9, LazyLoader.of(() -> new V1_9PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry)));
+        versions.put(ServerVersion.V_1_10, LazyLoader.of(() -> new V1_10PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry)));
+        versions.put(ServerVersion.V_1_14, LazyLoader.of(() -> new V1_14PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry)));
+        versions.put(ServerVersion.V_1_19, LazyLoader.of(() -> new V1_19PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry)));
 
         ServerVersion version = packetEvents.getServerManager().getVersion();
         if (versions.containsKey(version)) return versions.get(version).get();
@@ -207,14 +209,14 @@ public class ZNpcsPlus extends JavaPlugin {
     }
 
 
-    private void registerCommands(NpcRegistryImpl npcRegistry, SkinCache skinCache, BukkitAudiences adventure, ActionRegistry actionRegistry, NpcTypeRegistry typeRegistry) {
+    private void registerCommands(NpcRegistryImpl npcRegistry, SkinCache skinCache, BukkitAudiences adventure, ActionRegistry actionRegistry, NpcTypeRegistry typeRegistry, EntityPropertyRegistry propertyRegistry) {
         // TODO: make the messages better
         Message<CommandContext> incorrectUsageMessage = context -> context.send(Component.text("Incorrect usage: /" + context.getUsage(), NamedTextColor.RED));
         CommandManager manager = new CommandManager(this, adventure, incorrectUsageMessage);
 
         manager.registerParser(NpcTypeImpl.class, new NpcTypeParser(incorrectUsageMessage, typeRegistry));
         manager.registerParser(NpcEntryImpl.class, new NpcEntryParser(npcRegistry, incorrectUsageMessage));
-        manager.registerParser(EntityPropertyImpl.class, new EntityPropertyParser(incorrectUsageMessage));
+        manager.registerParser(EntityPropertyImpl.class, new EntityPropertyParser(incorrectUsageMessage, propertyRegistry));
         manager.registerParser(Integer.class, new IntegerParser(incorrectUsageMessage));
         manager.registerParser(Double.class, new DoubleParser(incorrectUsageMessage));
         manager.registerParser(Boolean.class, new BooleanParser(incorrectUsageMessage));
@@ -222,7 +224,7 @@ public class ZNpcsPlus extends JavaPlugin {
 
         manager.registerCommand("npc", new MultiCommand()
                 .addSubcommand("create", new CreateCommand(npcRegistry, typeRegistry))
-                .addSubcommand("skin", new SkinCommand(skinCache, npcRegistry, typeRegistry))
+                .addSubcommand("skin", new SkinCommand(skinCache, npcRegistry, typeRegistry, propertyRegistry))
                 .addSubcommand("delete", new DeleteCommand(npcRegistry, adventure))
                 .addSubcommand("move", new MoveCommand(npcRegistry))
                 .addSubcommand("properties", new PropertiesCommand(npcRegistry))

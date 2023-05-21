@@ -4,6 +4,7 @@ import lol.pyr.znpcsplus.ZNpcsPlus;
 import lol.pyr.znpcsplus.api.npc.NpcRegistry;
 import lol.pyr.znpcsplus.api.npc.NpcType;
 import lol.pyr.znpcsplus.config.ConfigManager;
+import lol.pyr.znpcsplus.entity.EntityPropertyRegistry;
 import lol.pyr.znpcsplus.interaction.ActionRegistry;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
@@ -22,8 +23,8 @@ public class NpcRegistryImpl implements NpcRegistry {
     private final PacketFactory packetFactory;
     private final ConfigManager configManager;
 
-    public NpcRegistryImpl(ConfigManager configManager, ZNpcsPlus plugin, PacketFactory packetFactory, ActionRegistry actionRegistry, TaskScheduler scheduler, NpcTypeRegistry typeRegistry) {
-        storage = configManager.getConfig().storageType().create(configManager, plugin, packetFactory, actionRegistry, typeRegistry);
+    public NpcRegistryImpl(ConfigManager configManager, ZNpcsPlus plugin, PacketFactory packetFactory, ActionRegistry actionRegistry, TaskScheduler scheduler, NpcTypeRegistry typeRegistry, EntityPropertyRegistry propertyRegistry) {
+        storage = configManager.getConfig().storageType().create(configManager, plugin, packetFactory, actionRegistry, typeRegistry, propertyRegistry);
         this.packetFactory = packetFactory;
         this.configManager = configManager;
 

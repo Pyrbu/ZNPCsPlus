@@ -3,7 +3,6 @@ package lol.pyr.znpcsplus.hologram;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
-import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.util.NpcLocation;
@@ -44,13 +43,13 @@ public class HologramLine implements PropertyHolder {
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getProperty(EntityProperty<T> key) {
-        if (key == EntityPropertyImpl.INVISIBLE) return (T) Boolean.TRUE;
-        if (key == EntityPropertyImpl.NAME) return (T) text;
+        if (key.getName().equalsIgnoreCase("invisible")) return (T) Boolean.TRUE;
+        if (key.getName().equalsIgnoreCase("name")) return (T) text;
         return key.getDefaultValue();
     }
 
     @Override
     public boolean hasProperty(EntityProperty<?> key) {
-        return key == EntityPropertyImpl.NAME || key == EntityPropertyImpl.INVISIBLE;
+        return key.getName().equalsIgnoreCase("name") || key.getName().equalsIgnoreCase("invisible");
     }
 }

@@ -4,8 +4,12 @@ import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
-import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
-import lol.pyr.znpcsplus.npc.*;
+import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
+import lol.pyr.znpcsplus.entity.EntityPropertyRegistry;
+import lol.pyr.znpcsplus.npc.NpcEntryImpl;
+import lol.pyr.znpcsplus.npc.NpcImpl;
+import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
+import lol.pyr.znpcsplus.npc.NpcTypeRegistry;
 import lol.pyr.znpcsplus.skin.cache.SkinCache;
 import lol.pyr.znpcsplus.skin.descriptor.FetchingDescriptor;
 import lol.pyr.znpcsplus.skin.descriptor.MirrorDescriptor;
@@ -20,11 +24,13 @@ public class SkinCommand implements CommandHandler {
     private final SkinCache skinCache;
     private final NpcRegistryImpl npcRegistry;
     private final NpcTypeRegistry typeRegistry;
+    private final EntityPropertyRegistry propertyRegistry;
 
-    public SkinCommand(SkinCache skinCache, NpcRegistryImpl npcRegistry, NpcTypeRegistry typeRegistry) {
+    public SkinCommand(SkinCache skinCache, NpcRegistryImpl npcRegistry, NpcTypeRegistry typeRegistry, EntityPropertyRegistry propertyRegistry) {
         this.skinCache = skinCache;
         this.npcRegistry = npcRegistry;
         this.typeRegistry = typeRegistry;
+        this.propertyRegistry = propertyRegistry;
     }
 
     @Override
@@ -35,7 +41,7 @@ public class SkinCommand implements CommandHandler {
         String type = context.popString();
 
         if (type.equalsIgnoreCase("mirror")) {
-            npc.setProperty(EntityPropertyImpl.SKIN, new MirrorDescriptor(skinCache));
+            npc.setProperty(propertyRegistry.getByName("skin", SkinDescriptor.class), new MirrorDescriptor(skinCache));
             npc.respawn();
             context.halt(Component.text("The NPC's skin will now mirror the player that it's being displayed to", NamedTextColor.GREEN));
         }
@@ -49,7 +55,7 @@ public class SkinCommand implements CommandHandler {
                     context.send(Component.text("Failed to fetch skin, are you sure the player name is valid?", NamedTextColor.RED));
                     return;
                 }
-                npc.setProperty(EntityPropertyImpl.SKIN, skin);
+                npc.setProperty(propertyRegistry.getByName("skin", SkinDescriptor.class), skin);
                 npc.respawn();
                 context.send(Component.text("The NPC's skin has been set to \"" + name + "\""));
             });
@@ -59,7 +65,7 @@ public class SkinCommand implements CommandHandler {
         if (type.equalsIgnoreCase("dynamic")) {
             context.ensureArgsNotEmpty();
             String name = context.dumpAllArgs();
-            npc.setProperty(EntityPropertyImpl.SKIN, new FetchingDescriptor(skinCache, name));
+            npc.setProperty(propertyRegistry.getByName("skin", SkinDescriptor.class), new FetchingDescriptor(skinCache, name));
             npc.respawn();
             context.halt(Component.text("The NPC's skin will now be resolved per-player from \"" + name + "\""));
         }

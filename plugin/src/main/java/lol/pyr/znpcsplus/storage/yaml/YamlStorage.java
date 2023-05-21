@@ -2,6 +2,7 @@ package lol.pyr.znpcsplus.storage.yaml;
 
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
+import lol.pyr.znpcsplus.entity.EntityPropertyRegistry;
 import lol.pyr.znpcsplus.hologram.HologramLine;
 import lol.pyr.znpcsplus.interaction.ActionRegistry;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
@@ -24,13 +25,15 @@ public class YamlStorage implements NpcStorage {
     private final ConfigManager configManager;
     private final ActionRegistry actionRegistry;
     private final NpcTypeRegistry typeRegistry;
+    private final EntityPropertyRegistry propertyRegistry;
     private final File folder;
 
-    public YamlStorage(PacketFactory packetFactory, ConfigManager configManager, ActionRegistry actionRegistry, NpcTypeRegistry typeRegistry, File folder) {
+    public YamlStorage(PacketFactory packetFactory, ConfigManager configManager, ActionRegistry actionRegistry, NpcTypeRegistry typeRegistry, EntityPropertyRegistry propertyRegistry, File folder) {
         this.packetFactory = packetFactory;
         this.configManager = configManager;
         this.actionRegistry = actionRegistry;
         this.typeRegistry = typeRegistry;
+        this.propertyRegistry = propertyRegistry;
         this.folder = folder;
         if (!this.folder.exists()) this.folder.mkdirs();
     }
@@ -49,7 +52,7 @@ public class YamlStorage implements NpcStorage {
             ConfigurationSection properties = config.getConfigurationSection("properties");
             if (properties != null) {
                 for (String key : properties.getKeys(false)) {
-                    EntityPropertyImpl<?> property = EntityPropertyImpl.getByName(key);
+                    EntityPropertyImpl<?> property = propertyRegistry.getByName(key);
                     npc.UNSAFE_setProperty(property, property.deserialize(properties.getString(key)));
                 }
             }

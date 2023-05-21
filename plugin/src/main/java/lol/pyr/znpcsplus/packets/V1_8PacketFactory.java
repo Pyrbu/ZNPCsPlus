@@ -11,7 +11,8 @@ import com.github.retrooper.packetevents.util.Vector3d;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.*;
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
-import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
+import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
+import lol.pyr.znpcsplus.entity.EntityPropertyRegistry;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.metadata.MetadataFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
@@ -29,11 +30,13 @@ public class V1_8PacketFactory implements PacketFactory {
     protected final TaskScheduler scheduler;
     protected final MetadataFactory metadataFactory;
     protected final PacketEventsAPI<Plugin> packetEvents;
+    protected final EntityPropertyRegistry propertyRegistry;
 
-    public V1_8PacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory, PacketEventsAPI<Plugin> packetEvents) {
+    public V1_8PacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistry propertyRegistry) {
         this.scheduler = scheduler;
         this.metadataFactory = metadataFactory;
         this.packetEvents = packetEvents;
+        this.propertyRegistry = propertyRegistry;
     }
 
     @Override
@@ -103,7 +106,7 @@ public class V1_8PacketFactory implements PacketFactory {
                 Component.empty(), Component.empty(), Component.empty(),
                 WrapperPlayServerTeams.NameTagVisibility.NEVER,
                 WrapperPlayServerTeams.CollisionRule.NEVER,
-                properties.hasProperty(EntityPropertyImpl.GLOW) ? properties.getProperty(EntityPropertyImpl.GLOW) : NamedTextColor.WHITE,
+                properties.hasProperty(propertyRegistry.getByName("glow")) ? properties.getProperty(propertyRegistry.getByName("glow", NamedTextColor.class)) : NamedTextColor.WHITE,
                 WrapperPlayServerTeams.OptionData.NONE
         )));
         sendPacket(player, new WrapperPlayServerTeams("npc_team_" + entity.getEntityId(), WrapperPlayServerTeams.TeamMode.ADD_ENTITIES, (WrapperPlayServerTeams.ScoreBoardTeamInfo) null,
@@ -118,10 +121,10 @@ public class V1_8PacketFactory implements PacketFactory {
     @Override
     public Map<Integer, EntityData> generateMetadata(Player player, PacketEntity entity, PropertyHolder properties) {
         HashMap<Integer, EntityData> data = new HashMap<>();
-        if (entity.getType() == EntityTypes.PLAYER) add(data, metadataFactory.skinLayers(properties.getProperty(EntityPropertyImpl.SKIN_LAYERS)));
-        add(data, metadataFactory.effects(properties.getProperty(EntityPropertyImpl.FIRE), false, properties.getProperty(EntityPropertyImpl.INVISIBLE)));
-        add(data, metadataFactory.silent(properties.getProperty(EntityPropertyImpl.SILENT)));
-        if (properties.hasProperty(EntityPropertyImpl.NAME)) addAll(data, metadataFactory.name(properties.getProperty(EntityPropertyImpl.NAME)));
+        if (entity.getType() == EntityTypes.PLAYER) add(data, metadataFactory.skinLayers(properties.getProperty(propertyRegistry.getByName("skin_layers", Boolean.class))));
+        add(data, metadataFactory.effects(properties.getProperty(propertyRegistry.getByName("fire", Boolean.class)), false, properties.getProperty(propertyRegistry.getByName("fire", Boolean.class))));
+        add(data, metadataFactory.silent(properties.getProperty(propertyRegistry.getByName("silent", Boolean.class))));
+        if (properties.hasProperty(propertyRegistry.getByName("name"))) addAll(data, metadataFactory.name(properties.getProperty(propertyRegistry.getByName("name", Component.class))));
         return data;
     }
 
@@ -140,8 +143,8 @@ public class V1_8PacketFactory implements PacketFactory {
     }
 
     protected CompletableFuture<UserProfile> skinned(Player player, PropertyHolder properties, UserProfile profile) {
-        if (!properties.hasProperty(EntityPropertyImpl.SKIN)) return CompletableFuture.completedFuture(profile);
-        BaseSkinDescriptor descriptor = (BaseSkinDescriptor) properties.getProperty(EntityPropertyImpl.SKIN);
+        if (!properties.hasProperty(propertyRegistry.getByName("skin"))) return CompletableFuture.completedFuture(profile);
+        BaseSkinDescriptor descriptor = (BaseSkinDescriptor) properties.getProperty(propertyRegistry.getByName("skin", SkinDescriptor.class));
         if (descriptor.supportsInstant(player)) {
             descriptor.fetchInstant(player).apply(profile);
             return CompletableFuture.completedFuture(profile);

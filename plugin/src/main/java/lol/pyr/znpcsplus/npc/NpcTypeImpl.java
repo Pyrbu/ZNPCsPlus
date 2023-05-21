@@ -4,6 +4,7 @@ import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
+import lol.pyr.znpcsplus.entity.EntityPropertyRegistry;
 
 import java.util.*;
 
@@ -14,7 +15,7 @@ public class NpcTypeImpl {
     private final double hologramOffset;
 
     private NpcTypeImpl(String name, EntityType type, double hologramOffset, Set<EntityPropertyImpl<?>> allowedProperties) {
-        this.name = name.toUpperCase();
+        this.name = name.toLowerCase();
         this.type = type;
         this.hologramOffset = hologramOffset;
         this.allowedProperties = allowedProperties;
@@ -37,13 +38,15 @@ public class NpcTypeImpl {
     }
 
     protected static final class Builder {
+        private final EntityPropertyRegistry propertyRegistry;
         private final String name;
         private final EntityType type;
         private final List<EntityPropertyImpl<?>> allowedProperties = new ArrayList<>();
         private boolean globalProperties = true;
         private double hologramOffset = 0;
 
-        Builder(String name, EntityType type) {
+        Builder(EntityPropertyRegistry propertyRegistry, String name, EntityType type) {
+            this.propertyRegistry = propertyRegistry;
             this.name = name;
             this.type = type;
         }
@@ -65,11 +68,11 @@ public class NpcTypeImpl {
 
         public NpcTypeImpl build() {
             if (globalProperties) {
-                allowedProperties.add(EntityPropertyImpl.FIRE);
-                allowedProperties.add(EntityPropertyImpl.INVISIBLE);
-                allowedProperties.add(EntityPropertyImpl.SILENT);
+                allowedProperties.add(propertyRegistry.getByName("fire"));
+                allowedProperties.add(propertyRegistry.getByName("invisible"));
+                allowedProperties.add(propertyRegistry.getByName("silent"));
                 if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9))
-                    allowedProperties.add(EntityPropertyImpl.GLOW);
+                    allowedProperties.add(propertyRegistry.getByName("glow"));
             }
             return new NpcTypeImpl(name, type, hologramOffset, new HashSet<>(allowedProperties));
         }

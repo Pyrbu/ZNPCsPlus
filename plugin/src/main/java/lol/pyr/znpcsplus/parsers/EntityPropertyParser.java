@@ -5,18 +5,22 @@ import lol.pyr.director.adventure.parse.ParserType;
 import lol.pyr.director.common.command.CommandExecutionException;
 import lol.pyr.director.common.message.Message;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
+import lol.pyr.znpcsplus.entity.EntityPropertyRegistry;
 
 import java.util.Deque;
 
 @SuppressWarnings("rawtypes")
 public class EntityPropertyParser extends ParserType<EntityPropertyImpl/*<?>*/> {
-    public EntityPropertyParser(Message<CommandContext> message) {
+    private final EntityPropertyRegistry propertyRegistry;
+
+    public EntityPropertyParser(Message<CommandContext> message, EntityPropertyRegistry propertyRegistry) {
         super(message);
+        this.propertyRegistry = propertyRegistry;
     }
 
     @Override
     public EntityPropertyImpl<?> parse(Deque<String> deque) throws CommandExecutionException {
-        EntityPropertyImpl<?> property = EntityPropertyImpl.getByName(deque.pop());
+        EntityPropertyImpl<?> property = propertyRegistry.getByName(deque.pop());
         if (property == null) throw new CommandExecutionException();
         return property;
     }
