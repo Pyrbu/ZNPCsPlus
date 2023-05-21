@@ -5,11 +5,13 @@ import com.github.retrooper.packetevents.PacketEventsAPI;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
+import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandManager;
 import lol.pyr.director.adventure.command.MultiCommand;
 import lol.pyr.director.adventure.parse.primitive.BooleanParser;
 import lol.pyr.director.adventure.parse.primitive.DoubleParser;
 import lol.pyr.director.adventure.parse.primitive.IntegerParser;
+import lol.pyr.director.common.message.Message;
 import lol.pyr.znpcsplus.api.ZApi;
 import lol.pyr.znpcsplus.api.ZApiProvider;
 import lol.pyr.znpcsplus.api.npc.NpcRegistry;
@@ -23,8 +25,8 @@ import lol.pyr.znpcsplus.commands.storage.LoadAllCommand;
 import lol.pyr.znpcsplus.commands.storage.SaveAllCommand;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
-import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
 import lol.pyr.znpcsplus.interaction.ActionRegistry;
+import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
 import lol.pyr.znpcsplus.metadata.*;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcImpl;
@@ -93,6 +95,8 @@ public class ZNpcsPlus extends JavaPlugin implements ZApi {
 
     @Override
     public void onEnable() {
+        getDataFolder().mkdirs();
+
         log(ChatColor.YELLOW + "  ___       __   __  __");
         log(ChatColor.YELLOW + "   _/ |\\ | |__) |   (__` " + ChatColor.GOLD + "__|__   " + ChatColor.YELLOW + getDescription().getName() + " " + ChatColor.GOLD + "v" + getDescription().getVersion());
         log(ChatColor.YELLOW + "  /__ | \\| |    |__ .__) " + ChatColor.GOLD + "  |     " + ChatColor.GRAY + "Maintained with " + ChatColor.RED + "\u2764 " + ChatColor.GRAY + " by Pyr#6969");
@@ -100,12 +104,7 @@ public class ZNpcsPlus extends JavaPlugin implements ZApi {
 
         PluginManager pluginManager = Bukkit.getPluginManager();
 
-        if (pluginManager.isPluginEnabled("ServersNPC")) {
-            log(ChatColor.DARK_RED + " * Detected old version of ZNPCs! Disabling the plugin.");
-            log("");
-            pluginManager.disablePlugin(this);
-            return;
-        }
+        if (pluginManager.isPluginEnabled("ServersNPC")) log(ChatColor.DARK_RED + " * Old version of znpcs detected! The plugin might not work correctly!");
         long before = System.currentTimeMillis();
 
         log(ChatColor.WHITE + " * Initializing Adventure...");
@@ -113,8 +112,6 @@ public class ZNpcsPlus extends JavaPlugin implements ZApi {
 
         metadataFactory = setupMetadataFactory();
         PacketFactory packetFactory = setupPacketFactory();
-
-        getDataFolder().mkdirs();
 
         log(ChatColor.WHITE + " * Loading configurations...");
         ConfigManager configManager = new ConfigManager(getDataFolder());
@@ -130,7 +127,6 @@ public class ZNpcsPlus extends JavaPlugin implements ZApi {
         userManager = new UserManager();
         Bukkit.getOnlinePlayers().forEach(userManager::get);
         pluginManager.registerEvents(new UserListener(userManager), this);
-
 
         if (configManager.getConfig().checkForUpdates()) {
             UpdateChecker updateChecker = new UpdateChecker(this.getDescription());
@@ -225,16 +221,17 @@ public class ZNpcsPlus extends JavaPlugin implements ZApi {
     }
 
     private void registerCommands() {
-        // TODO: Messages in here
-        CommandManager manager = new CommandManager(this, adventure, context -> {});
+        // TODO: make this better
+        Message<CommandContext> incorrectUsageMessage = context -> context.send(Component.text("Incorrect usage: " + context.getUsage()));
+        CommandManager manager = new CommandManager(this, adventure, incorrectUsageMessage);
 
-        manager.registerParser(NpcTypeImpl.class, new NpcTypeParser(context -> {}));
-        manager.registerParser(NpcEntryImpl.class, new NpcEntryParser(npcRegistry, context -> {}));
-        manager.registerParser(EntityPropertyImpl.class, new EntityPropertyParser(context -> {}));
-        manager.registerParser(Integer.class, new IntegerParser(context -> {}));
-        manager.registerParser(Double.class, new DoubleParser(context -> {}));
-        manager.registerParser(Boolean.class, new BooleanParser(context -> {}));
-        manager.registerParser(NamedTextColor.class, new NamedTextColorParser(context -> {}));
+        manager.registerParser(NpcTypeImpl.class, new NpcTypeParser(incorrectUsageMessage));
+        manager.registerParser(NpcEntryImpl.class, new NpcEntryParser(npcRegistry, incorrectUsageMessage));
+        manager.registerParser(EntityPropertyImpl.class, new EntityPropertyParser(incorrectUsageMessage));
+        manager.registerParser(Integer.class, new IntegerParser(incorrectUsageMessage));
+        manager.registerParser(Double.class, new DoubleParser(incorrectUsageMessage));
+        manager.registerParser(Boolean.class, new BooleanParser(incorrectUsageMessage));
+        manager.registerParser(NamedTextColor.class, new NamedTextColorParser(incorrectUsageMessage));
 
         manager.registerCommand("npc", new MultiCommand()
                 .addSubcommand("action", new ActionCommand())
