@@ -51,8 +51,8 @@ public class YamlStorage implements NpcStorage {
                     npc.UNSAFE_setProperty(property, property.deserialize(properties.getString(key)));
                 }
             }
-
-            for (String line : config.getStringList("hologram")) npc.getHologram().addLine(MiniMessage.miniMessage().deserialize(line));
+            npc.getHologram().setOffset(config.getDouble("hologram.offset", 0.0));
+            for (String line : config.getStringList("hologram.lines")) npc.getHologram().addLine(MiniMessage.miniMessage().deserialize(line));
             for (String s : config.getStringList("actions")) npc.addAction(actionRegistry.deserialize(s));
 
             NpcEntryImpl entry = new NpcEntryImpl(config.getString("id"), npc);
@@ -84,11 +84,12 @@ public class YamlStorage implements NpcStorage {
                 config.set("properties." + property.getName(), property.serialize(npc));
             }
 
+            if (npc.getHologram().getOffset() != 0.0) config.set("hologram.offset", npc.getHologram().getOffset());
             List<String> lines = new ArrayList<>();
             for (HologramLine line : npc.getHologram().getLines()) {
                 lines.add(MiniMessage.miniMessage().serialize(line.getText()));
             }
-            config.set("hologram", lines);
+            config.set("hologram.lines", lines);
             config.set("actions", npc.getActions().stream()
                     .map(actionRegistry::serialize)
                     .filter(Objects::nonNull)

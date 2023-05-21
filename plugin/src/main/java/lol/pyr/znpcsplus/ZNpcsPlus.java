@@ -8,6 +8,7 @@ import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder
 import lol.pyr.director.adventure.command.CommandManager;
 import lol.pyr.director.adventure.command.MultiCommand;
 import lol.pyr.director.adventure.parse.primitive.BooleanParser;
+import lol.pyr.director.adventure.parse.primitive.DoubleParser;
 import lol.pyr.director.adventure.parse.primitive.IntegerParser;
 import lol.pyr.znpcsplus.api.ZApi;
 import lol.pyr.znpcsplus.api.ZApiProvider;
@@ -110,10 +111,6 @@ public class ZNpcsPlus extends JavaPlugin implements ZApi {
         log(ChatColor.WHITE + " * Initializing Adventure...");
         adventure = BukkitAudiences.create(this);
 
-        log(ChatColor.WHITE + " * Initializing PacketEvents...");
-        packetEvents.getEventManager().registerListener(new InteractionPacketListener(userManager, npcRegistry), PacketListenerPriority.MONITOR);
-        packetEvents.init();
-
         metadataFactory = setupMetadataFactory();
         PacketFactory packetFactory = setupPacketFactory();
 
@@ -125,20 +122,15 @@ public class ZNpcsPlus extends JavaPlugin implements ZApi {
         log(ChatColor.WHITE + " * Defining NPC types...");
         NpcTypeImpl.defineTypes();
 
-        log(ChatColor.WHITE + " * Starting tasks & registering components...");
+        log(ChatColor.WHITE + " * Registering components...");
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         new Metrics(this, PLUGIN_ID);
         scheduler = FoliaUtil.isFolia() ? new FoliaScheduler(this) : new SpigotScheduler(this);
         BungeeUtil bungeeUtil = new BungeeUtil(this);
         userManager = new UserManager();
         Bukkit.getOnlinePlayers().forEach(userManager::get);
-
         pluginManager.registerEvents(new UserListener(userManager), this);
-        scheduler.runDelayedTimerAsync(new NpcVisibilityTask(npcRegistry, configManager), 60L, 10L);
-        skinCache = new SkinCache(configManager);
-        scheduler.runDelayedTimerAsync(new SkinCacheCleanTask(skinCache), 1200, 1200);
 
-        registerCommands();
 
         if (configManager.getConfig().checkForUpdates()) {
             UpdateChecker updateChecker = new UpdateChecker(this.getDescription());
@@ -150,6 +142,18 @@ public class ZNpcsPlus extends JavaPlugin implements ZApi {
         ActionRegistry actionRegistry = new ActionRegistry(scheduler, adventure, bungeeUtil);
         npcRegistry = new NpcRegistryImpl(configManager, this, packetFactory, actionRegistry);
         npcRegistry.reload();
+
+        log(ChatColor.WHITE + " * Initializing PacketEvents...");
+        packetEvents.getEventManager().registerListener(new InteractionPacketListener(userManager, npcRegistry), PacketListenerPriority.MONITOR);
+        packetEvents.init();
+
+        log(ChatColor.WHITE + " * Starting tasks...");
+        scheduler.runDelayedTimerAsync(new NpcVisibilityTask(npcRegistry, configManager), 60L, 10L);
+        skinCache = new SkinCache(configManager);
+        scheduler.runDelayedTimerAsync(new SkinCacheCleanTask(skinCache), 1200, 1200);
+
+        log(ChatColor.WHITE + " * Registering commands...");
+        registerCommands();
 
         ZApiProvider.register(this);
         enabled = true;
@@ -212,6 +216,7 @@ public class ZNpcsPlus extends JavaPlugin implements ZApi {
     @Override
     public void onDisable() {
         if (!enabled) return;
+        scheduler.cancelAll();
         npcRegistry.save();
         ZApiProvider.unregister();
         Bukkit.getOnlinePlayers().forEach(userManager::remove);
@@ -227,6 +232,7 @@ public class ZNpcsPlus extends JavaPlugin implements ZApi {
         manager.registerParser(NpcEntryImpl.class, new NpcEntryParser(npcRegistry, context -> {}));
         manager.registerParser(EntityPropertyImpl.class, new EntityPropertyParser(context -> {}));
         manager.registerParser(Integer.class, new IntegerParser(context -> {}));
+        manager.registerParser(Double.class, new DoubleParser(context -> {}));
         manager.registerParser(Boolean.class, new BooleanParser(context -> {}));
         manager.registerParser(NamedTextColor.class, new NamedTextColorParser(context -> {}));
 
@@ -250,7 +256,7 @@ public class ZNpcsPlus extends JavaPlugin implements ZApi {
                         .addSubcommand("info", new HoloInfoCommand(npcRegistry))
                         .addSubcommand("insert", new HoloInsertCommand(npcRegistry, textSerializer))
                         .addSubcommand("set", new HoloSetCommand(npcRegistry, textSerializer))
-                )
+                        .addSubcommand("offset", new HoloOffsetCommand(npcRegistry)))
         );
     }
 
