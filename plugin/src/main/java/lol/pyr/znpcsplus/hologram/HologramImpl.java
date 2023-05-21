@@ -60,12 +60,12 @@ public class HologramImpl extends Viewable implements Hologram {
     }
 
     @Override
-    protected void _show(Player player) {
+    protected void UNSAFE_show(Player player) {
         for (HologramLine line : lines) line.show(player);
     }
 
     @Override
-    protected void _hide(Player player) {
+    protected void UNSAFE_hide(Player player) {
         for (HologramLine line : lines) line.hide(player);
     }
 

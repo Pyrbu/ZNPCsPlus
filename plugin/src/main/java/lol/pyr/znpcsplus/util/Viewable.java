@@ -21,19 +21,19 @@ public abstract class Viewable {
 
     public void respawn(Player player) {
         if (!viewers.contains(player)) return;
-        _hide(player);
-        _show(player);
+        UNSAFE_hide(player);
+        UNSAFE_show(player);
     }
 
     public void show(Player player) {
         if (viewers.contains(player)) return;
-        _show(player);
+        UNSAFE_show(player);
         viewers.add(player);
     }
 
     public void hide(Player player) {
         if (!viewers.contains(player)) return;
-        _hide(player);
+        UNSAFE_hide(player);
         viewers.remove(player);
     }
 
@@ -42,11 +42,11 @@ public abstract class Viewable {
     }
 
     protected void UNSAFE_hideAll() {
-        for (Player viewer : viewers) _hide(viewer);
+        for (Player viewer : viewers) UNSAFE_hide(viewer);
     }
 
     protected void UNSAFE_showAll() {
-        for (Player viewer : viewers) _show(viewer);
+        for (Player viewer : viewers) UNSAFE_show(viewer);
     }
 
     public Set<Player> getViewers() {
@@ -57,7 +57,7 @@ public abstract class Viewable {
         return viewers.contains(player);
     }
 
-    protected abstract void _show(Player player);
+    protected abstract void UNSAFE_show(Player player);
 
-    protected abstract void _hide(Player player);
+    protected abstract void UNSAFE_hide(Player player);
 }

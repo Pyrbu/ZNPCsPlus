@@ -84,22 +84,22 @@ public class NpcImpl extends Viewable implements Npc {
     }
 
     @Override
-    protected void _show(Player player) {
+    protected void UNSAFE_show(Player player) {
         entity.spawn(player);
         hologram.show(player);
     }
 
     @Override
-    protected void _hide(Player player) {
+    protected void UNSAFE_hide(Player player) {
         entity.despawn(player);
         hologram.hide(player);
     }
 
-    private void _refreshMeta() {
+    private void UNSAFE_refreshMeta() {
         for (Player viewer : getViewers()) entity.refreshMeta(viewer);
     }
 
-    private void _remakeTeam() {
+    private void UNSAFE_remakeTeam() {
         for (Player viewer : getViewers()) entity.remakeTeam(viewer);
     }
 
@@ -116,8 +116,8 @@ public class NpcImpl extends Viewable implements Npc {
         if (value == null) return;
         if (value.equals(key.getDefaultValue())) removeProperty(key);
         else propertyMap.put(key, value);
-        _refreshMeta();
-        if (key == EntityPropertyImpl.GLOW) _remakeTeam();
+        UNSAFE_refreshMeta();
+        if (key == EntityPropertyImpl.GLOW) UNSAFE_remakeTeam();
     }
 
     @SuppressWarnings("unchecked")
@@ -127,8 +127,8 @@ public class NpcImpl extends Viewable implements Npc {
 
     public void removeProperty(EntityPropertyImpl<?> key) {
         propertyMap.remove(key);
-        _refreshMeta();
-        if (key == EntityPropertyImpl.GLOW) _remakeTeam();
+        UNSAFE_refreshMeta();
+        if (key == EntityPropertyImpl.GLOW) UNSAFE_remakeTeam();
     }
 
     public Set<EntityPropertyImpl<?>> getAppliedProperties() {
