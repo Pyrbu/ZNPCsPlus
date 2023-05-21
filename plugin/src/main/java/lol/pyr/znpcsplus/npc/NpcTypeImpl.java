@@ -1,10 +1,12 @@
 package lol.pyr.znpcsplus.npc;
 
 import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.PacketEventsAPI;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
+import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 
@@ -57,10 +59,10 @@ public class NpcTypeImpl {
     }
 
     private static boolean defined = false;
-    public static void defineTypes() {
+    public static void defineTypes(PacketEventsAPI<Plugin> packetEvents) {
         if (defined) return;
         defined = true;
-        ServerVersion version = PacketEvents.getAPI().getServerManager().getVersion();
+        ServerVersion version = packetEvents.getServerManager().getVersion();
 
         define(new Builder("player", EntityTypes.PLAYER).setHologramOffset(-0.15D)
                         .addProperties(EntityPropertyImpl.SKIN, EntityPropertyImpl.SKIN_LAYERS));

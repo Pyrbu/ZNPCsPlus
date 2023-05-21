@@ -26,7 +26,7 @@ public class NpcImpl extends Viewable implements Npc {
     private final HologramImpl hologram;
 
     private final Map<EntityPropertyImpl<?>, Object> propertyMap = new HashMap<>();
-    private final Set<InteractionAction> actions = new HashSet<>();
+    private final List<InteractionAction> actions = new ArrayList<>();
 
     protected NpcImpl(ConfigManager configManager, World world, NpcTypeImpl type, ZLocation location, PacketFactory packetFactory) {
         this(configManager, packetFactory, world.getName(), type, location);
@@ -135,8 +135,12 @@ public class NpcImpl extends Viewable implements Npc {
         return Collections.unmodifiableSet(propertyMap.keySet());
     }
 
-    public Collection<InteractionAction> getActions() {
-        return Collections.unmodifiableSet(actions);
+    public List<InteractionAction> getActions() {
+        return Collections.unmodifiableList(actions);
+    }
+
+    public void removeAction(int index) {
+        actions.remove(index);
     }
 
     public void addAction(InteractionAction action) {

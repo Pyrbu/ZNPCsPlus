@@ -12,15 +12,12 @@ import lol.pyr.director.adventure.parse.primitive.BooleanParser;
 import lol.pyr.director.adventure.parse.primitive.DoubleParser;
 import lol.pyr.director.adventure.parse.primitive.IntegerParser;
 import lol.pyr.director.common.message.Message;
-import lol.pyr.znpcsplus.api.ZApi;
 import lol.pyr.znpcsplus.api.ZApiProvider;
-import lol.pyr.znpcsplus.api.npc.NpcRegistry;
 import lol.pyr.znpcsplus.commands.*;
+import lol.pyr.znpcsplus.commands.action.ActionAddCommand;
+import lol.pyr.znpcsplus.commands.action.ActionDeleteCommand;
+import lol.pyr.znpcsplus.commands.action.ActionListCommand;
 import lol.pyr.znpcsplus.commands.hologram.*;
-import lol.pyr.znpcsplus.commands.parsers.EntityPropertyParser;
-import lol.pyr.znpcsplus.commands.parsers.NamedTextColorParser;
-import lol.pyr.znpcsplus.commands.parsers.NpcEntryParser;
-import lol.pyr.znpcsplus.commands.parsers.NpcTypeParser;
 import lol.pyr.znpcsplus.commands.storage.LoadAllCommand;
 import lol.pyr.znpcsplus.commands.storage.SaveAllCommand;
 import lol.pyr.znpcsplus.config.ConfigManager;
@@ -33,6 +30,10 @@ import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import lol.pyr.znpcsplus.npc.NpcTypeImpl;
 import lol.pyr.znpcsplus.packets.*;
+import lol.pyr.znpcsplus.parsers.EntityPropertyParser;
+import lol.pyr.znpcsplus.parsers.NamedTextColorParser;
+import lol.pyr.znpcsplus.parsers.NpcEntryParser;
+import lol.pyr.znpcsplus.parsers.NpcTypeParser;
 import lol.pyr.znpcsplus.scheduling.FoliaScheduler;
 import lol.pyr.znpcsplus.scheduling.SpigotScheduler;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
@@ -59,26 +60,20 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-public class ZNpcsPlus extends JavaPlugin implements ZApi {
+public class ZNpcsPlus extends JavaPlugin {
     private static final int PLUGIN_ID = 18244;
 
-    private TaskScheduler scheduler;
-    private BukkitAudiences adventure;
-    private SkinCache skinCache;
-
-    private MetadataFactory metadataFactory;
-
-    private NpcRegistryImpl npcRegistry;
-
-    private UserManager userManager;
+    private PacketEventsAPI<Plugin> packetEvents;
     private final LegacyComponentSerializer textSerializer = LegacyComponentSerializer.builder()
             .character('&')
             .hexCharacter('#')
             .hexColors().build();
-    private PacketEventsAPI<Plugin> packetEvents;
 
+    private final List<Runnable> shutdownTasks = new ArrayList<>();
     private boolean enabled = false;
 
     @Override
@@ -107,51 +102,49 @@ public class ZNpcsPlus extends JavaPlugin implements ZApi {
         if (pluginManager.isPluginEnabled("ServersNPC")) log(ChatColor.DARK_RED + " * Old version of znpcs detected! The plugin might not work correctly!");
         long before = System.currentTimeMillis();
 
-        log(ChatColor.WHITE + " * Initializing Adventure...");
-        adventure = BukkitAudiences.create(this);
+        log(ChatColor.WHITE + " * Initializing libraries...");
+        packetEvents.init();
+        BukkitAudiences adventure = BukkitAudiences.create(this);
 
-        metadataFactory = setupMetadataFactory();
-        PacketFactory packetFactory = setupPacketFactory();
-
-        log(ChatColor.WHITE + " * Loading configurations...");
-        ConfigManager configManager = new ConfigManager(getDataFolder());
-
-        log(ChatColor.WHITE + " * Defining NPC types...");
-        NpcTypeImpl.defineTypes();
-
-        log(ChatColor.WHITE + " * Registering components...");
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        new Metrics(this, PLUGIN_ID);
-        scheduler = FoliaUtil.isFolia() ? new FoliaScheduler(this) : new SpigotScheduler(this);
+        log(ChatColor.WHITE + " * Initializing components...");
+        TaskScheduler scheduler = FoliaUtil.isFolia() ? new FoliaScheduler(this) : new SpigotScheduler(this);
+        MetadataFactory metadataFactory = setupMetadataFactory();
+        PacketFactory packetFactory = setupPacketFactory(scheduler, metadataFactory);
         BungeeUtil bungeeUtil = new BungeeUtil(this);
-        userManager = new UserManager();
-        Bukkit.getOnlinePlayers().forEach(userManager::get);
-        pluginManager.registerEvents(new UserListener(userManager), this);
+        ConfigManager configManager = new ConfigManager(getDataFolder());
+        ActionRegistry actionRegistry = new ActionRegistry();
+        NpcRegistryImpl npcRegistry = new NpcRegistryImpl(configManager, this, packetFactory, actionRegistry);
+        UserManager userManager = new UserManager();
+        SkinCache skinCache = new SkinCache(configManager);
 
+        log(ChatColor.WHITE+  " * Registerring components...");
+        NpcTypeImpl.defineTypes(packetEvents);
+        actionRegistry.registerTypes(npcRegistry, scheduler, adventure, bungeeUtil, textSerializer);
+        packetEvents.getEventManager().registerListener(new InteractionPacketListener(userManager, npcRegistry), PacketListenerPriority.MONITOR);
+        new Metrics(this, PLUGIN_ID);
+        pluginManager.registerEvents(new UserListener(userManager), this);
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        registerCommands(npcRegistry, skinCache, adventure, actionRegistry);
+
+        log(ChatColor.WHITE + " * Starting tasks...");
         if (configManager.getConfig().checkForUpdates()) {
             UpdateChecker updateChecker = new UpdateChecker(this.getDescription());
             scheduler.runDelayedTimerAsync(updateChecker, 5L, 6000L);
             pluginManager.registerEvents(new UpdateNotificationListener(this, adventure, updateChecker), this);
         }
 
-        log(ChatColor.WHITE+  " * Loading NPCs...");
-        ActionRegistry actionRegistry = new ActionRegistry(scheduler, adventure, bungeeUtil);
-        npcRegistry = new NpcRegistryImpl(configManager, this, packetFactory, actionRegistry);
-        npcRegistry.reload();
-
-        log(ChatColor.WHITE + " * Initializing PacketEvents...");
-        packetEvents.getEventManager().registerListener(new InteractionPacketListener(userManager, npcRegistry), PacketListenerPriority.MONITOR);
-        packetEvents.init();
-
-        log(ChatColor.WHITE + " * Starting tasks...");
         scheduler.runDelayedTimerAsync(new NpcVisibilityTask(npcRegistry, configManager), 60L, 10L);
-        skinCache = new SkinCache(configManager);
         scheduler.runDelayedTimerAsync(new SkinCacheCleanTask(skinCache), 1200, 1200);
 
-        log(ChatColor.WHITE + " * Registering commands...");
-        registerCommands();
+        log(ChatColor.WHITE + " * Loading data...");
+        npcRegistry.reload();
 
-        ZApiProvider.register(this);
+        shutdownTasks.add(scheduler::cancelAll);
+        shutdownTasks.add(npcRegistry::save);
+        shutdownTasks.add(userManager::shutdown);
+        shutdownTasks.add(adventure::close);
+
+        ZApiProvider.register(new ZNPCsPlusApi(npcRegistry));
         enabled = true;
         log(ChatColor.WHITE + " * Loading complete! (" + (System.currentTimeMillis() - before) + "ms)");
         log("");
@@ -170,13 +163,20 @@ public class ZNpcsPlus extends JavaPlugin implements ZApi {
         }
     }
 
-    private PacketFactory setupPacketFactory() {
+    @Override
+    public void onDisable() {
+        if (!enabled) return;
+        ZApiProvider.unregister();
+        for (Runnable runnable : shutdownTasks) runnable.run();
+    }
+
+    private PacketFactory setupPacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory) {
         HashMap<ServerVersion, LazyLoader<? extends PacketFactory>> versions = new HashMap<>();
-        versions.put(ServerVersion.V_1_8, LazyLoader.of(() -> new V1_8PacketFactory(scheduler, metadataFactory)));
-        versions.put(ServerVersion.V_1_9, LazyLoader.of(() -> new V1_9PacketFactory(scheduler, metadataFactory)));
-        versions.put(ServerVersion.V_1_10, LazyLoader.of(() -> new V1_10PacketFactory(scheduler, metadataFactory)));
-        versions.put(ServerVersion.V_1_14, LazyLoader.of(() -> new V1_14PacketFactory(scheduler, metadataFactory)));
-        versions.put(ServerVersion.V_1_19, LazyLoader.of(() -> new V1_19PacketFactory(scheduler, metadataFactory)));
+        versions.put(ServerVersion.V_1_8, LazyLoader.of(() -> new V1_8PacketFactory(scheduler, metadataFactory, packetEvents)));
+        versions.put(ServerVersion.V_1_9, LazyLoader.of(() -> new V1_9PacketFactory(scheduler, metadataFactory, packetEvents)));
+        versions.put(ServerVersion.V_1_10, LazyLoader.of(() -> new V1_10PacketFactory(scheduler, metadataFactory, packetEvents)));
+        versions.put(ServerVersion.V_1_14, LazyLoader.of(() -> new V1_14PacketFactory(scheduler, metadataFactory, packetEvents)));
+        versions.put(ServerVersion.V_1_19, LazyLoader.of(() -> new V1_19PacketFactory(scheduler, metadataFactory, packetEvents)));
 
         ServerVersion version = packetEvents.getServerManager().getVersion();
         if (versions.containsKey(version)) return versions.get(version).get();
@@ -209,20 +209,9 @@ public class ZNpcsPlus extends JavaPlugin implements ZApi {
     }
 
 
-    @Override
-    public void onDisable() {
-        if (!enabled) return;
-        scheduler.cancelAll();
-        npcRegistry.save();
-        ZApiProvider.unregister();
-        Bukkit.getOnlinePlayers().forEach(userManager::remove);
-        adventure.close();
-        adventure = null;
-    }
-
-    private void registerCommands() {
-        // TODO: make this better
-        Message<CommandContext> incorrectUsageMessage = context -> context.send(Component.text("Incorrect usage: " + context.getUsage()));
+    private void registerCommands(NpcRegistryImpl npcRegistry, SkinCache skinCache, BukkitAudiences adventure, ActionRegistry actionRegistry) {
+        // TODO: make the messages better
+        Message<CommandContext> incorrectUsageMessage = context -> context.send(Component.text("Incorrect usage: /" + context.getUsage(), NamedTextColor.RED));
         CommandManager manager = new CommandManager(this, adventure, incorrectUsageMessage);
 
         manager.registerParser(NpcTypeImpl.class, new NpcTypeParser(incorrectUsageMessage));
@@ -234,7 +223,6 @@ public class ZNpcsPlus extends JavaPlugin implements ZApi {
         manager.registerParser(NamedTextColor.class, new NamedTextColorParser(incorrectUsageMessage));
 
         manager.registerCommand("npc", new MultiCommand()
-                .addSubcommand("action", new ActionCommand())
                 .addSubcommand("create", new CreateCommand(npcRegistry))
                 .addSubcommand("skin", new SkinCommand(skinCache, npcRegistry))
                 .addSubcommand("delete", new DeleteCommand(npcRegistry, adventure))
@@ -254,11 +242,10 @@ public class ZNpcsPlus extends JavaPlugin implements ZApi {
                         .addSubcommand("insert", new HoloInsertCommand(npcRegistry, textSerializer))
                         .addSubcommand("set", new HoloSetCommand(npcRegistry, textSerializer))
                         .addSubcommand("offset", new HoloOffsetCommand(npcRegistry)))
+                .addSubcommand("action", new MultiCommand()
+                        .addSubcommand("add", new ActionAddCommand(actionRegistry))
+                        .addSubcommand("delete", new ActionDeleteCommand(npcRegistry))
+                        .addSubcommand("list", new ActionListCommand()))
         );
-    }
-
-    @Override
-    public NpcRegistry getNpcRegistry() {
-        return npcRegistry;
     }
 }
