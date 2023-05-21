@@ -20,7 +20,7 @@ public class NpcVisibilityTask extends BukkitRunnable {
 
     public void run() {
         double distSq = NumberConversions.square(configManager.getConfig().viewDistance());
-        for (NpcEntryImpl entry : npcRegistry.all()) {
+        for (NpcEntryImpl entry : npcRegistry.getAll()) {
             if (!entry.isProcessed()) continue;
             NpcImpl npc = entry.getNpc();
             for (Player player : Bukkit.getOnlinePlayers()) {

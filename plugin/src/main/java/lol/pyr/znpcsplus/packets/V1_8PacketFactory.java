@@ -16,7 +16,7 @@ import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.metadata.MetadataFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.skin.BaseSkinDescriptor;
-import lol.pyr.znpcsplus.util.ZLocation;
+import lol.pyr.znpcsplus.util.NpcLocation;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
@@ -40,7 +40,7 @@ public class V1_8PacketFactory implements PacketFactory {
     public void spawnPlayer(Player player, PacketEntity entity, PropertyHolder properties) {
         addTabPlayer(player, entity, properties).thenAccept(ignored -> {
             createTeam(player, entity, properties);
-            ZLocation location = entity.getLocation();
+            NpcLocation location = entity.getLocation();
             sendPacket(player, new WrapperPlayServerSpawnPlayer(entity.getEntityId(),
                     entity.getUuid(), location.toVector3d(), location.getYaw(), location.getPitch(), Collections.emptyList()));
             sendPacket(player, new WrapperPlayServerEntityHeadLook(entity.getEntityId(), location.getYaw()));
@@ -51,7 +51,7 @@ public class V1_8PacketFactory implements PacketFactory {
 
     @Override
     public void spawnEntity(Player player, PacketEntity entity, PropertyHolder properties) {
-        ZLocation location = entity.getLocation();
+        NpcLocation location = entity.getLocation();
         EntityType type = entity.getType();
         ClientVersion clientVersion = packetEvents.getServerManager().getVersion().toClientVersion();
         sendPacket(player, type.getLegacyId(clientVersion) == -1 ?
@@ -71,7 +71,7 @@ public class V1_8PacketFactory implements PacketFactory {
 
     @Override
     public void teleportEntity(Player player, PacketEntity entity) {
-        ZLocation location = entity.getLocation();
+        NpcLocation location = entity.getLocation();
         sendPacket(player, new WrapperPlayServerEntityTeleport(entity.getEntityId(), location.toVector3d(), location.getYaw(), location.getPitch(), true));
         if (entity.getType() == EntityTypes.PLAYER) sendPacket(player, new WrapperPlayServerEntityHeadLook(entity.getEntityId(), location.getYaw()));
     }

@@ -4,7 +4,7 @@ import lol.pyr.znpcsplus.api.hologram.Hologram;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.util.Viewable;
-import lol.pyr.znpcsplus.util.ZLocation;
+import lol.pyr.znpcsplus.util.NpcLocation;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
@@ -17,10 +17,10 @@ public class HologramImpl extends Viewable implements Hologram {
     private final PacketFactory packetFactory;
 
     private double offset = 0.0;
-    private ZLocation location;
+    private NpcLocation location;
     private final List<HologramLine> lines = new ArrayList<>();
 
-    public HologramImpl(ConfigManager configManager, PacketFactory packetFactory, ZLocation location) {
+    public HologramImpl(ConfigManager configManager, PacketFactory packetFactory, NpcLocation location) {
         this.configManager = configManager;
         this.packetFactory = packetFactory;
         this.location = location;
@@ -69,7 +69,7 @@ public class HologramImpl extends Viewable implements Hologram {
         for (HologramLine line : lines) line.hide(player);
     }
 
-    public void setLocation(ZLocation location) {
+    public void setLocation(NpcLocation location) {
         this.location = location;
         relocateLines();
     }

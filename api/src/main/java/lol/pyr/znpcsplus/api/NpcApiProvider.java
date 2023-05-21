@@ -1,13 +1,13 @@
 package lol.pyr.znpcsplus.api;
 
-public class ZApiProvider {
-    private static ZApi plugin = null;
+public class NpcApiProvider {
+    private static NpcApi plugin = null;
 
-    private ZApiProvider() {
+    private NpcApiProvider() {
         throw new UnsupportedOperationException();
     }
 
-    public static ZApi get() {
+    public static NpcApi get() {
         if (plugin == null) throw new IllegalStateException(
                 "ZNPCsPlus plugin isn't enabled yet!\n" +
                 "Please add it to your plugin.yml as a depend or softdepend."
@@ -15,11 +15,11 @@ public class ZApiProvider {
         return plugin;
     }
 
-    public static void register(ZApi plugin) {
-        ZApiProvider.plugin = plugin;
+    public static void register(NpcApi plugin) {
+        NpcApiProvider.plugin = plugin;
     }
 
     public static void unregister() {
-        ZApiProvider.plugin = null;
+        NpcApiProvider.plugin = null;
     }
 }

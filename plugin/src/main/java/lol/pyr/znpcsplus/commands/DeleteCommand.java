@@ -31,7 +31,7 @@ public class DeleteCommand implements CommandHandler {
 
     @Override
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
-        if (context.argSize() == 1) return context.suggestCollection(npcRegistry.modifiableIds());
+        if (context.argSize() == 1) return context.suggestCollection(npcRegistry.getModifiableIds());
         return Collections.emptyList();
     }
 }

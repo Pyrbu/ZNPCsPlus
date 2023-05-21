@@ -7,7 +7,7 @@ import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.reflection.Reflections;
-import lol.pyr.znpcsplus.util.ZLocation;
+import lol.pyr.znpcsplus.util.NpcLocation;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
@@ -21,9 +21,9 @@ public class PacketEntity {
     private final UUID uuid;
 
     private final EntityType type;
-    private ZLocation location;
+    private NpcLocation location;
 
-    public PacketEntity(PacketFactory packetFactory, PropertyHolder properties, EntityType type, ZLocation location) {
+    public PacketEntity(PacketFactory packetFactory, PropertyHolder properties, EntityType type, NpcLocation location) {
         this.packetFactory = packetFactory;
         this.properties = properties;
         this.entityId = reserveEntityID();
@@ -36,7 +36,7 @@ public class PacketEntity {
         return entityId;
     }
 
-    public ZLocation getLocation() {
+    public NpcLocation getLocation() {
         return location;
     }
 
@@ -48,7 +48,7 @@ public class PacketEntity {
         return type;
     }
 
-    public void setLocation(ZLocation location, Collection<Player> viewers) {
+    public void setLocation(NpcLocation location, Collection<Player> viewers) {
         this.location = location;
         for (Player viewer : viewers) packetFactory.teleportEntity(viewer, this);
     }

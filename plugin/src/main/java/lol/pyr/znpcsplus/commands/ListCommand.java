@@ -5,7 +5,7 @@ import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
 import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
-import lol.pyr.znpcsplus.util.ZLocation;
+import lol.pyr.znpcsplus.util.NpcLocation;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -21,9 +21,9 @@ public class ListCommand implements CommandHandler {
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
         TextComponent.Builder component = Component.text("Npc's:\n").color(NamedTextColor.GOLD).toBuilder();
-        for (String id : npcRegistry.modifiableIds()) {
+        for (String id : npcRegistry.getModifiableIds()) {
             NpcImpl npc = npcRegistry.get(id).getNpc();
-            ZLocation location = npc.getLocation();
+            NpcLocation location = npc.getLocation();
             component.append(Component.text("ID: " + id, NamedTextColor.GREEN))
                     .append(Component.text(" | ", NamedTextColor.GRAY))
                     .append(Component.text("Type: ", NamedTextColor.GREEN))

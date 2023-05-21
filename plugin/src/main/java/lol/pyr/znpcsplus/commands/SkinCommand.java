@@ -1,13 +1,11 @@
 package lol.pyr.znpcsplus.commands;
 
+import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
-import lol.pyr.znpcsplus.npc.NpcEntryImpl;
-import lol.pyr.znpcsplus.npc.NpcImpl;
-import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
-import lol.pyr.znpcsplus.npc.NpcTypeImpl;
+import lol.pyr.znpcsplus.npc.*;
 import lol.pyr.znpcsplus.skin.cache.SkinCache;
 import lol.pyr.znpcsplus.skin.descriptor.FetchingDescriptor;
 import lol.pyr.znpcsplus.skin.descriptor.MirrorDescriptor;
@@ -21,17 +19,19 @@ import java.util.List;
 public class SkinCommand implements CommandHandler {
     private final SkinCache skinCache;
     private final NpcRegistryImpl npcRegistry;
+    private final NpcTypeRegistry typeRegistry;
 
-    public SkinCommand(SkinCache skinCache, NpcRegistryImpl npcRegistry) {
+    public SkinCommand(SkinCache skinCache, NpcRegistryImpl npcRegistry, NpcTypeRegistry typeRegistry) {
         this.skinCache = skinCache;
         this.npcRegistry = npcRegistry;
+        this.typeRegistry = typeRegistry;
     }
 
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
         context.setUsage(context.getLabel() + " skin <id> <type> [value]");
         NpcImpl npc = context.parse(NpcEntryImpl.class).getNpc();
-        if (npc.getType() != NpcTypeImpl.byName("player")) context.halt(Component.text("The NPC must be a player to have a skin", NamedTextColor.RED));
+        if (npc.getType() != typeRegistry.getByEntityType(EntityTypes.PLAYER)) context.halt(Component.text("The NPC must be a player to have a skin", NamedTextColor.RED));
         String type = context.popString();
 
         if (type.equalsIgnoreCase("mirror")) {
@@ -68,7 +68,7 @@ public class SkinCommand implements CommandHandler {
 
     @Override
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
-        if (context.argSize() == 1) return context.suggestCollection(npcRegistry.modifiableIds());
+        if (context.argSize() == 1) return context.suggestCollection(npcRegistry.getModifiableIds());
         if (context.argSize() == 2) return context.suggestLiteral("mirror", "static", "dynamic");
         if (context.matchSuggestion("*", "static")) return context.suggestPlayers();
         return Collections.emptyList();

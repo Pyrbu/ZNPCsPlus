@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 /**
- * Class containing all of the lazy-loaded reflections that the plugin
+ * Class containing getAll of the lazy-loaded reflections that the plugin
  * uses to access inaccessible components of the server jar.
  */
 public final class Reflections {

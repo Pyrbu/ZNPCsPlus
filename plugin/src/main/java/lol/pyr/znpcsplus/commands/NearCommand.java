@@ -24,7 +24,7 @@ public class NearCommand implements CommandHandler {
         int raw = context.parse(Integer.class);
         double radius = Math.pow(raw, 2);
 
-        String npcs = npcRegistry.allModifiable().stream()
+        String npcs = npcRegistry.getAllModifiable().stream()
                         .filter(entry -> entry.getNpc().getBukkitLocation().distanceSquared(player.getLocation()) < radius)
                         .map(NpcEntryImpl::getId)
                         .collect(Collectors.joining(", "));

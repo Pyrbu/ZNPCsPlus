@@ -57,7 +57,7 @@ public class SwitchServerActionType implements InteractionActionType<SwitchServe
 
     @Override
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
-        if (context.argSize() == 1) return context.suggestCollection(npcRegistry.modifiableIds());
+        if (context.argSize() == 1) return context.suggestCollection(npcRegistry.getModifiableIds());
         if (context.argSize() == 2) return context.suggestLiteral("1");
         return Collections.emptyList();
     }

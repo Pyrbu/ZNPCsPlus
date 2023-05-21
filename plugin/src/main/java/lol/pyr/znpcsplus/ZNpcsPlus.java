@@ -12,7 +12,7 @@ import lol.pyr.director.adventure.parse.primitive.BooleanParser;
 import lol.pyr.director.adventure.parse.primitive.DoubleParser;
 import lol.pyr.director.adventure.parse.primitive.IntegerParser;
 import lol.pyr.director.common.message.Message;
-import lol.pyr.znpcsplus.api.ZApiProvider;
+import lol.pyr.znpcsplus.api.NpcApiProvider;
 import lol.pyr.znpcsplus.commands.*;
 import lol.pyr.znpcsplus.commands.action.ActionAddCommand;
 import lol.pyr.znpcsplus.commands.action.ActionDeleteCommand;
@@ -25,10 +25,7 @@ import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.interaction.ActionRegistry;
 import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
 import lol.pyr.znpcsplus.metadata.*;
-import lol.pyr.znpcsplus.npc.NpcEntryImpl;
-import lol.pyr.znpcsplus.npc.NpcImpl;
-import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
-import lol.pyr.znpcsplus.npc.NpcTypeImpl;
+import lol.pyr.znpcsplus.npc.*;
 import lol.pyr.znpcsplus.packets.*;
 import lol.pyr.znpcsplus.parsers.EntityPropertyParser;
 import lol.pyr.znpcsplus.parsers.NamedTextColorParser;
@@ -47,7 +44,7 @@ import lol.pyr.znpcsplus.user.UserManager;
 import lol.pyr.znpcsplus.util.BungeeConnector;
 import lol.pyr.znpcsplus.util.FoliaUtil;
 import lol.pyr.znpcsplus.util.LazyLoader;
-import lol.pyr.znpcsplus.util.ZLocation;
+import lol.pyr.znpcsplus.util.NpcLocation;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -113,18 +110,19 @@ public class ZNpcsPlus extends JavaPlugin {
         BungeeConnector bungeeConnector = new BungeeConnector(this);
         ConfigManager configManager = new ConfigManager(getDataFolder());
         ActionRegistry actionRegistry = new ActionRegistry();
-        NpcRegistryImpl npcRegistry = new NpcRegistryImpl(configManager, this, packetFactory, actionRegistry, scheduler);
+        NpcTypeRegistry typeRegistry = new NpcTypeRegistry();
+        NpcRegistryImpl npcRegistry = new NpcRegistryImpl(configManager, this, packetFactory, actionRegistry, scheduler, typeRegistry);
         UserManager userManager = new UserManager();
         SkinCache skinCache = new SkinCache(configManager);
 
         log(ChatColor.WHITE + " * Registerring components...");
-        NpcTypeImpl.defineTypes(packetEvents);
+        typeRegistry.registerDefault(packetEvents);
         actionRegistry.registerTypes(npcRegistry, scheduler, adventure, bungeeConnector, textSerializer);
         packetEvents.getEventManager().registerListener(new InteractionPacketListener(userManager, npcRegistry), PacketListenerPriority.MONITOR);
         new Metrics(this, PLUGIN_ID);
         pluginManager.registerEvents(new UserListener(userManager), this);
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        registerCommands(npcRegistry, skinCache, adventure, actionRegistry);
+        registerCommands(npcRegistry, skinCache, adventure, actionRegistry, typeRegistry);
 
         log(ChatColor.WHITE + " * Starting tasks...");
         if (configManager.getConfig().checkForUpdates()) {
@@ -144,7 +142,7 @@ public class ZNpcsPlus extends JavaPlugin {
         shutdownTasks.add(adventure::close);
         if (configManager.getConfig().autoSaveEnabled()) shutdownTasks.add(npcRegistry::save);
 
-        ZApiProvider.register(new ZNPCsPlusApi(npcRegistry));
+        NpcApiProvider.register(new ZNPCsPlusApi(npcRegistry));
         enabled = true;
         log(ChatColor.WHITE + " * Loading complete! (" + (System.currentTimeMillis() - before) + "ms)");
         log("");
@@ -153,8 +151,8 @@ public class ZNpcsPlus extends JavaPlugin {
             World world = Bukkit.getWorld("world");
             if (world == null) world = Bukkit.getWorlds().get(0);
             int i = 0;
-            for (NpcTypeImpl type : NpcTypeImpl.values()) {
-                NpcEntryImpl entry = npcRegistry.create("debug_npc_" + i, world, type, new ZLocation(i * 3, 200, 0, 0, 0));
+            for (NpcTypeImpl type : typeRegistry.getAll()) {
+                NpcEntryImpl entry = npcRegistry.create("debug_npc_" + i, world, type, new NpcLocation(i * 3, 200, 0, 0, 0));
                 entry.setProcessed(true);
                 NpcImpl npc = entry.getNpc();
                 npc.getHologram().addLine(Component.text("Hello, World!"));
@@ -166,7 +164,7 @@ public class ZNpcsPlus extends JavaPlugin {
     @Override
     public void onDisable() {
         if (!enabled) return;
-        ZApiProvider.unregister();
+        NpcApiProvider.unregister();
         for (Runnable runnable : shutdownTasks) runnable.run();
     }
 
@@ -209,12 +207,12 @@ public class ZNpcsPlus extends JavaPlugin {
     }
 
 
-    private void registerCommands(NpcRegistryImpl npcRegistry, SkinCache skinCache, BukkitAudiences adventure, ActionRegistry actionRegistry) {
+    private void registerCommands(NpcRegistryImpl npcRegistry, SkinCache skinCache, BukkitAudiences adventure, ActionRegistry actionRegistry, NpcTypeRegistry typeRegistry) {
         // TODO: make the messages better
         Message<CommandContext> incorrectUsageMessage = context -> context.send(Component.text("Incorrect usage: /" + context.getUsage(), NamedTextColor.RED));
         CommandManager manager = new CommandManager(this, adventure, incorrectUsageMessage);
 
-        manager.registerParser(NpcTypeImpl.class, new NpcTypeParser(incorrectUsageMessage));
+        manager.registerParser(NpcTypeImpl.class, new NpcTypeParser(incorrectUsageMessage, typeRegistry));
         manager.registerParser(NpcEntryImpl.class, new NpcEntryParser(npcRegistry, incorrectUsageMessage));
         manager.registerParser(EntityPropertyImpl.class, new EntityPropertyParser(incorrectUsageMessage));
         manager.registerParser(Integer.class, new IntegerParser(incorrectUsageMessage));
@@ -223,15 +221,15 @@ public class ZNpcsPlus extends JavaPlugin {
         manager.registerParser(NamedTextColor.class, new NamedTextColorParser(incorrectUsageMessage));
 
         manager.registerCommand("npc", new MultiCommand()
-                .addSubcommand("create", new CreateCommand(npcRegistry))
-                .addSubcommand("skin", new SkinCommand(skinCache, npcRegistry))
+                .addSubcommand("create", new CreateCommand(npcRegistry, typeRegistry))
+                .addSubcommand("skin", new SkinCommand(skinCache, npcRegistry, typeRegistry))
                 .addSubcommand("delete", new DeleteCommand(npcRegistry, adventure))
                 .addSubcommand("move", new MoveCommand(npcRegistry))
                 .addSubcommand("properties", new PropertiesCommand(npcRegistry))
                 .addSubcommand("teleport", new TeleportCommand(npcRegistry))
                 .addSubcommand("list", new ListCommand(npcRegistry))
                 .addSubcommand("near", new NearCommand(npcRegistry))
-                .addSubcommand("type", new TypeCommand(npcRegistry))
+                .addSubcommand("type", new TypeCommand(npcRegistry, typeRegistry))
                 .addSubcommand("storage", new MultiCommand()
                         .addSubcommand("save", new SaveAllCommand(npcRegistry))
                         .addSubcommand("reload", new LoadAllCommand(npcRegistry)))

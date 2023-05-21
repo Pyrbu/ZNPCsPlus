@@ -7,7 +7,6 @@ import lol.pyr.znpcsplus.interaction.switchserver.SwitchServerActionType;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.util.BungeeConnector;
-import lol.pyr.znpcsplus.util.StringSerializer;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
@@ -50,7 +49,7 @@ public class ActionRegistry {
         try {
             String[] split = str.split(";");
             Class<?> clazz = Class.forName(split[0]);
-            StringSerializer<T> serializer = (StringSerializer<T>) serializerMap.get(clazz);
+            InteractionActionType<T> serializer = (InteractionActionType<T>) serializerMap.get(clazz);
             if (serializer == null) return null;
             return serializer.deserialize(String.join(";", Arrays.copyOfRange(split, 1, split.length)));
         } catch (ClassNotFoundException e) {
@@ -60,7 +59,7 @@ public class ActionRegistry {
 
     @SuppressWarnings("unchecked")
     public <T extends InteractionAction> String serialize(T action) {
-        StringSerializer<T> serializer = (StringSerializer<T>) serializerMap.get(action.getClass());
+        InteractionActionType<T> serializer = (InteractionActionType<T>) serializerMap.get(action.getClass());
         if (serializer == null) return null;
         return action.getClass().getName() + ";" + serializer.serialize(action);
     }

@@ -9,7 +9,7 @@ import lol.pyr.znpcsplus.hologram.HologramImpl;
 import lol.pyr.znpcsplus.interaction.InteractionAction;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.util.Viewable;
-import lol.pyr.znpcsplus.util.ZLocation;
+import lol.pyr.znpcsplus.util.NpcLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -21,18 +21,18 @@ public class NpcImpl extends Viewable implements Npc {
     private final PacketFactory packetFactory;
     private final String worldName;
     private PacketEntity entity;
-    private ZLocation location;
+    private NpcLocation location;
     private NpcTypeImpl type;
     private final HologramImpl hologram;
 
     private final Map<EntityPropertyImpl<?>, Object> propertyMap = new HashMap<>();
     private final List<InteractionAction> actions = new ArrayList<>();
 
-    protected NpcImpl(ConfigManager configManager, World world, NpcTypeImpl type, ZLocation location, PacketFactory packetFactory) {
+    protected NpcImpl(ConfigManager configManager, World world, NpcTypeImpl type, NpcLocation location, PacketFactory packetFactory) {
         this(configManager, packetFactory, world.getName(), type, location);
     }
 
-    public NpcImpl(ConfigManager configManager, PacketFactory packetFactory, String world, NpcTypeImpl type, ZLocation location) {
+    public NpcImpl(ConfigManager configManager, PacketFactory packetFactory, String world, NpcTypeImpl type, NpcLocation location) {
         this.packetFactory = packetFactory;
         this.worldName = world;
         this.type = type;
@@ -57,7 +57,7 @@ public class NpcImpl extends Viewable implements Npc {
         return entity;
     }
 
-    public ZLocation getLocation() {
+    public NpcLocation getLocation() {
         return location;
     }
 
@@ -65,7 +65,7 @@ public class NpcImpl extends Viewable implements Npc {
         return location.toBukkitLocation(getWorld());
     }
 
-    public void setLocation(ZLocation location) {
+    public void setLocation(NpcLocation location) {
         this.location = location;
         entity.setLocation(location, getViewers());
         hologram.setLocation(location.withY(location.getY() + type.getHologramOffset()));

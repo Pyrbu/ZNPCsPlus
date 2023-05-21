@@ -8,7 +8,7 @@ import lol.pyr.znpcsplus.interaction.ActionRegistry;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.storage.NpcStorage;
-import lol.pyr.znpcsplus.util.ZLocation;
+import lol.pyr.znpcsplus.util.NpcLocation;
 import org.bukkit.World;
 
 import java.util.Collection;
@@ -22,8 +22,8 @@ public class NpcRegistryImpl implements NpcRegistry {
     private final PacketFactory packetFactory;
     private final ConfigManager configManager;
 
-    public NpcRegistryImpl(ConfigManager configManager, ZNpcsPlus plugin, PacketFactory packetFactory, ActionRegistry actionRegistry, TaskScheduler scheduler) {
-        storage = configManager.getConfig().storageType().create(configManager, plugin, packetFactory, actionRegistry);
+    public NpcRegistryImpl(ConfigManager configManager, ZNpcsPlus plugin, PacketFactory packetFactory, ActionRegistry actionRegistry, TaskScheduler scheduler, NpcTypeRegistry typeRegistry) {
+        storage = configManager.getConfig().storageType().create(configManager, plugin, packetFactory, actionRegistry, typeRegistry);
         this.packetFactory = packetFactory;
         this.configManager = configManager;
 
@@ -48,36 +48,36 @@ public class NpcRegistryImpl implements NpcRegistry {
         return npcMap.get(id.toLowerCase());
     }
 
-    public Collection<NpcEntryImpl> all() {
+    public Collection<NpcEntryImpl> getAll() {
         return Collections.unmodifiableCollection(npcMap.values());
     }
 
-    public Collection<NpcEntryImpl> allModifiable() {
+    public Collection<NpcEntryImpl> getAllModifiable() {
         return Collections.unmodifiableCollection(npcMap.values().stream()
                 .filter(NpcEntryImpl::isAllowCommandModification)
                 .collect(Collectors.toList()));
     }
 
     public NpcEntryImpl getByEntityId(int id) {
-        return all().stream().filter(entry -> entry.getNpc().getEntity().getEntityId() == id).findFirst().orElse(null);
+        return getAll().stream().filter(entry -> entry.getNpc().getEntity().getEntityId() == id).findFirst().orElse(null);
     }
 
-    public Collection<String> ids() {
+    public Collection<String> getIds() {
         return Collections.unmodifiableSet(npcMap.keySet());
     }
 
-    public Collection<String> modifiableIds() {
+    public Collection<String> getModifiableIds() {
         return Collections.unmodifiableSet(npcMap.entrySet().stream()
                 .filter(entry -> entry.getValue().isAllowCommandModification())
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toSet()));
     }
 
-    public NpcEntryImpl create(String id, World world, NpcType type, ZLocation location) {
+    public NpcEntryImpl create(String id, World world, NpcType type, NpcLocation location) {
         return create(id, world, (NpcTypeImpl) type, location);
     }
 
-    public NpcEntryImpl create(String id, World world, NpcTypeImpl type, ZLocation location) {
+    public NpcEntryImpl create(String id, World world, NpcTypeImpl type, NpcLocation location) {
         id = id.toLowerCase();
         if (npcMap.containsKey(id)) throw new IllegalArgumentException("An npc with the id " + id + " already exists!");
         NpcImpl npc = new NpcImpl(configManager, world, type, location, packetFactory);

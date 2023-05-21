@@ -33,7 +33,7 @@ public class HoloAddCommand implements CommandHandler {
 
     @Override
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
-        if (context.argSize() == 1) return context.suggestCollection(registry.modifiableIds());
+        if (context.argSize() == 1) return context.suggestCollection(registry.getModifiableIds());
         return Collections.emptyList();
     }
 }

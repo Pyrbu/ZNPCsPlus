@@ -6,10 +6,10 @@ import lol.pyr.znpcsplus.hologram.HologramLine;
 import lol.pyr.znpcsplus.interaction.ActionRegistry;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcImpl;
-import lol.pyr.znpcsplus.npc.NpcTypeImpl;
+import lol.pyr.znpcsplus.npc.NpcTypeRegistry;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.storage.NpcStorage;
-import lol.pyr.znpcsplus.util.ZLocation;
+import lol.pyr.znpcsplus.util.NpcLocation;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -23,12 +23,14 @@ public class YamlStorage implements NpcStorage {
     private final PacketFactory packetFactory;
     private final ConfigManager configManager;
     private final ActionRegistry actionRegistry;
+    private final NpcTypeRegistry typeRegistry;
     private final File folder;
 
-    public YamlStorage(PacketFactory packetFactory, ConfigManager configManager, ActionRegistry actionRegistry, File folder) {
+    public YamlStorage(PacketFactory packetFactory, ConfigManager configManager, ActionRegistry actionRegistry, NpcTypeRegistry typeRegistry, File folder) {
         this.packetFactory = packetFactory;
         this.configManager = configManager;
         this.actionRegistry = actionRegistry;
+        this.typeRegistry = typeRegistry;
         this.folder = folder;
         if (!this.folder.exists()) this.folder.mkdirs();
     }
@@ -41,7 +43,7 @@ public class YamlStorage implements NpcStorage {
         List<NpcEntryImpl> npcs = new ArrayList<>();
         for (File file : files) if (file.isFile() && file.getName().toLowerCase().endsWith(".yml")) {
             YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-            NpcImpl npc = new NpcImpl(configManager, packetFactory, config.getString("world"), NpcTypeImpl.byName(config.getString("type")),
+            NpcImpl npc = new NpcImpl(configManager, packetFactory, config.getString("world"), typeRegistry.getByName(config.getString("type")),
                     deserializeLocation(config.getConfigurationSection("location")));
 
             ConfigurationSection properties = config.getConfigurationSection("properties");
@@ -101,8 +103,8 @@ public class YamlStorage implements NpcStorage {
         }
     }
 
-    public ZLocation deserializeLocation(ConfigurationSection section) {
-        return new ZLocation(
+    public NpcLocation deserializeLocation(ConfigurationSection section) {
+        return new NpcLocation(
                 section.getDouble("x"),
                 section.getDouble("y"),
                 section.getDouble("z"),
@@ -111,7 +113,7 @@ public class YamlStorage implements NpcStorage {
         );
     }
 
-    public YamlConfiguration serializeLocation(ZLocation location) {
+    public YamlConfiguration serializeLocation(NpcLocation location) {
         YamlConfiguration config = new YamlConfiguration();
         config.set("x", location.getX());
         config.set("y", location.getY());

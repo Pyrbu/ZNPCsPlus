@@ -3,10 +3,7 @@ package lol.pyr.znpcsplus.commands;
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
-import lol.pyr.znpcsplus.npc.NpcEntryImpl;
-import lol.pyr.znpcsplus.npc.NpcImpl;
-import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
-import lol.pyr.znpcsplus.npc.NpcTypeImpl;
+import lol.pyr.znpcsplus.npc.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
@@ -15,9 +12,11 @@ import java.util.List;
 
 public class TypeCommand implements CommandHandler {
     private final NpcRegistryImpl registry;
+    private final NpcTypeRegistry typeRegistry;
 
-    public TypeCommand(NpcRegistryImpl registry) {
+    public TypeCommand(NpcRegistryImpl registry, NpcTypeRegistry typeRegistry) {
         this.registry = registry;
+        this.typeRegistry = typeRegistry;
     }
 
     @Override
@@ -31,8 +30,8 @@ public class TypeCommand implements CommandHandler {
 
     @Override
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
-        if (context.argSize() == 1) return context.suggestCollection(registry.modifiableIds());
-        if (context.argSize() == 2) return context.suggestStream(NpcTypeImpl.values().stream().map(NpcTypeImpl::getName));
+        if (context.argSize() == 1) return context.suggestCollection(registry.getModifiableIds());
+        if (context.argSize() == 2) return context.suggestStream(typeRegistry.getAll().stream().map(NpcTypeImpl::getName));
         return Collections.emptyList();
     }
 }
