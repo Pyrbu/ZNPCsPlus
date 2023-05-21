@@ -1,4 +1,4 @@
-package lol.pyr.znpcsplus.interaction.types;
+package lol.pyr.znpcsplus.interaction.consolecommand;
 
 import lol.pyr.znpcsplus.interaction.InteractionAction;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;

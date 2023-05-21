@@ -1,4 +1,4 @@
-package lol.pyr.znpcsplus.interaction.types;
+package lol.pyr.znpcsplus.interaction.message;
 
 import lol.pyr.znpcsplus.interaction.InteractionAction;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;

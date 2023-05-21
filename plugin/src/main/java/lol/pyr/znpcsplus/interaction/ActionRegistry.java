@@ -1,31 +1,48 @@
 package lol.pyr.znpcsplus.interaction;
 
-import lol.pyr.znpcsplus.interaction.serialization.ConsoleCommandActionSerializer;
-import lol.pyr.znpcsplus.interaction.serialization.MessageActionSerializer;
-import lol.pyr.znpcsplus.interaction.serialization.PlayerCommandActionSerializer;
-import lol.pyr.znpcsplus.interaction.serialization.SwitchServerActionSerializer;
-import lol.pyr.znpcsplus.interaction.types.*;
+import lol.pyr.znpcsplus.interaction.consolecommand.ConsoleCommandActionType;
+import lol.pyr.znpcsplus.interaction.message.MessageActionType;
+import lol.pyr.znpcsplus.interaction.playercommand.PlayerCommandActionType;
+import lol.pyr.znpcsplus.interaction.switchserver.SwitchServerActionType;
+import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.util.BungeeUtil;
 import lol.pyr.znpcsplus.util.StringSerializer;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ActionRegistry {
-    private final Map<Class<?>, StringSerializer<?>> serializerMap = new HashMap<>();
+    private final Map<Class<?>, InteractionActionType<?>> serializerMap = new HashMap<>();
 
-    public ActionRegistry(TaskScheduler taskScheduler, BukkitAudiences adventure, BungeeUtil bungeeUtil) {
-        register(ConsoleCommandAction.class, new ConsoleCommandActionSerializer(taskScheduler));
-        register(PlayerCommandAction.class, new PlayerCommandActionSerializer(taskScheduler));
-        register(SwitchServerAction.class, new SwitchServerActionSerializer(bungeeUtil));
-        register(MessageAction.class, new MessageActionSerializer(adventure));
+    public ActionRegistry() {
     }
 
-    public <T extends InteractionAction> void register(Class<T> clazz, StringSerializer<T> serializer) {
-        serializerMap.put(clazz, serializer);
+    public void registerTypes(NpcRegistryImpl npcRegistry, TaskScheduler taskScheduler, BukkitAudiences adventure, BungeeUtil bungeeUtil, LegacyComponentSerializer textSerializer) {
+        register(new ConsoleCommandActionType(taskScheduler, npcRegistry));
+        register(new PlayerCommandActionType(taskScheduler, npcRegistry));
+        register(new SwitchServerActionType(bungeeUtil, npcRegistry));
+        register(new MessageActionType(adventure, textSerializer, npcRegistry));
+    }
+
+    public void register(InteractionActionType<?> type) {
+        serializerMap.put(type.getActionClass(), type);
+    }
+
+    public void unregister(Class<? extends InteractionAction> clazz) {
+        serializerMap.remove(clazz);
+    }
+
+    public List<InteractionCommandHandler> getCommands() {
+        return serializerMap.values().stream()
+                .filter(type -> type instanceof InteractionCommandHandler)
+                .map(type -> (InteractionCommandHandler) type)
+                .collect(Collectors.toList());
     }
 
     @SuppressWarnings("unchecked")
