@@ -7,14 +7,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class BungeeUtil {
+public class BungeeConnector {
     private final Plugin plugin;
 
-    public BungeeUtil(Plugin plugin) {
+    public BungeeConnector(Plugin plugin) {
         this.plugin = plugin;
     }
 
-    public void sendPlayerToServer(Player player, String server) {
+    public void sendPlayer(Player player, String server) {
         ByteArrayOutputStream b = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(b);
         try {

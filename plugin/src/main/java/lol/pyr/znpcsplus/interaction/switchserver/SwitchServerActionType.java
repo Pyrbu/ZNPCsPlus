@@ -6,7 +6,7 @@ import lol.pyr.znpcsplus.interaction.InteractionActionType;
 import lol.pyr.znpcsplus.interaction.InteractionCommandHandler;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
-import lol.pyr.znpcsplus.util.BungeeUtil;
+import lol.pyr.znpcsplus.util.BungeeConnector;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
@@ -16,11 +16,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class SwitchServerActionType implements InteractionActionType<SwitchServerAction>, InteractionCommandHandler {
-    private final BungeeUtil bungeeUtil;
+    private final BungeeConnector bungeeConnector;
     private final NpcRegistryImpl npcRegistry;
 
-    public SwitchServerActionType(BungeeUtil bungeeUtil, NpcRegistryImpl npcRegistry) {
-        this.bungeeUtil = bungeeUtil;
+    public SwitchServerActionType(BungeeConnector bungeeConnector, NpcRegistryImpl npcRegistry) {
+        this.bungeeConnector = bungeeConnector;
         this.npcRegistry = npcRegistry;
     }
 
@@ -32,7 +32,7 @@ public class SwitchServerActionType implements InteractionActionType<SwitchServe
     @Override
     public SwitchServerAction deserialize(String str) {
         String[] split = str.split(";");
-        return new SwitchServerAction(bungeeUtil, new String(Base64.getDecoder().decode(split[0]), StandardCharsets.UTF_8), Long.parseLong(split[1]));
+        return new SwitchServerAction(bungeeConnector, new String(Base64.getDecoder().decode(split[0]), StandardCharsets.UTF_8), Long.parseLong(split[1]));
     }
 
     @Override
@@ -51,7 +51,7 @@ public class SwitchServerActionType implements InteractionActionType<SwitchServe
         NpcEntryImpl entry = context.parse(NpcEntryImpl.class);
         long cooldown = (long) (context.parse(Double.class) * 1000D);
         String server = context.dumpAllArgs();
-        entry.getNpc().addAction(new SwitchServerAction(bungeeUtil, server, cooldown));
+        entry.getNpc().addAction(new SwitchServerAction(bungeeConnector, server, cooldown));
         context.send(Component.text("Added a switch server action to the npc with the server " + server, NamedTextColor.GREEN));
     }
 

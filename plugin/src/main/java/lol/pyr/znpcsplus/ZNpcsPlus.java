@@ -44,7 +44,7 @@ import lol.pyr.znpcsplus.updater.UpdateChecker;
 import lol.pyr.znpcsplus.updater.UpdateNotificationListener;
 import lol.pyr.znpcsplus.user.UserListener;
 import lol.pyr.znpcsplus.user.UserManager;
-import lol.pyr.znpcsplus.util.BungeeUtil;
+import lol.pyr.znpcsplus.util.BungeeConnector;
 import lol.pyr.znpcsplus.util.FoliaUtil;
 import lol.pyr.znpcsplus.util.LazyLoader;
 import lol.pyr.znpcsplus.util.ZLocation;
@@ -110,7 +110,7 @@ public class ZNpcsPlus extends JavaPlugin {
         TaskScheduler scheduler = FoliaUtil.isFolia() ? new FoliaScheduler(this) : new SpigotScheduler(this);
         MetadataFactory metadataFactory = setupMetadataFactory();
         PacketFactory packetFactory = setupPacketFactory(scheduler, metadataFactory);
-        BungeeUtil bungeeUtil = new BungeeUtil(this);
+        BungeeConnector bungeeConnector = new BungeeConnector(this);
         ConfigManager configManager = new ConfigManager(getDataFolder());
         ActionRegistry actionRegistry = new ActionRegistry();
         NpcRegistryImpl npcRegistry = new NpcRegistryImpl(configManager, this, packetFactory, actionRegistry);
@@ -119,7 +119,7 @@ public class ZNpcsPlus extends JavaPlugin {
 
         log(ChatColor.WHITE+  " * Registerring components...");
         NpcTypeImpl.defineTypes(packetEvents);
-        actionRegistry.registerTypes(npcRegistry, scheduler, adventure, bungeeUtil, textSerializer);
+        actionRegistry.registerTypes(npcRegistry, scheduler, adventure, bungeeConnector, textSerializer);
         packetEvents.getEventManager().registerListener(new InteractionPacketListener(userManager, npcRegistry), PacketListenerPriority.MONITOR);
         new Metrics(this, PLUGIN_ID);
         pluginManager.registerEvents(new UserListener(userManager), this);
