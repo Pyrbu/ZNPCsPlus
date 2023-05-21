@@ -1,11 +1,12 @@
 package lol.pyr.znpcsplus.entity;
 
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
-import lol.pyr.znpcsplus.reflection.Reflections;
-import lol.pyr.znpcsplus.util.VersionUtil;
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
 import lol.pyr.znpcsplus.packets.PacketFactory;
+import lol.pyr.znpcsplus.reflection.Reflections;
 import lol.pyr.znpcsplus.util.ZLocation;
 import org.bukkit.entity.Player;
 
@@ -71,8 +72,9 @@ public class PacketEntity {
     }
 
     private static int reserveEntityID() {
-        if (VersionUtil.isNewerThan(14)) return Reflections.ATOMIC_ENTITY_ID_FIELD.get().incrementAndGet();
-        else {
+        if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_14)) {
+            return Reflections.ATOMIC_ENTITY_ID_FIELD.get().incrementAndGet();
+        } else {
             int id = Reflections.ENTITY_ID_MODIFIER.get();
             Reflections.ENTITY_ID_MODIFIER.set(id + 1);
             return id;

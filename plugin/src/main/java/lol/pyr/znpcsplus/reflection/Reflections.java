@@ -1,9 +1,10 @@
 package lol.pyr.znpcsplus.reflection;
 
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.mojang.authlib.GameProfile;
 import lol.pyr.znpcsplus.reflection.types.FieldReflection;
 import lol.pyr.znpcsplus.util.FoliaUtil;
-import lol.pyr.znpcsplus.util.VersionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -46,7 +47,7 @@ public final class Reflections {
             new ReflectionBuilder(ReflectionPackage.ENTITY)
                     .withClassName(ENTITY_CLASS)
                     .withFieldName("entityCount")
-                    .setStrict(!VersionUtil.isNewerThan(14))
+                    .setStrict(!PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_14))
                     .toFieldReflection()
                     .toStaticValueModifier(int.class);
 
@@ -57,7 +58,7 @@ public final class Reflections {
                     .withFieldName("d")
                     .withFieldName("c")
                     .withExpectResult(AtomicInteger.class)
-                    .setStrict(VersionUtil.isNewerThan(14))
+                    .setStrict(PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_14))
                     .toFieldReflection()
                     .toStaticValueLoader(AtomicInteger.class);
 

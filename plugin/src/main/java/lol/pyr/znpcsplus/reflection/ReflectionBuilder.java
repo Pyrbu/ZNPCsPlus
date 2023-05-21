@@ -1,10 +1,11 @@
 package lol.pyr.znpcsplus.reflection;
 
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.google.common.collect.ImmutableList;
 import lol.pyr.znpcsplus.reflection.types.ClassReflection;
 import lol.pyr.znpcsplus.reflection.types.FieldReflection;
 import lol.pyr.znpcsplus.reflection.types.MethodReflection;
-import lol.pyr.znpcsplus.util.VersionUtil;
 
 import java.util.ArrayList;
 
@@ -35,7 +36,7 @@ public class ReflectionBuilder {
     }
 
     public ReflectionBuilder withClassName(String className) {
-        this.className.add(ReflectionPackage.joinWithDot(reflectionPackage, VersionUtil.isNewerThan(17) ? additionalData : "", className));
+        this.className.add(ReflectionPackage.joinWithDot(reflectionPackage, PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_17) ? additionalData : "", className));
         return this;
     }
 

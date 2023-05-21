@@ -1,6 +1,6 @@
 package lol.pyr.znpcsplus.reflection;
 
-import lol.pyr.znpcsplus.util.VersionUtil;
+import com.github.retrooper.packetevents.PacketEvents;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public abstract class ReflectionLazyLoader<T> {
                 logger.warning(getClass().getSimpleName() + " failed!");
                 logger.warning("Class Names: " + possibleClassNames);
                 logger.warning("Reflection Type: " + getClass().getCanonicalName());
-                logger.warning("Bukkit Version: " + VersionUtil.BUKKIT_VERSION + " (" + VersionUtil.getBukkitPackage() + ")");
+                logger.warning("Server Version: " + PacketEvents.getAPI().getServerManager().getVersion().name());
                 printDebugInfo(logger::warning);
                 logger.warning("Exception:");
                 throwable.printStackTrace();
