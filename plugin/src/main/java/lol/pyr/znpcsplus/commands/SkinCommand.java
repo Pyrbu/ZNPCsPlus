@@ -5,11 +5,11 @@ import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
-import lol.pyr.znpcsplus.entity.EntityPropertyRegistry;
+import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
-import lol.pyr.znpcsplus.npc.NpcTypeRegistry;
+import lol.pyr.znpcsplus.npc.NpcTypeRegistryImpl;
 import lol.pyr.znpcsplus.skin.cache.SkinCache;
 import lol.pyr.znpcsplus.skin.descriptor.FetchingDescriptor;
 import lol.pyr.znpcsplus.skin.descriptor.MirrorDescriptor;
@@ -23,10 +23,10 @@ import java.util.List;
 public class SkinCommand implements CommandHandler {
     private final SkinCache skinCache;
     private final NpcRegistryImpl npcRegistry;
-    private final NpcTypeRegistry typeRegistry;
-    private final EntityPropertyRegistry propertyRegistry;
+    private final NpcTypeRegistryImpl typeRegistry;
+    private final EntityPropertyRegistryImpl propertyRegistry;
 
-    public SkinCommand(SkinCache skinCache, NpcRegistryImpl npcRegistry, NpcTypeRegistry typeRegistry, EntityPropertyRegistry propertyRegistry) {
+    public SkinCommand(SkinCache skinCache, NpcRegistryImpl npcRegistry, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry) {
         this.skinCache = skinCache;
         this.npcRegistry = npcRegistry;
         this.typeRegistry = typeRegistry;

@@ -12,9 +12,9 @@ import java.util.List;
 
 public class TypeCommand implements CommandHandler {
     private final NpcRegistryImpl registry;
-    private final NpcTypeRegistry typeRegistry;
+    private final NpcTypeRegistryImpl typeRegistry;
 
-    public TypeCommand(NpcRegistryImpl registry, NpcTypeRegistry typeRegistry) {
+    public TypeCommand(NpcRegistryImpl registry, NpcTypeRegistryImpl typeRegistry) {
         this.registry = registry;
         this.typeRegistry = typeRegistry;
     }

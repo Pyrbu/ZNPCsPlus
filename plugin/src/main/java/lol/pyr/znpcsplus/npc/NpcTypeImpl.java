@@ -3,12 +3,15 @@ package lol.pyr.znpcsplus.npc;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
+import lol.pyr.znpcsplus.api.entity.EntityProperty;
+import lol.pyr.znpcsplus.api.npc.NpcType;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
-import lol.pyr.znpcsplus.entity.EntityPropertyRegistry;
+import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
-public class NpcTypeImpl {
+public class NpcTypeImpl implements NpcType {
     private final EntityType type;
     private final Set<EntityPropertyImpl<?>> allowedProperties;
     private final String name;
@@ -33,19 +36,19 @@ public class NpcTypeImpl {
         return hologramOffset;
     }
 
-    public Set<EntityPropertyImpl<?>> getAllowedProperties() {
-        return allowedProperties;
+    public Set<EntityProperty<?>> getAllowedProperties() {
+        return allowedProperties.stream().map(property -> (EntityProperty<?>) property).collect(Collectors.toSet());
     }
 
     protected static final class Builder {
-        private final EntityPropertyRegistry propertyRegistry;
+        private final EntityPropertyRegistryImpl propertyRegistry;
         private final String name;
         private final EntityType type;
         private final List<EntityPropertyImpl<?>> allowedProperties = new ArrayList<>();
         private boolean globalProperties = true;
         private double hologramOffset = 0;
 
-        Builder(EntityPropertyRegistry propertyRegistry, String name, EntityType type) {
+        Builder(EntityPropertyRegistryImpl propertyRegistry, String name, EntityType type) {
             this.propertyRegistry = propertyRegistry;
             this.name = name;
             this.type = type;

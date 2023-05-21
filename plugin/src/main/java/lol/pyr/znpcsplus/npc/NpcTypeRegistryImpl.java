@@ -4,7 +4,8 @@ import com.github.retrooper.packetevents.PacketEventsAPI;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
-import lol.pyr.znpcsplus.entity.EntityPropertyRegistry;
+import lol.pyr.znpcsplus.api.npc.NpcTypeRegistry;
+import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class NpcTypeRegistry {
+public class NpcTypeRegistryImpl implements NpcTypeRegistry {
     private final List<NpcTypeImpl> types = new ArrayList<>();
 
     private NpcTypeImpl register(NpcTypeImpl.Builder builder) {
@@ -24,7 +25,7 @@ public class NpcTypeRegistry {
         return type;
     }
 
-    public void registerDefault(PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistry propertyRegistry) {
+    public void registerDefault(PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry) {
         ServerVersion version = packetEvents.getServerManager().getVersion();
 
         register(new NpcTypeImpl.Builder(propertyRegistry, "player", EntityTypes.PLAYER).setHologramOffset(-0.15D)

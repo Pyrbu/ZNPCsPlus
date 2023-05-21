@@ -12,7 +12,7 @@ import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.*;
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
-import lol.pyr.znpcsplus.entity.EntityPropertyRegistry;
+import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.metadata.MetadataFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
@@ -30,9 +30,9 @@ public class V1_8PacketFactory implements PacketFactory {
     protected final TaskScheduler scheduler;
     protected final MetadataFactory metadataFactory;
     protected final PacketEventsAPI<Plugin> packetEvents;
-    protected final EntityPropertyRegistry propertyRegistry;
+    protected final EntityPropertyRegistryImpl propertyRegistry;
 
-    public V1_8PacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistry propertyRegistry) {
+    public V1_8PacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry) {
         this.scheduler = scheduler;
         this.metadataFactory = metadataFactory;
         this.packetEvents = packetEvents;

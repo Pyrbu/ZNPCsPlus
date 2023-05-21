@@ -2,12 +2,12 @@ package lol.pyr.znpcsplus.storage.yaml;
 
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
-import lol.pyr.znpcsplus.entity.EntityPropertyRegistry;
+import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.hologram.HologramLine;
 import lol.pyr.znpcsplus.interaction.ActionRegistry;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcImpl;
-import lol.pyr.znpcsplus.npc.NpcTypeRegistry;
+import lol.pyr.znpcsplus.npc.NpcTypeRegistryImpl;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.storage.NpcStorage;
 import lol.pyr.znpcsplus.util.NpcLocation;
@@ -24,11 +24,11 @@ public class YamlStorage implements NpcStorage {
     private final PacketFactory packetFactory;
     private final ConfigManager configManager;
     private final ActionRegistry actionRegistry;
-    private final NpcTypeRegistry typeRegistry;
-    private final EntityPropertyRegistry propertyRegistry;
+    private final NpcTypeRegistryImpl typeRegistry;
+    private final EntityPropertyRegistryImpl propertyRegistry;
     private final File folder;
 
-    public YamlStorage(PacketFactory packetFactory, ConfigManager configManager, ActionRegistry actionRegistry, NpcTypeRegistry typeRegistry, EntityPropertyRegistry propertyRegistry, File folder) {
+    public YamlStorage(PacketFactory packetFactory, ConfigManager configManager, ActionRegistry actionRegistry, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry, File folder) {
         this.packetFactory = packetFactory;
         this.configManager = configManager;
         this.actionRegistry = actionRegistry;

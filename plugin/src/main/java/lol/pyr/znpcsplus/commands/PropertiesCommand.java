@@ -3,6 +3,7 @@ package lol.pyr.znpcsplus.commands;
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
+import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcImpl;
@@ -37,7 +38,7 @@ public class PropertiesCommand implements CommandHandler {
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
         if (context.argSize() == 1) return context.suggestCollection(npcRegistry.getModifiableIds());
         if (context.argSize() == 2) return context.suggestStream(context.suggestionParse(0, NpcEntryImpl.class)
-                    .getNpc().getType().getAllowedProperties().stream().map(EntityPropertyImpl::getName));
+                    .getNpc().getType().getAllowedProperties().stream().map(EntityProperty::getName));
         if (context.argSize() == 3) {
             EntityPropertyImpl<?> property = context.suggestionParse(1, EntityPropertyImpl.class);
             Class<?> type = property.getType();

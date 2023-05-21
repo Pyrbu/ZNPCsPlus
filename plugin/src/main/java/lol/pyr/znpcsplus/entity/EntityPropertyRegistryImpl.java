@@ -1,5 +1,6 @@
 package lol.pyr.znpcsplus.entity;
 
+import lol.pyr.znpcsplus.api.entity.EntityPropertyRegistry;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.entity.serializers.BooleanPropertySerializer;
 import lol.pyr.znpcsplus.entity.serializers.ComponentPropertySerializer;
@@ -15,11 +16,11 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unchecked")
-public class EntityPropertyRegistry {
+public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
     private final Map<Class<?>, PropertySerializer<?>> serializerMap = new HashMap<>();
     private final List<EntityPropertyImpl<?>> properties = new ArrayList<>();
 
-    public EntityPropertyRegistry(SkinCache skinCache) {
+    public EntityPropertyRegistryImpl(SkinCache skinCache) {
         registerSerializer(new BooleanPropertySerializer());
         registerSerializer(new ComponentPropertySerializer());
         registerSerializer(new NamedTextColorPropertySerializer());

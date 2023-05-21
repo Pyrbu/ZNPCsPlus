@@ -1,7 +1,11 @@
 package lol.pyr.znpcsplus.api;
 
+import lol.pyr.znpcsplus.api.entity.EntityPropertyRegistry;
 import lol.pyr.znpcsplus.api.npc.NpcRegistry;
+import lol.pyr.znpcsplus.api.npc.NpcTypeRegistry;
 
 public interface NpcApi {
     NpcRegistry getNpcRegistry();
+    NpcTypeRegistry getNpcTypeRegistry();
+    EntityPropertyRegistry getPropertyRegistry();
 }

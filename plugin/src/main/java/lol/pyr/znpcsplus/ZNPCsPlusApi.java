@@ -1,18 +1,36 @@
 package lol.pyr.znpcsplus;
 
 import lol.pyr.znpcsplus.api.NpcApi;
+import lol.pyr.znpcsplus.api.entity.EntityPropertyRegistry;
 import lol.pyr.znpcsplus.api.npc.NpcRegistry;
+import lol.pyr.znpcsplus.api.npc.NpcTypeRegistry;
+import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
+import lol.pyr.znpcsplus.npc.NpcTypeRegistryImpl;
 
 public class ZNPCsPlusApi implements NpcApi {
     private final NpcRegistryImpl npcRegistry;
+    private final NpcTypeRegistryImpl typeRegistry;
+    private final EntityPropertyRegistryImpl propertyRegistry;
 
-    public ZNPCsPlusApi(NpcRegistryImpl npcRegistry) {
+    public ZNPCsPlusApi(NpcRegistryImpl npcRegistry, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry) {
         this.npcRegistry = npcRegistry;
+        this.typeRegistry = typeRegistry;
+        this.propertyRegistry = propertyRegistry;
     }
 
     @Override
     public NpcRegistry getNpcRegistry() {
         return npcRegistry;
+    }
+
+    @Override
+    public NpcTypeRegistry getNpcTypeRegistry() {
+        return typeRegistry;
+    }
+
+    @Override
+    public EntityPropertyRegistry getPropertyRegistry() {
+        return propertyRegistry;
     }
 }

@@ -6,7 +6,7 @@ import lol.pyr.director.common.command.CommandExecutionException;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import lol.pyr.znpcsplus.npc.NpcTypeImpl;
-import lol.pyr.znpcsplus.npc.NpcTypeRegistry;
+import lol.pyr.znpcsplus.npc.NpcTypeRegistryImpl;
 import lol.pyr.znpcsplus.util.NpcLocation;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -17,9 +17,9 @@ import java.util.List;
 
 public class CreateCommand implements CommandHandler {
     private final NpcRegistryImpl npcRegistry;
-    private final NpcTypeRegistry typeRegistry;
+    private final NpcTypeRegistryImpl typeRegistry;
 
-    public CreateCommand(NpcRegistryImpl npcRegistry, NpcTypeRegistry typeRegistry) {
+    public CreateCommand(NpcRegistryImpl npcRegistry, NpcTypeRegistryImpl typeRegistry) {
         this.npcRegistry = npcRegistry;
         this.typeRegistry = typeRegistry;
     }

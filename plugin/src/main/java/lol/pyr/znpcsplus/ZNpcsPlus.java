@@ -22,7 +22,7 @@ import lol.pyr.znpcsplus.commands.storage.LoadAllCommand;
 import lol.pyr.znpcsplus.commands.storage.SaveAllCommand;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
-import lol.pyr.znpcsplus.entity.EntityPropertyRegistry;
+import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.interaction.ActionRegistry;
 import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
 import lol.pyr.znpcsplus.metadata.*;
@@ -109,11 +109,11 @@ public class ZNpcsPlus extends JavaPlugin {
         MetadataFactory metadataFactory = setupMetadataFactory();
         ConfigManager configManager = new ConfigManager(getDataFolder());
         SkinCache skinCache = new SkinCache(configManager);
-        EntityPropertyRegistry propertyRegistry = new EntityPropertyRegistry(skinCache);
+        EntityPropertyRegistryImpl propertyRegistry = new EntityPropertyRegistryImpl(skinCache);
         PacketFactory packetFactory = setupPacketFactory(scheduler, metadataFactory, propertyRegistry);
         BungeeConnector bungeeConnector = new BungeeConnector(this);
         ActionRegistry actionRegistry = new ActionRegistry();
-        NpcTypeRegistry typeRegistry = new NpcTypeRegistry();
+        NpcTypeRegistryImpl typeRegistry = new NpcTypeRegistryImpl();
         NpcRegistryImpl npcRegistry = new NpcRegistryImpl(configManager, this, packetFactory, actionRegistry, scheduler, typeRegistry, propertyRegistry);
         UserManager userManager = new UserManager();
 
@@ -144,7 +144,7 @@ public class ZNpcsPlus extends JavaPlugin {
         shutdownTasks.add(adventure::close);
         if (configManager.getConfig().autoSaveEnabled()) shutdownTasks.add(npcRegistry::save);
 
-        NpcApiProvider.register(new ZNPCsPlusApi(npcRegistry));
+        NpcApiProvider.register(new ZNPCsPlusApi(npcRegistry, typeRegistry, propertyRegistry));
         enabled = true;
         log(ChatColor.WHITE + " * Loading complete! (" + (System.currentTimeMillis() - before) + "ms)");
         log("");
@@ -170,7 +170,7 @@ public class ZNpcsPlus extends JavaPlugin {
         for (Runnable runnable : shutdownTasks) runnable.run();
     }
 
-    private PacketFactory setupPacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory, EntityPropertyRegistry propertyRegistry) {
+    private PacketFactory setupPacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory, EntityPropertyRegistryImpl propertyRegistry) {
         HashMap<ServerVersion, LazyLoader<? extends PacketFactory>> versions = new HashMap<>();
         versions.put(ServerVersion.V_1_8, LazyLoader.of(() -> new V1_8PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry)));
         versions.put(ServerVersion.V_1_9, LazyLoader.of(() -> new V1_9PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry)));
@@ -209,7 +209,7 @@ public class ZNpcsPlus extends JavaPlugin {
     }
 
 
-    private void registerCommands(NpcRegistryImpl npcRegistry, SkinCache skinCache, BukkitAudiences adventure, ActionRegistry actionRegistry, NpcTypeRegistry typeRegistry, EntityPropertyRegistry propertyRegistry) {
+    private void registerCommands(NpcRegistryImpl npcRegistry, SkinCache skinCache, BukkitAudiences adventure, ActionRegistry actionRegistry, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry) {
         // TODO: make the messages better
         Message<CommandContext> incorrectUsageMessage = context -> context.send(Component.text("Incorrect usage: /" + context.getUsage(), NamedTextColor.RED));
         CommandManager manager = new CommandManager(this, adventure, incorrectUsageMessage);
