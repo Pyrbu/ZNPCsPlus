@@ -110,10 +110,6 @@ public class ZNpcsPlus extends JavaPlugin implements ZApi {
         log(ChatColor.WHITE + " * Initializing Adventure...");
         adventure = BukkitAudiences.create(this);
 
-        log(ChatColor.WHITE + " * Initializing PacketEvents...");
-        packetEvents.getEventManager().registerListener(new InteractionPacketListener(userManager, npcRegistry), PacketListenerPriority.MONITOR);
-        packetEvents.init();
-
         metadataFactory = setupMetadataFactory();
         PacketFactory packetFactory = setupPacketFactory();
 
@@ -125,20 +121,15 @@ public class ZNpcsPlus extends JavaPlugin implements ZApi {
         log(ChatColor.WHITE + " * Defining NPC types...");
         NpcTypeImpl.defineTypes();
 
-        log(ChatColor.WHITE + " * Starting tasks & registering components...");
+        log(ChatColor.WHITE + " * Registering components...");
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         new Metrics(this, PLUGIN_ID);
         scheduler = FoliaUtil.isFolia() ? new FoliaScheduler(this) : new SpigotScheduler(this);
         BungeeUtil bungeeUtil = new BungeeUtil(this);
         userManager = new UserManager();
         Bukkit.getOnlinePlayers().forEach(userManager::get);
-
         pluginManager.registerEvents(new UserListener(userManager), this);
-        scheduler.runDelayedTimerAsync(new NpcVisibilityTask(npcRegistry, configManager), 60L, 10L);
-        skinCache = new SkinCache(configManager);
-        scheduler.runDelayedTimerAsync(new SkinCacheCleanTask(skinCache), 1200, 1200);
 
-        registerCommands();
 
         if (configManager.getConfig().checkForUpdates()) {
             UpdateChecker updateChecker = new UpdateChecker(this.getDescription());
@@ -150,6 +141,18 @@ public class ZNpcsPlus extends JavaPlugin implements ZApi {
         ActionRegistry actionRegistry = new ActionRegistry(scheduler, adventure, bungeeUtil);
         npcRegistry = new NpcRegistryImpl(configManager, this, packetFactory, actionRegistry);
         npcRegistry.reload();
+
+        log(ChatColor.WHITE + " * Initializing PacketEvents...");
+        packetEvents.getEventManager().registerListener(new InteractionPacketListener(userManager, npcRegistry), PacketListenerPriority.MONITOR);
+        packetEvents.init();
+
+        log(ChatColor.WHITE + " * Starting tasks...");
+        scheduler.runDelayedTimerAsync(new NpcVisibilityTask(npcRegistry, configManager), 60L, 10L);
+        skinCache = new SkinCache(configManager);
+        scheduler.runDelayedTimerAsync(new SkinCacheCleanTask(skinCache), 1200, 1200);
+
+        log(ChatColor.WHITE + " * Registering commands...");
+        registerCommands();
 
         ZApiProvider.register(this);
         enabled = true;
