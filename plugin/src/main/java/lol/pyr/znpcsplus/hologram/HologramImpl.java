@@ -16,6 +16,7 @@ public class HologramImpl extends Viewable implements Hologram {
     private final ConfigManager configManager;
     private final PacketFactory packetFactory;
 
+    private double offset = 0.0;
     private ZLocation location;
     private final List<HologramLine> lines = new ArrayList<>();
 
@@ -79,10 +80,19 @@ public class HologramImpl extends Viewable implements Hologram {
 
     private void relocateLines(HologramLine newLine) {
         final double lineSpacing = configManager.getConfig().lineSpacing();
-        double height = location.getY() + (lines.size() - 1) * lineSpacing;
+        double height = location.getY() + (lines.size() - 1) * lineSpacing + getOffset();
         for (HologramLine line : lines) {
             line.setLocation(location.withY(height), line == newLine ? Collections.emptySet() : getViewers());
             height -= lineSpacing;
         }
+    }
+
+    public void setOffset(double offset) {
+        this.offset = offset;
+        relocateLines();
+    }
+
+    public double getOffset() {
+        return offset;
     }
 }

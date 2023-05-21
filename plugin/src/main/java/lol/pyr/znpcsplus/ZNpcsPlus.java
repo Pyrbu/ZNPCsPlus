@@ -8,6 +8,7 @@ import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder
 import lol.pyr.director.adventure.command.CommandManager;
 import lol.pyr.director.adventure.command.MultiCommand;
 import lol.pyr.director.adventure.parse.primitive.BooleanParser;
+import lol.pyr.director.adventure.parse.primitive.DoubleParser;
 import lol.pyr.director.adventure.parse.primitive.IntegerParser;
 import lol.pyr.znpcsplus.api.ZApi;
 import lol.pyr.znpcsplus.api.ZApiProvider;
@@ -231,6 +232,7 @@ public class ZNpcsPlus extends JavaPlugin implements ZApi {
         manager.registerParser(NpcEntryImpl.class, new NpcEntryParser(npcRegistry, context -> {}));
         manager.registerParser(EntityPropertyImpl.class, new EntityPropertyParser(context -> {}));
         manager.registerParser(Integer.class, new IntegerParser(context -> {}));
+        manager.registerParser(Double.class, new DoubleParser(context -> {}));
         manager.registerParser(Boolean.class, new BooleanParser(context -> {}));
         manager.registerParser(NamedTextColor.class, new NamedTextColorParser(context -> {}));
 
@@ -254,7 +256,7 @@ public class ZNpcsPlus extends JavaPlugin implements ZApi {
                         .addSubcommand("info", new HoloInfoCommand(npcRegistry))
                         .addSubcommand("insert", new HoloInsertCommand(npcRegistry, textSerializer))
                         .addSubcommand("set", new HoloSetCommand(npcRegistry, textSerializer))
-                )
+                        .addSubcommand("offset", new HoloOffsetCommand(npcRegistry)))
         );
     }
 
