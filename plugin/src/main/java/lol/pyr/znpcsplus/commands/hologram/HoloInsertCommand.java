@@ -30,7 +30,7 @@ public class HoloInsertCommand implements CommandHandler {
         int line = context.parse(Integer.class);
         if (line < 0 || line >= hologram.getLines().size()) context.halt(Component.text("Invalid line number!", NamedTextColor.RED));
         context.ensureArgsNotEmpty();
-        hologram.insertLine(line, componentSerializer.deserialize(context.dumpAllArgs()));
+        hologram.insertLineComponent(line, componentSerializer.deserialize(context.dumpAllArgs()));
         context.send(Component.text("NPC line inserted!", NamedTextColor.GREEN));
     }
 

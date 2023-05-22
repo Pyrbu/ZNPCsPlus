@@ -45,7 +45,7 @@ public class V1_8PacketFactory implements PacketFactory {
             createTeam(player, entity, properties);
             NpcLocation location = entity.getLocation();
             sendPacket(player, new WrapperPlayServerSpawnPlayer(entity.getEntityId(),
-                    entity.getUuid(), location.toVector3d(), location.getYaw(), location.getPitch(), Collections.emptyList()));
+                    entity.getUuid(), npcLocationToVector(location), location.getYaw(), location.getPitch(), Collections.emptyList()));
             sendPacket(player, new WrapperPlayServerEntityHeadLook(entity.getEntityId(), location.getYaw()));
             sendAllMetadata(player, entity, properties);
             scheduler.runLaterAsync(() -> removeTabPlayer(player, entity), 60);
@@ -58,12 +58,16 @@ public class V1_8PacketFactory implements PacketFactory {
         EntityType type = entity.getType();
         ClientVersion clientVersion = packetEvents.getServerManager().getVersion().toClientVersion();
         sendPacket(player, type.getLegacyId(clientVersion) == -1 ?
-                new WrapperPlayServerSpawnLivingEntity(entity.getEntityId(), entity.getUuid(), type, location.toVector3d(),
+                new WrapperPlayServerSpawnLivingEntity(entity.getEntityId(), entity.getUuid(), type, npcLocationToVector(location),
                         location.getYaw(), location.getPitch(), location.getPitch(), new Vector3d(), Collections.emptyList()) :
-                new WrapperPlayServerSpawnEntity(entity.getEntityId(), Optional.of(entity.getUuid()), entity.getType(), location.toVector3d(),
+                new WrapperPlayServerSpawnEntity(entity.getEntityId(), Optional.of(entity.getUuid()), entity.getType(), npcLocationToVector(location),
                         location.getPitch(), location.getYaw(), location.getYaw(), 0, Optional.empty()));
         sendAllMetadata(player, entity, properties);
         createTeam(player, entity, properties);
+    }
+
+    protected Vector3d npcLocationToVector(NpcLocation location) {
+        return new Vector3d(location.getX(), location.getY(), location.getZ());
     }
 
     @Override
@@ -75,7 +79,7 @@ public class V1_8PacketFactory implements PacketFactory {
     @Override
     public void teleportEntity(Player player, PacketEntity entity) {
         NpcLocation location = entity.getLocation();
-        sendPacket(player, new WrapperPlayServerEntityTeleport(entity.getEntityId(), location.toVector3d(), location.getYaw(), location.getPitch(), true));
+        sendPacket(player, new WrapperPlayServerEntityTeleport(entity.getEntityId(), npcLocationToVector(location), location.getYaw(), location.getPitch(), true));
         if (entity.getType() == EntityTypes.PLAYER) sendPacket(player, new WrapperPlayServerEntityHeadLook(entity.getEntityId(), location.getYaw()));
     }
 

@@ -6,6 +6,7 @@ import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.util.Viewable;
 import lol.pyr.znpcsplus.util.NpcLocation;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -15,26 +16,36 @@ import java.util.List;
 public class HologramImpl extends Viewable implements Hologram {
     private final ConfigManager configManager;
     private final PacketFactory packetFactory;
+    private final LegacyComponentSerializer textSerializer;
 
     private double offset = 0.0;
     private NpcLocation location;
     private final List<HologramLine> lines = new ArrayList<>();
 
-    public HologramImpl(ConfigManager configManager, PacketFactory packetFactory, NpcLocation location) {
+    public HologramImpl(ConfigManager configManager, PacketFactory packetFactory, LegacyComponentSerializer textSerializer, NpcLocation location) {
         this.configManager = configManager;
         this.packetFactory = packetFactory;
+        this.textSerializer = textSerializer;
         this.location = location;
     }
 
-    public void addLine(Component line) {
+    public void addLineComponent(Component line) {
         HologramLine newLine = new HologramLine(packetFactory, null, line);
         lines.add(newLine);
         relocateLines();
         for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
     }
 
-    public Component getLine(int index) {
+    public void addLine(String line) {
+        addLineComponent(textSerializer.deserialize(line));
+    }
+
+    public Component getLineComponent(int index) {
         return lines.get(index).getText();
+    }
+
+    public String getLine(int index) {
+        return textSerializer.serialize(getLineComponent(index));
     }
 
     public void removeLine(int index) {
@@ -52,11 +63,15 @@ public class HologramImpl extends Viewable implements Hologram {
         lines.clear();
     }
 
-    public void insertLine(int index, Component line) {
+    public void insertLineComponent(int index, Component line) {
         HologramLine newLine = new HologramLine(packetFactory, null, line);
         lines.add(index, newLine);
         relocateLines();
         for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
+    }
+
+    public void insertLine(int index, String line) {
+        insertLineComponent(index, textSerializer.deserialize(line));
     }
 
     @Override

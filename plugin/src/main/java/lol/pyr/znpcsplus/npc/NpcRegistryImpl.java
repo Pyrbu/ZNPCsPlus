@@ -10,6 +10,7 @@ import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.storage.NpcStorage;
 import lol.pyr.znpcsplus.util.NpcLocation;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.World;
 
 import java.util.Collection;
@@ -22,9 +23,11 @@ public class NpcRegistryImpl implements NpcRegistry {
     private final NpcStorage storage;
     private final PacketFactory packetFactory;
     private final ConfigManager configManager;
+    private final LegacyComponentSerializer textSerializer;
 
-    public NpcRegistryImpl(ConfigManager configManager, ZNpcsPlus plugin, PacketFactory packetFactory, ActionRegistry actionRegistry, TaskScheduler scheduler, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry) {
-        storage = configManager.getConfig().storageType().create(configManager, plugin, packetFactory, actionRegistry, typeRegistry, propertyRegistry);
+    public NpcRegistryImpl(ConfigManager configManager, ZNpcsPlus plugin, PacketFactory packetFactory, ActionRegistry actionRegistry, TaskScheduler scheduler, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer) {
+        this.textSerializer = textSerializer;
+        storage = configManager.getConfig().storageType().create(configManager, plugin, packetFactory, actionRegistry, typeRegistry, propertyRegistry, textSerializer);
         this.packetFactory = packetFactory;
         this.configManager = configManager;
 
@@ -81,7 +84,7 @@ public class NpcRegistryImpl implements NpcRegistry {
     public NpcEntryImpl create(String id, World world, NpcTypeImpl type, NpcLocation location) {
         id = id.toLowerCase();
         if (npcMap.containsKey(id)) throw new IllegalArgumentException("An npc with the id " + id + " already exists!");
-        NpcImpl npc = new NpcImpl(configManager, world, type, location, packetFactory);
+        NpcImpl npc = new NpcImpl(configManager, textSerializer, world, type, location, packetFactory);
         NpcEntryImpl entry = new NpcEntryImpl(id, npc);
         npcMap.put(id, entry);
         return entry;

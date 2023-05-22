@@ -114,7 +114,7 @@ public class ZNpcsPlus extends JavaPlugin {
         BungeeConnector bungeeConnector = new BungeeConnector(this);
         ActionRegistry actionRegistry = new ActionRegistry();
         NpcTypeRegistryImpl typeRegistry = new NpcTypeRegistryImpl();
-        NpcRegistryImpl npcRegistry = new NpcRegistryImpl(configManager, this, packetFactory, actionRegistry, scheduler, typeRegistry, propertyRegistry);
+        NpcRegistryImpl npcRegistry = new NpcRegistryImpl(configManager, this, packetFactory, actionRegistry, scheduler, typeRegistry, propertyRegistry, textSerializer);
         UserManager userManager = new UserManager();
 
         log(ChatColor.WHITE + " * Registerring components...");
@@ -157,7 +157,7 @@ public class ZNpcsPlus extends JavaPlugin {
                 NpcEntryImpl entry = npcRegistry.create("debug_npc_" + i, world, type, new NpcLocation(i * 3, 200, 0, 0, 0));
                 entry.setProcessed(true);
                 NpcImpl npc = entry.getNpc();
-                npc.getHologram().addLine(Component.text("Hello, World!"));
+                npc.getHologram().addLineComponent(Component.text("Hello, World!"));
                 i++;
             }
         }

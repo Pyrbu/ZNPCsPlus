@@ -10,6 +10,7 @@ import lol.pyr.znpcsplus.interaction.InteractionAction;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.util.NpcLocation;
 import lol.pyr.znpcsplus.util.Viewable;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -28,17 +29,17 @@ public class NpcImpl extends Viewable implements Npc {
     private final Map<EntityPropertyImpl<?>, Object> propertyMap = new HashMap<>();
     private final List<InteractionAction> actions = new ArrayList<>();
 
-    protected NpcImpl(ConfigManager configManager, World world, NpcTypeImpl type, NpcLocation location, PacketFactory packetFactory) {
-        this(configManager, packetFactory, world.getName(), type, location);
+    protected NpcImpl(ConfigManager configManager, LegacyComponentSerializer textSerializer, World world, NpcTypeImpl type, NpcLocation location, PacketFactory packetFactory) {
+        this(configManager, packetFactory, textSerializer, world.getName(), type, location);
     }
 
-    public NpcImpl(ConfigManager configManager, PacketFactory packetFactory, String world, NpcTypeImpl type, NpcLocation location) {
+    public NpcImpl(ConfigManager configManager, PacketFactory packetFactory, LegacyComponentSerializer textSerializer, String world, NpcTypeImpl type, NpcLocation location) {
         this.packetFactory = packetFactory;
         this.worldName = world;
         this.type = type;
         this.location = location;
         entity = new PacketEntity(packetFactory, this, type.getType(), location);
-        hologram = new HologramImpl(configManager, packetFactory, location.withY(location.getY() + type.getHologramOffset()));
+        hologram = new HologramImpl(configManager, packetFactory, textSerializer, location.withY(location.getY() + type.getHologramOffset()));
     }
 
 

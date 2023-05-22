@@ -31,7 +31,7 @@ public class HoloSetCommand implements CommandHandler {
         if (line < 0 || line >= hologram.getLines().size()) context.halt(Component.text("Invalid line number!", NamedTextColor.RED));
         context.ensureArgsNotEmpty();
         hologram.removeLine(line);
-        hologram.insertLine(line, componentSerializer.deserialize(context.dumpAllArgs()));
+        hologram.insertLineComponent(line, componentSerializer.deserialize(context.dumpAllArgs()));
         context.send(Component.text("NPC line set!", NamedTextColor.GREEN));
     }
 
@@ -43,7 +43,7 @@ public class HoloSetCommand implements CommandHandler {
             if (context.argSize() == 2) return context.suggestStream(Stream.iterate(0, n -> n + 1)
                     .limit(hologram.getLines().size()).map(String::valueOf));
             if (context.argSize() == 3) return context.suggestLiteral(componentSerializer.serialize(
-                    hologram.getLine(context.suggestionParse(1, Integer.class))));
+                    hologram.getLineComponent(context.suggestionParse(1, Integer.class))));
         }
         return Collections.emptyList();
     }

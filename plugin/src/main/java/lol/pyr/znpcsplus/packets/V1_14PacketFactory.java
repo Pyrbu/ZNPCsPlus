@@ -23,7 +23,7 @@ public class V1_14PacketFactory extends V1_10PacketFactory {
     public void spawnEntity(Player player, PacketEntity entity, PropertyHolder properties) {
         NpcLocation location = entity.getLocation();
         sendPacket(player, new WrapperPlayServerSpawnEntity(entity.getEntityId(), Optional.of(entity.getUuid()), entity.getType(),
-                location.toVector3d(), location.getPitch(), location.getYaw(), location.getYaw(), 0, Optional.of(new Vector3d())));
+                npcLocationToVector(location), location.getPitch(), location.getYaw(), location.getYaw(), 0, Optional.of(new Vector3d())));
         sendAllMetadata(player, entity, properties);
         createTeam(player, entity, properties);
     }

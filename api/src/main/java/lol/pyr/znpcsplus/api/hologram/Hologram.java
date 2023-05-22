@@ -1,11 +1,9 @@
 package lol.pyr.znpcsplus.api.hologram;
 
-import net.kyori.adventure.text.Component;
-
 public interface Hologram {
-    void addLine(Component line);
-    Component getLine(int index);
+    void addLine(String line);
+    String getLine(int index);
     void removeLine(int index);
     void clearLines();
-    void insertLine(int index, Component line);
+    void insertLine(int index, String line);
 }

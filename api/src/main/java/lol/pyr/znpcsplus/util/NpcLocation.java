@@ -1,6 +1,5 @@
 package lol.pyr.znpcsplus.util;
 
-import com.github.retrooper.packetevents.util.Vector3d;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.NumberConversions;
@@ -62,10 +61,6 @@ public class NpcLocation {
 
     public NpcLocation withY(double y) {
         return new NpcLocation(x, y, z, yaw, pitch);
-    }
-
-    public Vector3d toVector3d() {
-        return new Vector3d(x, y, z);
     }
 
     private static final double _2PI = 2 * Math.PI;
