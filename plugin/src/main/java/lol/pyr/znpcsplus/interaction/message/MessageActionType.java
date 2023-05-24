@@ -4,6 +4,7 @@ import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.common.command.CommandExecutionException;
 import lol.pyr.znpcsplus.interaction.InteractionActionType;
 import lol.pyr.znpcsplus.interaction.InteractionCommandHandler;
+import lol.pyr.znpcsplus.interaction.InteractionType;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
@@ -36,7 +37,8 @@ public class MessageActionType implements InteractionActionType<MessageAction>, 
     @Override
     public MessageAction deserialize(String str) {
         String[] split = str.split(";");
-        return new MessageAction(adventure, MiniMessage.miniMessage().deserialize(new String(Base64.getDecoder().decode(split[0]), StandardCharsets.UTF_8)), Long.parseLong(split[1]));
+        InteractionType type = split.length > 2 ? InteractionType.valueOf(split[2]) : InteractionType.ANY_CLICK;
+        return new MessageAction(adventure, MiniMessage.miniMessage().deserialize(new String(Base64.getDecoder().decode(split[0]), StandardCharsets.UTF_8)), type, Long.parseLong(split[1]));
     }
 
     @Override
@@ -51,18 +53,20 @@ public class MessageActionType implements InteractionActionType<MessageAction>, 
 
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
-        context.setUsage(context.getUsage() + " consolecommand <id> <cooldown seconds> <message>");
+        context.setUsage(context.getUsage() + " consolecommand <id> <type> <cooldown seconds> <message>");
         NpcEntryImpl entry = context.parse(NpcEntryImpl.class);
+        InteractionType type = context.parse(InteractionType.class);
         long cooldown = (long) (context.parse(Double.class) * 1000D);
         Component message = textSerializer.deserialize(context.dumpAllArgs());
-        entry.getNpc().addAction(new MessageAction(adventure, message, cooldown));
+        entry.getNpc().addAction(new MessageAction(adventure, message, type, cooldown));
         context.send(Component.text("Added a message action to the npc with the message ", NamedTextColor.GREEN).append(message));
     }
 
     @Override
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
         if (context.argSize() == 1) return context.suggestCollection(npcRegistry.getModifiableIds());
-        if (context.argSize() == 2) return context.suggestLiteral("1");
+        if (context.argSize() == 2) return context.suggestEnum(InteractionType.values());
+        if (context.argSize() == 3) return context.suggestLiteral("1");
         return Collections.emptyList();
     }
 }

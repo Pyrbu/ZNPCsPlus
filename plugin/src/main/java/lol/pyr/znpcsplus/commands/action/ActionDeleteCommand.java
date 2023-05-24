@@ -22,6 +22,7 @@ public class ActionDeleteCommand implements CommandHandler {
 
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
+        context.setUsage(context.getLabel() + " action delete <id> <index>");
         NpcImpl npc = context.parse(NpcEntryImpl.class).getNpc();
         int index = context.parse(Integer.class);
         if (index >= npc.getActions().size() || index < 0) context.halt(Component.text("That npc doesn't have any action with the index " + index, NamedTextColor.RED));

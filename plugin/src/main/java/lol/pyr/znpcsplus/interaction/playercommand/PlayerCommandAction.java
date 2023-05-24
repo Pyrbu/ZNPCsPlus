@@ -1,6 +1,7 @@
 package lol.pyr.znpcsplus.interaction.playercommand;
 
 import lol.pyr.znpcsplus.interaction.InteractionAction;
+import lol.pyr.znpcsplus.interaction.InteractionType;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.util.PapiUtil;
 import org.bukkit.Bukkit;
@@ -10,8 +11,8 @@ public class PlayerCommandAction extends InteractionAction {
     private final TaskScheduler scheduler;
     private final String command;
 
-    public PlayerCommandAction(TaskScheduler scheduler, String command, long delay) {
-        super(delay);
+    public PlayerCommandAction(TaskScheduler scheduler, String command, InteractionType interactionType, long delay) {
+        super(delay, interactionType);
         this.scheduler = scheduler;
         this.command = command;
     }

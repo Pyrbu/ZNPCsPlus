@@ -25,13 +25,11 @@ import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.interaction.ActionRegistry;
 import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
+import lol.pyr.znpcsplus.interaction.InteractionType;
 import lol.pyr.znpcsplus.metadata.*;
 import lol.pyr.znpcsplus.npc.*;
 import lol.pyr.znpcsplus.packets.*;
-import lol.pyr.znpcsplus.parsers.EntityPropertyParser;
-import lol.pyr.znpcsplus.parsers.NamedTextColorParser;
-import lol.pyr.znpcsplus.parsers.NpcEntryParser;
-import lol.pyr.znpcsplus.parsers.NpcTypeParser;
+import lol.pyr.znpcsplus.parsers.*;
 import lol.pyr.znpcsplus.scheduling.FoliaScheduler;
 import lol.pyr.znpcsplus.scheduling.SpigotScheduler;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
@@ -221,6 +219,7 @@ public class ZNpcsPlus extends JavaPlugin {
         manager.registerParser(Double.class, new DoubleParser(incorrectUsageMessage));
         manager.registerParser(Boolean.class, new BooleanParser(incorrectUsageMessage));
         manager.registerParser(NamedTextColor.class, new NamedTextColorParser(incorrectUsageMessage));
+        manager.registerParser(InteractionType.class, new InteractionTypeParser(incorrectUsageMessage));
 
         manager.registerCommand("npc", new MultiCommand()
                 .addSubcommand("create", new CreateCommand(npcRegistry, typeRegistry))

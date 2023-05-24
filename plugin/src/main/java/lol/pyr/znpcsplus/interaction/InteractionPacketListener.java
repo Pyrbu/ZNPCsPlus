@@ -34,8 +34,21 @@ public class InteractionPacketListener implements PacketListener {
         NpcImpl npc = entry.getNpc();
 
         for (InteractionAction action : npc.getActions()) {
+            if (!isAllowed(action.getInteractionType(), packet.getAction())) continue;
             if (action.getCooldown() > 0 && !user.actionCooldownCheck(action)) continue;
             action.run(player);
         }
+    }
+
+    private boolean isAllowed(InteractionType type, WrapperPlayClientInteractEntity.InteractAction action) {
+        switch (type) {
+            case ANY_CLICK:
+                return true;
+            case LEFT_CLICK:
+                return action == WrapperPlayClientInteractEntity.InteractAction.ATTACK;
+            case RIGHT_CLICK:
+                return action == WrapperPlayClientInteractEntity.InteractAction.INTERACT || action == WrapperPlayClientInteractEntity.InteractAction.INTERACT_AT;
+        }
+        return false;
     }
 }
