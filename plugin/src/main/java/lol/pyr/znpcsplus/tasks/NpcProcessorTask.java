@@ -1,5 +1,7 @@
 package lol.pyr.znpcsplus.tasks;
 
+import lol.pyr.znpcsplus.api.event.NpcDespawnEvent;
+import lol.pyr.znpcsplus.api.event.NpcSpawnEvent;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
@@ -38,9 +40,19 @@ public class NpcProcessorTask extends BukkitRunnable {
 
                 // visibility
                 boolean inRange = distance <= distSq;
-                if (!inRange && npc.isShown(player)) npc.hide(player);
+                if (!inRange && npc.isShown(player)) {
+                    NpcDespawnEvent event = new NpcDespawnEvent(player, entry);
+                    Bukkit.getPluginManager().callEvent(event);
+                    if (!event.isCancelled()) npc.hide(player);
+                }
                 if (inRange) {
-                    if (!npc.isShown(player)) npc.show(player);
+                    if (!npc.isShown(player)) {
+                        NpcSpawnEvent event = new NpcSpawnEvent(player, entry);
+                        Bukkit.getPluginManager().callEvent(event);
+                        if (event.isCancelled()) continue;
+
+                        npc.show(player);
+                    }
                     if (distance < closestDist) {
                         closestDist = distance;
                         closest = player;

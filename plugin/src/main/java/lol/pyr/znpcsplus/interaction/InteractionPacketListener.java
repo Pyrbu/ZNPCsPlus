@@ -4,11 +4,14 @@ import com.github.retrooper.packetevents.event.PacketListener;
 import com.github.retrooper.packetevents.event.PacketReceiveEvent;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientInteractEntity;
+import lol.pyr.znpcsplus.api.event.NpcInteractEvent;
+import lol.pyr.znpcsplus.api.interaction.InteractionType;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import lol.pyr.znpcsplus.user.User;
 import lol.pyr.znpcsplus.user.UserManager;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class InteractionPacketListener implements PacketListener {
@@ -32,23 +35,27 @@ public class InteractionPacketListener implements PacketListener {
         NpcEntryImpl entry = npcRegistry.getByEntityId(packet.getEntityId());
         if (entry == null || !entry.isProcessed()) return;
         NpcImpl npc = entry.getNpc();
+        InteractionType type = wrapClickType(packet.getAction());
+
+        NpcInteractEvent interactEvent = new NpcInteractEvent(player, entry, type);
+        Bukkit.getPluginManager().callEvent(interactEvent);
+        if (interactEvent.isCancelled()) return;
 
         for (InteractionAction action : npc.getActions()) {
-            if (!isAllowed(action.getInteractionType(), packet.getAction())) continue;
+            if (action.getInteractionType() != InteractionType.ANY_CLICK && action.getInteractionType() != type) continue;
             if (action.getCooldown() > 0 && !user.actionCooldownCheck(action)) continue;
             action.run(player);
         }
     }
 
-    private boolean isAllowed(InteractionType type, WrapperPlayClientInteractEntity.InteractAction action) {
-        switch (type) {
-            case ANY_CLICK:
-                return true;
-            case LEFT_CLICK:
-                return action == WrapperPlayClientInteractEntity.InteractAction.ATTACK;
-            case RIGHT_CLICK:
-                return action == WrapperPlayClientInteractEntity.InteractAction.INTERACT || action == WrapperPlayClientInteractEntity.InteractAction.INTERACT_AT;
+    private InteractionType wrapClickType(WrapperPlayClientInteractEntity.InteractAction action) {
+        switch (action) {
+            case ATTACK:
+                return InteractionType.LEFT_CLICK;
+            case INTERACT:
+            case INTERACT_AT:
+                return InteractionType.RIGHT_CLICK;
         }
-        return false;
+        throw new IllegalStateException();
     }
 }

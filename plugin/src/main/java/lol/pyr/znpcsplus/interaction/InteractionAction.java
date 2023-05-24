@@ -1,5 +1,6 @@
 package lol.pyr.znpcsplus.interaction;
 
+import lol.pyr.znpcsplus.api.interaction.InteractionType;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;

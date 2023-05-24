@@ -4,7 +4,7 @@ import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.parse.ParserType;
 import lol.pyr.director.common.command.CommandExecutionException;
 import lol.pyr.director.common.message.Message;
-import lol.pyr.znpcsplus.interaction.InteractionType;
+import lol.pyr.znpcsplus.api.interaction.InteractionType;
 
 import java.util.Deque;
 

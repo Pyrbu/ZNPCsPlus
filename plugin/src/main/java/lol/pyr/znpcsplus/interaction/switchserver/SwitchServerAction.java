@@ -1,7 +1,7 @@
 package lol.pyr.znpcsplus.interaction.switchserver;
 
 import lol.pyr.znpcsplus.interaction.InteractionAction;
-import lol.pyr.znpcsplus.interaction.InteractionType;
+import lol.pyr.znpcsplus.api.interaction.InteractionType;
 import lol.pyr.znpcsplus.util.BungeeConnector;
 import org.bukkit.entity.Player;
 

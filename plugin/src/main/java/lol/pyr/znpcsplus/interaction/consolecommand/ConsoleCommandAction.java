@@ -1,7 +1,7 @@
 package lol.pyr.znpcsplus.interaction.consolecommand;
 
 import lol.pyr.znpcsplus.interaction.InteractionAction;
-import lol.pyr.znpcsplus.interaction.InteractionType;
+import lol.pyr.znpcsplus.api.interaction.InteractionType;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.util.PapiUtil;
 import org.bukkit.Bukkit;

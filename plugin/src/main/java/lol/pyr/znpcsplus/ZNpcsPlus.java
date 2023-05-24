@@ -25,7 +25,7 @@ import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.interaction.ActionRegistry;
 import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
-import lol.pyr.znpcsplus.interaction.InteractionType;
+import lol.pyr.znpcsplus.api.interaction.InteractionType;
 import lol.pyr.znpcsplus.metadata.*;
 import lol.pyr.znpcsplus.npc.*;
 import lol.pyr.znpcsplus.packets.*;

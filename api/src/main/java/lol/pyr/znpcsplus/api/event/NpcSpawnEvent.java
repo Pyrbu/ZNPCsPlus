@@ -1,4 +1,20 @@
 package lol.pyr.znpcsplus.api.event;
 
-public class NpcSpawnEvent {
+import lol.pyr.znpcsplus.api.event.util.CancellableNpcEvent;
+import lol.pyr.znpcsplus.api.npc.NpcEntry;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.HandlerList;
+
+public class NpcSpawnEvent extends CancellableNpcEvent implements Cancellable {
+    private static final HandlerList handlers = new HandlerList();
+
+    public NpcSpawnEvent(Player player, NpcEntry entry) {
+        super(player, entry);
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
 }

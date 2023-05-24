@@ -1,4 +1,4 @@
-package lol.pyr.znpcsplus.interaction;
+package lol.pyr.znpcsplus.api.interaction;
 
 public enum InteractionType {
     ANY_CLICK,
