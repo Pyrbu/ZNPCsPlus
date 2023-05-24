@@ -9,16 +9,7 @@ public class EntityPropertyImpl<T> implements EntityProperty<T> {
     private final Class<T> clazz;
     private final PropertySerializer<T> serializer;
 
-    protected EntityPropertyImpl(String name, Class<T> type, PropertySerializer<T> serializer) {
-        this(name, null, type, serializer);
-    }
-
-    @SuppressWarnings("unchecked")
-    protected EntityPropertyImpl(String name, T defaultValue, PropertySerializer<T> serializer) {
-        this(name, defaultValue, (Class<T>) defaultValue.getClass(), serializer);
-    }
-
-    private EntityPropertyImpl(String name, T defaultValue, Class<T> clazz, PropertySerializer<T> serializer) {
+    protected EntityPropertyImpl(String name, T defaultValue, Class<T> clazz, PropertySerializer<T> serializer) {
         this.name = name.toLowerCase();
         this.defaultValue = defaultValue;
         this.clazz = clazz;
