@@ -2,7 +2,7 @@ package lol.pyr.znpcsplus.util.list;
 
 import java.util.*;
 
-public class ImmutableArrayList<T> implements List<T> {
+public class ImmutableArrayList<T> implements List<T>, RandomAccess {
     private final T[] elements;
 
     public ImmutableArrayList(T[] array) {
