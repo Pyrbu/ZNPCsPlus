@@ -21,4 +21,5 @@ public interface PacketFactory {
     Map<Integer, EntityData> generateMetadata(Player player, PacketEntity entity, PropertyHolder properties);
     void sendAllMetadata(Player player, PacketEntity entity, PropertyHolder properties);
     void sendMetadata(Player player, PacketEntity entity, List<EntityData> data);
+    void sendEquipment(Player player, PacketEntity entity, PropertyHolder properties);
 }

@@ -18,7 +18,7 @@ import org.bukkit.plugin.Plugin;
 import java.util.EnumSet;
 import java.util.concurrent.CompletableFuture;
 
-public class V1_19PacketFactory extends V1_14PacketFactory {
+public class V1_19PacketFactory extends V1_16PacketFactory {
     public V1_19PacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry) {
         super(scheduler, metadataFactory, packetEvents, propertyRegistry);
     }

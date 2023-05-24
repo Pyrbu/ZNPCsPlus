@@ -4,14 +4,15 @@ import com.github.retrooper.packetevents.PacketEventsAPI;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
-import com.github.retrooper.packetevents.protocol.player.ClientVersion;
-import com.github.retrooper.packetevents.protocol.player.GameMode;
-import com.github.retrooper.packetevents.protocol.player.UserProfile;
+import com.github.retrooper.packetevents.protocol.item.ItemStack;
+import com.github.retrooper.packetevents.protocol.item.type.ItemTypes;
+import com.github.retrooper.packetevents.protocol.player.*;
 import com.github.retrooper.packetevents.util.Vector3d;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.*;
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
+import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.metadata.MetadataFactory;
@@ -135,11 +136,43 @@ public class V1_8PacketFactory implements PacketFactory {
     @Override
     public void sendAllMetadata(Player player, PacketEntity entity, PropertyHolder properties) {
         sendMetadata(player, entity, new ArrayList<>(generateMetadata(player, entity, properties).values()));
+        sendEquipment(player, entity, properties);
     }
 
     @Override
     public void sendMetadata(Player player, PacketEntity entity, List<EntityData> data) {
         packetEvents.getPlayerManager().sendPacket(player, new WrapperPlayServerEntityMetadata(entity.getEntityId(), data));
+    }
+
+    @Override
+    public void sendEquipment(Player player, PacketEntity entity, PropertyHolder properties) {
+        for (Equipment equipment : generateEquipments(properties))
+            sendPacket(player, new WrapperPlayServerEntityEquipment(entity.getEntityId(), Collections.singletonList(equipment)));
+    }
+
+    protected List<Equipment> generateEquipments(PropertyHolder properties) {
+        List<Equipment> equipements = new ArrayList<>();
+        ItemStack air = new ItemStack.Builder().type(ItemTypes.AIR).build();
+
+        EntityPropertyImpl<ItemStack> helmet = propertyRegistry.getByName("helmet", ItemStack.class);
+        equipements.add(new Equipment(EquipmentSlot.HELMET, properties.hasProperty(helmet) ? properties.getProperty(helmet) : air));
+
+        EntityPropertyImpl<ItemStack> chestplate = propertyRegistry.getByName("chestplate", ItemStack.class);
+        equipements.add(new Equipment(EquipmentSlot.CHEST_PLATE, properties.hasProperty(chestplate) ? properties.getProperty(chestplate) : air));
+
+        EntityPropertyImpl<ItemStack> leggings = propertyRegistry.getByName("leggings", ItemStack.class);
+        equipements.add(new Equipment(EquipmentSlot.LEGGINGS, properties.hasProperty(leggings) ? properties.getProperty(leggings) : air));
+
+        EntityPropertyImpl<ItemStack> boots = propertyRegistry.getByName("boots", ItemStack.class);
+        equipements.add(new Equipment(EquipmentSlot.BOOTS, properties.hasProperty(boots) ? properties.getProperty(boots) : air));
+
+        EntityPropertyImpl<ItemStack> hand = propertyRegistry.getByName("hand", ItemStack.class);
+        equipements.add(new Equipment(EquipmentSlot.MAIN_HAND, properties.hasProperty(hand) ? properties.getProperty(hand) : air));
+
+        EntityPropertyImpl<ItemStack> offhand = propertyRegistry.getByName("offhand", ItemStack.class);
+        equipements.add(new Equipment(EquipmentSlot.OFF_HAND, properties.hasProperty(offhand) ? properties.getProperty(offhand) : air));
+
+        return equipements;
     }
 
     protected void sendPacket(Player player, PacketWrapper<?> packet) {

@@ -1,11 +1,9 @@
 package lol.pyr.znpcsplus.entity;
 
+import com.github.retrooper.packetevents.protocol.item.ItemStack;
 import lol.pyr.znpcsplus.api.entity.EntityPropertyRegistry;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
-import lol.pyr.znpcsplus.entity.serializers.BooleanPropertySerializer;
-import lol.pyr.znpcsplus.entity.serializers.ComponentPropertySerializer;
-import lol.pyr.znpcsplus.entity.serializers.NamedTextColorPropertySerializer;
-import lol.pyr.znpcsplus.entity.serializers.SkinDescriptorSerializer;
+import lol.pyr.znpcsplus.entity.serializers.*;
 import lol.pyr.znpcsplus.skin.cache.SkinCache;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -23,6 +21,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerSerializer(new ComponentPropertySerializer());
         registerSerializer(new NamedTextColorPropertySerializer());
         registerSerializer(new SkinDescriptorSerializer(skinCache));
+        registerSerializer(new ItemStackPropertySerializer());
 
         registerType("glow", NamedTextColor.class);
         registerType("skin_layers", true);
@@ -32,6 +31,13 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("skin", SkinDescriptor.class);
         registerType("name", Component.class);
         registerType("look", false);
+
+        registerType("helmet", ItemStack.class);
+        registerType("chestplate", ItemStack.class);
+        registerType("leggings", ItemStack.class);
+        registerType("boots", ItemStack.class);
+        registerType("hand", ItemStack.class);
+        registerType("offhand", ItemStack.class);
     }
 
     private void registerSerializer(PropertySerializer<?> serializer) {

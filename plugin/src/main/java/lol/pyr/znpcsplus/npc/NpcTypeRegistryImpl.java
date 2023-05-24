@@ -29,7 +29,7 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
         ServerVersion version = packetEvents.getServerManager().getVersion();
 
         register(new NpcTypeImpl.Builder(propertyRegistry, "player", EntityTypes.PLAYER).setHologramOffset(-0.15D)
-                .addProperties(propertyRegistry.getByName("skin"),  propertyRegistry.getByName("skin_layers")));
+                .addProperties("skin", "skin_layers", "helmet", "chestplate", "leggings", "boots", "hand", "offhand"));
 
         register(new NpcTypeImpl.Builder(propertyRegistry, "armor_stand", EntityTypes.ARMOR_STAND));
         register(new NpcTypeImpl.Builder(propertyRegistry, "bat", EntityTypes.BAT).setHologramOffset(-1.365));

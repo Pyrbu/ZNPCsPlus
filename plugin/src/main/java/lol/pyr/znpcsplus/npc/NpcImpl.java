@@ -114,8 +114,7 @@ public class NpcImpl extends Viewable implements Npc {
     }
 
     public <T> void setProperty(EntityPropertyImpl<T> key, T value) {
-        if (value == null) return;
-        if (value.equals(key.getDefaultValue())) removeProperty(key);
+        if (value == null || value.equals(key.getDefaultValue())) removeProperty(key);
         else propertyMap.put(key, value);
         UNSAFE_refreshMeta();
         if (key.getName().equalsIgnoreCase("glow")) UNSAFE_remakeTeam();

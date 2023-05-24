@@ -1,5 +1,6 @@
 package lol.pyr.znpcsplus.commands;
 
+import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
@@ -10,6 +11,7 @@ import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import com.github.retrooper.packetevents.protocol.item.ItemStack;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,15 +25,32 @@ public class PropertiesCommand implements CommandHandler {
 
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
+        context.setUsage(context.getLabel() + " properties <id> <property> <value>");
         NpcEntryImpl entry = context.parse(NpcEntryImpl.class);
         NpcImpl npc = entry.getNpc();
         EntityPropertyImpl<?> property = context.parse(EntityPropertyImpl.class);
 
-        if (!npc.getType().getAllowedProperties().contains(property)) context.halt(Component.text("Property " + property.getName() + " not allowed for npc type " + npc.getType().getName()));
+        if (!npc.getType().getAllowedProperties().contains(property)) context.halt(Component.text("Property " + property.getName() + " not allowed for npc type " + npc.getType().getName(), NamedTextColor.RED));
+        Class<?> type = property.getType();
+        Object value;
+        String valueName;
+        if (type == ItemStack.class) {
+            org.bukkit.inventory.ItemStack bukkitStack = context.ensureSenderIsPlayer().getInventory().getItemInMainHand();
+            if (bukkitStack.getType().isAir()) {
+                value = null;
+                valueName = "EMPTY";
+            } else {
+                value = SpigotConversionUtil.fromBukkitItemStack(bukkitStack);
+                valueName = bukkitStack.toString();
+            }
+        }
+        else {
+            value = context.parse(property.getType());
+            valueName = String.valueOf(value);
+        }
 
-        Object value = context.parse(property.getType());
         npc.UNSAFE_setProperty(property, value);
-        context.send(Component.text("Set property " + property.getName() + " for NPC " + entry.getId() + " to " + value.toString(), NamedTextColor.GREEN));
+        context.send(Component.text("Set property " + property.getName() + " for NPC " + entry.getId() + " to " + valueName, NamedTextColor.GREEN));
     }
 
     @Override

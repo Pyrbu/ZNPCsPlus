@@ -59,6 +59,11 @@ public class NpcTypeImpl implements NpcType {
             return this;
         }
 
+        public Builder addProperties(String... names) {
+            for (String name : names) allowedProperties.add(propertyRegistry.getByName(name));
+            return this;
+        }
+
         public Builder setEnableGlobalProperties(boolean enabled) {
             globalProperties = enabled;
             return this;
