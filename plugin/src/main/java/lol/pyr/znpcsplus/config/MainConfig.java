@@ -45,4 +45,9 @@ public interface MainConfig {
     default boolean autoSaveEnabled() {
         return autoSaveInterval() != -1;
     }
+
+    @ConfKey("look-property-distance")
+    @ConfComments("How far should the look property work from in blocks")
+    @DefaultDouble(10)
+    double lookPropertyDistance();
 }

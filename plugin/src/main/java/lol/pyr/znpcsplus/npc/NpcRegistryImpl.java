@@ -56,6 +56,12 @@ public class NpcRegistryImpl implements NpcRegistry {
         return Collections.unmodifiableCollection(npcMap.values());
     }
 
+    public Collection<NpcEntryImpl> getProcessable() {
+        return Collections.unmodifiableCollection(npcMap.values().stream()
+                .filter(NpcEntryImpl::isProcessed)
+                .collect(Collectors.toList()));
+    }
+
     public Collection<NpcEntryImpl> getAllModifiable() {
         return Collections.unmodifiableCollection(npcMap.values().stream()
                 .filter(NpcEntryImpl::isAllowCommandModification)

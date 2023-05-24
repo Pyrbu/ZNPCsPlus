@@ -35,7 +35,7 @@ import lol.pyr.znpcsplus.scheduling.SpigotScheduler;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.skin.cache.SkinCache;
 import lol.pyr.znpcsplus.skin.cache.SkinCacheCleanTask;
-import lol.pyr.znpcsplus.tasks.NpcVisibilityTask;
+import lol.pyr.znpcsplus.tasks.NpcProcessorTask;
 import lol.pyr.znpcsplus.updater.UpdateChecker;
 import lol.pyr.znpcsplus.updater.UpdateNotificationListener;
 import lol.pyr.znpcsplus.user.UserListener;
@@ -131,7 +131,7 @@ public class ZNpcsPlus extends JavaPlugin {
             pluginManager.registerEvents(new UpdateNotificationListener(this, adventure, updateChecker), this);
         }
 
-        scheduler.runDelayedTimerAsync(new NpcVisibilityTask(npcRegistry, configManager), 60L, 10L);
+        scheduler.runDelayedTimerAsync(new NpcProcessorTask(npcRegistry, configManager, propertyRegistry), 60L, 3L);
         scheduler.runDelayedTimerAsync(new SkinCacheCleanTask(skinCache), 1200, 1200);
 
         log(ChatColor.WHITE + " * Loading data...");

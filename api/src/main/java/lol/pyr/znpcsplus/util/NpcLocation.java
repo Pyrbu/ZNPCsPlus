@@ -4,6 +4,8 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.NumberConversions;
 
+import java.util.Objects;
+
 public class NpcLocation {
     private final double x;
     private final double y;
@@ -65,8 +67,8 @@ public class NpcLocation {
 
     private static final double _2PI = 2 * Math.PI;
 
-    public Location lookingAt(Location loc) {
-        return lookingAt(new NpcLocation(loc)).toBukkitLocation(loc.getWorld());
+    public NpcLocation lookingAt(Location loc) {
+        return lookingAt(new NpcLocation(loc));
     }
 
     public NpcLocation lookingAt(NpcLocation loc) {
@@ -87,5 +89,18 @@ public class NpcLocation {
         float pitch = (float) Math.toDegrees(Math.atan(-y / xz));
 
         return new NpcLocation(this.x, this.y, this.z, yaw, pitch);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NpcLocation that = (NpcLocation) o;
+        return Double.compare(that.x, x) == 0 && Double.compare(that.y, y) == 0 && Double.compare(that.z, z) == 0 && Float.compare(that.yaw, yaw) == 0 && Float.compare(that.pitch, pitch) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z, yaw, pitch);
     }
 }

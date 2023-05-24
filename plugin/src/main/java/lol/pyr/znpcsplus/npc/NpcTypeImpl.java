@@ -74,6 +74,7 @@ public class NpcTypeImpl implements NpcType {
                 allowedProperties.add(propertyRegistry.getByName("fire"));
                 allowedProperties.add(propertyRegistry.getByName("invisible"));
                 allowedProperties.add(propertyRegistry.getByName("silent"));
+                allowedProperties.add(propertyRegistry.getByName("look"));
                 if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9))
                     allowedProperties.add(propertyRegistry.getByName("glow"));
             }
