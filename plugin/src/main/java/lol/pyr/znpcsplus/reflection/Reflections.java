@@ -74,6 +74,12 @@ public final class Reflections {
                     .setStrict(FoliaUtil.isFolia())
                     .toClassReflection().get();
 
+    public static final Class<?> REGION_SCHEDULER_CLASS =
+            new ReflectionBuilder("io.papermc.paper.threadedregions.scheduler")
+                    .withClassName("RegionScheduler")
+                    .setStrict(FoliaUtil.isFolia())
+                    .toClassReflection().get();
+
     public static final Class<?> SCHEDULED_TASK_CLASS =
             new ReflectionBuilder("io.papermc.paper.threadedregions.scheduler")
                     .withClassName("ScheduledTask")
@@ -94,7 +100,14 @@ public final class Reflections {
                     .setStrict(FoliaUtil.isFolia())
                     .toMethodReflection();
 
-    public static final ReflectionLazyLoader<Method> FOLIA_RUN_DELAYED =
+    public static final ReflectionLazyLoader<Method> FOLIA_GET_REGION_SCHEDULER =
+            new ReflectionBuilder(Bukkit.class)
+                    .withMethodName("getRegionScheduler")
+                    .withExpectResult(REGION_SCHEDULER_CLASS)
+                    .setStrict(FoliaUtil.isFolia())
+                    .toMethodReflection();
+
+    public static final ReflectionLazyLoader<Method> FOLIA_RUN_DELAYED_ASYNC =
             new ReflectionBuilder(ASYNC_SCHEDULER_CLASS)
                     .withMethodName("runDelayed")
                     .withParameterTypes(Plugin.class, Consumer.class, long.class, TimeUnit.class)
@@ -102,7 +115,7 @@ public final class Reflections {
                     .setStrict(FoliaUtil.isFolia())
                     .toMethodReflection();
 
-    public static final ReflectionLazyLoader<Method> FOLIA_RUN_AT_FIXED_RATE =
+    public static final ReflectionLazyLoader<Method> FOLIA_RUN_AT_FIXED_RATE_ASYNC =
             new ReflectionBuilder(ASYNC_SCHEDULER_CLASS)
                     .withMethodName("runAtFixedRate")
                     .withParameterTypes(Plugin.class, Consumer.class, long.class, long.class, TimeUnit.class)
@@ -114,6 +127,14 @@ public final class Reflections {
             new ReflectionBuilder(GLOBAL_REGION_SCHEDULER_CLASS)
                     .withMethodName("runNow")
                     .withParameterTypes(Plugin.class, Consumer.class)
+                    .withExpectResult(SCHEDULED_TASK_CLASS)
+                    .setStrict(FoliaUtil.isFolia())
+                    .toMethodReflection();
+
+    public static final ReflectionLazyLoader<Method> FOLIA_EXECUTE_REGION =
+            new ReflectionBuilder(REGION_SCHEDULER_CLASS)
+                    .withMethodName("execute")
+                    .withParameterTypes(Plugin.class, Location.class, Runnable.class)
                     .withExpectResult(SCHEDULED_TASK_CLASS)
                     .setStrict(FoliaUtil.isFolia())
                     .toMethodReflection();

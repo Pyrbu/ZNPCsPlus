@@ -1,10 +1,9 @@
 package lol.pyr.znpcsplus.interaction.playercommand;
 
-import lol.pyr.znpcsplus.interaction.InteractionAction;
 import lol.pyr.znpcsplus.api.interaction.InteractionType;
+import lol.pyr.znpcsplus.interaction.InteractionAction;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.util.PapiUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class PlayerCommandAction extends InteractionAction {
@@ -20,7 +19,7 @@ public class PlayerCommandAction extends InteractionAction {
     @Override
     public void run(Player player) {
         String cmd = command.replace("{player}", player.getName()).replace("{uuid}", player.getUniqueId().toString());
-        scheduler.runSync(() -> Bukkit.dispatchCommand(player, PapiUtil.set(player, cmd)));
+        scheduler.schedulePlayerCommand(player, PapiUtil.set(player, cmd));
     }
 
     public String getCommand() {

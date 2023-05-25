@@ -1,6 +1,7 @@
 package lol.pyr.znpcsplus.scheduling;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 public class SpigotScheduler extends TaskScheduler {
@@ -9,7 +10,12 @@ public class SpigotScheduler extends TaskScheduler {
     }
 
     @Override
-    public void runSync(Runnable runnable) {
+    public void schedulePlayerCommand(Player player, String command) {
+        runSyncGlobal(() -> Bukkit.dispatchCommand(player, command));
+    }
+
+    @Override
+    public void runSyncGlobal(Runnable runnable) {
         Bukkit.getScheduler().runTask(plugin, runnable);
     }
 

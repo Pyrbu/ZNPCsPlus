@@ -1,6 +1,8 @@
 package lol.pyr.znpcsplus.scheduling;
 
 import lol.pyr.znpcsplus.reflection.Reflections;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.InvocationTargetException;
@@ -13,7 +15,16 @@ public class FoliaScheduler extends TaskScheduler {
     }
 
     @Override
-    public void runSync(Runnable runnable) {
+    public void schedulePlayerCommand(Player player, String command) {
+        try {
+            Object scheduler = Reflections.FOLIA_GET_REGION_SCHEDULER.get().invoke(null);
+            Reflections.FOLIA_EXECUTE_REGION.get().invoke(scheduler, plugin, player.getLocation(), (Runnable) () -> Bukkit.dispatchCommand(player, command));
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void runSyncGlobal(Runnable runnable) {
         try {
             Object scheduler = Reflections.FOLIA_GET_GLOBAL_REGION_SCHEDULER.get().invoke(null);
             Reflections.FOLIA_RUN_NOW_GLOBAL.get().invoke(scheduler, plugin, (Consumer<Object>) o -> runnable.run());
@@ -26,7 +37,7 @@ public class FoliaScheduler extends TaskScheduler {
     public void runLaterAsync(Runnable runnable, long delay) {
         try {
             Object scheduler = Reflections.FOLIA_GET_ASYNC_SCHEDULER.get().invoke(null);
-            Reflections.FOLIA_RUN_DELAYED.get().invoke(scheduler, plugin, (Consumer<Object>) o -> runnable.run(), delay * 50, TimeUnit.MILLISECONDS);
+            Reflections.FOLIA_RUN_DELAYED_ASYNC.get().invoke(scheduler, plugin, (Consumer<Object>) o -> runnable.run(), delay * 50, TimeUnit.MILLISECONDS);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
@@ -36,7 +47,7 @@ public class FoliaScheduler extends TaskScheduler {
     public void runDelayedTimerAsync(Runnable runnable, long delay, long interval) {
         try {
             Object scheduler = Reflections.FOLIA_GET_ASYNC_SCHEDULER.get().invoke(null);
-            Reflections.FOLIA_RUN_AT_FIXED_RATE.get().invoke(scheduler, plugin, (Consumer<Object>) o -> runnable.run(), delay * 50, interval * 50, TimeUnit.MILLISECONDS);
+            Reflections.FOLIA_RUN_AT_FIXED_RATE_ASYNC.get().invoke(scheduler, plugin, (Consumer<Object>) o -> runnable.run(), delay * 50, interval * 50, TimeUnit.MILLISECONDS);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }

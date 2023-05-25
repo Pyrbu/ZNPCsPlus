@@ -1,5 +1,6 @@
 package lol.pyr.znpcsplus.scheduling;
 
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 public abstract class TaskScheduler {
@@ -9,11 +10,9 @@ public abstract class TaskScheduler {
         this.plugin = plugin;
     }
 
-    public abstract void runSync(Runnable runnable);
-
+    public abstract void schedulePlayerCommand(Player player, String command);
+    public abstract void runSyncGlobal(Runnable runnable);
     public abstract void runLaterAsync(Runnable runnable, long delay);
-
     public abstract  void runDelayedTimerAsync(Runnable runnable, long delay, long interval);
-
     public abstract void cancelAll();
 }
