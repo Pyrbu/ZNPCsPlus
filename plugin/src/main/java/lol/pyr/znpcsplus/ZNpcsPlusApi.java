@@ -8,12 +8,12 @@ import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import lol.pyr.znpcsplus.npc.NpcTypeRegistryImpl;
 
-public class ZNPCsPlusApi implements NpcApi {
+public class ZNpcsPlusApi implements NpcApi {
     private final NpcRegistryImpl npcRegistry;
     private final NpcTypeRegistryImpl typeRegistry;
     private final EntityPropertyRegistryImpl propertyRegistry;
 
-    public ZNPCsPlusApi(NpcRegistryImpl npcRegistry, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry) {
+    public ZNpcsPlusApi(NpcRegistryImpl npcRegistry, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry) {
         this.npcRegistry = npcRegistry;
         this.typeRegistry = typeRegistry;
         this.propertyRegistry = propertyRegistry;
