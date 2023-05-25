@@ -45,7 +45,6 @@ public class NpcTypeImpl implements NpcType {
         private final String name;
         private final EntityType type;
         private final List<EntityPropertyImpl<?>> allowedProperties = new ArrayList<>();
-        private boolean globalProperties = true;
         private double hologramOffset = 0;
 
         Builder(EntityPropertyRegistryImpl propertyRegistry, String name, EntityType type) {
@@ -54,18 +53,16 @@ public class NpcTypeImpl implements NpcType {
             this.type = type;
         }
 
-        public Builder addProperties(EntityPropertyImpl<?>... properties) {
-            allowedProperties.addAll(Arrays.asList(properties));
-            return this;
+        public Builder addEquipmentProperties() {
+            return addProperties("helmet", "chestplate", "leggings", "boots", "hand", "offhand");
+        }
+
+        public Builder addHandProperties() {
+            return addProperties("hand", "offhand");
         }
 
         public Builder addProperties(String... names) {
             for (String name : names) allowedProperties.add(propertyRegistry.getByName(name));
-            return this;
-        }
-
-        public Builder setEnableGlobalProperties(boolean enabled) {
-            globalProperties = enabled;
             return this;
         }
 
@@ -75,14 +72,12 @@ public class NpcTypeImpl implements NpcType {
         }
 
         public NpcTypeImpl build() {
-            if (globalProperties) {
-                allowedProperties.add(propertyRegistry.getByName("fire"));
-                allowedProperties.add(propertyRegistry.getByName("invisible"));
-                allowedProperties.add(propertyRegistry.getByName("silent"));
-                allowedProperties.add(propertyRegistry.getByName("look"));
-                if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9))
-                    allowedProperties.add(propertyRegistry.getByName("glow"));
-            }
+            allowedProperties.add(propertyRegistry.getByName("fire"));
+            allowedProperties.add(propertyRegistry.getByName("invisible"));
+            allowedProperties.add(propertyRegistry.getByName("silent"));
+            allowedProperties.add(propertyRegistry.getByName("look"));
+            if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9))
+                allowedProperties.add(propertyRegistry.getByName("glow"));
             return new NpcTypeImpl(name, type, hologramOffset, new HashSet<>(allowedProperties));
         }
     }

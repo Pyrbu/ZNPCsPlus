@@ -25,110 +25,289 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
         return type;
     }
 
-    public void registerDefault(PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry) {
+    private NpcTypeImpl.Builder builder(EntityPropertyRegistryImpl propertyRegistry, String name, EntityType type) {
+        return new NpcTypeImpl.Builder(propertyRegistry, name, type);
+    }
+
+    public void registerDefault(PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl p /* propertyRegistry */) {
         ServerVersion version = packetEvents.getServerManager().getVersion();
 
-        register(new NpcTypeImpl.Builder(propertyRegistry, "player", EntityTypes.PLAYER).setHologramOffset(-0.15D)
-                .addProperties("skin", "skin_layers", "helmet", "chestplate", "leggings", "boots", "hand", "offhand"));
+        register(builder(p, "player", EntityTypes.PLAYER)
+                .setHologramOffset(-0.15D)
+                .addEquipmentProperties());
 
-        register(new NpcTypeImpl.Builder(propertyRegistry, "armor_stand", EntityTypes.ARMOR_STAND));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "bat", EntityTypes.BAT).setHologramOffset(-1.365));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "blaze", EntityTypes.BLAZE));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "cat", EntityTypes.CAT));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "cave_spider", EntityTypes.CAVE_SPIDER));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "chicken", EntityTypes.CHICKEN));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "cow", EntityTypes.COW));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "creeper", EntityTypes.CREEPER).setHologramOffset(-0.3D));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "donkey", EntityTypes.DONKEY));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "elder_guardian", EntityTypes.ELDER_GUARDIAN));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "ender_dragon", EntityTypes.ENDER_DRAGON));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "enderman", EntityTypes.ENDERMAN));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "endermite", EntityTypes.ENDERMITE));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "ghast", EntityTypes.GHAST));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "giant", EntityTypes.GIANT));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "guardian", EntityTypes.GUARDIAN));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "horse", EntityTypes.HORSE));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "iron_golem", EntityTypes.IRON_GOLEM));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "magma_cube", EntityTypes.MAGMA_CUBE));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "mooshroom", EntityTypes.MOOSHROOM));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "mule", EntityTypes.MULE));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "ocelot", EntityTypes.OCELOT));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "pig", EntityTypes.PIG));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "rabbit", EntityTypes.RABBIT));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "sheep", EntityTypes.SHEEP));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "silverfish", EntityTypes.SILVERFISH));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "skeleton", EntityTypes.SKELETON));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "skeleton_horse", EntityTypes.SKELETON_HORSE));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "slime", EntityTypes.SLIME));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "snow_golem", EntityTypes.SNOW_GOLEM));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "spider", EntityTypes.SPIDER));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "squid", EntityTypes.SQUID));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "villager", EntityTypes.VILLAGER));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "witch", EntityTypes.WITCH));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "wither", EntityTypes.WITHER));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "wither_skeleton", EntityTypes.WITHER_SKELETON));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "wolf", EntityTypes.WOLF));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "zombie", EntityTypes.ZOMBIE));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "zombie_horse", EntityTypes.ZOMBIE_HORSE));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "zombie_villager", EntityTypes.ZOMBIE_VILLAGER));
+        // Most hologram offsets generated using Entity#getHeight() in 1.19.4
+
+        register(builder(p, "armor_stand", EntityTypes.ARMOR_STAND)
+                .setHologramOffset(-0.15).addEquipmentProperties());
+
+        register(builder(p, "bat", EntityTypes.BAT)
+                .setHologramOffset(-1.075));
+
+        register(builder(p, "blaze", EntityTypes.BLAZE)
+                .setHologramOffset(-0.175));
+
+        register(builder(p, "cat", EntityTypes.CAT)
+                .setHologramOffset(-1.275));
+
+        register(builder(p, "cave_spider", EntityTypes.CAVE_SPIDER)
+                .setHologramOffset(-1.475));
+
+        register(builder(p, "chicken", EntityTypes.CHICKEN)
+                .setHologramOffset(-1.275));
+
+        register(builder(p, "cow", EntityTypes.COW)
+                .setHologramOffset(-0.575));
+
+        register(builder(p, "creeper", EntityTypes.CREEPER)
+                .setHologramOffset(-0.275));
+
+        register(builder(p, "donkey", EntityTypes.DONKEY)
+                .setHologramOffset(-0.475));
+
+        register(builder(p, "elder_guardian", EntityTypes.ELDER_GUARDIAN)
+                .setHologramOffset(0.0225));
+
+        register(builder(p, "ender_dragon", EntityTypes.ENDER_DRAGON)
+                .setHologramOffset(6.0245));
+
+        register(builder(p, "enderman", EntityTypes.ENDERMAN)
+                .setHologramOffset(0.925));
+
+        register(builder(p, "endermite", EntityTypes.ENDERMITE)
+                .setHologramOffset(-1.675));
+
+        register(builder(p, "ghast", EntityTypes.GHAST)
+                .setHologramOffset(2.025));
+
+        register(builder(p, "giant", EntityTypes.GIANT)
+                .setHologramOffset(10.025)
+                .addEquipmentProperties());
+
+        register(builder(p, "guardian", EntityTypes.GUARDIAN)
+                .setHologramOffset(-1.125));
+
+        register(builder(p, "horse", EntityTypes.HORSE)
+                .setHologramOffset(-0.375));
+
+        register(builder(p, "iron_golem", EntityTypes.IRON_GOLEM)
+                .setHologramOffset(0.725));
+
+        register(builder(p, "magma_cube", EntityTypes.MAGMA_CUBE)); // TODO: Hologram offset scaling with size property
+
+        register(builder(p, "mooshroom", EntityTypes.MOOSHROOM)
+                .setHologramOffset(-0.575));
+
+        register(builder(p, "mule", EntityTypes.MULE)
+                .setHologramOffset(-0.375));
+
+        register(builder(p, "ocelot", EntityTypes.OCELOT)
+                .setHologramOffset(-1.275));
+
+        register(builder(p, "pig", EntityTypes.PIG)
+                .setHologramOffset(-1.075));
+
+        register(builder(p, "rabbit", EntityTypes.RABBIT)
+                .setHologramOffset(-1.475));
+
+        register(builder(p, "sheep", EntityTypes.SHEEP)
+                .setHologramOffset(-0.675));
+
+        register(builder(p, "silverfish", EntityTypes.SILVERFISH)
+                .setHologramOffset(-1.675));
+
+        register(builder(p, "skeleton", EntityTypes.SKELETON)
+                .setHologramOffset(0.015)
+                .addEquipmentProperties());
+
+        register(builder(p, "skeleton_horse", EntityTypes.SKELETON_HORSE)
+                .setHologramOffset(-0.375));
+
+        register(builder(p, "slime", EntityTypes.SLIME)); // TODO: Hologram offset scaling with size property
+
+        register(builder(p, "snow_golem", EntityTypes.SNOW_GOLEM)
+                .setHologramOffset(-0.075));
+
+        register(builder(p, "spider", EntityTypes.SPIDER)
+                .setHologramOffset(-1.075));
+
+        register(builder(p, "squid", EntityTypes.SQUID)
+                .setHologramOffset(-1.175));
+
+        register(builder(p, "villager", EntityTypes.VILLAGER)
+                .setHologramOffset(-0.025)
+                .addProperties("hand"));
+
+        register(builder(p, "witch", EntityTypes.WITCH)
+                .setHologramOffset(-0.025)
+                .addProperties("hand"));
+
+        register(builder(p, "wither", EntityTypes.WITHER)
+                .setHologramOffset(1.525));
+
+        register(builder(p, "wither_skeleton", EntityTypes.WITHER_SKELETON)
+                .setHologramOffset(0.425)
+                .addEquipmentProperties());
+
+        register(builder(p, "wolf", EntityTypes.WOLF)
+                .setHologramOffset(-1.125));
+
+        register(builder(p, "zombie", EntityTypes.ZOMBIE)
+                .setHologramOffset(-0.025)
+                .addEquipmentProperties());
+
+        register(builder(p, "zombie_horse", EntityTypes.ZOMBIE_HORSE)
+                .setHologramOffset(-0.375));
+
+        register(builder(p, "zombie_villager", EntityTypes.ZOMBIE_VILLAGER)
+                .setHologramOffset(-1.0)
+                .addEquipmentProperties());
 
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_9)) return;
-        register(new NpcTypeImpl.Builder(propertyRegistry, "shulker", EntityTypes.SHULKER));
+
+        register(builder(p, "shulker", EntityTypes.SHULKER)
+                .setHologramOffset(-0.975));
 
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_10)) return;
-        register(new NpcTypeImpl.Builder(propertyRegistry, "husk", EntityTypes.HUSK));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "polar_bear", EntityTypes.POLAR_BEAR));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "stray", EntityTypes.STRAY));
+
+        register(builder(p, "husk", EntityTypes.HUSK)
+                .setHologramOffset(-0.025)
+                .addEquipmentProperties());
+
+        register(builder(p, "polar_bear", EntityTypes.POLAR_BEAR)
+                .setHologramOffset(-0.575));
+
+        register(builder(p, "stray", EntityTypes.STRAY)
+                .setHologramOffset(0.015)
+                .addEquipmentProperties());
 
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_11)) return;
-        register(new NpcTypeImpl.Builder(propertyRegistry, "evoker", EntityTypes.EVOKER));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "llama", EntityTypes.LLAMA));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "vex", EntityTypes.VEX));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "vindicator", EntityTypes.VINDICATOR));
+
+        register(builder(p, "evoker", EntityTypes.EVOKER)
+                .setHologramOffset(-0.025));
+
+        register(builder(p, "llama", EntityTypes.LLAMA)
+                .setHologramOffset(-0.105));
+
+        register(builder(p, "vex", EntityTypes.VEX)
+                .setHologramOffset(-1.175)
+                .addHandProperties());
+
+        register(builder(p, "vindicator", EntityTypes.VINDICATOR)
+                .setHologramOffset(-0.025));
 
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_12)) return;
-        register(new NpcTypeImpl.Builder(propertyRegistry, "illusioner", EntityTypes.ILLUSIONER));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "parrot", EntityTypes.PARROT));
+
+        register(builder(p, "illusioner", EntityTypes.ILLUSIONER)
+                .setHologramOffset(-0.025));
+
+        register(builder(p, "parrot", EntityTypes.PARROT)
+                .setHologramOffset(-1.075));
 
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_13)) return;
-        register(new NpcTypeImpl.Builder(propertyRegistry, "cod", EntityTypes.COD));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "dolphin", EntityTypes.DOLPHIN));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "drowned", EntityTypes.DROWNED));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "phantom", EntityTypes.PHANTOM));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "pufferfish", EntityTypes.PUFFERFISH));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "salmon", EntityTypes.SALMON));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "tropical_fish", EntityTypes.TROPICAL_FISH));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "turtle", EntityTypes.TURTLE));
+
+        register(builder(p, "cod", EntityTypes.COD)
+                .setHologramOffset(-1.675));
+
+        register(builder(p, "dolphin", EntityTypes.DOLPHIN)
+                .setHologramOffset(-1.375)
+                .addProperties("hand"));
+
+        register(builder(p, "drowned", EntityTypes.DROWNED)
+                .setHologramOffset(-0.025)
+                .addEquipmentProperties());
+
+        register(builder(p, "phantom", EntityTypes.PHANTOM)
+                .setHologramOffset(-1.475));
+
+        register(builder(p, "pufferfish", EntityTypes.PUFFERFISH)
+                .setHologramOffset(-1.625));
+
+        register(builder(p, "salmon", EntityTypes.SALMON)
+                .setHologramOffset(-1.575));
+
+        register(builder(p, "tropical_fish", EntityTypes.TROPICAL_FISH)
+                .setHologramOffset(-1.575));
+
+        register(builder(p, "turtle", EntityTypes.TURTLE)
+                .setHologramOffset(-1.575));
 
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_14)) return;
-        register(new NpcTypeImpl.Builder(propertyRegistry, "fox", EntityTypes.FOX));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "panda", EntityTypes.PANDA));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "pillager", EntityTypes.PILLAGER));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "ravager", EntityTypes.RAVAGER));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "trader_llama", EntityTypes.TRADER_LLAMA));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "wandering_trader", EntityTypes.WANDERING_TRADER));
+
+        register(builder(p, "fox", EntityTypes.FOX)
+                .setHologramOffset(-1.275)
+                .addProperties("hand"));
+
+        register(builder(p, "panda", EntityTypes.PANDA)
+                .setHologramOffset(-0.725));
+
+        register(builder(p, "pillager", EntityTypes.PILLAGER)
+                .setHologramOffset(-0.025)
+                .addHandProperties());
+
+        register(builder(p, "ravager", EntityTypes.RAVAGER)
+                .setHologramOffset(0.225));
+
+        register(builder(p, "trader_llama", EntityTypes.TRADER_LLAMA)
+                .setHologramOffset(-0.105));
+
+        register(builder(p, "wandering_trader", EntityTypes.WANDERING_TRADER)
+                .setHologramOffset(-0.025)
+                .addProperties("hand"));
 
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_15)) return;
-        register(new NpcTypeImpl.Builder(propertyRegistry, "bee", EntityTypes.BEE));
+
+        register(builder(p, "bee", EntityTypes.BEE)
+                .setHologramOffset(-1.375));
 
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_16)) return;
-        register(new NpcTypeImpl.Builder(propertyRegistry, "hoglin", EntityTypes.HOGLIN));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "piglin", EntityTypes.PIGLIN));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "piglin_brute", EntityTypes.PIGLIN_BRUTE));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "strider", EntityTypes.STRIDER));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "zoglin", EntityTypes.ZOGLIN));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "zombified_piglin", EntityTypes.ZOMBIFIED_PIGLIN));
+
+        register(builder(p, "hoglin", EntityTypes.HOGLIN)
+                .setHologramOffset(-0.575));
+
+        register(builder(p, "piglin", EntityTypes.PIGLIN)
+                .setHologramOffset(-1.0)
+                .addEquipmentProperties());
+
+        register(builder(p, "piglin_brute", EntityTypes.PIGLIN_BRUTE)
+                .setHologramOffset(-0.025)
+                .addEquipmentProperties());
+
+        register(builder(p, "strider", EntityTypes.STRIDER)
+                .setHologramOffset(-0.275));
+
+        register(builder(p, "zoglin", EntityTypes.ZOGLIN)
+                .setHologramOffset(-0.575));
+
+        register(builder(p, "zombified_piglin", EntityTypes.ZOMBIFIED_PIGLIN)
+                .setHologramOffset(-0.025)
+                .addEquipmentProperties());
 
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_17)) return;
-        register(new NpcTypeImpl.Builder(propertyRegistry, "axolotl", EntityTypes.AXOLOTL));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "glow_squid", EntityTypes.GLOW_SQUID));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "goat", EntityTypes.GOAT));
+
+        register(builder(p, "axolotl", EntityTypes.AXOLOTL)
+                .setHologramOffset(-1.555));
+
+        register(builder(p, "glow_squid", EntityTypes.GLOW_SQUID)
+                .setHologramOffset(-1.175));
+
+        register(builder(p, "goat", EntityTypes.GOAT)
+                .setHologramOffset(-0.675));
 
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_19)) return;
-        register(new NpcTypeImpl.Builder(propertyRegistry, "allay", EntityTypes.ALLAY));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "frog", EntityTypes.FROG));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "tadpole", EntityTypes.TADPOLE));
-        register(new NpcTypeImpl.Builder(propertyRegistry, "warden", EntityTypes.WARDEN));
+
+        register(builder(p, "allay", EntityTypes.ALLAY)
+                .setHologramOffset(-1.375)
+                .addHandProperties());
+
+        register(builder(p, "frog", EntityTypes.FROG)
+                .setHologramOffset(-1.475));
+
+        register(builder(p, "tadpole", EntityTypes.TADPOLE)
+                .setHologramOffset(-1.675));
+
+        register(builder(p, "warden", EntityTypes.WARDEN)
+                .setHologramOffset(0.925));
     }
 
     public Collection<NpcTypeImpl> getAll() {
