@@ -11,8 +11,8 @@ This plugin is a remake of a plugin called ZNPCs, we originally started because 
 - 100% Packet Based - Nothing is ran on the main thread
 - Performance & stability oriented code
 - Support for all versions from 1.8 to 1.19.4
-- Support for multiple different storage options (WIP)
-- Intuitive command system (WIP)
+- Support for multiple different storage options
+- Intuitive command system
 
 ### Requirements, Extensions & Supported Software
 Requirements:
