@@ -81,7 +81,7 @@ public class V1_8PacketFactory implements PacketFactory {
     public void teleportEntity(Player player, PacketEntity entity) {
         NpcLocation location = entity.getLocation();
         sendPacket(player, new WrapperPlayServerEntityTeleport(entity.getEntityId(), npcLocationToVector(location), location.getYaw(), location.getPitch(), true));
-        if (entity.getType() == EntityTypes.PLAYER) sendPacket(player, new WrapperPlayServerEntityHeadLook(entity.getEntityId(), location.getYaw()));
+        sendPacket(player, new WrapperPlayServerEntityHeadLook(entity.getEntityId(), location.getYaw()));
     }
 
     @Override

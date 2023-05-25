@@ -142,7 +142,7 @@ public class ZNpcsPlus extends JavaPlugin {
         shutdownTasks.add(adventure::close);
         if (configManager.getConfig().autoSaveEnabled()) shutdownTasks.add(npcRegistry::save);
 
-        NpcApiProvider.register(this, new ZNPCsPlusApi(npcRegistry, typeRegistry, propertyRegistry));
+        NpcApiProvider.register(this, new ZNpcsPlusApi(npcRegistry, typeRegistry, propertyRegistry));
         enabled = true;
         log(ChatColor.WHITE + " * Loading complete! (" + (System.currentTimeMillis() - before) + "ms)");
         log("");
@@ -156,6 +156,7 @@ public class ZNpcsPlus extends JavaPlugin {
                 entry.setProcessed(true);
                 NpcImpl npc = entry.getNpc();
                 npc.getHologram().addLineComponent(Component.text("Hello, World!"));
+                npc.setProperty(propertyRegistry.getByName("look", Boolean.class), true);
                 i++;
             }
         }
