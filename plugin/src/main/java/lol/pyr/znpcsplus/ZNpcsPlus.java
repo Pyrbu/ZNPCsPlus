@@ -142,7 +142,7 @@ public class ZNpcsPlus extends JavaPlugin {
         shutdownTasks.add(adventure::close);
         if (configManager.getConfig().autoSaveEnabled()) shutdownTasks.add(npcRegistry::save);
 
-        NpcApiProvider.register(new ZNPCsPlusApi(npcRegistry, typeRegistry, propertyRegistry));
+        NpcApiProvider.register(this, new ZNPCsPlusApi(npcRegistry, typeRegistry, propertyRegistry));
         enabled = true;
         log(ChatColor.WHITE + " * Loading complete! (" + (System.currentTimeMillis() - before) + "ms)");
         log("");
