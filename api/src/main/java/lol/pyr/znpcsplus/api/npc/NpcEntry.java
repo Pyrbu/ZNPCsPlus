@@ -1,6 +1,7 @@
 package lol.pyr.znpcsplus.api.npc;
 
 public interface NpcEntry {
+    String getId();
     Npc getNpc();
 
     boolean isProcessed();
