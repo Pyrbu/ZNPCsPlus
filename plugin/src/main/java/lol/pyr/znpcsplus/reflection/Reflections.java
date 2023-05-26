@@ -135,7 +135,6 @@ public final class Reflections {
             new ReflectionBuilder(REGION_SCHEDULER_CLASS)
                     .withMethodName("execute")
                     .withParameterTypes(Plugin.class, Location.class, Runnable.class)
-                    .withExpectResult(SCHEDULED_TASK_CLASS)
                     .setStrict(FoliaUtil.isFolia())
                     .toMethodReflection();
 
