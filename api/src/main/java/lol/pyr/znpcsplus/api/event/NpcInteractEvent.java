@@ -25,4 +25,8 @@ public class NpcInteractEvent extends CancellableNpcEvent implements Cancellable
     public InteractionType getClickType() {
         return clickType;
     }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 }
