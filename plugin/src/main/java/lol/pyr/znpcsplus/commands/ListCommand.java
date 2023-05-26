@@ -20,7 +20,7 @@ public class ListCommand implements CommandHandler {
 
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
-        TextComponent.Builder component = Component.text("Npc's:\n").color(NamedTextColor.GOLD).toBuilder();
+        TextComponent.Builder component = Component.text("Npc List:\n").color(NamedTextColor.GOLD).toBuilder();
         for (String id : npcRegistry.getModifiableIds()) {
             NpcImpl npc = npcRegistry.get(id).getNpc();
             NpcLocation location = npc.getLocation();
