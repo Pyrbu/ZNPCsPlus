@@ -44,8 +44,12 @@ public class PropertiesCommand implements CommandHandler {
                 valueName = bukkitStack.toString();
             }
         }
+        else if (type == NamedTextColor.class && context.argSize() < 1 && npc.getProperty(property) != null) {
+            value = null;
+            valueName = "NONE";
+        }
         else {
-            value = context.parse(property.getType());
+            value = context.parse(type);
             valueName = String.valueOf(value);
         }
 
