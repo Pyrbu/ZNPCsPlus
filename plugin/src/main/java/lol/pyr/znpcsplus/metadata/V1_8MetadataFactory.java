@@ -15,6 +15,11 @@ public class V1_8MetadataFactory implements MetadataFactory {
     }
 
     @Override
+    public EntityData cape(boolean enabled) {
+        return createCape(10, enabled);
+    }
+
+    @Override
     public EntityData effects(boolean onFire, boolean glowing, boolean invisible) {
         return new EntityData(0, EntityDataTypes.BYTE, (byte) ((onFire ? 0x01 : 0) | (invisible ? 0x20 : 0)));
     }
@@ -39,5 +44,9 @@ public class V1_8MetadataFactory implements MetadataFactory {
 
     protected EntityData createSkinLayers(int index, boolean enabled) {
         return new EntityData(index, EntityDataTypes.BYTE, enabled ? Byte.MAX_VALUE : 0);
+    }
+
+    protected EntityData createCape(int index, boolean enabled) {
+        return new EntityData(index, EntityDataTypes.BYTE, (byte) (enabled ? 0x01 : 0));
     }
 }

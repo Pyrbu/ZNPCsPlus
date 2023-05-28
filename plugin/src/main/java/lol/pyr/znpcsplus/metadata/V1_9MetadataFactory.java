@@ -15,6 +15,11 @@ public class V1_9MetadataFactory extends V1_8MetadataFactory {
     }
 
     @Override
+    public EntityData cape(boolean enabled) {
+        return createCape(12, enabled);
+    }
+
+    @Override
     public EntityData effects(boolean onFire, boolean glowing, boolean invisible) {
         return new EntityData(0, EntityDataTypes.BYTE, (byte) ((onFire ? 0x01 : 0) | (invisible ? 0x20 : 0) | (glowing ? 0x40 : 0)));
     }

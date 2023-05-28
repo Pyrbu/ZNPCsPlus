@@ -6,21 +6,21 @@ import net.kyori.adventure.text.Component;
 import java.util.Collection;
 
 /**
- * 1.8  https://wiki.vg/index.php?title=Entity_metadata&oldid=7415
- * 1.9  https://wiki.vg/index.php?title=Entity_metadata&oldid=7968
- * 1.10 https://wiki.vg/index.php?title=Entity_metadata&oldid=8241
- * 1.11 https://wiki.vg/index.php?title=Entity_metadata&oldid=8534
- * 1.12 https://wiki.vg/index.php?title=Entity_metadata&oldid=14048
- * 1.13 https://wiki.vg/index.php?title=Entity_metadata&oldid=14800
- * 1.14 https://wiki.vg/index.php?title=Entity_metadata&oldid=15240
- * 1.15 https://wiki.vg/index.php?title=Entity_metadata&oldid=15991
- * 1.16 https://wiki.vg/index.php?title=Entity_metadata&oldid=16539
- * 1.17 https://wiki.vg/index.php?title=Entity_metadata&oldid=17521
- * 1.18 NOTHING CHANGED
- * 1.19 https://wiki.vg/index.php?title=Entity_metadata
+ * 1.8  <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=7415">...</a>
+ * 1.9  <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=7968">...</a>
+ * 1.10 <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=8241">...</a>
+ * 1.11 <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=8534">...</a>
+ * 1.12 <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=14048">...</a>
+ * 1.13 <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=14800">...</a>
+ * 1.14 <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=15240">...</a>
+ * 1.15 <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=15991">...</a>
+ * 1.16 <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=16539">...</a>
+ * 1.17 <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=17521">...</a>
+ * 1.18-1.19 <a href="https://wiki.vg/index.php?title=Entity_metadata">...</a>
  */
 public interface MetadataFactory {
     EntityData skinLayers(boolean enabled);
+    EntityData cape(boolean enabled);
     EntityData effects(boolean onFire, boolean glowing, boolean invisible);
     EntityData silent(boolean enabled);
     Collection<EntityData> name(Component name);
