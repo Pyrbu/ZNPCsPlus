@@ -61,7 +61,7 @@ public class SkinCache {
                 }
             } catch (IOException exception) {
                 if (!configManager.getConfig().disableSkinFetcherWarnings()) {
-                    logger.warning("Failed to uuid from player name:");
+                    logger.warning("Failed to get uuid from player name:");
                     exception.printStackTrace();
                 }
             } finally {
