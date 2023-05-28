@@ -13,9 +13,11 @@ import lol.pyr.director.adventure.parse.primitive.DoubleParser;
 import lol.pyr.director.adventure.parse.primitive.IntegerParser;
 import lol.pyr.director.common.message.Message;
 import lol.pyr.znpcsplus.api.NpcApiProvider;
+import lol.pyr.znpcsplus.api.interaction.InteractionType;
 import lol.pyr.znpcsplus.commands.*;
 import lol.pyr.znpcsplus.commands.action.ActionAddCommand;
 import lol.pyr.znpcsplus.commands.action.ActionDeleteCommand;
+import lol.pyr.znpcsplus.commands.action.ActionEditCommand;
 import lol.pyr.znpcsplus.commands.action.ActionListCommand;
 import lol.pyr.znpcsplus.commands.hologram.*;
 import lol.pyr.znpcsplus.commands.storage.LoadAllCommand;
@@ -25,7 +27,6 @@ import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.interaction.ActionRegistry;
 import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
-import lol.pyr.znpcsplus.api.interaction.InteractionType;
 import lol.pyr.znpcsplus.metadata.*;
 import lol.pyr.znpcsplus.npc.*;
 import lol.pyr.znpcsplus.packets.*;
@@ -117,7 +118,7 @@ public class ZNpcsPlus extends JavaPlugin {
 
         log(ChatColor.WHITE + " * Registerring components...");
         typeRegistry.registerDefault(packetEvents, propertyRegistry);
-        actionRegistry.registerTypes(npcRegistry, scheduler, adventure, bungeeConnector, textSerializer);
+        actionRegistry.registerTypes(scheduler, adventure, bungeeConnector, textSerializer);
         packetEvents.getEventManager().registerListener(new InteractionPacketListener(userManager, npcRegistry), PacketListenerPriority.MONITOR);
         new Metrics(this, PLUGIN_ID);
         pluginManager.registerEvents(new UserListener(userManager), this);
@@ -243,8 +244,9 @@ public class ZNpcsPlus extends JavaPlugin {
                         .addSubcommand("set", new HoloSetCommand(npcRegistry, textSerializer))
                         .addSubcommand("offset", new HoloOffsetCommand(npcRegistry)))
                 .addSubcommand("action", new MultiCommand()
-                        .addSubcommand("add", new ActionAddCommand(actionRegistry))
+                        .addSubcommand("add", new ActionAddCommand(npcRegistry, actionRegistry))
                         .addSubcommand("delete", new ActionDeleteCommand(npcRegistry))
+                        .addSubcommand("edit", new ActionEditCommand(npcRegistry, actionRegistry))
                         .addSubcommand("list", new ActionListCommand()))
         );
     }

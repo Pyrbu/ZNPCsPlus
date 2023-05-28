@@ -2,11 +2,11 @@ package lol.pyr.znpcsplus.interaction.consolecommand;
 
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.common.command.CommandExecutionException;
+import lol.pyr.znpcsplus.api.interaction.InteractionType;
+import lol.pyr.znpcsplus.interaction.InteractionAction;
 import lol.pyr.znpcsplus.interaction.InteractionActionType;
 import lol.pyr.znpcsplus.interaction.InteractionCommandHandler;
-import lol.pyr.znpcsplus.api.interaction.InteractionType;
-import lol.pyr.znpcsplus.npc.NpcEntryImpl;
-import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
+import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -18,11 +18,9 @@ import java.util.List;
 
 public class ConsoleCommandActionType implements InteractionActionType<ConsoleCommandAction>, InteractionCommandHandler {
     private final TaskScheduler scheduler;
-    private final NpcRegistryImpl npcRegistry;
 
-    public ConsoleCommandActionType(TaskScheduler scheduler, NpcRegistryImpl npcRegistry) {
+    public ConsoleCommandActionType(TaskScheduler scheduler) {
         this.scheduler = scheduler;
-        this.npcRegistry = npcRegistry;
     }
 
     @Override
@@ -48,21 +46,28 @@ public class ConsoleCommandActionType implements InteractionActionType<ConsoleCo
     }
 
     @Override
-    public void run(CommandContext context) throws CommandExecutionException {
-        context.setUsage(context.getUsage() + " consolecommand <id> <type> <cooldown seconds> <command>");
-        NpcEntryImpl entry = context.parse(NpcEntryImpl.class);
+    public InteractionAction parse(CommandContext context, NpcImpl npc) throws CommandExecutionException {
+        context.setUsage(context.getUsage() + getSubcommandName() + " <type> <cooldown seconds> <command>");
         InteractionType type = context.parse(InteractionType.class);
         long cooldown = (long) (context.parse(Double.class) * 1000D);
         String command = context.dumpAllArgs();
-        entry.getNpc().addAction(new ConsoleCommandAction(scheduler, command, type, cooldown));
-        context.send(Component.text("Added a console command action to the npc with the command " + command, NamedTextColor.GREEN));
+        ConsoleCommandAction action = new ConsoleCommandAction(scheduler, command, type, cooldown);
+        if (npc != null) {
+            npc.addAction(action);
+            context.send(Component.text("Added a console command action to the npc with the command " + action.getCommand(), NamedTextColor.GREEN));
+        }
+        return action;
+    }
+
+    @Override
+    public void run(CommandContext context) throws CommandExecutionException {
+
     }
 
     @Override
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
-        if (context.argSize() == 1) return context.suggestCollection(npcRegistry.getModifiableIds());
-        if (context.argSize() == 2) return context.suggestEnum(InteractionType.values());
-        if (context.argSize() == 3) return context.suggestLiteral("1");
+        if (context.argSize() == 1) return context.suggestEnum(InteractionType.values());
+        if (context.argSize() == 2) return context.suggestLiteral("1");
         return Collections.emptyList();
     }
 }
