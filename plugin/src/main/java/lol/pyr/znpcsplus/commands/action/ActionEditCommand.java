@@ -29,7 +29,7 @@ public class ActionEditCommand implements CommandHandler {
 
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
-        context.setUsage(context.getLabel() + " action edit <id> <action id> <action type> ...");
+        context.setUsage(context.getLabel() + " action edit <id> <action index> <action type> ...");
         NpcEntryImpl entry = context.parse(NpcEntryImpl.class);
         int index = context.parse(Integer.class);
         if (index >= entry.getNpc().getActions().size() || index < 0) context.halt(Component.text("That npc doesn't have any action with the index " + index, NamedTextColor.RED));
@@ -42,7 +42,7 @@ public class ActionEditCommand implements CommandHandler {
             context.send(Component.text("Invalid action type, available action types:\n" +
                     commands.stream().map(InteractionCommandHandler::getSubcommandName).collect(Collectors.joining(", ")), NamedTextColor.RED));
         }
-        InteractionAction newAction = this.commandHandler.parse(context, null);
+        InteractionAction newAction = this.commandHandler.parse(context);
         entry.getNpc().editAction(index, newAction);
         context.send(Component.text("Edited action with index " + index + " of Npc " + entry.getId(), NamedTextColor.GREEN));
     }
