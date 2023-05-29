@@ -6,10 +6,7 @@ import lol.pyr.znpcsplus.api.interaction.InteractionType;
 import lol.pyr.znpcsplus.interaction.InteractionAction;
 import lol.pyr.znpcsplus.interaction.InteractionActionType;
 import lol.pyr.znpcsplus.interaction.InteractionCommandHandler;
-import lol.pyr.znpcsplus.npc.NpcImpl;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.nio.charset.StandardCharsets;
@@ -49,22 +46,16 @@ public class MessageActionType implements InteractionActionType<MessageAction>, 
     }
 
     @Override
-    public InteractionAction parse(CommandContext context, NpcImpl npc) throws CommandExecutionException {
-        context.setUsage(context.getUsage() + " <type> <cooldown seconds> <message>");
-        InteractionType type = context.parse(InteractionType.class);
-        long cooldown = (long) (context.parse(Double.class) * 1000D);
-        String message = context.dumpAllArgs();
-        MessageAction action = new MessageAction(adventure, message, type, textSerializer, cooldown);
-        if (npc != null) {
-            npc.addAction(action);
-            context.send(Component.text("Added a message action to the npc with the message ", NamedTextColor.GREEN).append(Component.text(message)));
-        }
-        return action;
+    public void appendUsage(CommandContext context) {
+        context.setUsage(context.getUsage() + " " + getSubcommandName() + " <id> <click type> <cooldown seconds> <message>");
     }
 
     @Override
-    public void run(CommandContext context) throws CommandExecutionException {
-
+    public InteractionAction parse(CommandContext context) throws CommandExecutionException {
+        InteractionType type = context.parse(InteractionType.class);
+        long cooldown = (long) (context.parse(Double.class) * 1000D);
+        String message = context.dumpAllArgs();
+        return new MessageAction(adventure, message, type, textSerializer, cooldown);
     }
 
     @Override

@@ -6,10 +6,7 @@ import lol.pyr.znpcsplus.api.interaction.InteractionType;
 import lol.pyr.znpcsplus.interaction.InteractionAction;
 import lol.pyr.znpcsplus.interaction.InteractionActionType;
 import lol.pyr.znpcsplus.interaction.InteractionCommandHandler;
-import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -46,22 +43,16 @@ public class ConsoleCommandActionType implements InteractionActionType<ConsoleCo
     }
 
     @Override
-    public InteractionAction parse(CommandContext context, NpcImpl npc) throws CommandExecutionException {
-        context.setUsage(context.getUsage() + getSubcommandName() + " <type> <cooldown seconds> <command>");
-        InteractionType type = context.parse(InteractionType.class);
-        long cooldown = (long) (context.parse(Double.class) * 1000D);
-        String command = context.dumpAllArgs();
-        ConsoleCommandAction action = new ConsoleCommandAction(scheduler, command, type, cooldown);
-        if (npc != null) {
-            npc.addAction(action);
-            context.send(Component.text("Added a console command action to the npc with the command " + action.getCommand(), NamedTextColor.GREEN));
-        }
-        return action;
+    public void appendUsage(CommandContext context) {
+        context.setUsage(context.getUsage() + " " + getSubcommandName() + " <id> <click type> <cooldown seconds> <server>");
     }
 
     @Override
-    public void run(CommandContext context) throws CommandExecutionException {
-
+    public InteractionAction parse(CommandContext context) throws CommandExecutionException {
+        InteractionType type = context.parse(InteractionType.class);
+        long cooldown = (long) (context.parse(Double.class) * 1000D);
+        String command = context.dumpAllArgs();
+        return new ConsoleCommandAction(scheduler, command, type, cooldown);
     }
 
     @Override

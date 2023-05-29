@@ -5,8 +5,6 @@ import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
 import lol.pyr.znpcsplus.interaction.ActionRegistry;
 import lol.pyr.znpcsplus.interaction.InteractionCommandHandler;
-import lol.pyr.znpcsplus.npc.NpcEntryImpl;
-import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -27,11 +25,11 @@ public class ActionAddCommand implements CommandHandler {
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
         List<InteractionCommandHandler> commands = actionRegistry.getCommands();
-        context.setUsage(context.getLabel() + " action add <id> <action type> ...");
-        NpcImpl npc = context.parse(NpcEntryImpl.class).getNpc();
+        context.setUsage(context.getLabel() + " action add <action type> ...");
         String sub = context.popString();
         for (InteractionCommandHandler command : commands) if (command.getSubcommandName().equalsIgnoreCase(sub)) {
-            command.parse(context, npc);
+            context.setUsage(context.getLabel() + " action add ");
+            command.run(context);
             return;
         }
         context.send(Component.text("Invalid action type, available action types:\n" +
