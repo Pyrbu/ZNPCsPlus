@@ -25,7 +25,7 @@ public class PlayerCommandActionType implements InteractionActionType<PlayerComm
 
     @Override
     public String serialize(PlayerCommandAction obj) {
-        return Base64.getEncoder().encodeToString(obj.getCommand().getBytes(StandardCharsets.UTF_8)) + ";" + obj.getCooldown();
+        return Base64.getEncoder().encodeToString(obj.getCommand().getBytes(StandardCharsets.UTF_8)) + ";" + obj.getCooldown() + ";" + obj.getInteractionType().name();
     }
 
     @Override

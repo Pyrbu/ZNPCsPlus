@@ -25,7 +25,7 @@ public class SwitchServerActionType implements InteractionActionType<SwitchServe
 
     @Override
     public String serialize(SwitchServerAction obj) {
-        return Base64.getEncoder().encodeToString(obj.getServer().getBytes(StandardCharsets.UTF_8)) + ";" + obj.getCooldown();
+        return Base64.getEncoder().encodeToString(obj.getServer().getBytes(StandardCharsets.UTF_8)) + ";" + obj.getCooldown() + ";" + obj.getInteractionType().name();
     }
 
     @Override

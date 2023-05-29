@@ -28,7 +28,7 @@ public class MessageActionType implements InteractionActionType<MessageAction>, 
 
     @Override
     public String serialize(MessageAction obj) {
-        return Base64.getEncoder().encodeToString(obj.getMessage().getBytes(StandardCharsets.UTF_8)) + ";" + obj.getCooldown();
+        return Base64.getEncoder().encodeToString(obj.getMessage().getBytes(StandardCharsets.UTF_8)) + ";" + obj.getCooldown() + ";" + obj.getInteractionType().name();
     }
 
     @Override
