@@ -146,4 +146,8 @@ public class NpcImpl extends Viewable implements Npc {
     public void addAction(InteractionAction action) {
         actions.add(action);
     }
+
+    public void editAction(int index, InteractionAction action) {
+        actions.set(index, action);
+    }
 }

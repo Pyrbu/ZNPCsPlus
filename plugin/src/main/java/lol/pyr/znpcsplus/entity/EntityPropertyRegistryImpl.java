@@ -31,6 +31,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("skin", SkinDescriptor.class);
         registerType("name", Component.class);
         registerType("look", false);
+        registerType("cape", true);
 
         registerType("helmet", ItemStack.class);
         registerType("chestplate", ItemStack.class);

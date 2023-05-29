@@ -3,10 +3,10 @@ package lol.pyr.znpcsplus.interaction.message;
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.common.command.CommandExecutionException;
 import lol.pyr.znpcsplus.api.interaction.InteractionType;
+import lol.pyr.znpcsplus.interaction.InteractionAction;
 import lol.pyr.znpcsplus.interaction.InteractionActionType;
 import lol.pyr.znpcsplus.interaction.InteractionCommandHandler;
-import lol.pyr.znpcsplus.npc.NpcEntryImpl;
-import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
+import lol.pyr.znpcsplus.npc.NpcImpl;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -20,12 +20,10 @@ import java.util.List;
 public class MessageActionType implements InteractionActionType<MessageAction>, InteractionCommandHandler {
     private final BukkitAudiences adventure;
     private final LegacyComponentSerializer textSerializer;
-    private final NpcRegistryImpl npcRegistry;
 
-    public MessageActionType(BukkitAudiences adventure, LegacyComponentSerializer textSerializer, NpcRegistryImpl npcRegistry) {
+    public MessageActionType(BukkitAudiences adventure, LegacyComponentSerializer textSerializer) {
         this.adventure = adventure;
         this.textSerializer = textSerializer;
-        this.npcRegistry = npcRegistry;
     }
 
     @Override
@@ -51,21 +49,28 @@ public class MessageActionType implements InteractionActionType<MessageAction>, 
     }
 
     @Override
-    public void run(CommandContext context) throws CommandExecutionException {
-        context.setUsage(context.getUsage() + " message <id> <type> <cooldown seconds> <message>");
-        NpcEntryImpl entry = context.parse(NpcEntryImpl.class);
+    public InteractionAction parse(CommandContext context, NpcImpl npc) throws CommandExecutionException {
+        context.setUsage(context.getUsage() + " <type> <cooldown seconds> <message>");
         InteractionType type = context.parse(InteractionType.class);
         long cooldown = (long) (context.parse(Double.class) * 1000D);
         String message = context.dumpAllArgs();
-        entry.getNpc().addAction(new MessageAction(adventure, message, type, textSerializer, cooldown));
-        context.send(Component.text("Added a message action to the npc with the message ", NamedTextColor.GREEN).append(Component.text(message)));
+        MessageAction action = new MessageAction(adventure, message, type, textSerializer, cooldown);
+        if (npc != null) {
+            npc.addAction(action);
+            context.send(Component.text("Added a message action to the npc with the message ", NamedTextColor.GREEN).append(Component.text(message)));
+        }
+        return action;
+    }
+
+    @Override
+    public void run(CommandContext context) throws CommandExecutionException {
+
     }
 
     @Override
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
-        if (context.argSize() == 1) return context.suggestCollection(npcRegistry.getModifiableIds());
-        if (context.argSize() == 2) return context.suggestEnum(InteractionType.values());
-        if (context.argSize() == 3) return context.suggestLiteral("1");
+        if (context.argSize() == 1) return context.suggestEnum(InteractionType.values());
+        if (context.argSize() == 2) return context.suggestLiteral("1");
         return Collections.emptyList();
     }
 }

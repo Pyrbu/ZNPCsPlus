@@ -7,4 +7,9 @@ public class V1_14MetadataFactory extends V1_13MetadataFactory {
     public EntityData skinLayers(boolean enabled) {
         return createSkinLayers(15, enabled);
     }
+
+    @Override
+    public EntityData cape(boolean enabled) {
+        return createCape(15, enabled);
+    }
 }

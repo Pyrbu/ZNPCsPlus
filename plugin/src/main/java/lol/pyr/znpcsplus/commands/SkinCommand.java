@@ -51,7 +51,7 @@ public class SkinCommand implements CommandHandler {
             String name = context.dumpAllArgs();
             context.send(Component.text("Fetching skin \"" + name + "\"...", NamedTextColor.GREEN));
             PrefetchedDescriptor.forPlayer(skinCache, name).thenAccept(skin -> {
-                if (skin == null) {
+                if (skin.getSkin() == null) {
                     context.send(Component.text("Failed to fetch skin, are you sure the player name is valid?", NamedTextColor.RED));
                     return;
                 }
