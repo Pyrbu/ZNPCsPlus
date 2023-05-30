@@ -27,9 +27,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Color;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Team;
 import org.bukkit.util.StringUtil;
 
 import java.lang.reflect.Method;

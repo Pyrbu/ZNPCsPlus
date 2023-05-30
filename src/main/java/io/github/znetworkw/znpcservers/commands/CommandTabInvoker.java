@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 public class CommandTabInvoker {
     private final Command command;
     private final Method commandTabMethod;

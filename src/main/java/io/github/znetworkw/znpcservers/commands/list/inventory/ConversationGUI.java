@@ -34,7 +34,7 @@ public class ConversationGUI extends ZInventory {
         this.setCurrentPage(new MainPage(this));
     }
 
-    @SuppressWarnings({"UnstableApiUsage", "deprecation"})
+    @SuppressWarnings({"UnstableApiUsage"})
     static class MainPage extends ZInventoryPage {
 
         int pageID = 1;
@@ -199,7 +199,7 @@ public class ConversationGUI extends ZInventory {
             }
         }
 
-        @SuppressWarnings({"deprecation", "UnstableApiUsage"})
+        @SuppressWarnings({"UnstableApiUsage"})
         static class EditConversationPage extends ZInventoryPage {
             private final Conversation conversation;
 

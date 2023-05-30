@@ -19,7 +19,6 @@ import org.bukkit.entity.Player;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.stream.Collectors;
 
 public class NPC {
     private static final ConcurrentMap<Integer, NPC> NPC_MAP = new ConcurrentHashMap<>();
