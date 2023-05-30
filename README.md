@@ -9,8 +9,6 @@ in the original project's [official discord server](https://discord.com/invite/R
 - Spigot 1.8 - 1.19.4
 - PlaceholderAPI (OPTIONAL)
 
-If you're using a Minecraft version that rejects Java 17 use the `-DPaper.IgnoreJavaVersion=true` flag
-
 ## Why is it better?
 This fork makes several improvements over the original including:
 - More performance-conscious code
