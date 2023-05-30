@@ -8,6 +8,7 @@ import io.github.znetworkw.znpcservers.reflection.types.MethodReflection;
 import io.github.znetworkw.znpcservers.utility.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
+import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -377,8 +378,15 @@ public final class Reflections {
     public static final Class<?> ENUM_CHAT_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.MINECRAFT)
             .withClassName("EnumChatFormat")).get();
 
+    public static final Class<?> ENUM_ITEM_SLOT = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
+            .withClassName("EnumItemSlot")
+            .setStrict(Utils.versionNewer(9))).get();
+
     public static final Class<?> I_CHAT_BASE_COMPONENT = new ClassReflection(new ReflectionBuilder(ReflectionPackage.CHAT)
             .withClassName("IChatBaseComponent")).get();
+
+    public static final Class<?> ITEM_STACK_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.ITEM)
+            .withClassName("ItemStack")).get();
 
     public static final Class<?> DATA_WATCHER_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.SYNCHER)
             .withClassName("DataWatcher")
@@ -399,6 +407,9 @@ public final class Reflections {
     public static final Class<?> WORLD_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.WORLD_LEVEL)
             .withClassName("World")).get();
 
+    public static final Class<?> CRAFT_ITEM_STACK_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.BUKKIT)
+            .withClassName("inventory.CraftItemStack")).get();
+
     public static final Class<?> WORLD_SERVER_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.SERVER_LEVEL)
             .withClassName("WorldServer")).get();
 
@@ -415,8 +426,15 @@ public final class Reflections {
             .withClassName("PacketPlayOutPlayerInfo")
             .withClassName("ClientboundPlayerInfoUpdatePacket")).get();
 
+    public static final Class<?> PACKET_PLAY_OUT_PLAYER_INFO_REMOVE_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
+            .withClassName("ClientboundPlayerInfoRemovePacket")
+            .setStrict(false)).get();
+
     public static final Class<?> PACKET_PLAY_OUT_SCOREBOARD_TEAM_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
             .withClassName("PacketPlayOutScoreboardTeam")).get();
+
+    public static final Class<?> PACKET_PLAY_OUT_ENTITY_DESTROY_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
+            .withClassName("PacketPlayOutEntityDestroy")).get();
 
     public static final Class<?> SCOREBOARD_CLASS = new ClassReflection(new ReflectionBuilder(ReflectionPackage.WORLD_SCORES)
             .withClassName("Scoreboard")).get();
@@ -459,6 +477,10 @@ public final class Reflections {
             .withClassName(PACKET_PLAY_OUT_PLAYER_INFO_CLASS)
             .withParameterTypes(ENUM_PLAYER_INFO_CLASS, (Utils.BUKKIT_VERSION > 16) ? Collection.class : Iterable.class).withParameterTypes(ENUM_PLAYER_INFO_CLASS, ENTITY_PLAYER_CLASS));
 
+    public static final ReflectionLazyLoader<Constructor<?>> PACKET_PLAY_OUT_PLAYER_INFO_REMOVE_CONSTRUCTOR = new ConstructorReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
+            .withClassName(PACKET_PLAY_OUT_PLAYER_INFO_REMOVE_CLASS)
+            .withParameterTypes(List.class));
+
     public static final ReflectionLazyLoader<Constructor<?>> PACKET_PLAY_OUT_ENTITY_LOOK_CONSTRUCTOR = new ConstructorReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
             .withClassName("PacketPlayOutEntity$PacketPlayOutEntityLook")
             .withParameterTypes(int.class, byte.class, byte.class, boolean.class));
@@ -480,6 +502,14 @@ public final class Reflections {
             .withClassName("PacketPlayOutEntityMetadata")
             .withParameterTypes(int.class, List.class));
 
+    public static final ReflectionLazyLoader<Constructor<?>> PACKET_PLAY_OUT_NAMED_ENTITY_CONSTRUCTOR = new ConstructorReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
+            .withClassName("PacketPlayOutNamedEntitySpawn")
+            .withParameterTypes(ENTITY_HUMAN_CLASS));
+
+    public static final ReflectionLazyLoader<Constructor<?>> PACKET_PLAY_OUT_ENTITY_DESTROY_CONSTRUCTOR = new ConstructorReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
+            .withClassName(PACKET_PLAY_OUT_ENTITY_DESTROY_CLASS)
+            .withParameterTypes(int.class).withParameterTypes(int[].class));
+
     public static final ReflectionLazyLoader<Constructor<?>> PACKET_PLAY_OUT_SPAWN_ENTITY_CONSTRUCTOR = new ConstructorReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
             .withClassName("PacketPlayOutSpawnEntity")
             .withClassName("PacketPlayOutSpawnEntityLiving")
@@ -496,6 +526,18 @@ public final class Reflections {
     public static final ReflectionLazyLoader<Constructor<?>> PACKET_PLAY_OUT_SCOREBOARD_TEAM_CONSTRUCTOR_OLD = new ConstructorReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
             .withClassName(PACKET_PLAY_OUT_SCOREBOARD_TEAM_CLASS));
 
+    public static final ReflectionLazyLoader<Constructor<?>> PACKET_PLAY_OUT_ENTITY_EQUIPMENT_CONSTRUCTOR_OLD = new ConstructorReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
+            .withClassName("PacketPlayOutEntityEquipment")
+            .withParameterTypes(int.class, int.class, ITEM_STACK_CLASS));
+
+    public static final ReflectionLazyLoader<Constructor<?>> PACKET_PLAY_OUT_ENTITY_EQUIPMENT_CONSTRUCTOR_NEWEST_OLD = new ConstructorReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
+            .withClassName("PacketPlayOutEntityEquipment")
+            .withParameterTypes(int.class, ENUM_ITEM_SLOT, ITEM_STACK_CLASS));
+
+    public static final ReflectionLazyLoader<Constructor<?>> PACKET_PLAY_OUT_ENTITY_EQUIPMENT_CONSTRUCTOR_V1 = new ConstructorReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
+            .withClassName("PacketPlayOutEntityEquipment")
+            .withParameterTypes(int.class, List.class));
+
     public static final ReflectionLazyLoader<Constructor<?>> I_CHAT_BASE_COMPONENT_A_CONSTRUCTOR = new ConstructorReflection(new ReflectionBuilder(ReflectionPackage.CHAT)
             .withClassName("ChatComponentText")
             .withParameterTypes(String.class));
@@ -507,6 +549,11 @@ public final class Reflections {
     public static final ReflectionLazyLoader<Constructor<?>> DATA_WATCHER_OBJECT_CONSTRUCTOR = new ConstructorReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
             .withClassName(DATA_WATCHER_OBJECT)
             .withParameterTypes(int.class, DATA_WATCHER_SERIALIZER));
+
+    public static final ReflectionLazyLoader<Method> AS_NMS_COPY_METHOD = new MethodReflection(new ReflectionBuilder(ReflectionPackage.BUKKIT)
+            .withClassName("inventory.CraftItemStack")
+            .withMethodName("asNMSCopy")
+            .withParameterTypes(ItemStack.class));
 
     public static final ReflectionLazyLoader<Method> GET_PROFILE_METHOD = new MethodReflection(new ReflectionBuilder(ReflectionPackage.ENTITY)
             .withClassName(ENTITY_HUMAN_CLASS)
@@ -646,6 +693,11 @@ public final class Reflections {
     public static final ReflectionLazyLoader<Object> UPDATE_LISTED_FIELD = new FieldReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
             .withClassName("ClientboundPlayerInfoUpdatePacket$a")
             .withFieldName("d")).staticValueLoader();
+
+    public static final ReflectionLazyLoader<Object> REMOVE_PLAYER_FIELD = new FieldReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
+            .withClassName("PacketPlayOutPlayerInfo$EnumPlayerInfoAction")
+            .withClassName("ClientboundPlayerInfoUpdatePacket$a")
+            .withFieldName((Utils.BUKKIT_VERSION > 16) ? "e" : "REMOVE_PLAYER")).staticValueLoader();
 
     public static final ReflectionLazyLoader<Object> DATA_WATCHER_REGISTER_FIELD = new FieldReflection(new ReflectionBuilder(ReflectionPackage.PACKET)
             .withClassName(DATA_WATCHER_REGISTRY)

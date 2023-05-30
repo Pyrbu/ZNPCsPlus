@@ -76,7 +76,10 @@ public final class Utils {
 
     public static void sendPackets(ZUser user, Object... packets) {
         try {
-            for (Object packet : packets) if (packet != null) Reflections.SEND_PACKET_METHOD.get().invoke(user.getPlayerConnection(), packet);
+            for (Object packet : packets) {
+                if (packet != null)
+                    Reflections.SEND_PACKET_METHOD.get().invoke(user.getPlayerConnection(), packet);
+            }
         } catch (IllegalAccessException | java.lang.reflect.InvocationTargetException e) {
             e.printStackTrace();
         }
