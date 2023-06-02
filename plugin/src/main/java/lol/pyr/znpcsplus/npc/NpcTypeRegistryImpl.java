@@ -34,7 +34,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
 
         register(builder(p, "player", EntityTypes.PLAYER)
                 .setHologramOffset(-0.15D)
-                .addEquipmentProperties());
+                .addEquipmentProperties()
+                .addProperties("skin_layers", "cape"));
 
         // Most hologram offsets generated using Entity#getHeight() in 1.19.4
 
