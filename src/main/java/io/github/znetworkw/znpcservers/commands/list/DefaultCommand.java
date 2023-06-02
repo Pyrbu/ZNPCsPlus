@@ -1,17 +1,15 @@
 package io.github.znetworkw.znpcservers.commands.list;
 
-import com.github.retrooper.packetevents.protocol.player.EquipmentSlot;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Ints;
-import io.github.znetworkw.znpcservers.commands.CommandTabInformation;
-import lol.pyr.znpcsplus.ZNPCsPlus;
 import io.github.znetworkw.znpcservers.commands.Command;
 import io.github.znetworkw.znpcservers.commands.CommandInformation;
 import io.github.znetworkw.znpcservers.commands.CommandSender;
+import io.github.znetworkw.znpcservers.commands.CommandTabInformation;
 import io.github.znetworkw.znpcservers.commands.list.inventory.ConversationGUI;
 import io.github.znetworkw.znpcservers.configuration.Configuration;
 import io.github.znetworkw.znpcservers.configuration.ConfigurationConstants;
@@ -21,6 +19,7 @@ import io.github.znetworkw.znpcservers.npc.conversation.Conversation;
 import io.github.znetworkw.znpcservers.npc.conversation.ConversationModel;
 import io.github.znetworkw.znpcservers.user.ZUser;
 import io.github.znetworkw.znpcservers.utility.location.ZLocation;
+import lol.pyr.znpcsplus.ZNPCsPlus;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -190,9 +189,6 @@ public class DefaultCommand extends Command {
         if (args.length == 1) {
             return partialTabCompleteOptions(args[0], NPC.all().stream().map(npc -> npc.getNpcPojo().getId()+"").collect(Collectors.toList()));
         }
-        if (args.length == 2) {
-            return Lists.newArrayList("player_name", "link_to_skin");
-        }
         return Lists.newArrayList();
     }
 
@@ -227,7 +223,7 @@ public class DefaultCommand extends Command {
             return partialTabCompleteOptions(args[0], NPC.all().stream().map(npc -> npc.getNpcPojo().getId()+"").collect(Collectors.toList()));
         }
         if (args.length == 2) {
-            return partialTabCompleteOptions(args[1], Arrays.stream(EquipmentSlot.values()).map(Enum::toString).collect(Collectors.toList()));
+            return partialTabCompleteOptions(args[1], Arrays.stream(ItemSlot.values()).map(Enum::toString).collect(Collectors.toList()));
         }
         return Lists.newArrayList();
     }
@@ -434,7 +430,7 @@ public class DefaultCommand extends Command {
                 return Lists.newArrayList();
             case "add":
                 if (args.length == 2) {
-                    return Lists.newArrayList("<npc_id>");
+                    return NPC.all().stream().map(npc -> npc.getNpcPojo().getId()).map(String::valueOf).collect(Collectors.toList());
                 }
                 if (args.length == 3) {
                     return partialTabCompleteOptions(args[2], Arrays.stream(NPCAction.ActionType.values()).map(Enum::toString).collect(Collectors.toList()));
@@ -458,24 +454,34 @@ public class DefaultCommand extends Command {
                 }
             case "remove":
                 if (args.length == 2) {
-                    return Lists.newArrayList("<npc_id>");
+                    return NPC.all().stream().map(npc -> npc.getNpcPojo().getId()).map(String::valueOf).collect(Collectors.toList());
                 }
                 if (args.length == 3) {
-                    return Lists.newArrayList("<action_id>");
+                    try {
+                        NPC npc = NPC.find(Integer.parseInt(args[1]));
+                        return npc.getNpcPojo().getClickActions().stream().map(s -> npc.getNpcPojo().getClickActions().indexOf(s)).map(String::valueOf).collect(Collectors.toList());
+                    } catch (NumberFormatException | NullPointerException e) {
+                        return Lists.newArrayList();
+                    }
                 }
             case "cooldown":
                 if (args.length == 2) {
-                    return Lists.newArrayList("<npc_id>");
+                    return NPC.all().stream().map(npc -> npc.getNpcPojo().getId()).map(String::valueOf).collect(Collectors.toList());
                 }
                 if (args.length == 3) {
-                    return Lists.newArrayList("<action_id>");
+                    try {
+                        NPC npc = NPC.find(Integer.parseInt(args[1]));
+                        return npc.getNpcPojo().getClickActions().stream().map(s -> npc.getNpcPojo().getClickActions().indexOf(s)).map(String::valueOf).collect(Collectors.toList());
+                    } catch (NumberFormatException | NullPointerException e) {
+                        return Lists.newArrayList();
+                    }
                 }
                 if (args.length == 4) {
                     return Lists.newArrayList("<delay_in_seconds>");
                 }
             case "list":
                 if (args.length == 2) {
-                    return Lists.newArrayList("<npc_id>");
+                    return NPC.all().stream().map(npc -> npc.getNpcPojo().getId()).map(String::valueOf).collect(Collectors.toList());
                 }
         }
         return Lists.newArrayList();
@@ -509,10 +515,10 @@ public class DefaultCommand extends Command {
     @CommandTabInformation(name = "toggle", permission = "znpcs.cmd.toggle")
     public List<String> toggleTabComplete(CommandSender sender, String[] args) {
         if (args.length == 0) {
-            return Lists.newArrayList("<npc_id>");
+            return NPC.all().stream().map(npc -> npc.getNpcPojo().getId()).map(String::valueOf).collect(Collectors.toList());
         }
         if (args.length == 1) {
-            return partialTabCompleteOptions(args[0], Lists.newArrayList("look", "glow"));
+            return partialTabCompleteOptions(args[0], Lists.newArrayList("look", "glow", "mirror", "holo"));
         }
         if (args.length == 2) {
             NPCFunction npcFunction = FunctionFactory.findFunctionForName(args[0]);
@@ -573,7 +579,7 @@ public class DefaultCommand extends Command {
     @CommandTabInformation(name = "customize", permission = "znpcs.cmd.customize")
     public List<String> customizeTabComplete(CommandSender sender, String[] args) {
         if (args.length == 0) {
-            return Lists.newArrayList("<npc_id>");
+            return NPC.all().stream().map(npc -> npc.getNpcPojo().getId()).map(String::valueOf).collect(Collectors.toList());
         }
         if (args.length == 1) {
             return partialTabCompleteOptions(args[0], NPC.all().stream().map(npc -> npc.getNpcPojo().getId()+"").collect(Collectors.toList()));
@@ -805,20 +811,19 @@ public class DefaultCommand extends Command {
             return partialTabCompleteOptions(args[0], Lists.newArrayList("create", "remove", "gui", "set"));
         }
         if (args.length == 2) {
-            if (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("set")) {
-                Integer id = Ints.tryParse(args[1]);
-                if (id == null) {
-                    return Collections.emptyList();
-                }
-                NPC npc = NPC.find(id);
-                if (npc == null) {
-                    return Collections.emptyList();
-                }
-
-                return Lists.newArrayList(npc.getNpcPojo().getConversation() == null ? "null" : npc.getNpcPojo().getConversation().getConversationName());
+            if (args[0].equalsIgnoreCase("remove")) {
+                return ConfigurationConstants.NPC_CONVERSATIONS.stream().map(Conversation::getName).collect(Collectors.toList());
+            }
+            if (args[0].equalsIgnoreCase("set")) {
+                return NPC.all().stream().map(npc -> npc.getNpcPojo().getId()+"").collect(Collectors.toList());
             }
         }
         if (args.length == 3) {
+            if (args[0].equalsIgnoreCase("set")) {
+                return ConfigurationConstants.NPC_CONVERSATIONS.stream().map(Conversation::getName).collect(Collectors.toList());
+            }
+        }
+        if (args.length == 4) {
             if (args[0].equalsIgnoreCase("set")) {
                 return Lists.newArrayList("CLICK", "RADIUS");
             }
