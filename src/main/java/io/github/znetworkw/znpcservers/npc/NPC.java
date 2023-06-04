@@ -176,7 +176,7 @@ public class NPC {
             boolean isPlayer = (npcType == NPCType.PLAYER);
             this.nmsEntity = isPlayer ? this.packets.getNms().createPlayer(nmsWorld, this.gameProfile) : (Utils.versionNewer(14) ? npcType.getConstructor().newInstance(npcType.getNmsEntityType(), nmsWorld) : npcType.getConstructor().newInstance(nmsWorld));
             this.bukkitEntity = Reflections.GET_BUKKIT_ENTITY_METHOD.get().invoke(this.nmsEntity);
-            this.uuid = (UUID) Reflections.GET_UNIQUE_ID_METHOD.get().invoke(this.nmsEntity, new Object[0]);
+            this.uuid = (UUID) Reflections.GET_UNIQUE_ID_METHOD.get().invoke(this.nmsEntity);
             if (isPlayer) {
                 try {
                     this.tabConstructor = Reflections.PACKET_PLAY_OUT_PLAYER_INFO_CONSTRUCTOR.get().newInstance(Reflections.ADD_PLAYER_FIELD.get(), Collections.singletonList(this.nmsEntity));
