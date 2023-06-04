@@ -37,6 +37,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class ZNPCsPlus extends JavaPlugin {
@@ -65,6 +66,7 @@ public class ZNPCsPlus extends JavaPlugin {
                 .withHologramHeight(npcType.getHoloHeight())
                 .withLocation(new ZLocation(location))
                 .withNpcType(npcType);
+        pojo.setUuid(UUID.randomUUID());
         ConfigurationConstants.NPC_LIST.add(pojo);
         return new NPC(pojo, true);
     }
