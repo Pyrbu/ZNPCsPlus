@@ -4,7 +4,7 @@ public class ZNpcsAction {
     private String actionType;
     private String clickType;
     private String action;
-    private double delay;
+    private int delay;
 
     public String getActionType() {
         return actionType;
@@ -18,7 +18,7 @@ public class ZNpcsAction {
         return action;
     }
 
-    public double getDelay() {
+    public int getDelay() {
         return delay;
     }
 }
