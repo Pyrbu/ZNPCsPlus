@@ -247,7 +247,7 @@ public class ZNpcsPlus extends JavaPlugin {
                         .addSubcommand("add", new ActionAddCommand(npcRegistry, actionRegistry))
                         .addSubcommand("delete", new ActionDeleteCommand(npcRegistry))
                         .addSubcommand("edit", new ActionEditCommand(npcRegistry, actionRegistry))
-                        .addSubcommand("list", new ActionListCommand()))
+                        .addSubcommand("list", new ActionListCommand(npcRegistry)))
         );
     }
 }
