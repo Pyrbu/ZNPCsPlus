@@ -1,8 +1,14 @@
 package lol.pyr.znpcsplus.interaction.switchserver;
 
-import lol.pyr.znpcsplus.interaction.InteractionAction;
+import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.znpcsplus.api.interaction.InteractionType;
+import lol.pyr.znpcsplus.interaction.InteractionAction;
 import lol.pyr.znpcsplus.util.BungeeConnector;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.entity.Player;
 
 public class SwitchServerAction extends InteractionAction {
@@ -18,6 +24,27 @@ public class SwitchServerAction extends InteractionAction {
     @Override
     public void run(Player player) {
         bungeeConnector.sendPlayer(player, server);
+    }
+
+    @Override
+    public Component getInfo(String id, int index, CommandContext context) {
+        return Component.text(index + ") ", NamedTextColor.GOLD)
+                .append(Component.text("[EDIT]", NamedTextColor.DARK_GREEN, TextDecoration.BOLD)
+                        .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
+                                Component.text("Click to edit this action", NamedTextColor.GRAY)))
+                        .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.SUGGEST_COMMAND,
+                                "/" + context.getLabel() + " action edit " + id + " " + index + " switcserver " + " " + getInteractionType().name() + " " + getCooldown()/1000 + " " + server))
+                .append(Component.text(" | ", NamedTextColor.GRAY))
+                .append(Component.text("[DELETE]", NamedTextColor.RED, TextDecoration.BOLD)
+                        .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
+                                Component.text("Click to delete this action", NamedTextColor.GRAY)))
+                        .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.SUGGEST_COMMAND,
+                                "/" + context.getLabel() + " action delete " + id + " " + index)))
+                .append(Component.text(" | ", NamedTextColor.GRAY))
+                .append(Component.text("Switch Server: ", NamedTextColor.GREEN)
+                        .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
+                                Component.text("Click Type: " + getInteractionType().name() + " Cooldown: " + getCooldown()/1000, NamedTextColor.GREEN))))
+                .append(Component.text(server, NamedTextColor.WHITE)));
     }
 
     public String getServer() {

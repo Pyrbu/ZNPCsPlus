@@ -2,6 +2,7 @@ package lol.pyr.znpcsplus.interaction;
 
 import lol.pyr.znpcsplus.interaction.consolecommand.ConsoleCommandActionType;
 import lol.pyr.znpcsplus.interaction.message.MessageActionType;
+import lol.pyr.znpcsplus.interaction.playerchat.PlayerChatActionType;
 import lol.pyr.znpcsplus.interaction.playercommand.PlayerCommandActionType;
 import lol.pyr.znpcsplus.interaction.switchserver.SwitchServerActionType;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
@@ -26,6 +27,7 @@ public class ActionRegistry {
         register(new PlayerCommandActionType(taskScheduler));
         register(new SwitchServerActionType(bungeeConnector));
         register(new MessageActionType(adventure, textSerializer));
+        register(new PlayerChatActionType());
     }
 
     public void register(InteractionActionType<?> type) {
