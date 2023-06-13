@@ -10,13 +10,8 @@ import java.util.Collection;
 
 public class V1_9MetadataFactory extends V1_8MetadataFactory {
     @Override
-    public EntityData skinLayers(boolean enabled) {
-        return createSkinLayers(13, enabled);
-    }
-
-    @Override
-    public EntityData cape(boolean enabled) {
-        return createCape(12, enabled);
+    public EntityData skinLayers(boolean cape, boolean jacket, boolean leftSleeve, boolean rightSleeve, boolean leftLeg, boolean rightLeg, boolean hat) {
+        return createSkinLayers(13, cape, jacket, leftSleeve, rightSleeve, leftLeg, rightLeg, hat);
     }
 
     @Override

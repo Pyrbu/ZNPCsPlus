@@ -126,10 +126,15 @@ public class V1_8PacketFactory implements PacketFactory {
     @Override
     public Map<Integer, EntityData> generateMetadata(Player player, PacketEntity entity, PropertyHolder properties) {
         HashMap<Integer, EntityData> data = new HashMap<>();
-        if (entity.getType() == EntityTypes.PLAYER) {
-            add(data, metadataFactory.skinLayers(properties.getProperty(propertyRegistry.getByName("skin_layers", Boolean.class))));
-            add(data, metadataFactory.cape(properties.getProperty(propertyRegistry.getByName("cape", Boolean.class))));
-        }
+        if (entity.getType() == EntityTypes.PLAYER) add(data, metadataFactory.skinLayers(
+                properties.getProperty(propertyRegistry.getByName("skin_cape", Boolean.class)),
+                properties.getProperty(propertyRegistry.getByName("skin_jacket", Boolean.class)),
+                properties.getProperty(propertyRegistry.getByName("skin_left_sleeve", Boolean.class)),
+                properties.getProperty(propertyRegistry.getByName("skin_right_sleeve", Boolean.class)),
+                properties.getProperty(propertyRegistry.getByName("skin_left_leg", Boolean.class)),
+                properties.getProperty(propertyRegistry.getByName("skin_right_leg", Boolean.class)),
+                properties.getProperty(propertyRegistry.getByName("skin_hat", Boolean.class))
+        ));
         add(data, metadataFactory.effects(properties.getProperty(propertyRegistry.getByName("fire", Boolean.class)), false, properties.getProperty(propertyRegistry.getByName("fire", Boolean.class))));
         add(data, metadataFactory.silent(properties.getProperty(propertyRegistry.getByName("silent", Boolean.class))));
         if (properties.hasProperty(propertyRegistry.getByName("name"))) addAll(data, metadataFactory.name(properties.getProperty(propertyRegistry.getByName("name", Component.class))));

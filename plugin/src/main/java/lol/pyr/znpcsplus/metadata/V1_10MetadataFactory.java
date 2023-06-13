@@ -5,11 +5,6 @@ import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 
 public class V1_10MetadataFactory extends V1_9MetadataFactory {
     @Override
-    public EntityData cape(boolean enabled) {
-        return createCape(13, enabled);
-    }
-
-    @Override
     public EntityData noGravity() {
         return newEntityData(5, EntityDataTypes.BOOLEAN, true);
     }

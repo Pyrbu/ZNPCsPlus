@@ -11,13 +11,8 @@ import java.util.Collection;
 
 public class V1_8MetadataFactory implements MetadataFactory {
     @Override
-    public EntityData skinLayers(boolean enabled) {
-        return createSkinLayers(12, enabled);
-    }
-
-    @Override
-    public EntityData cape(boolean enabled) {
-        return createCape(10, enabled);
+    public EntityData skinLayers(boolean cape, boolean jacket, boolean leftSleeve, boolean rightSleeve, boolean leftLeg, boolean rightLeg, boolean hat) {
+        return createSkinLayers(12, cape, jacket, leftSleeve, rightSleeve, leftLeg, rightLeg, hat);
     }
 
     @Override
@@ -43,12 +38,16 @@ public class V1_8MetadataFactory implements MetadataFactory {
         return newEntityData(4, EntityDataTypes.BYTE, (byte) (enabled ? 1 : 0));
     }
 
-    protected EntityData createSkinLayers(int index, boolean enabled) {
-        return newEntityData(index, EntityDataTypes.BYTE, enabled ? Byte.MAX_VALUE : (byte) 0);
-    }
-
-    protected EntityData createCape(int index, boolean enabled) {
-        return newEntityData(index, EntityDataTypes.BYTE, (byte) (enabled ? 1 : 0));
+    protected EntityData createSkinLayers(int index, boolean cape, boolean jacket, boolean leftSleeve, boolean rightSleeve, boolean leftLeg, boolean rightLeg, boolean hat) {
+        return newEntityData(index, EntityDataTypes.BYTE, (byte) (
+                (cape ? 0x01 : 0) |
+                (jacket ? 0x02 : 0) |
+                (leftSleeve ? 0x04 : 0) |
+                (rightSleeve ? 0x08 : 0) |
+                (leftLeg ? 0x10 : 0) |
+                (rightLeg ? 0x20 : 0) |
+                (hat ? 0x40 : 0))
+        );
     }
 
     protected <T> EntityData newEntityData(int index, EntityDataType<T> type, T value) {

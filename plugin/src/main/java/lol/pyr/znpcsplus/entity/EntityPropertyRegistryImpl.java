@@ -24,14 +24,20 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerSerializer(new ItemStackPropertySerializer());
 
         registerType("glow", NamedTextColor.class);
-        registerType("skin_layers", true);
         registerType("fire", false);
         registerType("invisible", false);
         registerType("silent", false);
         registerType("skin", SkinDescriptor.class);
         registerType("name", Component.class);
         registerType("look", false);
-        registerType("cape", true);
+
+        registerType("skin_cape", true);
+        registerType("skin_jacket", true);
+        registerType("skin_left_sleeve", true);
+        registerType("skin_right_sleeve", true);
+        registerType("skin_left_leg", true);
+        registerType("skin_right_leg", true);
+        registerType("skin_hat", true);
 
         registerType("helmet", ItemStack.class);
         registerType("chestplate", ItemStack.class);

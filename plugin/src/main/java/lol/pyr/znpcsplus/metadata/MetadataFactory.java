@@ -19,8 +19,7 @@ import java.util.Collection;
  * 1.18-1.19 <a href="https://wiki.vg/index.php?title=Entity_metadata">...</a>
  */
 public interface MetadataFactory {
-    EntityData skinLayers(boolean enabled);
-    EntityData cape(boolean enabled);
+    EntityData skinLayers(boolean cape, boolean jacket, boolean leftSleeve, boolean rightSleeve, boolean leftLeg, boolean rightLeg, boolean hat);
     EntityData effects(boolean onFire, boolean glowing, boolean invisible);
     EntityData silent(boolean enabled);
     Collection<EntityData> name(Component name);
