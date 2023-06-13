@@ -76,9 +76,7 @@ public class NpcLocation {
         final double z = loc.getZ() - this.z;
         final double y = loc.getY() - this.y;
 
-        if (x == 0 && z == 0) {
-            return new NpcLocation(this.x, this.y, this.z, this.yaw, y > 0 ? -90 : 90);
-        }
+        if (x == 0 && z == 0) return new NpcLocation(this.x, this.y, this.z, this.yaw, y > 0 ? -90 : 90);
 
         double x2 = NumberConversions.square(x);
         double z2 = NumberConversions.square(z);
@@ -96,7 +94,11 @@ public class NpcLocation {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NpcLocation that = (NpcLocation) o;
-        return Double.compare(that.x, x) == 0 && Double.compare(that.y, y) == 0 && Double.compare(that.z, z) == 0 && Float.compare(that.yaw, yaw) == 0 && Float.compare(that.pitch, pitch) == 0;
+        return Double.compare(that.x, x) == 0 &&
+                Double.compare(that.y, y) == 0 &&
+                Double.compare(that.z, z) == 0 &&
+                Float.compare(that.yaw, yaw) == 0 &&
+                Float.compare(that.pitch, pitch) == 0;
     }
 
     @Override
