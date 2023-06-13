@@ -27,7 +27,7 @@ public class ActionRegistry {
         register(new PlayerCommandActionType(taskScheduler));
         register(new SwitchServerActionType(bungeeConnector));
         register(new MessageActionType(adventure, textSerializer));
-        register(new PlayerChatActionType());
+        register(new PlayerChatActionType(taskScheduler));
     }
 
     public void register(InteractionActionType<?> type) {

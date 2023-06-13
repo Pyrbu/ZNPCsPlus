@@ -10,6 +10,11 @@ public class SpigotScheduler extends TaskScheduler {
     }
 
     @Override
+    public void schedulePlayerChat(Player player, String chat) {
+        runSyncGlobal(() -> player.chat(chat));
+    }
+
+    @Override
     public void schedulePlayerCommand(Player player, String command) {
         runSyncGlobal(() -> Bukkit.dispatchCommand(player, command));
     }

@@ -10,6 +10,7 @@ public abstract class TaskScheduler {
         this.plugin = plugin;
     }
 
+    public abstract void schedulePlayerChat(Player player, String message);
     public abstract void schedulePlayerCommand(Player player, String command);
     public abstract void runSyncGlobal(Runnable runnable);
     public abstract void runLaterAsync(Runnable runnable, long delay);

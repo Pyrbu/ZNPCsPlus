@@ -15,6 +15,16 @@ public class FoliaScheduler extends TaskScheduler {
     }
 
     @Override
+    public void schedulePlayerChat(Player player, String chat) {
+        try {
+            Object scheduler = Reflections.FOLIA_GET_REGION_SCHEDULER.get().invoke(null);
+            Reflections.FOLIA_EXECUTE_REGION.get().invoke(scheduler, plugin, player.getLocation(), (Runnable) () -> player.chat(chat));
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void schedulePlayerCommand(Player player, String command) {
         try {
             Object scheduler = Reflections.FOLIA_GET_REGION_SCHEDULER.get().invoke(null);
