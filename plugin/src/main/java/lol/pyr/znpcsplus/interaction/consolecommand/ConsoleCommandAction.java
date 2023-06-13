@@ -9,7 +9,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -32,18 +31,18 @@ public class ConsoleCommandAction extends InteractionAction {
     @Override
     public Component getInfo(String id, int index, CommandContext context) {
         return Component.text(index + ") ", NamedTextColor.GOLD)
-                .append(Component.text("[EDIT]", NamedTextColor.DARK_GREEN, TextDecoration.BOLD)
+                .append(Component.text("[EDIT]", NamedTextColor.DARK_GREEN)
                         .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
                                 Component.text("Click to edit this action", NamedTextColor.GRAY)))
                         .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.SUGGEST_COMMAND,
                                 "/" + context.getLabel() + " action edit " + id + " " + index + " consolecommand " + " " + getInteractionType().name() + " " + getCooldown()/1000 + " " + command))
-                .append(Component.text(" | ", NamedTextColor.GRAY).decoration(TextDecoration.BOLD, false))
-                .append(Component.text("[DELETE]", NamedTextColor.RED, TextDecoration.BOLD)
+                .append(Component.text(" | ", NamedTextColor.GRAY))
+                .append(Component.text("[DELETE]", NamedTextColor.RED)
                         .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
                                 Component.text("Click to delete this action", NamedTextColor.GRAY)))
                         .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.SUGGEST_COMMAND,
                                 "/" + context.getLabel() + " action delete " + id + " " + index)))
-                .append(Component.text(" | ", NamedTextColor.GRAY).style(style -> style.decoration(TextDecoration.BOLD, false)))
+                .append(Component.text(" | ", NamedTextColor.GRAY))
                 .append(Component.text("Console Command: ", NamedTextColor.GREEN)
                         .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
                                 Component.text("Click Type: " + getInteractionType().name() + " Cooldown: " + getCooldown()/1000, NamedTextColor.GREEN))))
