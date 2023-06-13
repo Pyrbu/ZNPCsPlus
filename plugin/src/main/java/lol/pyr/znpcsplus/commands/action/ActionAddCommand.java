@@ -25,10 +25,10 @@ public class ActionAddCommand implements CommandHandler {
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
         List<InteractionCommandHandler> commands = actionRegistry.getCommands();
-        context.setUsage(context.getLabel() + " action add <action type> ...");
+        context.setUsage(context.getLabel() + " action add <action type>");
         String sub = context.popString();
         for (InteractionCommandHandler command : commands) if (command.getSubcommandName().equalsIgnoreCase(sub)) {
-            context.setUsage(context.getLabel() + " action add ");
+            context.setUsage(context.getLabel() + " action add");
             command.run(context);
             return;
         }
@@ -38,12 +38,14 @@ public class ActionAddCommand implements CommandHandler {
 
     @Override
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
-        if (context.argSize() == 1) return context.suggestCollection(npcRegistry.getModifiableIds());
         List<InteractionCommandHandler> commands = actionRegistry.getCommands();
-        if (context.argSize() == 2) return context.suggestStream(commands.stream().map(InteractionCommandHandler::getSubcommandName));
-        context.popString();
-        String sub = context.popString();
-        for (InteractionCommandHandler command : commands) if (command.getSubcommandName().equalsIgnoreCase(sub)) return command.suggest(context);
+        if (context.argSize() == 1) return context.suggestStream(commands.stream().map(InteractionCommandHandler::getSubcommandName));
+        if (context.argSize() == 2) return context.suggestCollection(npcRegistry.getModifiableIds());
+        if (context.argSize() >= 3) {
+            String sub = context.popString();
+            context.popString();
+            for (InteractionCommandHandler command : commands) if (command.getSubcommandName().equalsIgnoreCase(sub)) return command.suggest(context);
+        }
         return Collections.emptyList();
     }
 }
