@@ -28,7 +28,7 @@ public class V1_8MetadataFactory implements MetadataFactory {
     public Collection<EntityData> name(Component name) {
         return ListUtil.immutableList(
                 new EntityData(2, EntityDataTypes.STRING, AdventureSerializer.getGsonSerializer().serialize(name)),
-                new EntityData(3, EntityDataTypes.BYTE, 1)
+                new EntityData(3, EntityDataTypes.BYTE, (byte) 1)
         );
     }
 
@@ -39,14 +39,14 @@ public class V1_8MetadataFactory implements MetadataFactory {
 
     @Override
     public EntityData silent(boolean enabled) {
-        return new EntityData(4, EntityDataTypes.BYTE, enabled ? 1 : 0);
+        return new EntityData(4, EntityDataTypes.BYTE, (byte) (enabled ? 1 : 0));
     }
 
     protected EntityData createSkinLayers(int index, boolean enabled) {
-        return new EntityData(index, EntityDataTypes.BYTE, enabled ? Byte.MAX_VALUE : 0);
+        return new EntityData(index, EntityDataTypes.BYTE, enabled ? Byte.MAX_VALUE : (byte) 0);
     }
 
     protected EntityData createCape(int index, boolean enabled) {
-        return new EntityData(index, EntityDataTypes.BYTE, (byte) (enabled ? 0x01 : 0));
+        return new EntityData(index, EntityDataTypes.BYTE, (byte) (enabled ? 1 : 0));
     }
 }
