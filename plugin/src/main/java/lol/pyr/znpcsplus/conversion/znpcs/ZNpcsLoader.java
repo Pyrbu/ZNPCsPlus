@@ -57,7 +57,6 @@ public class ZNpcsLoader implements DataImporter {
         gson = new Gson();
     }
 
-
     @Override
     public Collection<NpcEntryImpl> importData() {
         ZNpcsModel[] models;
@@ -70,9 +69,15 @@ public class ZNpcsLoader implements DataImporter {
         ArrayList<NpcEntryImpl> entries = new ArrayList<>();
         for (ZNpcsModel model : models) {
             String type = model.getNpcType();
-            if (type.equalsIgnoreCase("mushroom_cow")) type = "mooshroom";
-            else if (type.equalsIgnoreCase("snowman")) type = "snow_golem";
 
+            switch (type.toLowerCase()) {
+                case "mushroom_cow":
+                    type = "mooshroom";
+                    break;
+                case "snowman":
+                    type = "snow_golem";
+                    break;
+            }
 
             ZNpcsLocation oldLoc = model.getLocation();
             NpcLocation location = new NpcLocation(oldLoc.getX(), oldLoc.getY(), oldLoc.getZ(), oldLoc.getYaw(), oldLoc.getPitch());
@@ -85,7 +90,7 @@ public class ZNpcsLoader implements DataImporter {
 
             for (ZNpcsAction action : model.getClickActions()) {
                 InteractionType t = adaptClickType(action.getActionType());
-                // TODO
+                npc.addAction(adaptAction(action.getActionType(), t, action.getAction(), action.getDelay()));
             }
 
             NpcEntryImpl entry = new NpcEntryImpl(String.valueOf(model.getId()), npc);
@@ -119,7 +124,7 @@ public class ZNpcsLoader implements DataImporter {
             case "console":
                 return new ConsoleCommandAction(taskScheduler, parameter, clickType, delay * 1000L);
             case "chat":
-                return new PlayerChatAction(parameter, clickType, delay * 1000L);
+                return new PlayerChatAction(taskScheduler, parameter, clickType, delay * 1000L);
             case "message":
                 return new MessageAction(adventure, parameter, clickType, textSerializer, delay * 1000L);
             case "server":
