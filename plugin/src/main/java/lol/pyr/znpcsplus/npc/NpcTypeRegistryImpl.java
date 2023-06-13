@@ -309,6 +309,14 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
 
         register(builder(p, "warden", EntityTypes.WARDEN)
                 .setHologramOffset(0.925));
+
+        if (!version.isNewerThanOrEquals(ServerVersion.V_1_20)) return;
+
+        register(builder(p, "sniffer", EntityTypes.SNIFFER)
+                .setHologramOffset(0.125));
+
+        register(builder(p, "camel", EntityTypes.CAMEL)
+                .setHologramOffset(0.25));
     }
 
     public Collection<NpcTypeImpl> getAll() {
