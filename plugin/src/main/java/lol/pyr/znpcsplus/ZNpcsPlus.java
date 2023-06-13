@@ -41,13 +41,11 @@ import lol.pyr.znpcsplus.updater.UpdateChecker;
 import lol.pyr.znpcsplus.updater.UpdateNotificationListener;
 import lol.pyr.znpcsplus.user.UserListener;
 import lol.pyr.znpcsplus.user.UserManager;
-import lol.pyr.znpcsplus.util.BungeeConnector;
-import lol.pyr.znpcsplus.util.FoliaUtil;
-import lol.pyr.znpcsplus.util.LazyLoader;
-import lol.pyr.znpcsplus.util.NpcLocation;
+import lol.pyr.znpcsplus.util.*;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -57,6 +55,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -123,6 +122,7 @@ public class ZNpcsPlus extends JavaPlugin {
         new Metrics(this, PLUGIN_ID);
         pluginManager.registerEvents(new UserListener(userManager), this);
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+
         registerCommands(npcRegistry, skinCache, adventure, actionRegistry, typeRegistry, propertyRegistry);
 
         log(ChatColor.WHITE + " * Starting tasks...");
@@ -210,8 +210,13 @@ public class ZNpcsPlus extends JavaPlugin {
 
 
     private void registerCommands(NpcRegistryImpl npcRegistry, SkinCache skinCache, BukkitAudiences adventure, ActionRegistry actionRegistry, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry) {
-        // TODO: make the messages better
+        Reader reader = getTextResource("help-message.txt");
+        if (reader == null) throw new RuntimeException("help-message.txt is missing from the ZNpcsPlus jar!");
+        Component component = MiniMessage.miniMessage().deserialize(FileUtil.dumpReaderAsString(reader));
+
+        Message<CommandContext> helpMessage = context -> context.send(component);
         Message<CommandContext> incorrectUsageMessage = context -> context.send(Component.text("Incorrect usage: /" + context.getUsage(), NamedTextColor.RED));
+
         CommandManager manager = new CommandManager(this, adventure, incorrectUsageMessage);
 
         manager.registerParser(NpcTypeImpl.class, new NpcTypeParser(incorrectUsageMessage, typeRegistry));
@@ -223,7 +228,7 @@ public class ZNpcsPlus extends JavaPlugin {
         manager.registerParser(NamedTextColor.class, new NamedTextColorParser(incorrectUsageMessage));
         manager.registerParser(InteractionType.class, new InteractionTypeParser(incorrectUsageMessage));
 
-        manager.registerCommand("npc", new MultiCommand()
+        manager.registerCommand("npc", new MultiCommand(helpMessage)
                 .addSubcommand("create", new CreateCommand(npcRegistry, typeRegistry))
                 .addSubcommand("skin", new SkinCommand(skinCache, npcRegistry, typeRegistry, propertyRegistry))
                 .addSubcommand("delete", new DeleteCommand(npcRegistry, adventure))
@@ -233,17 +238,17 @@ public class ZNpcsPlus extends JavaPlugin {
                 .addSubcommand("list", new ListCommand(npcRegistry))
                 .addSubcommand("near", new NearCommand(npcRegistry))
                 .addSubcommand("type", new TypeCommand(npcRegistry, typeRegistry))
-                .addSubcommand("storage", new MultiCommand()
+                .addSubcommand("storage", new MultiCommand(context -> context.send(Component.text("Incorrect usage: /" + context.getLabel() + " storage <save|reload>", NamedTextColor.RED)))
                         .addSubcommand("save", new SaveAllCommand(npcRegistry))
                         .addSubcommand("reload", new LoadAllCommand(npcRegistry)))
-                .addSubcommand("holo", new MultiCommand()
+                .addSubcommand("holo", new MultiCommand(context -> context.send(Component.text("Incorrect usage: /" + context.getLabel() + " holo <add|delete|info|insert|set|offset>", NamedTextColor.RED)))
                         .addSubcommand("add", new HoloAddCommand(npcRegistry, textSerializer))
                         .addSubcommand("delete", new HoloDeleteCommand(npcRegistry))
                         .addSubcommand("info", new HoloInfoCommand(npcRegistry))
                         .addSubcommand("insert", new HoloInsertCommand(npcRegistry, textSerializer))
                         .addSubcommand("set", new HoloSetCommand(npcRegistry, textSerializer))
                         .addSubcommand("offset", new HoloOffsetCommand(npcRegistry)))
-                .addSubcommand("action", new MultiCommand()
+                .addSubcommand("action", new MultiCommand(context -> context.send(Component.text("Incorrect usage: /" + context.getLabel() + " action <add|delete|edit|list>", NamedTextColor.RED)))
                         .addSubcommand("add", new ActionAddCommand(npcRegistry, actionRegistry))
                         .addSubcommand("delete", new ActionDeleteCommand(npcRegistry))
                         .addSubcommand("edit", new ActionEditCommand(npcRegistry, actionRegistry))
