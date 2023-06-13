@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 /**
  * A class containing getAll of the packages of the server jar that we import classes from.
  * Every line has a check for the "flattened" variable due to the fact that server jars
- * pre-1.17 had getAll of their classes "flattened" into one package.
+ * pre-1.17 had all of their classes "flattened" into one package.
  */
 public class ReflectionPackage {
     private static final String VERSION = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
