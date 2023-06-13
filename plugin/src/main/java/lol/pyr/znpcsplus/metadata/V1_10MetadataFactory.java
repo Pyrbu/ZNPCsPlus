@@ -11,6 +11,6 @@ public class V1_10MetadataFactory extends V1_9MetadataFactory {
 
     @Override
     public EntityData noGravity() {
-        return new EntityData(5, EntityDataTypes.BOOLEAN, true);
+        return newEntityData(5, EntityDataTypes.BOOLEAN, true);
     }
 }

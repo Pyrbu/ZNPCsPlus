@@ -13,8 +13,8 @@ public class V1_13MetadataFactory extends V1_10MetadataFactory {
     @Override
     public Collection<EntityData> name(Component name) {
         return ListUtil.immutableList(
-                new EntityData(2, EntityDataTypes.OPTIONAL_COMPONENT, Optional.of(AdventureSerializer.getGsonSerializer().serialize(name))),
-                new EntityData(3, EntityDataTypes.BOOLEAN, true)
+                newEntityData(2, EntityDataTypes.OPTIONAL_COMPONENT, Optional.of(AdventureSerializer.getGsonSerializer().serialize(name))),
+                newEntityData(3, EntityDataTypes.BOOLEAN, true)
         );
     }
 }

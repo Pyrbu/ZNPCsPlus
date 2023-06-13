@@ -21,19 +21,19 @@ public class V1_9MetadataFactory extends V1_8MetadataFactory {
 
     @Override
     public EntityData effects(boolean onFire, boolean glowing, boolean invisible) {
-        return new EntityData(0, EntityDataTypes.BYTE, (byte) ((onFire ? 0x01 : 0) | (invisible ? 0x20 : 0) | (glowing ? 0x40 : 0)));
+        return newEntityData(0, EntityDataTypes.BYTE, (byte) ((onFire ? 0x01 : 0) | (invisible ? 0x20 : 0) | (glowing ? 0x40 : 0)));
     }
 
     @Override
     public Collection<EntityData> name(Component name) {
         return ListUtil.immutableList(
-                new EntityData(2, EntityDataTypes.STRING, AdventureSerializer.getGsonSerializer().serialize(name)),
-                new EntityData(3, EntityDataTypes.BOOLEAN, true)
+                newEntityData(2, EntityDataTypes.STRING, AdventureSerializer.getGsonSerializer().serialize(name)),
+                newEntityData(3, EntityDataTypes.BOOLEAN, true)
         );
     }
 
     @Override
     public EntityData silent(boolean enabled) {
-        return new EntityData(4, EntityDataTypes.BOOLEAN, enabled);
+        return newEntityData(4, EntityDataTypes.BOOLEAN, enabled);
     }
 }
