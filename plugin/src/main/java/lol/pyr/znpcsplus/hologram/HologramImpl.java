@@ -32,7 +32,7 @@ public class HologramImpl extends Viewable implements Hologram {
     public void addLineComponent(Component line) {
         HologramLine newLine = new HologramLine(packetFactory, null, line);
         lines.add(newLine);
-        relocateLines();
+        relocateLines(newLine);
         for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
     }
 
@@ -66,7 +66,7 @@ public class HologramImpl extends Viewable implements Hologram {
     public void insertLineComponent(int index, Component line) {
         HologramLine newLine = new HologramLine(packetFactory, null, line);
         lines.add(index, newLine);
-        relocateLines();
+        relocateLines(newLine);
         for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
     }
 
