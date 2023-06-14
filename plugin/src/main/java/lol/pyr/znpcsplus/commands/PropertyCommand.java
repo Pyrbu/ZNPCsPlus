@@ -16,16 +16,16 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import java.util.Collections;
 import java.util.List;
 
-public class PropertiesCommand implements CommandHandler {
+public class PropertyCommand implements CommandHandler {
     private final NpcRegistryImpl npcRegistry;
 
-    public PropertiesCommand(NpcRegistryImpl npcRegistry) {
+    public PropertyCommand(NpcRegistryImpl npcRegistry) {
         this.npcRegistry = npcRegistry;
     }
 
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
-        context.setUsage(context.getLabel() + " properties <id> <property> <value>");
+        context.setUsage(context.getLabel() + " property <id> <property> <value>");
         NpcEntryImpl entry = context.parse(NpcEntryImpl.class);
         NpcImpl npc = entry.getNpc();
         EntityPropertyImpl<?> property = context.parse(EntityPropertyImpl.class);

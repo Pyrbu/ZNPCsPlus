@@ -233,7 +233,7 @@ public class ZNpcsPlus extends JavaPlugin {
                 .addSubcommand("skin", new SkinCommand(skinCache, npcRegistry, typeRegistry, propertyRegistry))
                 .addSubcommand("delete", new DeleteCommand(npcRegistry, adventure))
                 .addSubcommand("move", new MoveCommand(npcRegistry))
-                .addSubcommand("properties", new PropertiesCommand(npcRegistry))
+                .addSubcommand("property", new PropertyCommand(npcRegistry))
                 .addSubcommand("teleport", new TeleportCommand(npcRegistry))
                 .addSubcommand("list", new ListCommand(npcRegistry))
                 .addSubcommand("near", new NearCommand(npcRegistry))
