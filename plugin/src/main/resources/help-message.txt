@@ -1,4 +1,5 @@
-<red>Test Help Message!!!!!
-<#FF0000>red
-<#00FF00>green
-<#0000FF>blue
+
+<gold><bold>ZNPCsPlus v{version}
+<gray>Hover over any command for example usage
+
+TODO

@@ -212,7 +212,7 @@ public class ZNpcsPlus extends JavaPlugin {
     private void registerCommands(NpcRegistryImpl npcRegistry, SkinCache skinCache, BukkitAudiences adventure, ActionRegistry actionRegistry, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry) {
         Reader reader = getTextResource("help-message.txt");
         if (reader == null) throw new RuntimeException("help-message.txt is missing from the ZNpcsPlus jar!");
-        Component component = MiniMessage.miniMessage().deserialize(FileUtil.dumpReaderAsString(reader));
+        Component component = MiniMessage.miniMessage().deserialize(FileUtil.dumpReaderAsString(reader).replace("{version}", this.getDescription().getVersion()));
 
         Message<CommandContext> helpMessage = context -> context.send(component);
         Message<CommandContext> incorrectUsageMessage = context -> context.send(Component.text("Incorrect usage: /" + context.getUsage(), NamedTextColor.RED));
