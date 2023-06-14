@@ -23,7 +23,7 @@ public class V1_8MetadataFactory implements MetadataFactory {
     @Override
     public Collection<EntityData> name(Component name) {
         return ListUtil.immutableList(
-                newEntityData(2, EntityDataTypes.STRING, AdventureSerializer.getGsonSerializer().serialize(name)),
+                newEntityData(2, EntityDataTypes.STRING, AdventureSerializer.getLegacyGsonSerializer().serialize(name)),
                 newEntityData(3, EntityDataTypes.BYTE, (byte) 1)
         );
     }
