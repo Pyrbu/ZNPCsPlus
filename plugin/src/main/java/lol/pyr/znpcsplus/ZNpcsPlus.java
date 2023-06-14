@@ -210,13 +210,7 @@ public class ZNpcsPlus extends JavaPlugin {
 
 
     private void registerCommands(NpcRegistryImpl npcRegistry, SkinCache skinCache, BukkitAudiences adventure, ActionRegistry actionRegistry, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry) {
-        Reader reader = getTextResource("help-message.txt");
-        if (reader == null) throw new RuntimeException("help-message.txt is missing from the ZNpcsPlus jar!");
-        Component component = MiniMessage.miniMessage().deserialize(FileUtil.dumpReaderAsString(reader).replace("{version}", this.getDescription().getVersion()));
-
-        Message<CommandContext> helpMessage = context -> context.send(component);
         Message<CommandContext> incorrectUsageMessage = context -> context.send(Component.text("Incorrect usage: /" + context.getUsage(), NamedTextColor.RED));
-
         CommandManager manager = new CommandManager(this, adventure, incorrectUsageMessage);
 
         manager.registerParser(NpcTypeImpl.class, new NpcTypeParser(incorrectUsageMessage, typeRegistry));
@@ -228,7 +222,7 @@ public class ZNpcsPlus extends JavaPlugin {
         manager.registerParser(NamedTextColor.class, new NamedTextColorParser(incorrectUsageMessage));
         manager.registerParser(InteractionType.class, new InteractionTypeParser(incorrectUsageMessage));
 
-        manager.registerCommand("npc", new MultiCommand(helpMessage)
+        manager.registerCommand("npc", new MultiCommand(loadHelpMessage("root"))
                 .addSubcommand("create", new CreateCommand(npcRegistry, typeRegistry))
                 .addSubcommand("skin", new SkinCommand(skinCache, npcRegistry, typeRegistry, propertyRegistry))
                 .addSubcommand("delete", new DeleteCommand(npcRegistry, adventure))
@@ -238,21 +232,28 @@ public class ZNpcsPlus extends JavaPlugin {
                 .addSubcommand("list", new ListCommand(npcRegistry))
                 .addSubcommand("near", new NearCommand(npcRegistry))
                 .addSubcommand("type", new TypeCommand(npcRegistry, typeRegistry))
-                .addSubcommand("storage", new MultiCommand(context -> context.send(Component.text("Incorrect usage: /" + context.getLabel() + " storage <save|reload>", NamedTextColor.RED)))
+                .addSubcommand("storage", new MultiCommand(loadHelpMessage("storage"))
                         .addSubcommand("save", new SaveAllCommand(npcRegistry))
                         .addSubcommand("reload", new LoadAllCommand(npcRegistry)))
-                .addSubcommand("holo", new MultiCommand(context -> context.send(Component.text("Incorrect usage: /" + context.getLabel() + " holo <add|delete|info|insert|set|offset>", NamedTextColor.RED)))
+                .addSubcommand("holo", new MultiCommand(loadHelpMessage("holo"))
                         .addSubcommand("add", new HoloAddCommand(npcRegistry, textSerializer))
                         .addSubcommand("delete", new HoloDeleteCommand(npcRegistry))
                         .addSubcommand("info", new HoloInfoCommand(npcRegistry))
                         .addSubcommand("insert", new HoloInsertCommand(npcRegistry, textSerializer))
                         .addSubcommand("set", new HoloSetCommand(npcRegistry, textSerializer))
                         .addSubcommand("offset", new HoloOffsetCommand(npcRegistry)))
-                .addSubcommand("action", new MultiCommand(context -> context.send(Component.text("Incorrect usage: /" + context.getLabel() + " action <add|delete|edit|list>", NamedTextColor.RED)))
+                .addSubcommand("action", new MultiCommand(loadHelpMessage("action"))
                         .addSubcommand("add", new ActionAddCommand(npcRegistry, actionRegistry))
                         .addSubcommand("delete", new ActionDeleteCommand(npcRegistry))
                         .addSubcommand("edit", new ActionEditCommand(npcRegistry, actionRegistry))
                         .addSubcommand("list", new ActionListCommand(npcRegistry)))
         );
+    }
+
+    private Message<CommandContext> loadHelpMessage(String name) {
+        Reader reader = getTextResource("help-messages/" + name + ".txt");
+        if (reader == null) throw new RuntimeException(name + ".txt is missing from the help-messages folder in the ZNPCsPlus jar!");
+        Component component = MiniMessage.miniMessage().deserialize(FileUtil.dumpReaderAsString(reader));
+        return context -> context.send(component);
     }
 }

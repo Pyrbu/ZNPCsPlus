@@ -1,0 +1,7 @@
+
+<gold>ZNPCsPlus <yellow>v${version} <red><click:run_command:/npc><hover:show_text:'<red>Click to view the main help message'>[BACK]</hover></click></red>
+<gray>Hover over any command for more info
+
+ <gold>* <yellow>/npc storage save
+ <gold>* <yellow>/npc storage reload
+

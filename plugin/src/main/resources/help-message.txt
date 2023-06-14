@@ -1,5 +1,0 @@
-
-<gold><bold>ZNPCsPlus v{version}
-<gray>Hover over any command for example usage
-
-TODO
