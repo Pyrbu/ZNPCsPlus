@@ -1,5 +1,6 @@
 package lol.pyr.znpcsplus.commands;
 
+import com.github.retrooper.packetevents.protocol.item.ItemStack;
 import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
@@ -11,7 +12,6 @@ import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import com.github.retrooper.packetevents.protocol.item.ItemStack;
 
 import java.util.Collections;
 import java.util.List;
@@ -35,8 +35,8 @@ public class PropertiesCommand implements CommandHandler {
         Object value;
         String valueName;
         if (type == ItemStack.class) {
-            org.bukkit.inventory.ItemStack bukkitStack = context.ensureSenderIsPlayer().getInventory().getItemInMainHand();
-            if (bukkitStack.getType().isAir()) {
+            org.bukkit.inventory.ItemStack bukkitStack = context.ensureSenderIsPlayer().getInventory().getItemInHand();
+            if (bukkitStack.getAmount() == 0) {
                 value = null;
                 valueName = "EMPTY";
             } else {
