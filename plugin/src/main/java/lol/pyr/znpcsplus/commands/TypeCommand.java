@@ -3,6 +3,7 @@ package lol.pyr.znpcsplus.commands;
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
+import lol.pyr.znpcsplus.api.npc.Npc;
 import lol.pyr.znpcsplus.npc.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -22,9 +23,12 @@ public class TypeCommand implements CommandHandler {
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
         context.setUsage(context.getLabel() + " type <id> <type>");
-        NpcImpl npc = context.parse(NpcEntryImpl.class).getNpc();
+        Npc npc = context.parse(NpcEntryImpl.class).getNpc();
+        if (!(npc instanceof NpcImpl)) {
+            context.halt(Component.text("This npc cannot have a type.", NamedTextColor.RED));
+        }
         NpcTypeImpl type = context.parse(NpcTypeImpl.class);
-        npc.setType(type);
+        ((NpcImpl) npc).setType(type);
         context.send(Component.text("NPC type set to " + type.getName() + ".", NamedTextColor.GREEN));
     }
 

@@ -3,7 +3,7 @@ package lol.pyr.znpcsplus.commands.action;
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
-import lol.pyr.znpcsplus.interaction.InteractionAction;
+import lol.pyr.znpcsplus.api.interaction.InteractionAction;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 
@@ -24,7 +24,7 @@ public class ActionListCommand implements CommandHandler {
         List<InteractionAction> actions = entry.getNpc().getActions();
         context.send("Actions of Npc " + entry.getId() + ":");
         for (int i = 0; i < actions.size(); i++) {
-            context.send(actions.get(i).getInfo(entry.getId(), i, context));
+            context.send(actions.get(i).getInfo(entry.getId(), i, context.getLabel()));
         }
     }
 

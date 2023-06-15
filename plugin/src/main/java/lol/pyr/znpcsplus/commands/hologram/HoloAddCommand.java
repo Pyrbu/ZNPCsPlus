@@ -25,7 +25,7 @@ public class HoloAddCommand implements CommandHandler {
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
         context.setUsage(context.getLabel() + " holo add <id> <text>");
-        HologramImpl hologram = context.parse(NpcEntryImpl.class).getNpc().getHologram();
+        HologramImpl hologram = (HologramImpl) context.parse(NpcEntryImpl.class).getNpc().getHologram();
         context.ensureArgsNotEmpty();
         hologram.addLineComponent(textSerializer.deserialize(context.dumpAllArgs()));
         context.send(Component.text("NPC line added!", NamedTextColor.GREEN));

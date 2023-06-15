@@ -1,8 +1,11 @@
 package lol.pyr.znpcsplus.storage.yaml;
 
+import lol.pyr.znpcsplus.api.entity.EntityProperty;
+import lol.pyr.znpcsplus.api.npc.Npc;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
+import lol.pyr.znpcsplus.hologram.HologramImpl;
 import lol.pyr.znpcsplus.hologram.HologramLine;
 import lol.pyr.znpcsplus.interaction.ActionRegistry;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
@@ -49,26 +52,29 @@ public class YamlStorage implements NpcStorage {
         List<NpcEntryImpl> npcs = new ArrayList<>();
         for (File file : files) if (file.isFile() && file.getName().toLowerCase().endsWith(".yml")) {
             YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-            NpcImpl npc = new NpcImpl(configManager, packetFactory, textSerializer, config.getString("world"),
-                    typeRegistry.getByName(config.getString("type")), deserializeLocation(config.getConfigurationSection("location")));
+            if (config.getString("type") != null) {
+                NpcImpl npc = new NpcImpl(configManager, packetFactory, textSerializer, config.getString("world"),
+                        typeRegistry.getByName(config.getString("type")), deserializeLocation(config.getConfigurationSection("location")));
 
-            ConfigurationSection properties = config.getConfigurationSection("properties");
-            if (properties != null) {
-                for (String key : properties.getKeys(false)) {
-                    EntityPropertyImpl<?> property = propertyRegistry.getByName(key);
-                    npc.UNSAFE_setProperty(property, property.deserialize(properties.getString(key)));
+                ConfigurationSection properties = config.getConfigurationSection("properties");
+                if (properties != null) {
+                    for (String key : properties.getKeys(false)) {
+                        EntityPropertyImpl<?> property = propertyRegistry.getByName(key);
+                        npc.UNSAFE_setProperty(property, property.deserialize(properties.getString(key)));
+                    }
                 }
+                ((HologramImpl) npc.getHologram()).setOffset(config.getDouble("hologram.offset", 0.0));
+                for (String line : config.getStringList("hologram.lines"))
+                    ((HologramImpl) npc.getHologram()).addLineComponent(MiniMessage.miniMessage().deserialize(line));
+                for (String s : config.getStringList("actions")) npc.addAction(actionRegistry.deserialize(s));
+
+                NpcEntryImpl entry = new NpcEntryImpl(config.getString("id"), npc);
+                entry.setProcessed(config.getBoolean("is-processed"));
+                entry.setAllowCommandModification(config.getBoolean("allow-commands"));
+                entry.setSave(true);
+
+                npcs.add(entry);
             }
-            npc.getHologram().setOffset(config.getDouble("hologram.offset", 0.0));
-            for (String line : config.getStringList("hologram.lines")) npc.getHologram().addLineComponent(MiniMessage.miniMessage().deserialize(line));
-            for (String s : config.getStringList("actions")) npc.addAction(actionRegistry.deserialize(s));
-
-            NpcEntryImpl entry = new NpcEntryImpl(config.getString("id"), npc);
-            entry.setProcessed(config.getBoolean("is-processed"));
-            entry.setAllowCommandModification(config.getBoolean("allow-commands"));
-            entry.setSave(true);
-
-            npcs.add(entry);
         }
         return npcs;
     }
@@ -83,26 +89,28 @@ public class YamlStorage implements NpcStorage {
             config.set("is-processed", entry.isProcessed());
             config.set("allow-commands", entry.isAllowCommandModification());
 
-            NpcImpl npc = entry.getNpc();
-            config.set("world", npc.getWorldName());
-            config.set("location", serializeLocation(npc.getLocation()));
-            config.set("type", npc.getType().getName());
+            Npc npc = entry.getNpc();
+            config.set("world", npc.getWorld().getName());
+            config.set("location", serializeLocation(npc.getNpcLocation()));
+            if (npc.getType() != null) config.set("type", npc.getType().getName());
 
-            for (EntityPropertyImpl<?> property : npc.getAppliedProperties()) {
-                config.set("properties." + property.getName(), property.serialize(npc));
+            if (npc instanceof NpcImpl) {
+                for (EntityProperty<?> property : ((NpcImpl) npc).getAppliedProperties()) {
+                    EntityPropertyImpl<?> impl = (EntityPropertyImpl<?>) property;
+                    config.set("properties." + impl.getName(), impl.serialize(npc));
+                }
+
+                if (((HologramImpl) npc.getHologram()).getOffset() != 0.0) config.set("hologram.offset", ((HologramImpl) npc.getHologram()).getOffset());
+                List<String> lines = new ArrayList<>();
+                for (HologramLine line : ((HologramImpl) npc.getHologram()).getLines()) {
+                    lines.add(MiniMessage.miniMessage().serialize(line.getText()));
+                }
+                config.set("hologram.lines", lines);
+                config.set("actions", npc.getActions().stream()
+                        .map(actionRegistry::serialize)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList()));
             }
-
-            if (npc.getHologram().getOffset() != 0.0) config.set("hologram.offset", npc.getHologram().getOffset());
-            List<String> lines = new ArrayList<>();
-            for (HologramLine line : npc.getHologram().getLines()) {
-                lines.add(MiniMessage.miniMessage().serialize(line.getText()));
-            }
-            config.set("hologram.lines", lines);
-            config.set("actions", npc.getActions().stream()
-                    .map(actionRegistry::serialize)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList()));
-
             config.save(new File(folder, entry.getId() + ".yml"));
         } catch (IOException e) {
             throw new RuntimeException(e);

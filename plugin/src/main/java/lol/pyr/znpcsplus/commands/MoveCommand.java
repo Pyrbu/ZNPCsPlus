@@ -3,8 +3,8 @@ package lol.pyr.znpcsplus.commands;
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
+import lol.pyr.znpcsplus.api.npc.Npc;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
-import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import lol.pyr.znpcsplus.util.NpcLocation;
 import net.kyori.adventure.text.Component;
@@ -25,8 +25,9 @@ public class MoveCommand implements CommandHandler {
     public void run(CommandContext context) throws CommandExecutionException {
         context.setUsage(context.getLabel() + " move <id>");
         Player player = context.ensureSenderIsPlayer();
-        NpcImpl npc = context.parse(NpcEntryImpl.class).getNpc();
-        npc.setLocation(new NpcLocation(player.getLocation()));
+        Npc npc = context.parse(NpcEntryImpl.class).getNpc();
+        npc.setNpcLocation(new NpcLocation(player.getLocation()));
+        npc.setWorld(player.getWorld());
         context.send(Component.text("NPC moved to your current location.", NamedTextColor.GREEN));
     }
 

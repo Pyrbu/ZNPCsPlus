@@ -1,6 +1,6 @@
 package lol.pyr.znpcsplus.user;
 
-import lol.pyr.znpcsplus.interaction.InteractionAction;
+import lol.pyr.znpcsplus.api.interaction.InteractionAction;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

@@ -1,18 +1,19 @@
 package lol.pyr.znpcsplus.npc;
 
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
+import lol.pyr.znpcsplus.api.hologram.Hologram;
 import lol.pyr.znpcsplus.api.npc.Npc;
+import lol.pyr.znpcsplus.api.npc.NpcType;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.hologram.HologramImpl;
-import lol.pyr.znpcsplus.interaction.InteractionAction;
+import lol.pyr.znpcsplus.api.interaction.InteractionAction;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.util.NpcLocation;
 import lol.pyr.znpcsplus.util.Viewable;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -20,13 +21,13 @@ import java.util.*;
 
 public class NpcImpl extends Viewable implements Npc {
     private final PacketFactory packetFactory;
-    private final String worldName;
+    private String worldName;
     private PacketEntity entity;
     private NpcLocation location;
     private NpcTypeImpl type;
     private final HologramImpl hologram;
 
-    private final Map<EntityPropertyImpl<?>, Object> propertyMap = new HashMap<>();
+    private final Map<EntityProperty<?>, Object> propertyMap = new HashMap<>();
     private final List<InteractionAction> actions = new ArrayList<>();
 
     protected NpcImpl(ConfigManager configManager, LegacyComponentSerializer textSerializer, World world, NpcTypeImpl type, NpcLocation location, PacketFactory packetFactory) {
@@ -50,7 +51,8 @@ public class NpcImpl extends Viewable implements Npc {
         UNSAFE_showAll();
     }
 
-    public NpcTypeImpl getType() {
+    @Override
+    public NpcType getType() {
         return type;
     }
 
@@ -58,30 +60,36 @@ public class NpcImpl extends Viewable implements Npc {
         return entity;
     }
 
-    public NpcLocation getLocation() {
+    @Override
+    public NpcLocation getNpcLocation() {
         return location;
     }
 
-    public Location getBukkitLocation() {
-        return location.toBukkitLocation(getWorld());
+    @Override
+    public void setNpcLocation(NpcLocation npcLocation) {
+        this.location = npcLocation;
+        entity.setLocation(npcLocation, getViewers());
+        hologram.setLocation(npcLocation.withY(npcLocation.getY() + type.getHologramOffset()));
     }
 
-    public void setLocation(NpcLocation location) {
-        this.location = location;
-        entity.setLocation(location, getViewers());
-        hologram.setLocation(location.withY(location.getY() + type.getHologramOffset()));
-    }
-
-    public HologramImpl getHologram() {
+    @Override
+    public Hologram getHologram() {
         return hologram;
     }
 
+    @Override
+    public int getEntityId() {
+        return entity.getEntityId();
+    }
+
+    @Override
     public World getWorld() {
         return Bukkit.getWorld(worldName);
     }
 
-    public String getWorldName() {
-        return worldName;
+    @Override
+    public void setWorld(World world) {
+        this.worldName = world.getName();
     }
 
     @Override
@@ -105,15 +113,18 @@ public class NpcImpl extends Viewable implements Npc {
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public <T> T getProperty(EntityProperty<T> key) {
         return hasProperty(key) ? (T) propertyMap.get((EntityPropertyImpl<?>) key) : key.getDefaultValue();
     }
 
+    @Override
     public boolean hasProperty(EntityProperty<?> key) {
-        return propertyMap.containsKey((EntityPropertyImpl<?>) key);
+        return propertyMap.containsKey(key);
     }
 
-    public <T> void setProperty(EntityPropertyImpl<T> key, T value) {
+    @Override
+    public <T> void setProperty(EntityProperty<T> key, T value) {
         if (value == null || value.equals(key.getDefaultValue())) removeProperty(key);
         else propertyMap.put(key, value);
         UNSAFE_refreshMeta();
@@ -121,33 +132,38 @@ public class NpcImpl extends Viewable implements Npc {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> void UNSAFE_setProperty(EntityPropertyImpl<?> property, Object value) {
-        setProperty((EntityPropertyImpl<T>) property, (T) value);
+    @Override
+    public <T> void UNSAFE_setProperty(EntityProperty<?> property, Object value) {
+        setProperty((EntityProperty<T>) property, (T) value);
     }
 
-    public void removeProperty(EntityPropertyImpl<?> key) {
+    public void removeProperty(EntityProperty<?> key) {
         propertyMap.remove(key);
         UNSAFE_refreshMeta();
         if (key.getName().equalsIgnoreCase("glow")) UNSAFE_remakeTeam();
     }
 
-    public Set<EntityPropertyImpl<?>> getAppliedProperties() {
+    public Set<EntityProperty<?>> getAppliedProperties() {
         return Collections.unmodifiableSet(propertyMap.keySet());
     }
 
+    @Override
     public List<InteractionAction> getActions() {
         return Collections.unmodifiableList(actions);
     }
 
+    @Override
     public void removeAction(int index) {
         actions.remove(index);
     }
 
-    public void addAction(InteractionAction action) {
-        actions.add(action);
+    @Override
+    public void editAction(int index, InteractionAction newAction) {
+        actions.set(index, newAction);
     }
 
-    public void editAction(int index, InteractionAction action) {
-        actions.set(index, action);
+    @Override
+    public void addAction(InteractionAction parse) {
+        actions.add(parse);
     }
 }

@@ -1,8 +1,7 @@
 package lol.pyr.znpcsplus.interaction.playerchat;
 
-import lol.pyr.director.adventure.command.CommandContext;
+import lol.pyr.znpcsplus.api.interaction.InteractionAction;
 import lol.pyr.znpcsplus.api.interaction.InteractionType;
-import lol.pyr.znpcsplus.interaction.InteractionAction;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -27,19 +26,19 @@ public class PlayerChatAction extends InteractionAction {
     }
 
     @Override
-    public Component getInfo(String id, int index, CommandContext context) {
+    public Component getInfo(String id, int index, String label) {
         return Component.text(index + ") ", NamedTextColor.GOLD)
                 .append(Component.text("[EDIT]", NamedTextColor.DARK_GREEN)
                         .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
                                 Component.text("Click to edit this action", NamedTextColor.GRAY)))
                         .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.SUGGEST_COMMAND,
-                                "/" + context.getLabel() + " action edit " + id + " " + index + " playerchat " + " " + getInteractionType().name() + " " + getCooldown()/1000 + " " + message))
+                                "/" + label + " action edit " + id + " " + index + " playerchat " + " " + getInteractionType().name() + " " + getCooldown()/1000 + " " + message))
                         .append(Component.text(" | ", NamedTextColor.GRAY))
                         .append(Component.text("[DELETE]", NamedTextColor.RED)
                                 .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
                                         Component.text("Click to delete this action", NamedTextColor.GRAY)))
                                 .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.SUGGEST_COMMAND,
-                                        "/" + context.getLabel() + " action delete " + id + " " + index)))
+                                        "/" + label + " action delete " + id + " " + index)))
                         .append(Component.text(" | ", NamedTextColor.GRAY))
                         .append(Component.text("Player Chat: ", NamedTextColor.GREEN)
                                 .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,

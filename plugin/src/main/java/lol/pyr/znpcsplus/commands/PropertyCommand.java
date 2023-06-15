@@ -6,9 +6,10 @@ import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
+import lol.pyr.znpcsplus.api.npc.Npc;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
+import lol.pyr.znpcsplus.npc.ModeledNpcImpl;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
-import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -27,10 +28,12 @@ public class PropertyCommand implements CommandHandler {
     public void run(CommandContext context) throws CommandExecutionException {
         context.setUsage(context.getLabel() + " property <id> <property> <value>");
         NpcEntryImpl entry = context.parse(NpcEntryImpl.class);
-        NpcImpl npc = entry.getNpc();
+        Npc npc = entry.getNpc();
+//        if (!(npc instanceof NpcImpl)) {
+//            context.halt(Component.text("NPC " + entry.getId() + " cannot be have properties set", NamedTextColor.RED));
+//        }
         EntityPropertyImpl<?> property = context.parse(EntityPropertyImpl.class);
-
-        if (!npc.getType().getAllowedProperties().contains(property)) context.halt(Component.text("Property " + property.getName() + " not allowed for npc type " + npc.getType().getName(), NamedTextColor.RED));
+        if (!(npc instanceof ModeledNpcImpl) && !npc.getType().getAllowedProperties().contains(property)) context.halt(Component.text("Property " + property.getName() + " not allowed for npc type " + npc.getType().getName(), NamedTextColor.RED));
         Class<?> type = property.getType();
         Object value;
         String valueName;

@@ -3,8 +3,8 @@ package lol.pyr.znpcsplus.commands.action;
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
+import lol.pyr.znpcsplus.api.npc.Npc;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
-import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -23,7 +23,7 @@ public class ActionDeleteCommand implements CommandHandler {
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
         context.setUsage(context.getLabel() + " action delete <id> <index>");
-        NpcImpl npc = context.parse(NpcEntryImpl.class).getNpc();
+        Npc npc = context.parse(NpcEntryImpl.class).getNpc();
         int index = context.parse(Integer.class);
         if (index >= npc.getActions().size() || index < 0) context.halt(Component.text("That npc doesn't have any action with the index " + index, NamedTextColor.RED));
         npc.removeAction(index);

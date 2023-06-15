@@ -52,4 +52,14 @@ public class HologramLine implements PropertyHolder {
     public boolean hasProperty(EntityProperty<?> key) {
         return key.getName().equalsIgnoreCase("name") || key.getName().equalsIgnoreCase("invisible");
     }
+
+    @Override
+    public <T> void setProperty(EntityProperty<T> key, T value) {
+
+    }
+
+    @Override
+    public <T> void UNSAFE_setProperty(EntityProperty<?> property, Object value) {
+
+    }
 }

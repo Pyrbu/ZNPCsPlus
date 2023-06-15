@@ -8,7 +8,8 @@ import lol.pyr.znpcsplus.conversion.DataImporter;
 import lol.pyr.znpcsplus.conversion.znpcs.model.ZNpcsAction;
 import lol.pyr.znpcsplus.conversion.znpcs.model.ZNpcsLocation;
 import lol.pyr.znpcsplus.conversion.znpcs.model.ZNpcsModel;
-import lol.pyr.znpcsplus.interaction.InteractionAction;
+import lol.pyr.znpcsplus.api.interaction.InteractionAction;
+import lol.pyr.znpcsplus.hologram.HologramImpl;
 import lol.pyr.znpcsplus.interaction.consolecommand.ConsoleCommandAction;
 import lol.pyr.znpcsplus.interaction.message.MessageAction;
 import lol.pyr.znpcsplus.interaction.playerchat.PlayerChatAction;
@@ -85,7 +86,7 @@ public class ZNpcsLoader implements DataImporter {
 
             for (String raw : model.getHologramLines()) {
                 Component line = textSerializer.deserialize(raw);
-                npc.getHologram().addLineComponent(line);
+                ((HologramImpl) npc.getHologram()).addLineComponent(line);
             }
 
             for (ZNpcsAction action : model.getClickActions()) {

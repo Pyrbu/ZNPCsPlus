@@ -3,7 +3,7 @@ package lol.pyr.znpcsplus.interaction.consolecommand;
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.common.command.CommandExecutionException;
 import lol.pyr.znpcsplus.api.interaction.InteractionType;
-import lol.pyr.znpcsplus.interaction.InteractionAction;
+import lol.pyr.znpcsplus.api.interaction.InteractionAction;
 import lol.pyr.znpcsplus.interaction.InteractionActionType;
 import lol.pyr.znpcsplus.interaction.InteractionCommandHandler;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;

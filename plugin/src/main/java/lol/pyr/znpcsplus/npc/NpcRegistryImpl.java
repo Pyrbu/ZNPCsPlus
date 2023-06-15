@@ -69,7 +69,7 @@ public class NpcRegistryImpl implements NpcRegistry {
     }
 
     public NpcEntryImpl getByEntityId(int id) {
-        return getAll().stream().filter(entry -> entry.getNpc().getEntity().getEntityId() == id).findFirst().orElse(null);
+        return getAll().stream().filter(entry -> entry.getNpc().getEntityId() == id).findFirst().orElse(null);
     }
 
     public Collection<String> getIds() {
@@ -101,5 +101,10 @@ public class NpcRegistryImpl implements NpcRegistry {
         id = id.toLowerCase();
         if (!npcMap.containsKey(id)) return;
         npcMap.remove(id).getNpc().delete();
+    }
+
+    public void add(NpcEntryImpl entry) {
+        if (npcMap.containsKey(entry.getId())) throw new IllegalArgumentException("An npc with the id " + entry.getId() + " already exists!");
+        npcMap.put(entry.getId(), entry);
     }
 }

@@ -5,9 +5,10 @@ import com.github.retrooper.packetevents.event.PacketReceiveEvent;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientInteractEntity;
 import lol.pyr.znpcsplus.api.event.NpcInteractEvent;
+import lol.pyr.znpcsplus.api.interaction.InteractionAction;
 import lol.pyr.znpcsplus.api.interaction.InteractionType;
+import lol.pyr.znpcsplus.api.npc.Npc;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
-import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import lol.pyr.znpcsplus.user.User;
 import lol.pyr.znpcsplus.user.UserManager;
@@ -33,8 +34,10 @@ public class InteractionPacketListener implements PacketListener {
         if (!user.canInteract()) return;
 
         NpcEntryImpl entry = npcRegistry.getByEntityId(packet.getEntityId());
-        if (entry == null || !entry.isProcessed()) return;
-        NpcImpl npc = entry.getNpc();
+        if (entry == null || !entry.isProcessed()) {
+            Bukkit.broadcastMessage("null entry");
+        }
+        Npc npc = entry.getNpc();
         InteractionType type = wrapClickType(packet.getAction());
 
         NpcInteractEvent interactEvent = new NpcInteractEvent(player, entry, type);

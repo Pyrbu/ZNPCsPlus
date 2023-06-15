@@ -26,7 +26,7 @@ public class HoloSetCommand implements CommandHandler {
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
         context.setUsage(context.getLabel() + " holo set <id> <line> <text>");
-        HologramImpl hologram = context.parse(NpcEntryImpl.class).getNpc().getHologram();
+        HologramImpl hologram = (HologramImpl) context.parse(NpcEntryImpl.class).getNpc().getHologram();
         int line = context.parse(Integer.class);
         if (line < 0 || line >= hologram.getLines().size()) context.halt(Component.text("Invalid line number!", NamedTextColor.RED));
         context.ensureArgsNotEmpty();
@@ -39,7 +39,7 @@ public class HoloSetCommand implements CommandHandler {
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
         if (context.argSize() == 1) return context.suggestCollection(npcRegistry.getModifiableIds());
         if (context.argSize() >= 2) {
-            HologramImpl hologram = context.suggestionParse(0, NpcEntryImpl.class).getNpc().getHologram();
+            HologramImpl hologram = (HologramImpl) context.suggestionParse(0, NpcEntryImpl.class).getNpc().getHologram();
             if (context.argSize() == 2) return context.suggestStream(Stream.iterate(0, n -> n + 1)
                     .limit(hologram.getLines().size()).map(String::valueOf));
             if (context.argSize() == 3) return context.suggestLiteral(componentSerializer.serialize(

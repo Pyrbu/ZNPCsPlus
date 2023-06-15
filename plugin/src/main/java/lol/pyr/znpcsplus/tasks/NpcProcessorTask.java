@@ -2,11 +2,11 @@ package lol.pyr.znpcsplus.tasks;
 
 import lol.pyr.znpcsplus.api.event.NpcDespawnEvent;
 import lol.pyr.znpcsplus.api.event.NpcSpawnEvent;
+import lol.pyr.znpcsplus.api.npc.Npc;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
-import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import lol.pyr.znpcsplus.util.NpcLocation;
 import org.bukkit.Bukkit;
@@ -30,7 +30,7 @@ public class NpcProcessorTask extends BukkitRunnable {
         double lookPropertyDistSq = NumberConversions.square(configManager.getConfig().lookPropertyDistance());
         EntityPropertyImpl<Boolean> lookProperty = propertyRegistry.getByName("look", Boolean.class);
         for (NpcEntryImpl entry : npcRegistry.getProcessable()) {
-            NpcImpl npc = entry.getNpc();
+            Npc npc = entry.getNpc();
 
             double closestDist = Double.MAX_VALUE;
             Player closest = null;
@@ -63,8 +63,10 @@ public class NpcProcessorTask extends BukkitRunnable {
             }
             // look property
             if (closest != null && npc.getProperty(lookProperty) && lookPropertyDistSq >= closestDist) {
-                NpcLocation expected = npc.getLocation().lookingAt(closest.getLocation().add(0, -npc.getType().getHologramOffset(), 0));
-                if (!expected.equals(npc.getLocation())) npc.setLocation(expected);
+                double offset = 0;
+                if (npc.getType() != null)  offset = -npc.getType().getHologramOffset();
+                NpcLocation expected = npc.getNpcLocation().lookingAt(closest.getLocation().add(0, offset, 0));
+                if (!expected.equals(npc.getNpcLocation())) npc.setNpcLocation(expected);
             }
         }
     }

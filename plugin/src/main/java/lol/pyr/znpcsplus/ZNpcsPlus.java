@@ -14,6 +14,7 @@ import lol.pyr.director.adventure.parse.primitive.IntegerParser;
 import lol.pyr.director.common.message.Message;
 import lol.pyr.znpcsplus.api.NpcApiProvider;
 import lol.pyr.znpcsplus.api.interaction.InteractionType;
+import lol.pyr.znpcsplus.api.npc.Npc;
 import lol.pyr.znpcsplus.commands.*;
 import lol.pyr.znpcsplus.commands.action.ActionAddCommand;
 import lol.pyr.znpcsplus.commands.action.ActionDeleteCommand;
@@ -25,6 +26,7 @@ import lol.pyr.znpcsplus.commands.storage.SaveAllCommand;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
+import lol.pyr.znpcsplus.hologram.HologramImpl;
 import lol.pyr.znpcsplus.interaction.ActionRegistry;
 import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
 import lol.pyr.znpcsplus.metadata.*;
@@ -155,8 +157,8 @@ public class ZNpcsPlus extends JavaPlugin {
             for (NpcTypeImpl type : typeRegistry.getAll()) {
                 NpcEntryImpl entry = npcRegistry.create("debug_npc_" + i, world, type, new NpcLocation(i * 3, 200, 0, 0, 0));
                 entry.setProcessed(true);
-                NpcImpl npc = entry.getNpc();
-                npc.getHologram().addLineComponent(Component.text("Hello, World!"));
+                Npc npc = entry.getNpc();
+                ((HologramImpl) npc.getHologram()).addLineComponent(Component.text("Hello, World!"));
                 npc.setProperty(propertyRegistry.getByName("look", Boolean.class), true);
                 i++;
             }
@@ -232,6 +234,7 @@ public class ZNpcsPlus extends JavaPlugin {
                 .addSubcommand("list", new ListCommand(npcRegistry))
                 .addSubcommand("near", new NearCommand(npcRegistry))
                 .addSubcommand("type", new TypeCommand(npcRegistry, typeRegistry))
+                .addSubcommand("tocustommodel", new ToCustomModelCommand(npcRegistry, adventure))
                 .addSubcommand("storage", new MultiCommand(loadHelpMessage("storage"))
                         .addSubcommand("save", new SaveAllCommand(npcRegistry))
                         .addSubcommand("reload", new LoadAllCommand(npcRegistry)))

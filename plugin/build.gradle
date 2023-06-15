@@ -27,6 +27,7 @@ dependencies {
     implementation "net.kyori:adventure-text-minimessage:4.13.1"
     implementation "com.github.retrooper.packetevents:spigot:2.0.0-SNAPSHOT"
     implementation "space.arim.dazzleconf:dazzleconf-ext-snakeyaml:1.2.1"
+    compileOnly "com.ticxo.modelengine:api:R3.1.7"
 
     implementation "lol.pyr:director-adventure:2.1.1"
     implementation project(":api")

@@ -4,10 +4,10 @@ import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
+import lol.pyr.znpcsplus.api.npc.Npc;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
-import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import lol.pyr.znpcsplus.npc.NpcTypeRegistryImpl;
 import lol.pyr.znpcsplus.skin.cache.SkinCache;
@@ -36,7 +36,7 @@ public class SkinCommand implements CommandHandler {
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
         context.setUsage(context.getLabel() + " skin <id> <type> [value]");
-        NpcImpl npc = context.parse(NpcEntryImpl.class).getNpc();
+        Npc npc = context.parse(NpcEntryImpl.class).getNpc();
         if (npc.getType() != typeRegistry.getByEntityType(EntityTypes.PLAYER)) context.halt(Component.text("The NPC must be a player to have a skin", NamedTextColor.RED));
         String type = context.popString();
 

@@ -20,7 +20,7 @@ public class HoloOffsetCommand implements CommandHandler {
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
         context.setUsage(context.getLabel() + " holo offset <id> <offset>");
-        HologramImpl hologram = context.parse(NpcEntryImpl.class).getNpc().getHologram();
+        HologramImpl hologram = (HologramImpl) context.parse(NpcEntryImpl.class).getNpc().getHologram();
         double offset = context.parse(Double.class);
         hologram.setOffset(offset);
         context.send("NPC hologram offset set!");
@@ -30,8 +30,7 @@ public class HoloOffsetCommand implements CommandHandler {
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
         if (context.argSize() == 1) return context.suggestCollection(npcRegistry.getModifiableIds());
         if (context.argSize() == 2) {
-            HologramImpl hologram = context.suggestionParse(0, NpcEntryImpl.class).getNpc().getHologram();
-            return context.suggestLiteral(String.valueOf(hologram.getOffset()));
+            return context.suggestLiteral(String.valueOf(((HologramImpl) context.suggestionParse(0, NpcEntryImpl.class).getNpc().getHologram()).getOffset()));
         }
         return Collections.emptyList();
     }

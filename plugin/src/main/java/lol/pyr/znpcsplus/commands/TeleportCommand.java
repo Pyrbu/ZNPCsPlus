@@ -3,8 +3,8 @@ package lol.pyr.znpcsplus.commands;
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
+import lol.pyr.znpcsplus.api.npc.Npc;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
-import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import lol.pyr.znpcsplus.util.FoliaUtil;
 import net.kyori.adventure.text.Component;
@@ -25,7 +25,7 @@ public class TeleportCommand implements CommandHandler {
     public void run(CommandContext context) throws CommandExecutionException {
         context.setUsage(context.getLabel() + " teleport <id>");
         Player player = context.ensureSenderIsPlayer();
-        NpcImpl npc = context.parse(NpcEntryImpl.class).getNpc();
+        Npc npc = context.parse(NpcEntryImpl.class).getNpc();
         FoliaUtil.teleport(player, npc.getBukkitLocation());
         context.send(Component.text("Teleported to NPC!", NamedTextColor.GREEN));
     }
