@@ -35,7 +35,7 @@ public class InteractionPacketListener implements PacketListener {
 
         NpcEntryImpl entry = npcRegistry.getByEntityId(packet.getEntityId());
         if (entry == null || !entry.isProcessed()) {
-            Bukkit.broadcastMessage("null entry");
+            return;
         }
         Npc npc = entry.getNpc();
         InteractionType type = wrapClickType(packet.getAction());

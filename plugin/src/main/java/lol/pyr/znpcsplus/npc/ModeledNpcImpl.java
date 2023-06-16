@@ -15,7 +15,6 @@ import lol.pyr.znpcsplus.api.npc.Npc;
 import lol.pyr.znpcsplus.api.npc.NpcType;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.util.NpcLocation;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -193,12 +192,11 @@ public class ModeledNpcImpl extends Dummy implements Npc {
 
     @Override
     public boolean onHurt(IDamageSource source, float amount) {
-        Bukkit.broadcastMessage("damaged custom model");
         return false;
     }
 
     @Override
     public void onInteract(Player player, EquipmentSlot hand) {
-        Bukkit.broadcastMessage("interacted with custom model");
+
     }
 }

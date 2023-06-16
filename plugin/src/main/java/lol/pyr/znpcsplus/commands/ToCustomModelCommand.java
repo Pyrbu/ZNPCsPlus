@@ -46,10 +46,10 @@ public class ToCustomModelCommand implements CommandHandler {
             return;
         }
         entity.wrapRangeManager(modeledEntity);
+        entity.getRangeManager().setRenderDistance(32); // TODO: use config value
         entity.setHitbox(model.getBlueprint().getMainHitbox());
         modeledEntity.addModel(model, false);
         modeledEntity.setBaseEntityVisible(false);
-        modeledEntity.getRangeManager().setRenderDistance(100);
 //        modeledEntity.setModelRotationLock(true);
         modeledEntity.setState(entity.getModelState());
         if (!modeledEntity.isInitialized()) {

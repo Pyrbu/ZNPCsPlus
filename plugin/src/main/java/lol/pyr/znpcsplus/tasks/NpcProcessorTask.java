@@ -6,6 +6,7 @@ import lol.pyr.znpcsplus.api.npc.Npc;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
+import lol.pyr.znpcsplus.npc.ModeledNpcImpl;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import lol.pyr.znpcsplus.util.NpcLocation;
@@ -42,7 +43,7 @@ public class NpcProcessorTask extends BukkitRunnable {
                 double distance = player.getLocation().distanceSquared(npc.getBukkitLocation());
 
                 // visibility
-                boolean inRange = distance <= distSq;
+                boolean inRange = npc instanceof ModeledNpcImpl ? distance <= NumberConversions.square(((ModeledNpcImpl) npc).getRangeManager().getRenderDistance()) : distance <= distSq;
                 if (!inRange && npc.isShown(player)) {
                     NpcDespawnEvent event = new NpcDespawnEvent(player, entry);
                     Bukkit.getPluginManager().callEvent(event);
