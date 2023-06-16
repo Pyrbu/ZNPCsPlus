@@ -64,6 +64,11 @@ public class ModeledNpcImpl extends Dummy implements Npc {
         return rangeManager;
     }
 
+    @Override
+    public ManualRangeManager getRangeManager() {
+        return rangeManager;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getProperty(EntityProperty<T> key) {

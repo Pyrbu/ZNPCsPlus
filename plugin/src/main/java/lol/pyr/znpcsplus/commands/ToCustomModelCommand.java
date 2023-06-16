@@ -37,7 +37,6 @@ public class ToCustomModelCommand implements CommandHandler {
             return;
         }
         ModeledNpcImpl entity = new ModeledNpcImpl(entry.getNpc().getNpcLocation(), entry.getNpc().getWorld());
-        entity.setHitbox(model.getBlueprint().getMainHitbox());
         NpcEntryImpl modeledEntry = new NpcEntryImpl(entry.getId() + "_model", entity);
         npcRegistry.add(modeledEntry);
         modeledEntry.enableEverything();
@@ -47,6 +46,7 @@ public class ToCustomModelCommand implements CommandHandler {
             return;
         }
         entity.wrapRangeManager(modeledEntity);
+        entity.setHitbox(model.getBlueprint().getMainHitbox());
         modeledEntity.addModel(model, false);
         modeledEntity.setBaseEntityVisible(false);
         modeledEntity.getRangeManager().setRenderDistance(100);
