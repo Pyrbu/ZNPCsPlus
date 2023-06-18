@@ -1,15 +1,21 @@
 package lol.pyr.znpcsplus.conversion.znpcs;
 
+import com.github.retrooper.packetevents.protocol.item.ItemStack;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import lol.pyr.znpcsplus.api.interaction.InteractionType;
+import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.conversion.DataImporter;
 import lol.pyr.znpcsplus.conversion.znpcs.model.ZNpcsAction;
 import lol.pyr.znpcsplus.conversion.znpcs.model.ZNpcsLocation;
 import lol.pyr.znpcsplus.conversion.znpcs.model.ZNpcsModel;
+import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
+import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
+import lol.pyr.znpcsplus.hologram.HologramImpl;
 import lol.pyr.znpcsplus.interaction.InteractionAction;
 import lol.pyr.znpcsplus.interaction.consolecommand.ConsoleCommandAction;
 import lol.pyr.znpcsplus.interaction.message.MessageAction;
@@ -21,7 +27,10 @@ import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcTypeRegistryImpl;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
+import lol.pyr.znpcsplus.skin.cache.SkinCache;
+import lol.pyr.znpcsplus.skin.descriptor.FetchingDescriptor;
 import lol.pyr.znpcsplus.util.BungeeConnector;
+import lol.pyr.znpcsplus.util.ItemSerializationUtil;
 import lol.pyr.znpcsplus.util.NpcLocation;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
@@ -34,6 +43,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 
 public class ZNpcImporter implements DataImporter {
     private final ConfigManager configManager;
@@ -43,12 +53,14 @@ public class ZNpcImporter implements DataImporter {
     private final PacketFactory packetFactory;
     private final LegacyComponentSerializer textSerializer;
     private final NpcTypeRegistryImpl typeRegistry;
+    private final EntityPropertyRegistryImpl propertyRegistry;
+    private final SkinCache skinCache;
     private final File dataFile;
     private final Gson gson;
 
     public ZNpcImporter(ConfigManager configManager, BukkitAudiences adventure, BungeeConnector bungeeConnector,
                         TaskScheduler taskScheduler, PacketFactory packetFactory, LegacyComponentSerializer textSerializer,
-                        NpcTypeRegistryImpl typeRegistry, File dataFile) {
+                        NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry, SkinCache skinCache, File dataFile) {
 
         this.configManager = configManager;
         this.adventure = adventure;
@@ -57,6 +69,8 @@ public class ZNpcImporter implements DataImporter {
         this.packetFactory = packetFactory;
         this.textSerializer = textSerializer;
         this.typeRegistry = typeRegistry;
+        this.propertyRegistry = propertyRegistry;
+        this.skinCache = skinCache;
         this.dataFile = dataFile;
         gson = new GsonBuilder()
                 .create();
@@ -73,7 +87,7 @@ public class ZNpcImporter implements DataImporter {
             return Collections.emptyList();
         }
         if (models == null) return Collections.emptyList();
-        ArrayList<NpcEntryImpl> entries = new ArrayList<>();
+        ArrayList<NpcEntryImpl> entries = new ArrayList<>(models.length);
         for (ZNpcsModel model : models) {
             String type = model.getNpcType();
 
@@ -90,14 +104,26 @@ public class ZNpcImporter implements DataImporter {
             NpcLocation location = new NpcLocation(oldLoc.getX(), oldLoc.getY(), oldLoc.getZ(), oldLoc.getYaw(), oldLoc.getPitch());
             NpcImpl npc = new NpcImpl(configManager, packetFactory, textSerializer, oldLoc.getWorld(), typeRegistry.getByName(type), location);
 
+            HologramImpl hologram = npc.getHologram();
+            hologram.setOffset(model.getHologramHeight());
             for (String raw : model.getHologramLines()) {
                 Component line = textSerializer.deserialize(raw);
-                npc.getHologram().addLineComponent(line);
+                hologram.addLineComponent(line);
             }
 
             for (ZNpcsAction action : model.getClickActions()) {
                 InteractionType t = adaptClickType(action.getClickType());
                 npc.addAction(adaptAction(action.getActionType(), t, action.getAction(), action.getDelay()));
+            }
+
+            for (Map.Entry<String, String> entry : model.getNpcEquip().entrySet()) {
+                EntityPropertyImpl<ItemStack> property = propertyRegistry.getByName(entry.getKey(), ItemStack.class);
+                if (property == null) continue;
+                npc.setProperty(property, SpigotConversionUtil.fromBukkitItemStack(ItemSerializationUtil.itemFromB64(entry.getValue())));
+            }
+
+            if (model.getSkinName() != null) {
+                npc.setProperty(propertyRegistry.getByName("skin", SkinDescriptor.class), new FetchingDescriptor(skinCache, model.getSkinName()));
             }
 
             NpcEntryImpl entry = new NpcEntryImpl(String.valueOf(model.getId()), npc);

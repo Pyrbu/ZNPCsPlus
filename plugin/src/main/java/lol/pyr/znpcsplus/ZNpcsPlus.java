@@ -118,7 +118,8 @@ public class ZNpcsPlus extends JavaPlugin {
                 scheduler, typeRegistry, propertyRegistry, textSerializer);
         UserManager userManager = new UserManager();
         DataImporterRegistry importerRegistry = new DataImporterRegistry(configManager, adventure, bungeeConnector,
-                scheduler, packetFactory, textSerializer, typeRegistry, getDataFolder().getParentFile());
+                scheduler, packetFactory, textSerializer, typeRegistry, getDataFolder().getParentFile(),
+                propertyRegistry, skinCache);
 
         log(ChatColor.WHITE + " * Registerring components...");
         typeRegistry.registerDefault(packetEvents, propertyRegistry);
