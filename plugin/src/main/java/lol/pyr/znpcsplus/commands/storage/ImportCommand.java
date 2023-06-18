@@ -5,10 +5,12 @@ import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
 import lol.pyr.znpcsplus.conversion.DataImporter;
 import lol.pyr.znpcsplus.conversion.DataImporterRegistry;
+import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -37,8 +39,9 @@ public class ImportCommand implements CommandHandler {
                 return;
             }
             try {
-                npcRegistry.registerAll(importer.importData());
-                context.send(Component.text("All NPCs from " + id + " have been loaded.", NamedTextColor.GREEN));
+                Collection<NpcEntryImpl> entries = importer.importData();
+                npcRegistry.registerAll(entries);
+                context.send(Component.text(entries.size() + " npcs have been loaded from " + id, NamedTextColor.GREEN));
             } catch (Exception exception) {
                 context.send(Component.text("Importing failed! Please check the console for more details.", NamedTextColor.RED));
                 exception.printStackTrace();
