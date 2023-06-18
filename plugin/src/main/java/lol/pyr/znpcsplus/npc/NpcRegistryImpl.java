@@ -25,6 +25,8 @@ public class NpcRegistryImpl implements NpcRegistry {
     private final ConfigManager configManager;
     private final LegacyComponentSerializer textSerializer;
 
+    private final Map<String, NpcEntryImpl> npcMap = new HashMap<>();
+
     public NpcRegistryImpl(ConfigManager configManager, ZNpcsPlus plugin, PacketFactory packetFactory, ActionRegistry actionRegistry, TaskScheduler scheduler, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer) {
         this.textSerializer = textSerializer;
         storage = configManager.getConfig().storageType().create(configManager, plugin, packetFactory, actionRegistry, typeRegistry, propertyRegistry, textSerializer);
@@ -37,7 +39,15 @@ public class NpcRegistryImpl implements NpcRegistry {
         }
     }
 
+    public void registerAll(Collection<NpcEntryImpl> entries) {
+        for (NpcEntryImpl entry : entries) {
+            NpcEntryImpl old = npcMap.put(entry.getId(), entry);
+            if (old != null) old.getNpc().delete();
+        }
+    }
+
     public void reload() {
+        for (NpcEntryImpl entry : npcMap.values()) entry.getNpc().delete();
         npcMap.clear();
         for (NpcEntryImpl entry : storage.loadNpcs()) npcMap.put(entry.getId(), entry);
     }
@@ -45,8 +55,6 @@ public class NpcRegistryImpl implements NpcRegistry {
     public void save() {
         storage.saveNpcs(npcMap.values().stream().filter(NpcEntryImpl::isSave).collect(Collectors.toList()));
     }
-
-    private final Map<String, NpcEntryImpl> npcMap = new HashMap<>();
 
     public NpcEntryImpl get(String id) {
         return npcMap.get(id.toLowerCase());

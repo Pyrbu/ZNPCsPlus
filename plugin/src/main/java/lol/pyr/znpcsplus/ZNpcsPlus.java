@@ -20,9 +20,11 @@ import lol.pyr.znpcsplus.commands.action.ActionDeleteCommand;
 import lol.pyr.znpcsplus.commands.action.ActionEditCommand;
 import lol.pyr.znpcsplus.commands.action.ActionListCommand;
 import lol.pyr.znpcsplus.commands.hologram.*;
+import lol.pyr.znpcsplus.commands.storage.ImportCommand;
 import lol.pyr.znpcsplus.commands.storage.LoadAllCommand;
 import lol.pyr.znpcsplus.commands.storage.SaveAllCommand;
 import lol.pyr.znpcsplus.config.ConfigManager;
+import lol.pyr.znpcsplus.conversion.DataImporterRegistry;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.interaction.ActionRegistry;
@@ -112,8 +114,11 @@ public class ZNpcsPlus extends JavaPlugin {
         BungeeConnector bungeeConnector = new BungeeConnector(this);
         ActionRegistry actionRegistry = new ActionRegistry();
         NpcTypeRegistryImpl typeRegistry = new NpcTypeRegistryImpl();
-        NpcRegistryImpl npcRegistry = new NpcRegistryImpl(configManager, this, packetFactory, actionRegistry, scheduler, typeRegistry, propertyRegistry, textSerializer);
+        NpcRegistryImpl npcRegistry = new NpcRegistryImpl(configManager, this, packetFactory, actionRegistry,
+                scheduler, typeRegistry, propertyRegistry, textSerializer);
         UserManager userManager = new UserManager();
+        DataImporterRegistry importerRegistry = new DataImporterRegistry(configManager, adventure, bungeeConnector,
+                scheduler, packetFactory, textSerializer, typeRegistry, getDataFolder().getParentFile());
 
         log(ChatColor.WHITE + " * Registerring components...");
         typeRegistry.registerDefault(packetEvents, propertyRegistry);
@@ -123,7 +128,7 @@ public class ZNpcsPlus extends JavaPlugin {
         pluginManager.registerEvents(new UserListener(userManager), this);
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
-        registerCommands(npcRegistry, skinCache, adventure, actionRegistry, typeRegistry, propertyRegistry);
+        registerCommands(npcRegistry, skinCache, adventure, actionRegistry, typeRegistry, propertyRegistry, importerRegistry);
 
         log(ChatColor.WHITE + " * Starting tasks...");
         if (configManager.getConfig().checkForUpdates()) {
@@ -209,7 +214,10 @@ public class ZNpcsPlus extends JavaPlugin {
     }
 
 
-    private void registerCommands(NpcRegistryImpl npcRegistry, SkinCache skinCache, BukkitAudiences adventure, ActionRegistry actionRegistry, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry) {
+    private void registerCommands(NpcRegistryImpl npcRegistry, SkinCache skinCache, BukkitAudiences adventure,
+                                  ActionRegistry actionRegistry, NpcTypeRegistryImpl typeRegistry,
+                                  EntityPropertyRegistryImpl propertyRegistry, DataImporterRegistry importerRegistry) {
+
         Message<CommandContext> incorrectUsageMessage = context -> context.send(Component.text("Incorrect usage: /" + context.getUsage(), NamedTextColor.RED));
         CommandManager manager = new CommandManager(this, adventure, incorrectUsageMessage);
 
@@ -234,7 +242,8 @@ public class ZNpcsPlus extends JavaPlugin {
                 .addSubcommand("type", new TypeCommand(npcRegistry, typeRegistry))
                 .addSubcommand("storage", new MultiCommand(loadHelpMessage("storage"))
                         .addSubcommand("save", new SaveAllCommand(npcRegistry))
-                        .addSubcommand("reload", new LoadAllCommand(npcRegistry)))
+                        .addSubcommand("reload", new LoadAllCommand(npcRegistry))
+                        .addSubcommand("import", new ImportCommand(npcRegistry, importerRegistry)))
                 .addSubcommand("holo", new MultiCommand(loadHelpMessage("holo"))
                         .addSubcommand("add", new HoloAddCommand(npcRegistry, textSerializer))
                         .addSubcommand("delete", new HoloDeleteCommand(npcRegistry))

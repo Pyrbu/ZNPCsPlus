@@ -1,7 +1,5 @@
 package lol.pyr.znpcsplus.conversion.znpcs.model;
 
-import org.bukkit.inventory.ItemStack;
-
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +13,7 @@ public class ZNpcsModel {
     private String npcType;
     private List<String> hologramLines;
     private List<ZNpcsAction> clickActions;
-    private Map<String, ItemStack> npcEquip;
+    private Map<String, String> npcEquip;
     private Map<String, String[]> customizationMap;
 
     public int getId() {
@@ -54,7 +52,7 @@ public class ZNpcsModel {
         return clickActions;
     }
 
-    public Map<String, ItemStack> getNpcEquip() {
+    public Map<String, String> getNpcEquip() {
         return npcEquip;
     }
 

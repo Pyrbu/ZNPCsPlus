@@ -1,7 +1,9 @@
 package lol.pyr.znpcsplus.conversion.znpcs;
 
 import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import lol.pyr.znpcsplus.api.interaction.InteractionType;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.conversion.DataImporter;
@@ -25,14 +27,15 @@ import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-public class ZNpcsLoader implements DataImporter {
+public class ZNpcImporter implements DataImporter {
     private final ConfigManager configManager;
     private final BukkitAudiences adventure;
     private final BungeeConnector bungeeConnector;
@@ -40,11 +43,13 @@ public class ZNpcsLoader implements DataImporter {
     private final PacketFactory packetFactory;
     private final LegacyComponentSerializer textSerializer;
     private final NpcTypeRegistryImpl typeRegistry;
-    private final File folder;
     private final File dataFile;
     private final Gson gson;
 
-    public ZNpcsLoader(ConfigManager configManager, BukkitAudiences adventure, BungeeConnector bungeeConnector, TaskScheduler taskScheduler, PacketFactory packetFactory, LegacyComponentSerializer textSerializer, NpcTypeRegistryImpl typeRegistry, File pluginsFolder) {
+    public ZNpcImporter(ConfigManager configManager, BukkitAudiences adventure, BungeeConnector bungeeConnector,
+                        TaskScheduler taskScheduler, PacketFactory packetFactory, LegacyComponentSerializer textSerializer,
+                        NpcTypeRegistryImpl typeRegistry, File dataFile) {
+
         this.configManager = configManager;
         this.adventure = adventure;
         this.bungeeConnector = bungeeConnector;
@@ -52,18 +57,20 @@ public class ZNpcsLoader implements DataImporter {
         this.packetFactory = packetFactory;
         this.textSerializer = textSerializer;
         this.typeRegistry = typeRegistry;
-        folder = new File(pluginsFolder, "ServersNPC");
-        dataFile = new File(folder, "data.json");
-        gson = new Gson();
+        this.dataFile = dataFile;
+        gson = new GsonBuilder()
+                .create();
     }
 
     @Override
     public Collection<NpcEntryImpl> importData() {
         ZNpcsModel[] models;
-        try (FileReader fileReader = new FileReader(dataFile)) {
-            models = gson.fromJson(new JsonReader(fileReader), ZNpcsModel[].class);
+        try (BufferedReader fileReader = Files.newBufferedReader(dataFile.toPath())) {
+            JsonElement element = JsonParser.parseReader(fileReader);
+            models = gson.fromJson(element, ZNpcsModel[].class);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            return Collections.emptyList();
         }
         if (models == null) return Collections.emptyList();
         ArrayList<NpcEntryImpl> entries = new ArrayList<>();
@@ -89,7 +96,7 @@ public class ZNpcsLoader implements DataImporter {
             }
 
             for (ZNpcsAction action : model.getClickActions()) {
-                InteractionType t = adaptClickType(action.getActionType());
+                InteractionType t = adaptClickType(action.getClickType());
                 npc.addAction(adaptAction(action.getActionType(), t, action.getAction(), action.getDelay()));
             }
 
@@ -102,7 +109,7 @@ public class ZNpcsLoader implements DataImporter {
 
     @Override
     public boolean isValid() {
-        return folder.isDirectory() && dataFile.isFile();
+        return dataFile.isFile();
     }
 
     private InteractionType adaptClickType(String clickType) {
