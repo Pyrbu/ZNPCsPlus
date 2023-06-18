@@ -28,14 +28,16 @@ public class DataImporterRegistry {
 
         register("znpcs", LazyLoader.of(() -> new ZNpcImporter(configManager, adventure, bungeeConnector, taskScheduler,
                 packetFactory, textSerializer, typeRegistry, propertyRegistry, skinCache, new File(pluginsFolder, "ServersNPC/data.json"))));
+        /* register("citizens", LazyLoader.of(() -> new CitizensImporter(configManager, adventure, bungeeConnector, taskScheduler,
+                packetFactory, textSerializer, typeRegistry, propertyRegistry, skinCache, new File(pluginsFolder, "Citizens/saves.yml")))); */
     }
 
     private void register(String id, LazyLoader<DataImporter> loader) {
-        importers.put(id.toUpperCase(), loader);
+        importers.put(id.toLowerCase(), loader);
     }
 
     public DataImporter getImporter(String id) {
-        id = id.toUpperCase();
+        id = id.toLowerCase();
         return importers.containsKey(id) ? importers.get(id).get() : null;
     }
 
