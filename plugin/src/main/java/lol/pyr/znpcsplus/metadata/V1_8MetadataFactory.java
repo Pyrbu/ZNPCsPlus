@@ -4,10 +4,11 @@ import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataType;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
-import lol.pyr.znpcsplus.util.list.ListUtil;
 import net.kyori.adventure.text.Component;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class V1_8MetadataFactory implements MetadataFactory {
     @Override
@@ -22,7 +23,7 @@ public class V1_8MetadataFactory implements MetadataFactory {
 
     @Override
     public Collection<EntityData> name(Component name) {
-        return ListUtil.immutableList(
+        return list(
                 newEntityData(2, EntityDataTypes.STRING, AdventureSerializer.getLegacyGsonSerializer().serialize(name)),
                 newEntityData(3, EntityDataTypes.BYTE, (byte) 1)
         );
@@ -52,5 +53,12 @@ public class V1_8MetadataFactory implements MetadataFactory {
 
     protected <T> EntityData newEntityData(int index, EntityDataType<T> type, T value) {
         return new EntityData(index, type, value);
+    }
+
+    @SafeVarargs
+    protected final <T> List<T> list(T... items) {
+        ArrayList<T> list = new ArrayList<>(items.length);
+        for (int i = 0; i < items.length; i++) list.add(i, items[i]);
+        return list;
     }
 }
