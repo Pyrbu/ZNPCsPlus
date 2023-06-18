@@ -1,5 +1,6 @@
 package lol.pyr.znpcsplus.conversion.znpcs.model;
 
+@SuppressWarnings("unused")
 public class ZNpcsLocation {
     private String world;
     private double x;

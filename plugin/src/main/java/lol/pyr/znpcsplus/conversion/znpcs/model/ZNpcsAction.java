@@ -1,5 +1,6 @@
 package lol.pyr.znpcsplus.conversion.znpcs.model;
 
+@SuppressWarnings("unused")
 public class ZNpcsAction {
     private String actionType;
     private String clickType;

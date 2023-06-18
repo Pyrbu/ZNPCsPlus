@@ -3,11 +3,11 @@ package lol.pyr.znpcsplus.conversion.znpcs.model;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 public class ZNpcsModel {
     private int id;
     private double hologramHeight;
-    private String skin;
-    private String signature;
+    private String skinName;
     private String glowName;
     private ZNpcsLocation location;
     private String npcType;
@@ -24,16 +24,8 @@ public class ZNpcsModel {
         return hologramHeight;
     }
 
-    public String getSkin() {
-        return skin;
-    }
-
-    public String getSignature() {
-        return signature;
-    }
-
-    public String getGlowName() {
-        return glowName;
+    public String getSkinName() {
+        return skinName;
     }
 
     public ZNpcsLocation getLocation() {
