@@ -41,12 +41,11 @@ public class YamlStorage implements NpcStorage {
         if (!this.folder.exists()) this.folder.mkdirs();
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public Collection<NpcEntryImpl> loadNpcs() {
         File[] files = folder.listFiles();
         if (files == null || files.length == 0) return Collections.emptyList();
-        List<NpcEntryImpl> npcs = new ArrayList<>();
+        List<NpcEntryImpl> npcs = new ArrayList<>(files.length);
         for (File file : files) if (file.isFile() && file.getName().toLowerCase().endsWith(".yml")) {
             YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
             NpcImpl npc = new NpcImpl(configManager, packetFactory, textSerializer, config.getString("world"),
@@ -93,7 +92,7 @@ public class YamlStorage implements NpcStorage {
             }
 
             if (npc.getHologram().getOffset() != 0.0) config.set("hologram.offset", npc.getHologram().getOffset());
-            List<String> lines = new ArrayList<>();
+            List<String> lines = new ArrayList<>(npc.getHologram().getLines().size());
             for (HologramLine line : npc.getHologram().getLines()) {
                 lines.add(MiniMessage.miniMessage().serialize(line.getText()));
             }
