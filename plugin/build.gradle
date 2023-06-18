@@ -51,7 +51,6 @@ shadowJar {
     relocate "space.arim.dazzleconf", "lol.pyr.znpcsplus.lib.dazzleconf"
 
     relocate "lol.pyr.director", "lol.pyr.znpcsplus.lib.command"
-    relocate "lol.pyr.serviceinjector", "lol.pyr.znpcsplus.lib.serviceinjector"
     minimize()
 }
 
