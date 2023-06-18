@@ -1,6 +1,7 @@
 package lol.pyr.znpcsplus.entity;
 
 import com.github.retrooper.packetevents.protocol.item.ItemStack;
+import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.entity.EntityPropertyRegistry;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.entity.serializers.*;
@@ -8,8 +9,11 @@ import lol.pyr.znpcsplus.skin.cache.SkinCache;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unchecked")
 public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
@@ -211,6 +215,14 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         if (clazz == null) return;
         EntityPropertyImpl<T> property = new EntityPropertyImpl<>(name, defaultValue, clazz, (PropertySerializer<T>) serializerMap.get(clazz));
         byName.put(name.toLowerCase(), property);
+    }
+
+    @Override
+    public Collection<EntityProperty<?>> getAll() {
+        return Collections.unmodifiableCollection(
+                byName.values().stream()
+                        .map(property -> (EntityProperty<?>) property)
+                        .collect(Collectors.toSet()));
     }
 
     public <T> EntityPropertyImpl<T> getByName(String name, Class<T> type) {

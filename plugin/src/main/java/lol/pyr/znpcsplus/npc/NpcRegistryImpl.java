@@ -1,6 +1,7 @@
 package lol.pyr.znpcsplus.npc;
 
 import lol.pyr.znpcsplus.ZNpcsPlus;
+import lol.pyr.znpcsplus.api.npc.NpcEntry;
 import lol.pyr.znpcsplus.api.npc.NpcRegistry;
 import lol.pyr.znpcsplus.api.npc.NpcType;
 import lol.pyr.znpcsplus.config.ConfigManager;
@@ -80,8 +81,20 @@ public class NpcRegistryImpl implements NpcRegistry {
         return getAll().stream().filter(entry -> entry.getNpc().getEntity().getEntityId() == id).findFirst().orElse(null);
     }
 
-    public Collection<String> getIds() {
+    public Collection<String> getAllIds() {
         return Collections.unmodifiableSet(npcMap.keySet());
+    }
+
+    @Override
+    public Collection<? extends NpcEntry> getAllPlayerMade() {
+        return getAllModifiable();
+    }
+
+    @Override
+    public Collection<String> getAllPlayerMadeIds() {
+        return getAllModifiable().stream()
+                .map(NpcEntryImpl::getId)
+                .collect(Collectors.toSet());
     }
 
     public Collection<String> getModifiableIds() {

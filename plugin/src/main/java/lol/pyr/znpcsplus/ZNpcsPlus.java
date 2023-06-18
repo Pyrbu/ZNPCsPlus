@@ -158,7 +158,7 @@ public class ZNpcsPlus extends JavaPlugin {
             World world = Bukkit.getWorld("world");
             if (world == null) world = Bukkit.getWorlds().get(0);
             int i = 0;
-            for (NpcTypeImpl type : typeRegistry.getAll()) {
+            for (NpcTypeImpl type : typeRegistry.getAllImpl()) {
                 NpcEntryImpl entry = npcRegistry.create("debug_npc_" + i, world, type, new NpcLocation(i * 3, 200, 0, 0, 0));
                 entry.setProcessed(true);
                 NpcImpl npc = entry.getNpc();

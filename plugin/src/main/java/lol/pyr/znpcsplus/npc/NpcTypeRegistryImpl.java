@@ -4,6 +4,7 @@ import com.github.retrooper.packetevents.PacketEventsAPI;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
+import lol.pyr.znpcsplus.api.npc.NpcType;
 import lol.pyr.znpcsplus.api.npc.NpcTypeRegistry;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import org.bukkit.plugin.Plugin;
@@ -319,7 +320,11 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .setHologramOffset(0.25));
     }
 
-    public Collection<NpcTypeImpl> getAll() {
+    public Collection<NpcType> getAll() {
+        return Collections.unmodifiableList(types);
+    }
+
+    public Collection<NpcTypeImpl> getAllImpl() {
         return Collections.unmodifiableList(types);
     }
 

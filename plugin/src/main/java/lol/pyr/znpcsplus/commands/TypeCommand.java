@@ -31,7 +31,7 @@ public class TypeCommand implements CommandHandler {
     @Override
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
         if (context.argSize() == 1) return context.suggestCollection(registry.getModifiableIds());
-        if (context.argSize() == 2) return context.suggestStream(typeRegistry.getAll().stream().map(NpcTypeImpl::getName));
+        if (context.argSize() == 2) return context.suggestStream(typeRegistry.getAllImpl().stream().map(NpcTypeImpl::getName));
         return Collections.emptyList();
     }
 }

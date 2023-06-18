@@ -42,7 +42,7 @@ public class CreateCommand implements CommandHandler {
     @Override
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
         if (context.argSize() == 1) return context.suggestCollection(npcRegistry.getModifiableIds());
-        if (context.argSize() == 2) return context.suggestStream(typeRegistry.getAll().stream().map(NpcTypeImpl::getName));
+        if (context.argSize() == 2) return context.suggestStream(typeRegistry.getAllImpl().stream().map(NpcTypeImpl::getName));
         return Collections.emptyList();
     }
 }
