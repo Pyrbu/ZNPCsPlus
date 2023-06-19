@@ -4,8 +4,8 @@ subprojects {
     group "lol.pyr"
     version "2.0.0"
 
-    compileJava {
-        options.release.set(8)
+    java {
+        toolchain.languageVersion.set(JavaLanguageVersion.of(8))
     }
 
     repositories {
