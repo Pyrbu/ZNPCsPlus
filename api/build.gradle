@@ -22,13 +22,13 @@ publishing {
     }
     repositories {
         maven {
-            if (properties.containsKey("DIST_USERNAME") && properties.containsKey("DIST_PASSWORD")) {
-                credentials {
-                    username properties.get("DIST_USERNAME")
-                    password properties.get("DIST_PASSWORD")
-                }
+            Map<String, String> systemProperties = System.getenv()
+            credentials {
+                if (systemProperties.containsKey("DIST_USERNAME")) username systemProperties.get("DIST_USERNAME")
+                if (systemProperties.containsKey("DIST_PASSWORD")) password systemProperties.get("DIST_PASSWORD")
             }
-            url = uri("https://repo.pyr.lol/releases/")
+            // If the BUILD_ID enviroment variable is present that means its a Jenkins build & that it should go into the snapshots repo
+            url = systemProperties.containsKey("BUILD_ID") ? uri("https://repo.pyr.lol/snapshots/") : uri("https://repo.pyr.lol/releases/")
         }
     }
 }
