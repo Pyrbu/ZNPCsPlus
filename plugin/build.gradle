@@ -5,6 +5,9 @@ plugins {
 }
 
 runServer {
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
     minecraftVersion "1.20.1"
 }
 
