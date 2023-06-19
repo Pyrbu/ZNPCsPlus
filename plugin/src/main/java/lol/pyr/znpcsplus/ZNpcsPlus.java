@@ -97,7 +97,6 @@ public class ZNpcsPlus extends JavaPlugin {
 
         PluginManager pluginManager = Bukkit.getPluginManager();
 
-        if (pluginManager.isPluginEnabled("ServersNPC")) log(ChatColor.DARK_RED + " * Old version of znpcs detected! The plugin might not work correctly!");
         long before = System.currentTimeMillis();
 
         log(ChatColor.WHITE + " * Initializing libraries...");
