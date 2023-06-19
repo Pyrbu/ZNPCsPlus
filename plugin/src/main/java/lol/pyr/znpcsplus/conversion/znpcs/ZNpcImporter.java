@@ -40,10 +40,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 
 public class ZNpcImporter implements DataImporter {
     private final ConfigManager configManager;
@@ -102,7 +99,8 @@ public class ZNpcImporter implements DataImporter {
 
             ZNpcsLocation oldLoc = model.getLocation();
             NpcLocation location = new NpcLocation(oldLoc.getX(), oldLoc.getY(), oldLoc.getZ(), oldLoc.getYaw(), oldLoc.getPitch());
-            NpcImpl npc = new NpcImpl(configManager, packetFactory, textSerializer, oldLoc.getWorld(), typeRegistry.getByName(type), location);
+            UUID uuid = model.getUuid() == null ? UUID.randomUUID() : model.getUuid();
+            NpcImpl npc = new NpcImpl(uuid, configManager, packetFactory, textSerializer, oldLoc.getWorld(), typeRegistry.getByName(type), location);
 
             HologramImpl hologram = npc.getHologram();
             hologram.setOffset(model.getHologramHeight());

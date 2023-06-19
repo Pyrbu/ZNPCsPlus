@@ -48,7 +48,8 @@ public class YamlStorage implements NpcStorage {
         List<NpcEntryImpl> npcs = new ArrayList<>(files.length);
         for (File file : files) if (file.isFile() && file.getName().toLowerCase().endsWith(".yml")) {
             YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-            NpcImpl npc = new NpcImpl(configManager, packetFactory, textSerializer, config.getString("world"),
+            UUID uuid = config.contains("uuid") ? UUID.fromString(config.getString("uuid")) : UUID.randomUUID();
+            NpcImpl npc = new NpcImpl(uuid, configManager, packetFactory, textSerializer, config.getString("world"),
                     typeRegistry.getByName(config.getString("type")), deserializeLocation(config.getConfigurationSection("location")));
 
             ConfigurationSection properties = config.getConfigurationSection("properties");
@@ -83,6 +84,7 @@ public class YamlStorage implements NpcStorage {
             config.set("allow-commands", entry.isAllowCommandModification());
 
             NpcImpl npc = entry.getNpc();
+            config.set("uuid", npc.getUuid().toString());
             config.set("world", npc.getWorldName());
             config.set("location", serializeLocation(npc.getLocation()));
             config.set("type", npc.getType().getName());

@@ -30,7 +30,7 @@ public class CreateCommand implements CommandHandler {
         Player player = context.ensureSenderIsPlayer();
         
         String id = context.popString();
-        if (npcRegistry.get(id) != null) context.halt(Component.text("NPC with that ID already exists.", NamedTextColor.RED));
+        if (npcRegistry.getById(id) != null) context.halt(Component.text("NPC with that ID already exists.", NamedTextColor.RED));
         NpcTypeImpl type = context.parse(NpcTypeImpl.class);
 
         NpcEntryImpl entry = npcRegistry.create(id, player.getWorld(), type, new NpcLocation(player.getLocation()));

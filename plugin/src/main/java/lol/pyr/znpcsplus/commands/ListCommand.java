@@ -22,7 +22,7 @@ public class ListCommand implements CommandHandler {
     public void run(CommandContext context) throws CommandExecutionException {
         TextComponent.Builder component = Component.text("Npc List:\n").color(NamedTextColor.GOLD).toBuilder();
         for (String id : npcRegistry.getModifiableIds()) {
-            NpcImpl npc = npcRegistry.get(id).getNpc();
+            NpcImpl npc = npcRegistry.getById(id).getNpc();
             NpcLocation location = npc.getLocation();
             component.append(Component.text("ID: " + id, NamedTextColor.GREEN))
                     .append(Component.text(" | ", NamedTextColor.GRAY))

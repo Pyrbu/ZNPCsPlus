@@ -19,7 +19,7 @@ public class NpcEntryParser extends ParserType<NpcEntryImpl> {
 
     @Override
     public NpcEntryImpl parse(Deque<String> deque) throws CommandExecutionException {
-        NpcEntryImpl entry = npcRegistry.get(deque.pop());
+        NpcEntryImpl entry = npcRegistry.getById(deque.pop());
         if (entry == null || !entry.isAllowCommandModification()) throw new CommandExecutionException();
         return entry;
     }

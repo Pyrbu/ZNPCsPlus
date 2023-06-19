@@ -2,10 +2,12 @@ package lol.pyr.znpcsplus.conversion.znpcs.model;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @SuppressWarnings("unused")
 public class ZNpcsModel {
     private int id;
+    private UUID uuid;
     private double hologramHeight;
     private String skinName;
     private String glowName;
@@ -18,6 +20,10 @@ public class ZNpcsModel {
 
     public int getId() {
         return id;
+    }
+
+    public UUID getUuid() {
+        return uuid;
     }
 
     public double getHologramHeight() {

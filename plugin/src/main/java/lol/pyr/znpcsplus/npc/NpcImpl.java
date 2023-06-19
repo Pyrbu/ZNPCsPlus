@@ -25,19 +25,21 @@ public class NpcImpl extends Viewable implements Npc {
     private NpcLocation location;
     private NpcTypeImpl type;
     private final HologramImpl hologram;
+    private final UUID uuid;
 
     private final Map<EntityPropertyImpl<?>, Object> propertyMap = new HashMap<>();
     private final List<InteractionAction> actions = new ArrayList<>();
 
-    protected NpcImpl(ConfigManager configManager, LegacyComponentSerializer textSerializer, World world, NpcTypeImpl type, NpcLocation location, PacketFactory packetFactory) {
-        this(configManager, packetFactory, textSerializer, world.getName(), type, location);
+    protected NpcImpl(UUID uuid, ConfigManager configManager, LegacyComponentSerializer textSerializer, World world, NpcTypeImpl type, NpcLocation location, PacketFactory packetFactory) {
+        this(uuid, configManager, packetFactory, textSerializer, world.getName(), type, location);
     }
 
-    public NpcImpl(ConfigManager configManager, PacketFactory packetFactory, LegacyComponentSerializer textSerializer, String world, NpcTypeImpl type, NpcLocation location) {
+    public NpcImpl(UUID uuid, ConfigManager configManager, PacketFactory packetFactory, LegacyComponentSerializer textSerializer, String world, NpcTypeImpl type, NpcLocation location) {
         this.packetFactory = packetFactory;
         this.worldName = world;
         this.type = type;
         this.location = location;
+        this.uuid = uuid;
         entity = new PacketEntity(packetFactory, this, type.getType(), location);
         hologram = new HologramImpl(configManager, packetFactory, textSerializer, location.withY(location.getY() + type.getHologramOffset()));
     }
@@ -74,6 +76,10 @@ public class NpcImpl extends Viewable implements Npc {
 
     public HologramImpl getHologram() {
         return hologram;
+    }
+
+    public UUID getUuid() {
+        return uuid;
     }
 
     public World getWorld() {

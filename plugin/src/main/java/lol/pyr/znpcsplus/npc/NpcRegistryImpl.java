@@ -14,10 +14,7 @@ import lol.pyr.znpcsplus.util.NpcLocation;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.World;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class NpcRegistryImpl implements NpcRegistry {
@@ -26,7 +23,9 @@ public class NpcRegistryImpl implements NpcRegistry {
     private final ConfigManager configManager;
     private final LegacyComponentSerializer textSerializer;
 
-    private final Map<String, NpcEntryImpl> npcMap = new HashMap<>();
+    private final List<NpcEntryImpl> npcList = new ArrayList<>();
+    private final Map<String, NpcEntryImpl> npcIdLookupMap = new HashMap<>();
+    private final Map<UUID, NpcEntryImpl> npcUuidLookupMap = new HashMap<>();
 
     public NpcRegistryImpl(ConfigManager configManager, ZNpcsPlus plugin, PacketFactory packetFactory, ActionRegistry actionRegistry, TaskScheduler scheduler, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer) {
         this.textSerializer = textSerializer;
@@ -40,49 +39,73 @@ public class NpcRegistryImpl implements NpcRegistry {
         }
     }
 
+    private void register(NpcEntryImpl entry) {
+        unregister(npcIdLookupMap.put(entry.getId(), entry));
+        unregister(npcUuidLookupMap.put(entry.getNpc().getUuid(), entry));
+        npcList.add(entry);
+    }
+
+    private void unregister(NpcEntryImpl entry) {
+        if (entry == null) return;
+        npcList.remove(entry);
+        NpcImpl one = npcIdLookupMap.remove(entry.getId()).getNpc();
+        NpcImpl two = npcUuidLookupMap.remove(entry.getNpc().getUuid()).getNpc();
+        if (one != null) one.delete();
+        if (two != null && !Objects.equals(one, two)) two.delete();
+    }
+
+    private void unregisterAll() {
+        for (NpcEntryImpl entry : npcList) entry.getNpc().delete();
+        npcList.clear();
+        npcIdLookupMap.clear();
+        npcUuidLookupMap.clear();
+    }
+
     public void registerAll(Collection<NpcEntryImpl> entries) {
-        for (NpcEntryImpl entry : entries) {
-            NpcEntryImpl old = npcMap.put(entry.getId(), entry);
-            if (old != null) old.getNpc().delete();
-        }
+        for (NpcEntryImpl entry : entries) register(entry);
     }
 
     public void reload() {
-        for (NpcEntryImpl entry : npcMap.values()) entry.getNpc().delete();
-        npcMap.clear();
-        for (NpcEntryImpl entry : storage.loadNpcs()) npcMap.put(entry.getId(), entry);
+        unregisterAll();
+        registerAll(storage.loadNpcs());
     }
 
     public void save() {
-        storage.saveNpcs(npcMap.values().stream().filter(NpcEntryImpl::isSave).collect(Collectors.toList()));
+        storage.saveNpcs(npcList.stream().filter(NpcEntryImpl::isSave).collect(Collectors.toList()));
     }
 
-    public NpcEntryImpl get(String id) {
-        return npcMap.get(id.toLowerCase());
+    @Override
+    public NpcEntryImpl getById(String id) {
+        return npcIdLookupMap.get(id.toLowerCase());
+    }
+
+    @Override
+    public NpcEntry getByUuid(UUID uuid) {
+        return npcUuidLookupMap.get(uuid);
     }
 
     public Collection<NpcEntryImpl> getAll() {
-        return Collections.unmodifiableCollection(npcMap.values());
+        return Collections.unmodifiableCollection(npcList);
     }
 
     public Collection<NpcEntryImpl> getProcessable() {
-        return Collections.unmodifiableCollection(npcMap.values().stream()
+        return Collections.unmodifiableCollection(npcList.stream()
                 .filter(NpcEntryImpl::isProcessed)
                 .collect(Collectors.toList()));
     }
 
     public Collection<NpcEntryImpl> getAllModifiable() {
-        return Collections.unmodifiableCollection(npcMap.values().stream()
+        return Collections.unmodifiableCollection(npcList.stream()
                 .filter(NpcEntryImpl::isAllowCommandModification)
                 .collect(Collectors.toList()));
     }
 
     public NpcEntryImpl getByEntityId(int id) {
-        return getAll().stream().filter(entry -> entry.getNpc().getEntity().getEntityId() == id).findFirst().orElse(null);
+        return npcList.stream().filter(entry -> entry.getNpc().getEntity().getEntityId() == id).findFirst().orElse(null);
     }
 
     public Collection<String> getAllIds() {
-        return Collections.unmodifiableSet(npcMap.keySet());
+        return Collections.unmodifiableSet(npcIdLookupMap.keySet());
     }
 
     @Override
@@ -98,7 +121,7 @@ public class NpcRegistryImpl implements NpcRegistry {
     }
 
     public Collection<String> getModifiableIds() {
-        return Collections.unmodifiableSet(npcMap.entrySet().stream()
+        return Collections.unmodifiableSet(npcIdLookupMap.entrySet().stream()
                 .filter(entry -> entry.getValue().isAllowCommandModification())
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toSet()));
@@ -110,17 +133,17 @@ public class NpcRegistryImpl implements NpcRegistry {
 
     public NpcEntryImpl create(String id, World world, NpcTypeImpl type, NpcLocation location) {
         id = id.toLowerCase();
-        if (npcMap.containsKey(id)) throw new IllegalArgumentException("An npc with the id " + id + " already exists!");
-        NpcImpl npc = new NpcImpl(configManager, textSerializer, world, type, location, packetFactory);
+        if (npcIdLookupMap.containsKey(id)) throw new IllegalArgumentException("An npc with the id " + id + " already exists!");
+        NpcImpl npc = new NpcImpl(UUID.randomUUID(), configManager, textSerializer, world, type, location, packetFactory);
         NpcEntryImpl entry = new NpcEntryImpl(id, npc);
-        npcMap.put(id, entry);
+        npcIdLookupMap.put(id, entry);
         return entry;
     }
 
     @Override
     public void delete(String id) {
         id = id.toLowerCase();
-        if (!npcMap.containsKey(id)) return;
-        npcMap.remove(id).getNpc().delete();
+        if (!npcIdLookupMap.containsKey(id)) return;
+        npcIdLookupMap.remove(id).getNpc().delete();
     }
 }
