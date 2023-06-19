@@ -31,6 +31,7 @@ public class NpcProcessorTask extends BukkitRunnable {
         EntityPropertyImpl<Boolean> lookProperty = propertyRegistry.getByName("look", Boolean.class);
         for (NpcEntryImpl entry : npcRegistry.getProcessable()) {
             NpcImpl npc = entry.getNpc();
+            if (!npc.isEnabled()) continue;
 
             double closestDist = Double.MAX_VALUE;
             Player closest = null;

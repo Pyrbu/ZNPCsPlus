@@ -24,6 +24,7 @@ public class NpcImpl extends Viewable implements Npc {
     private PacketEntity entity;
     private NpcLocation location;
     private NpcTypeImpl type;
+    private boolean enabled = true;
     private final HologramImpl hologram;
     private final UUID uuid;
 
@@ -76,6 +77,15 @@ public class NpcImpl extends Viewable implements Npc {
 
     public HologramImpl getHologram() {
         return hologram;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        if (!enabled) delete();
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 
     public UUID getUuid() {

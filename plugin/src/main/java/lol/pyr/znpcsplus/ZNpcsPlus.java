@@ -233,6 +233,7 @@ public class ZNpcsPlus extends JavaPlugin {
 
         manager.registerCommand("npc", new MultiCommand(loadHelpMessage("root"))
                 .addSubcommand("create", new CreateCommand(npcRegistry, typeRegistry))
+                .addSubcommand("toggle", new ToggleCommand(npcRegistry))
                 .addSubcommand("skin", new SkinCommand(skinCache, npcRegistry, typeRegistry, propertyRegistry))
                 .addSubcommand("delete", new DeleteCommand(npcRegistry, adventure))
                 .addSubcommand("move", new MoveCommand(npcRegistry))

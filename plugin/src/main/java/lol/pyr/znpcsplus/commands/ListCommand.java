@@ -24,7 +24,7 @@ public class ListCommand implements CommandHandler {
         for (String id : npcRegistry.getModifiableIds()) {
             NpcImpl npc = npcRegistry.getById(id).getNpc();
             NpcLocation location = npc.getLocation();
-            component.append(Component.text("ID: " + id, NamedTextColor.GREEN))
+            component.append(Component.text("ID: " + id, npc.isEnabled() ? NamedTextColor.GREEN : NamedTextColor.RED))
                     .append(Component.text(" | ", NamedTextColor.GRAY))
                     .append(Component.text("Type: ", NamedTextColor.GREEN))
                     .append(Component.text(npc.getType().getName(), NamedTextColor.GREEN))
