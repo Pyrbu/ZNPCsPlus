@@ -41,7 +41,9 @@ public class UpdateChecker extends BukkitRunnable {
     }
 
     private int versionToNumber(String version) {
-        return Integer.parseInt(version.replaceAll("[^0-9]", ""));
+        int num = Integer.parseInt(version.replaceAll("[^0-9]", ""));
+        if (version.toLowerCase().contains("snapshot")) num -= 1;
+        return num;
     }
 
     public Status getStatus() {
