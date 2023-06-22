@@ -148,6 +148,6 @@ public class NpcRegistryImpl implements NpcRegistry {
     }
 
     public void unload() {
-        npcList.forEach(npcEntry -> npcEntry.getNpc().getViewers().forEach(npcEntry.getNpc()::UNSAFE_hide));
+        npcList.forEach(npcEntry -> npcEntry.getNpc().delete());
     }
 }
