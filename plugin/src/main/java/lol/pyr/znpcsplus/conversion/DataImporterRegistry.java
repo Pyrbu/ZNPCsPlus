@@ -28,6 +28,8 @@ public class DataImporterRegistry {
 
         register("znpcs", LazyLoader.of(() -> new ZNpcImporter(configManager, adventure, bungeeConnector, taskScheduler,
                 packetFactory, textSerializer, typeRegistry, propertyRegistry, skinCache, new File(pluginsFolder, "ServersNPC/data.json"))));
+        register("znpcsplus_legacy", LazyLoader.of(() -> new ZNpcImporter(configManager, adventure, bungeeConnector, taskScheduler,
+                packetFactory, textSerializer, typeRegistry, propertyRegistry, skinCache, new File(pluginsFolder, "ZNPCsPlusLegacy/data.json"))));
         /* register("citizens", LazyLoader.of(() -> new CitizensImporter(configManager, adventure, bungeeConnector, taskScheduler,
                 packetFactory, textSerializer, typeRegistry, propertyRegistry, skinCache, new File(pluginsFolder, "Citizens/saves.yml")))); */
     }
