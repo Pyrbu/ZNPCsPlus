@@ -80,6 +80,8 @@ public class NpcTypeImpl implements NpcType {
             allowedProperties.add(propertyRegistry.getByName("skin_cape"));
             if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9))
                 allowedProperties.add(propertyRegistry.getByName("glow"));
+            if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_14))
+                allowedProperties.add(propertyRegistry.getByName("pose"));
             if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_17))
                 allowedProperties.add(propertyRegistry.getByName("shaking"));
             return new NpcTypeImpl(name, type, hologramOffset, new HashSet<>(allowedProperties));

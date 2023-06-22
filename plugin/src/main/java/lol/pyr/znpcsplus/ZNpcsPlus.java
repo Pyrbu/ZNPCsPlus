@@ -4,6 +4,7 @@ import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.PacketEventsAPI;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import com.github.retrooper.packetevents.protocol.entity.pose.EntityPose;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandManager;
@@ -232,6 +233,7 @@ public class ZNpcsPlus extends JavaPlugin {
         manager.registerParser(Boolean.class, new BooleanParser(incorrectUsageMessage));
         manager.registerParser(NamedTextColor.class, new NamedTextColorParser(incorrectUsageMessage));
         manager.registerParser(InteractionType.class, new InteractionTypeParser(incorrectUsageMessage));
+        manager.registerParser(EntityPose.class, new EntityPoseParser(incorrectUsageMessage));
 
         manager.registerCommand("npc", new MultiCommand(loadHelpMessage("root"))
                 .addSubcommand("create", new CreateCommand(npcRegistry, typeRegistry))

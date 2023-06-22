@@ -1,6 +1,7 @@
 package lol.pyr.znpcsplus.metadata;
 
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
+import com.github.retrooper.packetevents.protocol.entity.pose.EntityPose;
 import net.kyori.adventure.text.Component;
 
 import java.util.Collection;
@@ -24,4 +25,5 @@ public interface MetadataFactory {
     EntityData silent(boolean enabled);
     Collection<EntityData> name(Component name);
     EntityData noGravity();
+    EntityData pose(EntityPose pose);
 }

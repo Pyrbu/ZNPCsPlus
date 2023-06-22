@@ -1,5 +1,6 @@
 package lol.pyr.znpcsplus.entity;
 
+import com.github.retrooper.packetevents.protocol.entity.pose.EntityPose;
 import com.github.retrooper.packetevents.protocol.item.ItemStack;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.entity.EntityPropertyRegistry;
@@ -26,6 +27,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerSerializer(new NamedTextColorPropertySerializer());
         registerSerializer(new SkinDescriptorSerializer(skinCache));
         registerSerializer(new ItemStackPropertySerializer());
+        registerSerializer(new EntityPosePropertySerializer());
 
         registerType("glow", NamedTextColor.class);
         registerType("fire", false);
@@ -48,6 +50,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("potion_ambient", false); // TODO
         registerType("shaking", false);
         registerType("baby", false); // TODO
+        registerType("pose", EntityPose.STANDING, EntityPose.class); // TODO
 
         // Player
         registerType("skin_cape", true);

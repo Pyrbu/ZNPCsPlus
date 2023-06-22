@@ -3,6 +3,7 @@ package lol.pyr.znpcsplus.metadata;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataType;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
+import com.github.retrooper.packetevents.protocol.entity.pose.EntityPose;
 import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
 import net.kyori.adventure.text.Component;
 
@@ -32,6 +33,11 @@ public class V1_8MetadataFactory implements MetadataFactory {
     @Override
     public EntityData noGravity() {
         throw new UnsupportedOperationException("The gravity entity data isn't supported on this version");
+    }
+
+    @Override
+    public EntityData pose(EntityPose pose) {
+        throw new UnsupportedOperationException("The pose entity data isn't supported on this version");
     }
 
     @Override

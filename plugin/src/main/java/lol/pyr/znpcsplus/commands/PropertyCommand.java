@@ -1,5 +1,6 @@
 package lol.pyr.znpcsplus.commands;
 
+import com.github.retrooper.packetevents.protocol.entity.pose.EntityPose;
 import com.github.retrooper.packetevents.protocol.item.ItemStack;
 import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import lol.pyr.director.adventure.command.CommandContext;
@@ -67,6 +68,7 @@ public class PropertyCommand implements CommandHandler {
             Class<?> type = property.getType();
             if (type == Boolean.class) return context.suggestLiteral("true", "false");
             if (type == NamedTextColor.class) return context.suggestCollection(NamedTextColor.NAMES.keys());
+            if (type == EntityPose.class) return context.suggestEnum(EntityPose.values());
         }
         return Collections.emptyList();
     }
