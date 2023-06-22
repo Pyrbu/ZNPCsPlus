@@ -72,7 +72,6 @@ public class NpcTypeImpl implements NpcType {
         }
 
         public NpcTypeImpl build() {
-            allowedProperties.add(propertyRegistry.getByName("crouched"));
             allowedProperties.add(propertyRegistry.getByName("fire"));
             allowedProperties.add(propertyRegistry.getByName("invisible"));
             allowedProperties.add(propertyRegistry.getByName("silent"));

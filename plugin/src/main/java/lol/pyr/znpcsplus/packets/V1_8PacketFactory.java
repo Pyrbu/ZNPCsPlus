@@ -137,7 +137,6 @@ public class V1_8PacketFactory implements PacketFactory {
         ));
         addAll(data, metadataFactory.effects(
                 properties.getProperty(propertyRegistry.getByName("fire", Boolean.class)),
-                properties.getProperty(propertyRegistry.getByName("crouched", Boolean.class)),
                 false,
                 properties.getProperty(propertyRegistry.getByName("invisible", Boolean.class)),
                 false,

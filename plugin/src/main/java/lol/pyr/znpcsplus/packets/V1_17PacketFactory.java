@@ -21,7 +21,6 @@ public class V1_17PacketFactory extends V1_16PacketFactory {
     public Map<Integer, EntityData> generateMetadata(Player player, PacketEntity entity, PropertyHolder properties) {
         Map<Integer, EntityData> data = super.generateMetadata(player, entity, properties);
         addAll(data, metadataFactory.effects(properties.getProperty(propertyRegistry.getByName("fire", Boolean.class)),
-                properties.getProperty(propertyRegistry.getByName("crouched", Boolean.class)),
                 properties.hasProperty(propertyRegistry.getByName("glow", Boolean.class)),
                 properties.getProperty(propertyRegistry.getByName("invisible", Boolean.class)),
                 false,

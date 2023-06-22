@@ -21,7 +21,7 @@ import java.util.Collection;
  */
 public interface MetadataFactory {
     EntityData skinLayers(boolean cape, boolean jacket, boolean leftSleeve, boolean rightSleeve, boolean leftLeg, boolean rightLeg, boolean hat);
-    Collection<EntityData> effects(boolean onFire, boolean crouched, boolean glowing, boolean invisible, boolean usingElytra, boolean shaking);
+    Collection<EntityData> effects(boolean onFire, boolean glowing, boolean invisible, boolean usingElytra, boolean shaking);
     EntityData silent(boolean enabled);
     Collection<EntityData> name(Component name);
     EntityData noGravity();
