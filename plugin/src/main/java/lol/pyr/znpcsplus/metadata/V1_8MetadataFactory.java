@@ -18,8 +18,8 @@ public class V1_8MetadataFactory implements MetadataFactory {
     }
 
     @Override
-    public Collection<EntityData> effects(boolean onFire, boolean glowing, boolean invisible, boolean usingElytra, boolean shaking) {
-        return list(newEntityData(0, EntityDataTypes.BYTE, (byte) ((onFire ? 0x01 : 0) | (invisible ? 0x20 : 0))));
+    public EntityData effects(boolean onFire, boolean glowing, boolean invisible, boolean usingElytra) {
+        return newEntityData(0, EntityDataTypes.BYTE, (byte) ((onFire ? 0x01 : 0) | (invisible ? 0x20 : 0)));
     }
 
     @Override
@@ -38,6 +38,11 @@ public class V1_8MetadataFactory implements MetadataFactory {
     @Override
     public EntityData pose(EntityPose pose) {
         throw new UnsupportedOperationException("The pose entity data isn't supported on this version");
+    }
+
+    @Override
+    public EntityData shaking() {
+        throw new UnsupportedOperationException("The shaking entity data isn't supported on this version");
     }
 
     @Override
