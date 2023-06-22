@@ -143,6 +143,7 @@ public class ZNpcsPlus extends JavaPlugin {
         log(ChatColor.WHITE + " * Loading data...");
         npcRegistry.reload();
 
+        shutdownTasks.add(npcRegistry::unload);
         shutdownTasks.add(scheduler::cancelAll);
         shutdownTasks.add(userManager::shutdown);
         shutdownTasks.add(adventure::close);

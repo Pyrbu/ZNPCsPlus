@@ -146,4 +146,8 @@ public class NpcRegistryImpl implements NpcRegistry {
         if (!npcIdLookupMap.containsKey(id)) return;
         npcIdLookupMap.remove(id).getNpc().delete();
     }
+
+    public void unload() {
+        npcList.forEach(npcEntry -> npcEntry.getNpc().getViewers().forEach(npcEntry.getNpc()::UNSAFE_hide));
+    }
 }
