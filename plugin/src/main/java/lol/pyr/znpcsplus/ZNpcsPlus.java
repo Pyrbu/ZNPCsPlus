@@ -183,6 +183,7 @@ public class ZNpcsPlus extends JavaPlugin {
         versions.put(ServerVersion.V_1_9, LazyLoader.of(() -> new V1_9PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry)));
         versions.put(ServerVersion.V_1_10, LazyLoader.of(() -> new V1_10PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry)));
         versions.put(ServerVersion.V_1_14, LazyLoader.of(() -> new V1_14PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry)));
+        versions.put(ServerVersion.V_1_16, LazyLoader.of(() -> new V1_16PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry)));
         versions.put(ServerVersion.V_1_19, LazyLoader.of(() -> new V1_19PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry)));
 
         ServerVersion version = packetEvents.getServerManager().getVersion();
