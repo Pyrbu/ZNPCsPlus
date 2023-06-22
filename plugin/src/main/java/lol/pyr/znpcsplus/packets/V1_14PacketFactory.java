@@ -11,6 +11,7 @@ import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.metadata.MetadataFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.util.NpcLocation;
+import lol.pyr.znpcsplus.util.NpcPose;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -34,7 +35,11 @@ public class V1_14PacketFactory extends V1_10PacketFactory {
     @Override
     public Map<Integer, EntityData> generateMetadata(Player player, PacketEntity entity, PropertyHolder properties) {
         Map<Integer, EntityData> data = super.generateMetadata(player, entity, properties);
-        add(data, metadataFactory.pose(properties.getProperty(propertyRegistry.getByName("pose", EntityPose.class))));
+        add(data, metadataFactory.pose(adaptNpcPose(properties.getProperty(propertyRegistry.getByName("pose", NpcPose.class)))));
         return data;
+    }
+
+    protected EntityPose adaptNpcPose(NpcPose pose) {
+        return EntityPose.valueOf(pose.name());
     }
 }

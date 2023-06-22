@@ -1,12 +1,12 @@
 package lol.pyr.znpcsplus.entity;
 
-import com.github.retrooper.packetevents.protocol.entity.pose.EntityPose;
 import com.github.retrooper.packetevents.protocol.item.ItemStack;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.entity.EntityPropertyRegistry;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.entity.serializers.*;
 import lol.pyr.znpcsplus.skin.cache.SkinCache;
+import lol.pyr.znpcsplus.util.NpcPose;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
@@ -27,7 +27,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerSerializer(new NamedTextColorPropertySerializer());
         registerSerializer(new SkinDescriptorSerializer(skinCache));
         registerSerializer(new ItemStackPropertySerializer());
-        registerSerializer(new EntityPosePropertySerializer());
+        registerSerializer(new NpcPosePropertySerializer());
 
         registerType("glow", NamedTextColor.class);
         registerType("fire", false);
@@ -37,6 +37,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("name", Component.class);
         registerType("look", false);
 
+        // TODO: make all of these bukkit itemstack classes so api users wont have to add packetevents as a dependency
         registerType("helmet", ItemStack.class);
         registerType("chestplate", ItemStack.class);
         registerType("leggings", ItemStack.class);
@@ -49,7 +50,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("potion_ambient", false); // TODO
         registerType("shaking", false);
         registerType("baby", false); // TODO
-        registerType("pose", EntityPose.STANDING, EntityPose.class); // TODO
+        registerType("pose", NpcPose.STANDING);
 
         // Player
         registerType("skin_cape", true);

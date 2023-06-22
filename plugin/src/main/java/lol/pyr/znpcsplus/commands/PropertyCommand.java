@@ -1,6 +1,5 @@
 package lol.pyr.znpcsplus.commands;
 
-import com.github.retrooper.packetevents.protocol.entity.pose.EntityPose;
 import com.github.retrooper.packetevents.protocol.item.ItemStack;
 import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import lol.pyr.director.adventure.command.CommandContext;
@@ -11,6 +10,7 @@ import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
+import lol.pyr.znpcsplus.util.NpcPose;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
@@ -68,7 +68,7 @@ public class PropertyCommand implements CommandHandler {
             Class<?> type = property.getType();
             if (type == Boolean.class) return context.suggestLiteral("true", "false");
             if (type == NamedTextColor.class) return context.suggestCollection(NamedTextColor.NAMES.keys());
-            if (type == EntityPose.class) return context.suggestEnum(EntityPose.values());
+            if (type == NpcPose.class) return context.suggestEnum(NpcPose.values());
         }
         return Collections.emptyList();
     }
