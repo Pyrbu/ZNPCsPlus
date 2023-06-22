@@ -72,6 +72,7 @@ public class NpcTypeImpl implements NpcType {
         }
 
         public NpcTypeImpl build() {
+            allowedProperties.add(propertyRegistry.getByName("crouched"));
             allowedProperties.add(propertyRegistry.getByName("fire"));
             allowedProperties.add(propertyRegistry.getByName("invisible"));
             allowedProperties.add(propertyRegistry.getByName("silent"));
@@ -79,6 +80,8 @@ public class NpcTypeImpl implements NpcType {
             allowedProperties.add(propertyRegistry.getByName("skin_cape"));
             if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9))
                 allowedProperties.add(propertyRegistry.getByName("glow"));
+            if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_17))
+                allowedProperties.add(propertyRegistry.getByName("shaking"));
             return new NpcTypeImpl(name, type, hologramOffset, new HashSet<>(allowedProperties));
         }
     }

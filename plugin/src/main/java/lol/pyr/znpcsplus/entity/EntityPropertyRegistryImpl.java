@@ -46,7 +46,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("using_item", false); // TODO: Eating/Drinking/Blocking with sword/etc
         registerType("potion_color", 0xFFFFFF); // TODO
         registerType("potion_ambient", false); // TODO
-        registerType("shaking", false); // TODO: Set the "ticks frozen in powdered snow" meta to 140 to get the entity to shake
+        registerType("shaking", false);
         registerType("baby", false); // TODO
 
         // Player

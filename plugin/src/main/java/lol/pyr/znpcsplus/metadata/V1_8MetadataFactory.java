@@ -17,8 +17,8 @@ public class V1_8MetadataFactory implements MetadataFactory {
     }
 
     @Override
-    public EntityData effects(boolean onFire, boolean glowing, boolean invisible) {
-        return newEntityData(0, EntityDataTypes.BYTE, (byte) ((onFire ? 0x01 : 0) | (invisible ? 0x20 : 0)));
+    public Collection<EntityData> effects(boolean onFire, boolean crouched, boolean glowing, boolean invisible, boolean usingElytra, boolean shaking) {
+        return list(newEntityData(0, EntityDataTypes.BYTE, (byte) ((onFire ? 0x01 : 0) | (crouched ? 0x02 : 0) | (invisible ? 0x20 : 0))));
     }
 
     @Override

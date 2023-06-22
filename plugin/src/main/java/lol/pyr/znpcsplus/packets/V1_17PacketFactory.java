@@ -12,8 +12,8 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.Map;
 
-public class V1_9PacketFactory extends V1_8PacketFactory {
-    public V1_9PacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry) {
+public class V1_17PacketFactory extends V1_16PacketFactory {
+    public V1_17PacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry) {
         super(scheduler, metadataFactory, packetEvents, propertyRegistry);
     }
 
@@ -25,7 +25,7 @@ public class V1_9PacketFactory extends V1_8PacketFactory {
                 properties.hasProperty(propertyRegistry.getByName("glow", Boolean.class)),
                 properties.getProperty(propertyRegistry.getByName("invisible", Boolean.class)),
                 false,
-                false));
+                properties.getProperty(propertyRegistry.getByName("shaking", Boolean.class))));
         return data;
     }
 }
