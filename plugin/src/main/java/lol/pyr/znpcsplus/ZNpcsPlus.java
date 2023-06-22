@@ -57,15 +57,15 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.Reader;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
 public class ZNpcsPlus extends JavaPlugin {
-    private static final int PLUGIN_ID = 18244;
-
-    private PacketEventsAPI<Plugin> packetEvents;
     private final LegacyComponentSerializer textSerializer = LegacyComponentSerializer.builder()
             .character('&')
             .hexCharacter('#')
@@ -73,6 +73,7 @@ public class ZNpcsPlus extends JavaPlugin {
 
     private final List<Runnable> shutdownTasks = new ArrayList<>();
     private boolean enabled = false;
+    private PacketEventsAPI<Plugin> packetEvents;
 
     @Override
     public void onLoad() {
@@ -96,8 +97,17 @@ public class ZNpcsPlus extends JavaPlugin {
         log("");
 
         PluginManager pluginManager = Bukkit.getPluginManager();
-
         long before = System.currentTimeMillis();
+
+        boolean legacy = new File(getDataFolder(), "data.json").isFile();
+        if (legacy) try {
+            Files.move(getDataFolder().toPath(), new File(getDataFolder().getParentFile(), "ZNPCsPlusLegacy").toPath());
+        } catch (IOException e) {
+            log(ChatColor.RED + " * Moving legacy files to subfolder failed, plugin will shut down.");
+            e.printStackTrace();
+            pluginManager.disablePlugin(this);
+            return;
+        }
 
         log(ChatColor.WHITE + " * Initializing libraries...");
         packetEvents.init();
@@ -124,7 +134,7 @@ public class ZNpcsPlus extends JavaPlugin {
         typeRegistry.registerDefault(packetEvents, propertyRegistry);
         actionRegistry.registerTypes(scheduler, adventure, bungeeConnector, textSerializer);
         packetEvents.getEventManager().registerListener(new InteractionPacketListener(userManager, npcRegistry), PacketListenerPriority.MONITOR);
-        new Metrics(this, PLUGIN_ID);
+        new Metrics(this, 18244);
         pluginManager.registerEvents(new UserListener(userManager), this);
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
@@ -142,6 +152,22 @@ public class ZNpcsPlus extends JavaPlugin {
 
         log(ChatColor.WHITE + " * Loading data...");
         npcRegistry.reload();
+
+        if (legacy) {
+            log(ChatColor.WHITE + " * Converting legacy data...");
+            try {
+                Collection<NpcEntryImpl> entries = importerRegistry.getImporter("znpcsplus_legacy").importData();
+                npcRegistry.registerAll(entries);
+            } catch (Exception exception) {
+                log(ChatColor.RED + " * Legacy data conversion failed! Check conversion.log for more info.");
+                try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(new File(getDataFolder(), "conversion.log").toPath(), StandardOpenOption.CREATE_NEW))) {
+                    exception.printStackTrace(writer);
+                } catch (IOException e) {
+                    log(ChatColor.DARK_RED + " * Critical error! Writing to conversion.log failed.");
+                    e.printStackTrace();
+                }
+            }
+        }
 
         shutdownTasks.add(npcRegistry::unload);
         shutdownTasks.add(scheduler::cancelAll);
