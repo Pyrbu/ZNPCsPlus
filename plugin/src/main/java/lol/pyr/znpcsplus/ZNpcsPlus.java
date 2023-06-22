@@ -174,6 +174,7 @@ public class ZNpcsPlus extends JavaPlugin {
         if (!enabled) return;
         NpcApiProvider.unregister();
         for (Runnable runnable : shutdownTasks) runnable.run();
+        PacketEvents.getAPI().terminate();
     }
 
     private PacketFactory setupPacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory, EntityPropertyRegistryImpl propertyRegistry) {
