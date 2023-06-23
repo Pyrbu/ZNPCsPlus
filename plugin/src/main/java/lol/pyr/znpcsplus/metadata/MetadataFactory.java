@@ -26,5 +26,5 @@ public interface MetadataFactory {
     Collection<EntityData> name(Component name);
     EntityData noGravity();
     EntityData pose(EntityPose pose);
-    EntityData shaking();
+    EntityData shaking(boolean enabled);
 }

@@ -41,7 +41,7 @@ public class V1_8MetadataFactory implements MetadataFactory {
     }
 
     @Override
-    public EntityData shaking() {
+    public EntityData shaking(boolean enabled) {
         throw new UnsupportedOperationException("The shaking entity data isn't supported on this version");
     }
 
