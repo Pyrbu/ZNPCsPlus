@@ -15,7 +15,7 @@ public class V1_17MetadataFactory extends V1_16MetadataFactory {
     }
 
     @Override
-    public EntityData shaking() {
-        return newEntityData(7, EntityDataTypes.INT, 140);
+    public EntityData shaking(boolean enabled) {
+        return newEntityData(7, EntityDataTypes.INT, enabled ? 140 : 0);
     }
 }

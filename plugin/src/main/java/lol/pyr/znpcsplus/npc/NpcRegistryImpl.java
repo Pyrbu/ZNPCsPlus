@@ -136,7 +136,7 @@ public class NpcRegistryImpl implements NpcRegistry {
         if (npcIdLookupMap.containsKey(id)) throw new IllegalArgumentException("An npc with the id " + id + " already exists!");
         NpcImpl npc = new NpcImpl(UUID.randomUUID(), configManager, textSerializer, world, type, location, packetFactory);
         NpcEntryImpl entry = new NpcEntryImpl(id, npc);
-        npcIdLookupMap.put(id, entry);
+        register(entry);
         return entry;
     }
 
@@ -144,7 +144,7 @@ public class NpcRegistryImpl implements NpcRegistry {
     public void delete(String id) {
         id = id.toLowerCase();
         if (!npcIdLookupMap.containsKey(id)) return;
-        npcIdLookupMap.remove(id).getNpc().delete();
+        unregister(npcIdLookupMap.get(id));
     }
 
     public void unload() {

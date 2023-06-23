@@ -24,7 +24,7 @@ public class V1_17PacketFactory extends V1_16PacketFactory {
                 properties.hasProperty(propertyRegistry.getByName("glow", Boolean.class)),
                 properties.getProperty(propertyRegistry.getByName("invisible", Boolean.class)),
                 false));
-        if (properties.getProperty(propertyRegistry.getByName("shaking", Boolean.class))) add(data, metadataFactory.shaking());
+        add(data, metadataFactory.shaking(properties.getProperty(propertyRegistry.getByName("shaking", Boolean.class))));
         return data;
     }
 }
