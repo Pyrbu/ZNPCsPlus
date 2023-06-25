@@ -46,6 +46,11 @@ public class V1_8MetadataFactory implements MetadataFactory {
     }
 
     @Override
+    public EntityData usingItem(boolean enabled, boolean offHand, boolean riptide) {
+        return newEntityData(0, EntityDataTypes.BYTE, (byte) (enabled ? 0x10 : 0));
+    }
+
+    @Override
     public EntityData potionColor(int color) {
         return newEntityData(7, EntityDataTypes.INT, color);
     }

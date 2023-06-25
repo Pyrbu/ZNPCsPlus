@@ -16,6 +16,11 @@ public class V1_14MetadataFactory extends V1_13MetadataFactory {
     }
 
     @Override
+    public EntityData usingItem(boolean usingItem, boolean offHand, boolean riptide) {
+        return newEntityData(7, EntityDataTypes.BYTE, (byte) ((usingItem ? 0x01 : 0) | (offHand ? 0x02 : 0) | (riptide ? 0x04 : 0)));
+    }
+
+    @Override
     public EntityData potionColor(int color) {
         return newEntityData(9, EntityDataTypes.INT, color);
     }

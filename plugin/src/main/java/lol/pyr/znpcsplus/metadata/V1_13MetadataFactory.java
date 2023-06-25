@@ -8,12 +8,17 @@ import net.kyori.adventure.text.Component;
 import java.util.Collection;
 import java.util.Optional;
 
-public class V1_13MetadataFactory extends V1_10MetadataFactory {
+public class V1_13MetadataFactory extends V1_11MetadataFactory {
     @Override
     public Collection<EntityData> name(Component name) {
         return list(
                 newEntityData(2, EntityDataTypes.OPTIONAL_COMPONENT, Optional.of(AdventureSerializer.getGsonSerializer().serialize(name))),
                 newEntityData(3, EntityDataTypes.BOOLEAN, true)
         );
+    }
+
+    @Override
+    public EntityData usingItem(boolean usingItem, boolean offHand, boolean riptide) {
+        return newEntityData(6, EntityDataTypes.BYTE, (byte) ((usingItem ? 0x01 : 0) | (offHand ? 0x02 : 0) | (riptide ? 0x04 : 0)));
     }
 }

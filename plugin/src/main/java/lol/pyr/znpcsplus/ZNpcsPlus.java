@@ -227,6 +227,7 @@ public class ZNpcsPlus extends JavaPlugin {
         versions.put(ServerVersion.V_1_8, LazyLoader.of(V1_8MetadataFactory::new));
         versions.put(ServerVersion.V_1_9, LazyLoader.of(V1_9MetadataFactory::new));
         versions.put(ServerVersion.V_1_10, LazyLoader.of(V1_10MetadataFactory::new));
+        versions.put(ServerVersion.V_1_11, LazyLoader.of(V1_11MetadataFactory::new));
         versions.put(ServerVersion.V_1_13, LazyLoader.of(V1_13MetadataFactory::new));
         versions.put(ServerVersion.V_1_14, LazyLoader.of(V1_14MetadataFactory::new));
         versions.put(ServerVersion.V_1_16, LazyLoader.of(V1_16MetadataFactory::new));
