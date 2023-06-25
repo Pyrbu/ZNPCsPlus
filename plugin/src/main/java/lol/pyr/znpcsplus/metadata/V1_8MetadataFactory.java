@@ -46,6 +46,16 @@ public class V1_8MetadataFactory implements MetadataFactory {
     }
 
     @Override
+    public EntityData potionColor(int color) {
+        return newEntityData(7, EntityDataTypes.INT, color);
+    }
+
+    @Override
+    public EntityData potionAmbient(boolean ambient) {
+        return newEntityData(8, EntityDataTypes.BYTE, (byte) (ambient ? 1 : 0));
+    }
+
+    @Override
     public EntityData silent(boolean enabled) {
         return newEntityData(4, EntityDataTypes.BYTE, (byte) (enabled ? 1 : 0));
     }

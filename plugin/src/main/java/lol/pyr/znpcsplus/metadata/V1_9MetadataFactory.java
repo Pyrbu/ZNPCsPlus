@@ -19,6 +19,11 @@ public class V1_9MetadataFactory extends V1_8MetadataFactory {
     }
 
     @Override
+    public EntityData potionAmbient(boolean ambient) {
+        return newEntityData(8, EntityDataTypes.BOOLEAN, ambient);
+    }
+
+    @Override
     public Collection<EntityData> name(Component name) {
         return list(
                 newEntityData(2, EntityDataTypes.STRING, AdventureSerializer.getGsonSerializer().serialize(name)),

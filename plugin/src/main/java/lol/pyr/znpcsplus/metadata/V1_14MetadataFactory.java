@@ -14,4 +14,14 @@ public class V1_14MetadataFactory extends V1_13MetadataFactory {
     public EntityData pose(EntityPose pose) {
         return newEntityData(6, EntityDataTypes.ENTITY_POSE, pose);
     }
+
+    @Override
+    public EntityData potionColor(int color) {
+        return newEntityData(9, EntityDataTypes.INT, color);
+    }
+
+    @Override
+    public EntityData potionAmbient(boolean ambient) {
+        return newEntityData(10, EntityDataTypes.BOOLEAN, ambient);
+    }
 }

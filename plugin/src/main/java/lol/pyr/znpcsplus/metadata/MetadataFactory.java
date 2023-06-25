@@ -27,4 +27,6 @@ public interface MetadataFactory {
     EntityData noGravity();
     EntityData pose(EntityPose pose);
     EntityData shaking(boolean enabled);
+    EntityData potionColor(int color);
+    EntityData potionAmbient(boolean ambient);
 }

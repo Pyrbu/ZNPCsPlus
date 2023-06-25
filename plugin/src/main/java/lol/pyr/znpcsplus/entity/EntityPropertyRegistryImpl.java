@@ -7,6 +7,7 @@ import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.entity.serializers.*;
 import lol.pyr.znpcsplus.skin.cache.SkinCache;
 import lol.pyr.znpcsplus.util.NpcPose;
+import lol.pyr.znpcsplus.util.PotionColor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
@@ -28,6 +29,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerSerializer(new SkinDescriptorSerializer(skinCache));
         registerSerializer(new ItemStackPropertySerializer());
         registerSerializer(new NpcPosePropertySerializer());
+        registerSerializer(new PotionColorPropertySerializer());
 
         registerType("glow", NamedTextColor.class);
         registerType("fire", false);
@@ -46,7 +48,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("offhand", ItemStack.class);
 
         registerType("using_item", false); // TODO: Eating/Drinking/Blocking with sword/etc
-        registerType("potion_color", 0xFFFFFF); // TODO
+        registerType("potion_color", PotionColor.class); // TODO
         registerType("potion_ambient", false); // TODO
         registerType("shaking", false);
         registerType("baby", false); // TODO

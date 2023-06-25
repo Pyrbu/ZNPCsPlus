@@ -8,4 +8,14 @@ public class V1_10MetadataFactory extends V1_9MetadataFactory {
     public EntityData noGravity() {
         return newEntityData(5, EntityDataTypes.BOOLEAN, true);
     }
+
+    @Override
+    public EntityData potionColor(int color) {
+        return newEntityData(8, EntityDataTypes.INT, color);
+    }
+
+    @Override
+    public EntityData potionAmbient(boolean ambient) {
+        return newEntityData(9, EntityDataTypes.BOOLEAN, ambient);
+    }
 }

@@ -77,6 +77,8 @@ public class NpcTypeImpl implements NpcType {
             allowedProperties.add(propertyRegistry.getByName("silent"));
             allowedProperties.add(propertyRegistry.getByName("look"));
             allowedProperties.add(propertyRegistry.getByName("skin_cape"));
+            allowedProperties.add(propertyRegistry.getByName("potion_color"));
+            allowedProperties.add(propertyRegistry.getByName("potion_ambient"));
             if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9))
                 allowedProperties.add(propertyRegistry.getByName("glow"));
             if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_14))

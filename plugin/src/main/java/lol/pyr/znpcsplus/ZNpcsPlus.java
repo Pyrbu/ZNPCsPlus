@@ -259,6 +259,7 @@ public class ZNpcsPlus extends JavaPlugin {
         manager.registerParser(NamedTextColor.class, new NamedTextColorParser(incorrectUsageMessage));
         manager.registerParser(InteractionType.class, new InteractionTypeParser(incorrectUsageMessage));
         manager.registerParser(NpcPose.class, new NpcPoseParser(incorrectUsageMessage));
+        manager.registerParser(PotionColor.class, new PotionColorParser(incorrectUsageMessage));
 
         manager.registerCommand("npc", new MultiCommand(loadHelpMessage("root"))
                 .addSubcommand("create", new CreateCommand(npcRegistry, typeRegistry))

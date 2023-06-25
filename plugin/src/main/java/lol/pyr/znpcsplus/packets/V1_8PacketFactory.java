@@ -15,6 +15,7 @@ import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
+import lol.pyr.znpcsplus.util.PotionColor;
 import lol.pyr.znpcsplus.metadata.MetadataFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.skin.BaseSkinDescriptor;
@@ -142,6 +143,8 @@ public class V1_8PacketFactory implements PacketFactory {
                 false)
         );
         add(data, metadataFactory.silent(properties.getProperty(propertyRegistry.getByName("silent", Boolean.class))));
+        add(data, metadataFactory.potionColor(properties.getProperty(propertyRegistry.getByName("potion_color", PotionColor.class)).getColor()));
+        add(data, metadataFactory.potionAmbient(properties.getProperty(propertyRegistry.getByName("potion_ambient", Boolean.class))));
         if (properties.hasProperty(propertyRegistry.getByName("name"))) addAll(data, metadataFactory.name(properties.getProperty(propertyRegistry.getByName("name", Component.class))));
         return data;
     }
