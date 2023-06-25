@@ -48,7 +48,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("offhand", ItemStack.class);
 
         registerType("using_item", false); // TODO: Eating/Drinking/Blocking with sword/etc
-        registerType("potion_color", PotionColor.class); // TODO
+        registerType("potion_color", PotionColor.DEFAULT, PotionColor.class);
         registerType("potion_ambient", false); // TODO
         registerType("shaking", false);
         registerType("baby", false); // TODO
