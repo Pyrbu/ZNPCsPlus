@@ -54,11 +54,16 @@ public class NpcTypeImpl implements NpcType {
         }
 
         public Builder addEquipmentProperties() {
-            return addProperties("helmet", "chestplate", "leggings", "boots", "hand", "offhand");
+            addProperties("helmet", "chestplate", "leggings", "boots");
+            return addHandProperties();
         }
 
         public Builder addHandProperties() {
-            return addProperties("hand", "offhand");
+            if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9)) {
+                return addProperties("hand", "offhand");
+            } else {
+                return addProperties("hand");
+            }
         }
 
         public Builder addProperties(String... names) {

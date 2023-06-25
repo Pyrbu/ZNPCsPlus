@@ -5,21 +5,19 @@ import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import com.github.retrooper.packetevents.protocol.item.ItemStack;
-import com.github.retrooper.packetevents.protocol.item.type.ItemTypes;
 import com.github.retrooper.packetevents.protocol.player.*;
 import com.github.retrooper.packetevents.util.Vector3d;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.*;
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
-import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
-import lol.pyr.znpcsplus.util.PotionColor;
 import lol.pyr.znpcsplus.metadata.MetadataFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.skin.BaseSkinDescriptor;
 import lol.pyr.znpcsplus.util.NpcLocation;
+import lol.pyr.znpcsplus.util.PotionColor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
@@ -168,27 +166,19 @@ public class V1_8PacketFactory implements PacketFactory {
     }
 
     protected List<Equipment> generateEquipments(PropertyHolder properties) {
+        HashMap<String, EquipmentSlot> equipmentSlotMap = new HashMap<>();
+        equipmentSlotMap.put("helmet", EquipmentSlot.HELMET);
+        equipmentSlotMap.put("chestplate", EquipmentSlot.CHEST_PLATE);
+        equipmentSlotMap.put("leggings", EquipmentSlot.LEGGINGS);
+        equipmentSlotMap.put("boots", EquipmentSlot.BOOTS);
+        equipmentSlotMap.put("hand", EquipmentSlot.MAIN_HAND);
+        equipmentSlotMap.put("offhand", EquipmentSlot.OFF_HAND);
         List<Equipment> equipements = new ArrayList<>();
-        ItemStack air = new ItemStack.Builder().type(ItemTypes.AIR).build();
 
-        EntityPropertyImpl<ItemStack> helmet = propertyRegistry.getByName("helmet", ItemStack.class);
-        equipements.add(new Equipment(EquipmentSlot.HELMET, properties.hasProperty(helmet) ? properties.getProperty(helmet) : air));
-
-        EntityPropertyImpl<ItemStack> chestplate = propertyRegistry.getByName("chestplate", ItemStack.class);
-        equipements.add(new Equipment(EquipmentSlot.CHEST_PLATE, properties.hasProperty(chestplate) ? properties.getProperty(chestplate) : air));
-
-        EntityPropertyImpl<ItemStack> leggings = propertyRegistry.getByName("leggings", ItemStack.class);
-        equipements.add(new Equipment(EquipmentSlot.LEGGINGS, properties.hasProperty(leggings) ? properties.getProperty(leggings) : air));
-
-        EntityPropertyImpl<ItemStack> boots = propertyRegistry.getByName("boots", ItemStack.class);
-        equipements.add(new Equipment(EquipmentSlot.BOOTS, properties.hasProperty(boots) ? properties.getProperty(boots) : air));
-
-        EntityPropertyImpl<ItemStack> hand = propertyRegistry.getByName("hand", ItemStack.class);
-        equipements.add(new Equipment(EquipmentSlot.MAIN_HAND, properties.hasProperty(hand) ? properties.getProperty(hand) : air));
-
-        EntityPropertyImpl<ItemStack> offhand = propertyRegistry.getByName("offhand", ItemStack.class);
-        equipements.add(new Equipment(EquipmentSlot.OFF_HAND, properties.hasProperty(offhand) ? properties.getProperty(offhand) : air));
-
+        for (Map.Entry<String, EquipmentSlot> entry : equipmentSlotMap.entrySet()) {
+            if (!properties.hasProperty(propertyRegistry.getByName(entry.getKey()))) continue;
+            equipements.add(new Equipment(entry.getValue(), properties.getProperty(propertyRegistry.getByName(entry.getKey(), ItemStack.class))));
+        }
         return equipements;
     }
 

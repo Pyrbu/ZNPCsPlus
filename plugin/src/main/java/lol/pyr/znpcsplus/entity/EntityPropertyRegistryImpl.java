@@ -47,9 +47,9 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("hand", ItemStack.class);
         registerType("offhand", ItemStack.class);
 
-        registerType("using_item", false); // TODO: Eating/Drinking/Blocking with sword/etc
+        registerType("using_item", false); // TODO: fix it for 1.8 and add new property to use offhand item and riptide animation
         registerType("potion_color", PotionColor.DEFAULT, PotionColor.class);
-        registerType("potion_ambient", false); // TODO
+        registerType("potion_ambient", false);
         registerType("shaking", false);
         registerType("baby", false); // TODO
         registerType("pose", NpcPose.STANDING);
