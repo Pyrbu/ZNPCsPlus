@@ -129,6 +129,11 @@ public class NpcImpl extends Viewable implements Npc {
         return propertyMap.containsKey((EntityPropertyImpl<?>) key);
     }
 
+    @Override
+    public <T> void setProperty(EntityProperty<T> key, T value) {
+        setProperty((EntityPropertyImpl<T>) key, value );
+    }
+
     public <T> void setProperty(EntityPropertyImpl<T> key, T value) {
         if (value == null || value.equals(key.getDefaultValue())) removeProperty(key);
         else propertyMap.put(key, value);
