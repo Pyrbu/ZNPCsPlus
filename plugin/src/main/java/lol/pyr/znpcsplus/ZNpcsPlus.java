@@ -73,7 +73,6 @@ public class ZNpcsPlus extends JavaPlugin {
             .hexColors().build();
 
     private final List<Runnable> shutdownTasks = new ArrayList<>();
-    private boolean enabled = false;
     private PacketEventsAPI<Plugin> packetEvents;
 
     @Override
@@ -111,27 +110,40 @@ public class ZNpcsPlus extends JavaPlugin {
         }
 
         log(ChatColor.WHITE + " * Initializing libraries...");
+
         packetEvents.init();
+
         BukkitAudiences adventure = BukkitAudiences.create(this);
+        shutdownTasks.add(adventure::close);
 
         log(ChatColor.WHITE + " * Initializing components...");
+
         TaskScheduler scheduler = FoliaUtil.isFolia() ? new FoliaScheduler(this) : new SpigotScheduler(this);
-        MetadataFactory metadataFactory = setupMetadataFactory();
+        shutdownTasks.add(scheduler::cancelAll);
+
         ConfigManager configManager = new ConfigManager(getDataFolder());
         SkinCache skinCache = new SkinCache(configManager);
         EntityPropertyRegistryImpl propertyRegistry = new EntityPropertyRegistryImpl(skinCache);
+        MetadataFactory metadataFactory = setupMetadataFactory();
         PacketFactory packetFactory = setupPacketFactory(scheduler, metadataFactory, propertyRegistry);
         BungeeConnector bungeeConnector = new BungeeConnector(this);
+
         ActionRegistry actionRegistry = new ActionRegistry();
         NpcTypeRegistryImpl typeRegistry = new NpcTypeRegistryImpl();
         NpcRegistryImpl npcRegistry = new NpcRegistryImpl(configManager, this, packetFactory, actionRegistry,
                 scheduler, typeRegistry, propertyRegistry, textSerializer);
+        if (configManager.getConfig().autoSaveEnabled()) shutdownTasks.add(npcRegistry::save);
+        shutdownTasks.add(npcRegistry::unload);
+
         UserManager userManager = new UserManager();
+        shutdownTasks.add(userManager::shutdown);
+
         DataImporterRegistry importerRegistry = new DataImporterRegistry(configManager, adventure, bungeeConnector,
                 scheduler, packetFactory, textSerializer, typeRegistry, getDataFolder().getParentFile(),
                 propertyRegistry, skinCache);
 
         log(ChatColor.WHITE + " * Registerring components...");
+
         typeRegistry.registerDefault(packetEvents, propertyRegistry);
         actionRegistry.registerTypes(scheduler, adventure, bungeeConnector, textSerializer);
         packetEvents.getEventManager().registerListener(new InteractionPacketListener(userManager, npcRegistry), PacketListenerPriority.MONITOR);
@@ -170,14 +182,7 @@ public class ZNpcsPlus extends JavaPlugin {
             }
         }
 
-        shutdownTasks.add(npcRegistry::unload);
-        shutdownTasks.add(scheduler::cancelAll);
-        shutdownTasks.add(userManager::shutdown);
-        shutdownTasks.add(adventure::close);
-        if (configManager.getConfig().autoSaveEnabled()) shutdownTasks.add(npcRegistry::save);
-
         NpcApiProvider.register(this, new ZNpcsPlusApi(npcRegistry, typeRegistry, propertyRegistry, skinCache));
-        enabled = true;
         log(ChatColor.WHITE + " * Loading complete! (" + (System.currentTimeMillis() - before) + "ms)");
         log("");
 
@@ -198,7 +203,6 @@ public class ZNpcsPlus extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (!enabled) return;
         NpcApiProvider.unregister();
         for (Runnable runnable : shutdownTasks) runnable.run();
         PacketEvents.getAPI().terminate();
