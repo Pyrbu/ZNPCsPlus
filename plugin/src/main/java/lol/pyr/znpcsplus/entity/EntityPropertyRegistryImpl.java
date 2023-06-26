@@ -7,9 +7,9 @@ import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.entity.serializers.*;
 import lol.pyr.znpcsplus.skin.cache.SkinCache;
 import lol.pyr.znpcsplus.util.NpcPose;
-import lol.pyr.znpcsplus.util.PotionColor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Color;
 import org.bukkit.DyeColor;
 
 import java.util.Collection;
@@ -29,7 +29,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerSerializer(new NamedTextColorPropertySerializer());
         registerSerializer(new SkinDescriptorSerializer(skinCache));
         registerSerializer(new ItemStackPropertySerializer());
-        registerSerializer(new PotionColorPropertySerializer());
+        registerSerializer(new ColorPropertySerializer());
 
         registerEnumSerializer(NpcPose.class);
         registerEnumSerializer(DyeColor.class);
@@ -51,7 +51,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("offhand", ItemStack.class);
 
         registerType("using_item", false); // TODO: fix it for 1.8 and add new property to use offhand item and riptide animation
-        registerType("potion_color", PotionColor.DEFAULT, PotionColor.class);
+        registerType("potion_color", Color.WHITE);
         registerType("potion_ambient", false);
         registerType("shaking", false);
         registerType("baby", false); // TODO

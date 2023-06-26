@@ -17,9 +17,9 @@ import lol.pyr.znpcsplus.metadata.MetadataFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.skin.BaseSkinDescriptor;
 import lol.pyr.znpcsplus.util.NpcLocation;
-import lol.pyr.znpcsplus.util.PotionColor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Color;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -142,7 +142,7 @@ public class V1_8PacketFactory implements PacketFactory {
         );
         add(data, metadataFactory.silent(properties.getProperty(propertyRegistry.getByName("silent", Boolean.class))));
         add(data, metadataFactory.usingItem(properties.getProperty(propertyRegistry.getByName("using_item", Boolean.class)), false, false));
-        add(data, metadataFactory.potionColor(properties.getProperty(propertyRegistry.getByName("potion_color", PotionColor.class)).getColor()));
+        add(data, metadataFactory.potionColor(properties.getProperty(propertyRegistry.getByName("potion_color", Color.class)).asRGB()));
         add(data, metadataFactory.potionAmbient(properties.getProperty(propertyRegistry.getByName("potion_ambient", Boolean.class))));
         if (properties.hasProperty(propertyRegistry.getByName("name"))) addAll(data, metadataFactory.name(properties.getProperty(propertyRegistry.getByName("name", Component.class))));
         return data;

@@ -11,9 +11,9 @@ import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import lol.pyr.znpcsplus.util.NpcPose;
-import lol.pyr.znpcsplus.util.PotionColor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Color;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +31,8 @@ public class PropertyCommand implements CommandHandler {
         NpcEntryImpl entry = context.parse(NpcEntryImpl.class);
         NpcImpl npc = entry.getNpc();
         EntityPropertyImpl<?> property = context.parse(EntityPropertyImpl.class);
+
+        // TODO: find a way to do this better & rewrite this mess
 
         if (!npc.getType().getAllowedProperties().contains(property)) context.halt(Component.text("Property " + property.getName() + " not allowed for npc type " + npc.getType().getName(), NamedTextColor.RED));
         Class<?> type = property.getType();
@@ -50,8 +52,8 @@ public class PropertyCommand implements CommandHandler {
             value = null;
             valueName = "NONE";
         }
-        else if (type == PotionColor.class && context.argSize() < 1 && npc.getProperty(property) != null) {
-            value = PotionColor.DEFAULT;
+        else if (type == Color.class && context.argSize() < 1 && npc.getProperty(property) != null) {
+            value = Color.WHITE;
             valueName = "NONE";
         }
         else {
@@ -74,7 +76,7 @@ public class PropertyCommand implements CommandHandler {
             if (type == Boolean.class) return context.suggestLiteral("true", "false");
             if (type == NamedTextColor.class) return context.suggestCollection(NamedTextColor.NAMES.keys());
             if (type == NpcPose.class) return context.suggestEnum(NpcPose.values());
-            if (property.getName().equals("potion_color")) return context.suggestLiteral("0x0F00FF", "#FFFFFF", "16711935");
+            if (type == Color.class) return context.suggestLiteral("0x0F00FF", "#FFFFFF", "16711935");
         }
         return Collections.emptyList();
     }

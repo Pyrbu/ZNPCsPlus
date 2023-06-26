@@ -50,10 +50,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -264,7 +261,7 @@ public class ZNpcsPlus extends JavaPlugin {
         manager.registerParser(Boolean.class, new BooleanParser(incorrectUsageMessage));
         manager.registerParser(NamedTextColor.class, new NamedTextColorParser(incorrectUsageMessage));
         manager.registerParser(InteractionType.class, new InteractionTypeParser(incorrectUsageMessage));
-        manager.registerParser(PotionColor.class, new PotionColorParser(incorrectUsageMessage));
+        manager.registerParser(Color.class, new ColorParser(incorrectUsageMessage));
 
         registerEnumParser(manager, NpcPose.class, incorrectUsageMessage);
         registerEnumParser(manager, DyeColor.class, incorrectUsageMessage);
