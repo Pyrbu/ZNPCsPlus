@@ -8,7 +8,7 @@ import net.kyori.adventure.text.Component;
 public class V1_9MetadataFactory extends V1_8MetadataFactory {
     @Override
     public EntityData skinLayers(boolean cape, boolean jacket, boolean leftSleeve, boolean rightSleeve, boolean leftLeg, boolean rightLeg, boolean hat) {
-        return createSkinLayers(13, cape, jacket, leftSleeve, rightSleeve, leftLeg, rightLeg, hat);
+        return createSkinLayers(12, cape, jacket, leftSleeve, rightSleeve, leftLeg, rightLeg, hat);
     }
 
     @Override

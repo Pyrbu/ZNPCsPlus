@@ -5,6 +5,11 @@ import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 
 public class V1_10MetadataFactory extends V1_9MetadataFactory {
     @Override
+    public EntityData skinLayers(boolean cape, boolean jacket, boolean leftSleeve, boolean rightSleeve, boolean leftLeg, boolean rightLeg, boolean hat) {
+        return createSkinLayers(13, cape, jacket, leftSleeve, rightSleeve, leftLeg, rightLeg, hat);
+    }
+
+    @Override
     public EntityData noGravity() {
         return newEntityData(5, EntityDataTypes.BOOLEAN, true);
     }
