@@ -151,7 +151,8 @@ public class ZNpcsPlus extends JavaPlugin {
         pluginManager.registerEvents(new UserListener(userManager), this);
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
-        registerCommands(npcRegistry, skinCache, adventure, actionRegistry, typeRegistry, propertyRegistry, importerRegistry);
+        registerCommands(npcRegistry, skinCache, adventure, actionRegistry,
+                typeRegistry, propertyRegistry, importerRegistry, configManager);
 
         log(ChatColor.WHITE + " * Starting tasks...");
         if (configManager.getConfig().checkForUpdates()) {
@@ -252,7 +253,8 @@ public class ZNpcsPlus extends JavaPlugin {
 
     private void registerCommands(NpcRegistryImpl npcRegistry, SkinCache skinCache, BukkitAudiences adventure,
                                   ActionRegistry actionRegistry, NpcTypeRegistryImpl typeRegistry,
-                                  EntityPropertyRegistryImpl propertyRegistry, DataImporterRegistry importerRegistry) {
+                                  EntityPropertyRegistryImpl propertyRegistry, DataImporterRegistry importerRegistry,
+                                  ConfigManager configManager) {
 
         Message<CommandContext> incorrectUsageMessage = context -> context.send(Component.text("Incorrect usage: /" + context.getUsage(), NamedTextColor.RED));
         CommandManager manager = new CommandManager(this, adventure, incorrectUsageMessage);
@@ -272,6 +274,7 @@ public class ZNpcsPlus extends JavaPlugin {
 
         manager.registerCommand("npc", new MultiCommand(loadHelpMessage("root"))
                 .addSubcommand("create", new CreateCommand(npcRegistry, typeRegistry))
+                .addSubcommand("reloadconfig", new ReloadConfigCommand(configManager))
                 .addSubcommand("toggle", new ToggleCommand(npcRegistry))
                 .addSubcommand("skin", new SkinCommand(skinCache, npcRegistry, typeRegistry, propertyRegistry))
                 .addSubcommand("delete", new DeleteCommand(npcRegistry, adventure))
