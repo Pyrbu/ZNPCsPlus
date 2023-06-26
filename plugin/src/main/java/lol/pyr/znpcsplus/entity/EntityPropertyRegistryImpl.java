@@ -10,6 +10,7 @@ import lol.pyr.znpcsplus.util.NpcPose;
 import lol.pyr.znpcsplus.util.PotionColor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.DyeColor;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -28,8 +29,10 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerSerializer(new NamedTextColorPropertySerializer());
         registerSerializer(new SkinDescriptorSerializer(skinCache));
         registerSerializer(new ItemStackPropertySerializer());
-        registerSerializer(new NpcPosePropertySerializer());
         registerSerializer(new PotionColorPropertySerializer());
+
+        registerEnumSerializer(NpcPose.class);
+        registerEnumSerializer(DyeColor.class);
 
         registerType("glow", NamedTextColor.class);
         registerType("fire", false);
@@ -98,7 +101,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("horse_saddle", false); // TODO
 
         // LLama
-        registerType("carpet_color", -1); // TODO
+        registerType("carpet_color", DyeColor.class); // TODO
         registerType("llama_variant", 0); // TODO
 
         // Axolotl
@@ -135,7 +138,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("polar_bear_standing", false); // TODO
 
         // Sheep
-        registerType("sheep_color", 0); // TODO: Figure this out
+        registerType("sheep_color", DyeColor.WHITE); // TODO: Figure this out
         registerType("sheep_sheared", false); // TODO
 
         // Strider
@@ -145,10 +148,10 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Cat
         registerType("cat_variant", null); // TODO: Custom type
         registerType("cat_laying", false); // TODO
-        registerType("cat_collar_color", 14); // TODO
+        registerType("cat_collar_color", DyeColor.RED); // TODO
 
         // Wolf
-        registerType("wolf_collar_color", 14); // TODO
+        registerType("wolf_collar_color", DyeColor.RED); // TODO
         registerType("wolf_angry", false); // TODO
 
         // Parrot
@@ -164,7 +167,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Shulker
         registerType("attach_direction", null); // TODO: make a direction enum
         registerType("shield_height", 0); // TODO: figure this out
-        registerType("shulker_color", 10); // TODO
+        registerType("shulker_color", DyeColor.RED); // TODO
 
         // Piglin / Hoglin
         registerType("immune_to_zombification", false); // TODO
@@ -206,6 +209,10 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
     private void registerSerializer(PropertySerializer<?> serializer) {
         serializerMap.put(serializer.getTypeClass(), serializer);
+    }
+
+    private <T extends Enum<T>> void registerEnumSerializer(Class<T> clazz) {
+        serializerMap.put(clazz, new EnumPropertySerializer<>(clazz));
     }
 
     private <T> void registerType(String name, Class<T> type) {

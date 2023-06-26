@@ -4,19 +4,22 @@ import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.parse.ParserType;
 import lol.pyr.director.common.command.CommandExecutionException;
 import lol.pyr.director.common.message.Message;
-import lol.pyr.znpcsplus.util.NpcPose;
 
 import java.util.Deque;
 
-public class NpcPoseParser extends ParserType<NpcPose> {
-    public NpcPoseParser(Message<CommandContext> message) {
+public class EnumParser<T extends Enum<T>> extends ParserType<T> {
+
+    private final Class<T> enumClass;
+
+    public EnumParser(Class<T> enumClass, Message<CommandContext> message) {
         super(message);
+        this.enumClass = enumClass;
     }
 
     @Override
-    public NpcPose parse(Deque<String> deque) throws CommandExecutionException {
+    public T parse(Deque<String> deque) throws CommandExecutionException {
         try {
-            return NpcPose.valueOf(deque.pop().toUpperCase());
+            return Enum.valueOf(enumClass, deque.pop().toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new CommandExecutionException();
         }
