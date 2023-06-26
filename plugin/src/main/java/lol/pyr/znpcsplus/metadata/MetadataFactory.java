@@ -19,7 +19,7 @@ import net.kyori.adventure.text.Component;
  */
 public interface MetadataFactory {
     EntityData skinLayers(boolean cape, boolean jacket, boolean leftSleeve, boolean rightSleeve, boolean leftLeg, boolean rightLeg, boolean hat);
-    EntityData effects(boolean onFire, boolean glowing, boolean invisible, boolean usingElytra);
+    EntityData effects(boolean onFire, boolean glowing, boolean invisible, boolean usingElytra, boolean usingItemLegacy);
     EntityData silent(boolean enabled);
     EntityData name(Component name);
     EntityData nameShown();

@@ -14,8 +14,8 @@ public class V1_8MetadataFactory implements MetadataFactory {
     }
 
     @Override
-    public EntityData effects(boolean onFire, boolean glowing, boolean invisible, boolean usingElytra) {
-        return newEntityData(0, EntityDataTypes.BYTE, (byte) ((onFire ? 0x01 : 0) | (invisible ? 0x20 : 0)));
+    public EntityData effects(boolean onFire, boolean glowing, boolean invisible, boolean usingElytra, boolean usingItemLegacy) {
+        return newEntityData(0, EntityDataTypes.BYTE, (byte) ((onFire ? 0x01 : 0) | (usingItemLegacy ? 0x10 : 0) | (invisible ? 0x20 : 0)));
     }
 
     @Override
@@ -45,7 +45,7 @@ public class V1_8MetadataFactory implements MetadataFactory {
 
     @Override
     public EntityData usingItem(boolean enabled, boolean offHand, boolean riptide) {
-        return newEntityData(0, EntityDataTypes.BYTE, (byte) (enabled ? 0x10 : 0));
+        throw new UnsupportedOperationException("The standalone using item data isn't supported on this version");
     }
 
     @Override

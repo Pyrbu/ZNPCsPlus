@@ -18,7 +18,7 @@ import org.bukkit.plugin.Plugin;
 import java.util.Map;
 import java.util.Optional;
 
-public class V1_14PacketFactory extends V1_10PacketFactory {
+public class V1_14PacketFactory extends V1_11PacketFactory {
     public V1_14PacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry) {
         super(scheduler, metadataFactory, packetEvents, propertyRegistry);
     }

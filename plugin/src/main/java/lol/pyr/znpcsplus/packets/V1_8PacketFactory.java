@@ -139,10 +139,10 @@ public class V1_8PacketFactory implements PacketFactory {
                 properties.getProperty(propertyRegistry.getByName("fire", Boolean.class)),
                 false,
                 properties.getProperty(propertyRegistry.getByName("invisible", Boolean.class)),
-                false)
-        );
+                false,
+                properties.getProperty(propertyRegistry.getByName("using_item", Boolean.class))
+        ));
         add(data, metadataFactory.silent(properties.getProperty(propertyRegistry.getByName("silent", Boolean.class))));
-        add(data, metadataFactory.usingItem(properties.getProperty(propertyRegistry.getByName("using_item", Boolean.class)), false, false));
         add(data, metadataFactory.potionColor(properties.getProperty(propertyRegistry.getByName("potion_color", Color.class)).asRGB()));
         add(data, metadataFactory.potionAmbient(properties.getProperty(propertyRegistry.getByName("potion_ambient", Boolean.class))));
         if (properties.hasProperty(propertyRegistry.getByName("name"))) {

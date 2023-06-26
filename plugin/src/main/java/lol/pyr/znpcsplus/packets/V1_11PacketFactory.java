@@ -12,20 +12,15 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.Map;
 
-public class V1_9PacketFactory extends V1_8PacketFactory {
-    public V1_9PacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry) {
+public class V1_11PacketFactory extends V1_10PacketFactory {
+    public V1_11PacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry) {
         super(scheduler, metadataFactory, packetEvents, propertyRegistry);
     }
 
     @Override
     public Map<Integer, EntityData> generateMetadata(Player player, PacketEntity entity, PropertyHolder properties) {
         Map<Integer, EntityData> data = super.generateMetadata(player, entity, properties);
-        add(data, metadataFactory.effects(properties.getProperty(propertyRegistry.getByName("fire", Boolean.class)),
-                properties.hasProperty(propertyRegistry.getByName("glow", Boolean.class)),
-                properties.getProperty(propertyRegistry.getByName("invisible", Boolean.class)),
-                false,
-                properties.getProperty(propertyRegistry.getByName("using_item", Boolean.class))
-        ));
+        add(data, metadataFactory.usingItem(properties.getProperty(propertyRegistry.getByName("using_item", Boolean.class)), false, false));
         return data;
     }
 }

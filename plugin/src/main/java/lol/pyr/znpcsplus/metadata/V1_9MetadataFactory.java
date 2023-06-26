@@ -12,8 +12,8 @@ public class V1_9MetadataFactory extends V1_8MetadataFactory {
     }
 
     @Override
-    public EntityData effects(boolean onFire, boolean glowing, boolean invisible, boolean usingElytra) {
-        return newEntityData(0, EntityDataTypes.BYTE, (byte) ((onFire ? 0x01 : 0) | (invisible ? 0x20 : 0) | (glowing ? 0x40 : 0) | (usingElytra ? 0x80 : 0)));
+    public EntityData effects(boolean onFire, boolean glowing, boolean invisible, boolean usingElytra, boolean usingItemLegacy) {
+        return newEntityData(0, EntityDataTypes.BYTE, (byte) ((onFire ? 0x01 : 0) | (usingItemLegacy ? 0x10 : 0) | (invisible ? 0x20 : 0) | (glowing ? 0x40 : 0) | (usingElytra ? 0x80 : 0)));
     }
 
     @Override
