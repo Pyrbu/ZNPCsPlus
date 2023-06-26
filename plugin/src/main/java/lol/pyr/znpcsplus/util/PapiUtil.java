@@ -21,7 +21,7 @@ public class PapiUtil {
 
     // Ugly workaround would be cool if a better solution existed
     public static Component set(Player player, Component component) {
-        if (isSupported()) return component;
+        if (!isSupported()) return component;
         LegacyComponentSerializer serializer = LegacyComponentSerializer.legacySection();
         return serializer.deserialize(set(player, serializer.serialize(component)));
     }
