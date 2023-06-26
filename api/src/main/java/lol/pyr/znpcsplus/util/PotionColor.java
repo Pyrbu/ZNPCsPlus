@@ -1,27 +1,29 @@
 package lol.pyr.znpcsplus.util;
 
 public class PotionColor {
+    private final int color;
+    public static PotionColor DEFAULT = new PotionColor(0);
 
-    private final String color;
-
-    public static PotionColor DEFAULT = new PotionColor("0");
-
-    public PotionColor(String color) {
+    public PotionColor(int color) {
         this.color = color;
     }
 
-    public int getColor() {
+    public PotionColor(String color) {
+        boolean hex = false;
         if (color.startsWith("#")) {
-            if (color.length() != 7)
-                throw new IllegalArgumentException("Hex color must be 6 characters long");
-            return Integer.parseInt(color.substring(1), 16);
-        } else if (color.startsWith("0x")) {
-            if (color.length() != 8)
-                throw new IllegalArgumentException("Hex color must be 6 characters long");
-            return Integer.parseInt(color.substring(2), 16);
-        } else {
-            return Integer.parseInt(color);
+            color = color.substring(1);
+            hex = true;
         }
+        else if (color.startsWith("0x")) {
+            color = color.substring(2);
+            hex = true;
+        }
+        if (hex && color.length() != 6) throw new IllegalArgumentException("Hex color must be 6 characters long");
+        this.color = Integer.parseInt(color);
+    }
+
+    public int getColor() {
+        return color;
     }
 
     public String toString() {
