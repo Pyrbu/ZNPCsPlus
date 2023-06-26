@@ -38,6 +38,7 @@ import lol.pyr.znpcsplus.scheduling.SpigotScheduler;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.skin.cache.SkinCache;
 import lol.pyr.znpcsplus.skin.cache.SkinCacheCleanTask;
+import lol.pyr.znpcsplus.tasks.HologramRefreshTask;
 import lol.pyr.znpcsplus.tasks.NpcProcessorTask;
 import lol.pyr.znpcsplus.updater.UpdateChecker;
 import lol.pyr.znpcsplus.updater.UpdateNotificationListener;
@@ -162,6 +163,7 @@ public class ZNpcsPlus extends JavaPlugin {
         }
 
         scheduler.runDelayedTimerAsync(new NpcProcessorTask(npcRegistry, configManager, propertyRegistry), 60L, 3L);
+        scheduler.runDelayedTimerAsync(new HologramRefreshTask(npcRegistry), 60L, 20L);
         scheduler.runDelayedTimerAsync(new SkinCacheCleanTask(skinCache), 1200, 1200);
 
         log(ChatColor.WHITE + " * Loading data...");
@@ -294,7 +296,8 @@ public class ZNpcsPlus extends JavaPlugin {
                         .addSubcommand("info", new HoloInfoCommand(npcRegistry))
                         .addSubcommand("insert", new HoloInsertCommand(npcRegistry, textSerializer))
                         .addSubcommand("set", new HoloSetCommand(npcRegistry, textSerializer))
-                        .addSubcommand("offset", new HoloOffsetCommand(npcRegistry)))
+                        .addSubcommand("offset", new HoloOffsetCommand(npcRegistry))
+                        .addSubcommand("refreshdelay", new HoloRefreshDelayCommand(npcRegistry)))
                 .addSubcommand("action", new MultiCommand(loadHelpMessage("action"))
                         .addSubcommand("add", new ActionAddCommand(npcRegistry, actionRegistry))
                         .addSubcommand("delete", new ActionDeleteCommand(npcRegistry))

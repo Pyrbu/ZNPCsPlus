@@ -19,6 +19,8 @@ public class HologramImpl extends Viewable implements Hologram {
     private final LegacyComponentSerializer textSerializer;
 
     private double offset = 0.0;
+    private long refreshDelay = -1;
+    private long lastRefresh = System.currentTimeMillis();
     private NpcLocation location;
     private final List<HologramLine> lines = new ArrayList<>();
 
@@ -82,6 +84,23 @@ public class HologramImpl extends Viewable implements Hologram {
     @Override
     protected void UNSAFE_hide(Player player) {
         for (HologramLine line : lines) line.hide(player);
+    }
+
+    public long getRefreshDelay() {
+        return refreshDelay;
+    }
+
+    public void setRefreshDelay(long refreshDelay) {
+        this.refreshDelay = refreshDelay;
+    }
+
+    public boolean shouldRefresh() {
+        return refreshDelay != -1 && (System.currentTimeMillis() - lastRefresh) > refreshDelay;
+    }
+
+    public void refresh() {
+        lastRefresh = System.currentTimeMillis();
+        for (HologramLine line : lines) for (Player viewer : getViewers()) line.refreshMeta(viewer);
     }
 
     public void setLocation(NpcLocation location) {

@@ -3,6 +3,7 @@ package lol.pyr.znpcsplus.storage.yaml;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
+import lol.pyr.znpcsplus.hologram.HologramImpl;
 import lol.pyr.znpcsplus.hologram.HologramLine;
 import lol.pyr.znpcsplus.interaction.ActionRegistry;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
@@ -61,8 +62,10 @@ public class YamlStorage implements NpcStorage {
                     npc.UNSAFE_setProperty(property, property.deserialize(properties.getString(key)));
                 }
             }
-            npc.getHologram().setOffset(config.getDouble("hologram.offset", 0.0));
-            for (String line : config.getStringList("hologram.lines")) npc.getHologram().addLineComponent(MiniMessage.miniMessage().deserialize(line));
+            HologramImpl hologram = npc.getHologram();
+            hologram.setOffset(config.getDouble("hologram.offset", 0.0));
+            hologram.setRefreshDelay(config.getLong("hologram.refresh-delay", -1));
+            for (String line : config.getStringList("hologram.lines")) hologram.addLineComponent(MiniMessage.miniMessage().deserialize(line));
             for (String s : config.getStringList("actions")) npc.addAction(actionRegistry.deserialize(s));
 
             NpcEntryImpl entry = new NpcEntryImpl(config.getString("id"), npc);
@@ -96,9 +99,11 @@ public class YamlStorage implements NpcStorage {
                 config.set("properties." + property.getName(), property.serialize(npc));
             }
 
-            if (npc.getHologram().getOffset() != 0.0) config.set("hologram.offset", npc.getHologram().getOffset());
+            HologramImpl hologram = npc.getHologram();
+            if (hologram.getOffset() != 0.0) config.set("hologram.offset", hologram.getOffset());
+            if (hologram.getRefreshDelay() != -1) config.set("hologram.refresh-delay", hologram.getRefreshDelay());
             List<String> lines = new ArrayList<>(npc.getHologram().getLines().size());
-            for (HologramLine line : npc.getHologram().getLines()) {
+            for (HologramLine line : hologram.getLines()) {
                 lines.add(MiniMessage.miniMessage().serialize(line.getText()));
             }
             config.set("hologram.lines", lines);

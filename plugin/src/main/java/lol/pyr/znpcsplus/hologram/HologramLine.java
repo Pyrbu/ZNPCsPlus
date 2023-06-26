@@ -28,6 +28,10 @@ public class HologramLine implements PropertyHolder {
         this.text = text;
     }
 
+    public void refreshMeta(Player player) {
+        armorStand.refreshMeta(player);
+    }
+
     protected void show(Player player) {
         armorStand.spawn(player);
     }
