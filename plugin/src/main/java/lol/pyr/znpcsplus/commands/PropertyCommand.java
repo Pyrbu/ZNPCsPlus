@@ -53,7 +53,7 @@ public class PropertyCommand implements CommandHandler {
             valueName = "NONE";
         }
         else if (type == Color.class && context.argSize() < 1 && npc.getProperty(property) != null) {
-            value = Color.WHITE;
+            value = Color.BLACK;
             valueName = "NONE";
         }
         else {

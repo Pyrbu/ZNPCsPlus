@@ -51,7 +51,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("offhand", ItemStack.class);
 
         registerType("using_item", false); // TODO: fix it for 1.8 and add new property to use offhand item and riptide animation
-        registerType("potion_color", Color.WHITE);
+        registerType("potion_color", Color.BLACK);
         registerType("potion_ambient", false);
         registerType("shaking", false);
         registerType("baby", false); // TODO
