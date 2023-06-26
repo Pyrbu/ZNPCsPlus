@@ -4,8 +4,6 @@ import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.pose.EntityPose;
 import net.kyori.adventure.text.Component;
 
-import java.util.Collection;
-
 /**
  * 1.8  <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=7415">...</a>
  * 1.9  <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=7968">...</a>
@@ -23,7 +21,8 @@ public interface MetadataFactory {
     EntityData skinLayers(boolean cape, boolean jacket, boolean leftSleeve, boolean rightSleeve, boolean leftLeg, boolean rightLeg, boolean hat);
     EntityData effects(boolean onFire, boolean glowing, boolean invisible, boolean usingElytra);
     EntityData silent(boolean enabled);
-    Collection<EntityData> name(Component name);
+    EntityData name(Component name);
+    EntityData nameShown();
     EntityData noGravity();
     EntityData pose(EntityPose pose);
     EntityData shaking(boolean enabled);

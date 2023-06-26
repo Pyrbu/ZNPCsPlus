@@ -145,7 +145,10 @@ public class V1_8PacketFactory implements PacketFactory {
         add(data, metadataFactory.usingItem(properties.getProperty(propertyRegistry.getByName("using_item", Boolean.class)), false, false));
         add(data, metadataFactory.potionColor(properties.getProperty(propertyRegistry.getByName("potion_color", Color.class)).asRGB()));
         add(data, metadataFactory.potionAmbient(properties.getProperty(propertyRegistry.getByName("potion_ambient", Boolean.class))));
-        if (properties.hasProperty(propertyRegistry.getByName("name"))) addAll(data, metadataFactory.name(PapiUtil.set(player, properties.getProperty(propertyRegistry.getByName("name", Component.class)))));
+        if (properties.hasProperty(propertyRegistry.getByName("name"))) {
+            add(data, metadataFactory.name(PapiUtil.set(player, properties.getProperty(propertyRegistry.getByName("name", Component.class)))));
+            add(data, metadataFactory.nameShown());
+        }
         return data;
     }
 
@@ -204,9 +207,5 @@ public class V1_8PacketFactory implements PacketFactory {
 
     protected void add(Map<Integer, EntityData> map, EntityData data) {
         map.put(data.getIndex(), data);
-    }
-
-    protected void addAll(Map<Integer, EntityData> map, Collection<EntityData> data) {
-        for (EntityData d : data) add(map, d);
     }
 }

@@ -5,8 +5,6 @@ import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
 import net.kyori.adventure.text.Component;
 
-import java.util.Collection;
-
 public class V1_9MetadataFactory extends V1_8MetadataFactory {
     @Override
     public EntityData skinLayers(boolean cape, boolean jacket, boolean leftSleeve, boolean rightSleeve, boolean leftLeg, boolean rightLeg, boolean hat) {
@@ -24,11 +22,13 @@ public class V1_9MetadataFactory extends V1_8MetadataFactory {
     }
 
     @Override
-    public Collection<EntityData> name(Component name) {
-        return list(
-                newEntityData(2, EntityDataTypes.STRING, AdventureSerializer.getGsonSerializer().serialize(name)),
-                newEntityData(3, EntityDataTypes.BOOLEAN, true)
-        );
+    public EntityData name(Component name) {
+        return newEntityData(2, EntityDataTypes.STRING, AdventureSerializer.getGsonSerializer().serialize(name));
+    }
+
+    @Override
+    public EntityData nameShown() {
+        return newEntityData(3, EntityDataTypes.BOOLEAN, true);
     }
 
     @Override

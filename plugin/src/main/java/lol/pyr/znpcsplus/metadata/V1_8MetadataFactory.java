@@ -8,7 +8,6 @@ import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
 import net.kyori.adventure.text.Component;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class V1_8MetadataFactory implements MetadataFactory {
@@ -23,11 +22,13 @@ public class V1_8MetadataFactory implements MetadataFactory {
     }
 
     @Override
-    public Collection<EntityData> name(Component name) {
-        return list(
-                newEntityData(2, EntityDataTypes.STRING, AdventureSerializer.getLegacyGsonSerializer().serialize(name)),
-                newEntityData(3, EntityDataTypes.BYTE, (byte) 1)
-        );
+    public EntityData name(Component name) {
+        return newEntityData(2, EntityDataTypes.STRING, AdventureSerializer.getLegacyGsonSerializer().serialize(name));
+    }
+
+    @Override
+    public EntityData nameShown() {
+        return newEntityData(3, EntityDataTypes.BYTE, (byte) 1);
     }
 
     @Override
@@ -79,12 +80,5 @@ public class V1_8MetadataFactory implements MetadataFactory {
 
     protected <T> EntityData newEntityData(int index, EntityDataType<T> type, T value) {
         return new EntityData(index, type, value);
-    }
-
-    @SafeVarargs
-    protected final <T> List<T> list(T... items) {
-        ArrayList<T> list = new ArrayList<>(items.length);
-        for (int i = 0; i < items.length; i++) list.add(i, items[i]);
-        return list;
     }
 }
