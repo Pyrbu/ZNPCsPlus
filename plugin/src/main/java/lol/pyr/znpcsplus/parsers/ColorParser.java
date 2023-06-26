@@ -20,7 +20,7 @@ public class ColorParser extends ParserType<Color> {
         if (color.startsWith("&")) color = color.substring(1);
         if (color.startsWith("#")) color = color.substring(1);
         try {
-            return Color.fromRGB(Integer.parseInt(color));
+            return Color.fromRGB(Integer.parseInt(color, 16));
         } catch (IllegalArgumentException exception) {
             throw new CommandExecutionException();
         }
