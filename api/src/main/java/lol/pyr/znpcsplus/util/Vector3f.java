@@ -1,9 +1,9 @@
 package lol.pyr.znpcsplus.util;
 
 public class Vector3f {
-    public final float x;
-    public final float y;
-    public final float z;
+    private final float x;
+    private final float y;
+    private final float z;
 
     public Vector3f() {
         this.x = 0.0F;
