@@ -32,31 +32,31 @@ public class V1_10MetadataFactory extends V1_9MetadataFactory {
 
     @Override
     public EntityData armorStandHeadRotation(Vector3f headRotation) {
-        return newEntityData(12, EntityDataTypes.ROTATION, new com.github.retrooper.packetevents.util.Vector3f(headRotation.getX(), headRotation.getY(), headRotation.getZ()));
+        return createRotations(12, headRotation);
     }
 
     @Override
     public EntityData armorStandBodyRotation(Vector3f bodyRotation) {
-        return newEntityData(13, EntityDataTypes.ROTATION, new com.github.retrooper.packetevents.util.Vector3f(bodyRotation.getX(), bodyRotation.getY(), bodyRotation.getZ()));
+        return createRotations(13, bodyRotation);
     }
 
     @Override
     public EntityData armorStandLeftArmRotation(Vector3f leftArmRotation) {
-        return newEntityData(14, EntityDataTypes.ROTATION, new com.github.retrooper.packetevents.util.Vector3f(leftArmRotation.getX(), leftArmRotation.getY(), leftArmRotation.getZ()));
+        return createRotations(14, leftArmRotation);
     }
 
     @Override
     public EntityData armorStandRightArmRotation(Vector3f rightArmRotation) {
-        return newEntityData(15, EntityDataTypes.ROTATION, new com.github.retrooper.packetevents.util.Vector3f(rightArmRotation.getX(), rightArmRotation.getY(), rightArmRotation.getZ()));
+        return createRotations(15, rightArmRotation);
     }
 
     @Override
     public EntityData armorStandLeftLegRotation(Vector3f leftLegRotation) {
-        return newEntityData(16, EntityDataTypes.ROTATION, new com.github.retrooper.packetevents.util.Vector3f(leftLegRotation.getX(), leftLegRotation.getY(), leftLegRotation.getZ()));
+        return createRotations(16, leftLegRotation);
     }
 
     @Override
     public EntityData armorStandRightLegRotation(Vector3f rightLegRotation) {
-        return newEntityData(17, EntityDataTypes.ROTATION, new com.github.retrooper.packetevents.util.Vector3f(rightLegRotation.getX(), rightLegRotation.getY(), rightLegRotation.getZ()));
+        return createRotations(17, rightLegRotation);
     }
 }

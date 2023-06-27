@@ -66,32 +66,32 @@ public class V1_8MetadataFactory implements MetadataFactory {
 
     @Override
     public EntityData armorStandHeadRotation(Vector3f headRotation) {
-        return newEntityData(11, EntityDataTypes.ROTATION, new com.github.retrooper.packetevents.util.Vector3f(headRotation.getX(), headRotation.getY(), headRotation.getZ()));
+        return createRotations(11, headRotation);
     }
 
     @Override
     public EntityData armorStandBodyRotation(Vector3f bodyRotation) {
-        return newEntityData(12, EntityDataTypes.ROTATION, new com.github.retrooper.packetevents.util.Vector3f(bodyRotation.getX(), bodyRotation.getY(), bodyRotation.getZ()));
+        return createRotations(12, bodyRotation);
     }
 
     @Override
     public EntityData armorStandLeftArmRotation(Vector3f leftArmRotation) {
-        return newEntityData(13, EntityDataTypes.ROTATION, new com.github.retrooper.packetevents.util.Vector3f(leftArmRotation.getX(), leftArmRotation.getY(), leftArmRotation.getZ()));
+        return createRotations(13, leftArmRotation);
     }
 
     @Override
     public EntityData armorStandRightArmRotation(Vector3f rightArmRotation) {
-        return newEntityData(14, EntityDataTypes.ROTATION, new com.github.retrooper.packetevents.util.Vector3f(rightArmRotation.getX(), rightArmRotation.getY(), rightArmRotation.getZ()));
+        return createRotations(14, rightArmRotation);
     }
 
     @Override
     public EntityData armorStandLeftLegRotation(Vector3f leftLegRotation) {
-        return newEntityData(15, EntityDataTypes.ROTATION, new com.github.retrooper.packetevents.util.Vector3f(leftLegRotation.getX(), leftLegRotation.getY(), leftLegRotation.getZ()));
+        return createRotations(15, leftLegRotation);
     }
 
     @Override
     public EntityData armorStandRightLegRotation(Vector3f rightLegRotation) {
-        return newEntityData(16, EntityDataTypes.ROTATION, new com.github.retrooper.packetevents.util.Vector3f(rightLegRotation.getX(), rightLegRotation.getY(), rightLegRotation.getZ()));
+        return createRotations(16, rightLegRotation);
     }
 
     @Override
@@ -113,5 +113,9 @@ public class V1_8MetadataFactory implements MetadataFactory {
 
     protected <T> EntityData newEntityData(int index, EntityDataType<T> type, T value) {
         return new EntityData(index, type, value);
+    }
+
+    protected EntityData createRotations(int index, Vector3f rotations) {
+        return newEntityData(index, EntityDataTypes.ROTATION, new com.github.retrooper.packetevents.util.Vector3f(rotations.getX(), rotations.getY(), rotations.getZ()));
     }
 }
