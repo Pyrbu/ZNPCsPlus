@@ -18,6 +18,7 @@ import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.skin.BaseSkinDescriptor;
 import lol.pyr.znpcsplus.util.NpcLocation;
 import lol.pyr.znpcsplus.util.PapiUtil;
+import lol.pyr.znpcsplus.util.Vector3f;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
@@ -145,6 +146,19 @@ public class V1_8PacketFactory implements PacketFactory {
         add(data, metadataFactory.silent(properties.getProperty(propertyRegistry.getByName("silent", Boolean.class))));
         add(data, metadataFactory.potionColor(properties.getProperty(propertyRegistry.getByName("potion_color", Color.class)).asRGB()));
         add(data, metadataFactory.potionAmbient(properties.getProperty(propertyRegistry.getByName("potion_ambient", Boolean.class))));
+        if (entity.getType() == EntityTypes.ARMOR_STAND) {
+            add(data, metadataFactory.armorStandProperties(
+                    properties.getProperty(propertyRegistry.getByName("small", Boolean.class)),
+                    properties.getProperty(propertyRegistry.getByName("arms", Boolean.class)),
+                    !properties.getProperty(propertyRegistry.getByName("base_plate", Boolean.class))
+            ));
+            add(data, metadataFactory.armorStandHeadRotation(properties.getProperty(propertyRegistry.getByName("head_rotation", Vector3f.class))));
+            add(data, metadataFactory.armorStandBodyRotation(properties.getProperty(propertyRegistry.getByName("body_rotation", Vector3f.class))));
+            add(data, metadataFactory.armorStandLeftArmRotation(properties.getProperty(propertyRegistry.getByName("left_arm_rotation", Vector3f.class))));
+            add(data, metadataFactory.armorStandRightArmRotation(properties.getProperty(propertyRegistry.getByName("right_arm_rotation", Vector3f.class))));
+            add(data, metadataFactory.armorStandLeftLegRotation(properties.getProperty(propertyRegistry.getByName("left_leg_rotation", Vector3f.class))));
+            add(data, metadataFactory.armorStandRightLegRotation(properties.getProperty(propertyRegistry.getByName("right_leg_rotation", Vector3f.class))));
+        }
         if (properties.hasProperty(propertyRegistry.getByName("name"))) {
             add(data, metadataFactory.name(PapiUtil.set(player, properties.getProperty(propertyRegistry.getByName("name", Component.class)))));
             add(data, metadataFactory.nameShown());

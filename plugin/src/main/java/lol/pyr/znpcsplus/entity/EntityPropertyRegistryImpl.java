@@ -7,6 +7,7 @@ import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.entity.serializers.*;
 import lol.pyr.znpcsplus.skin.cache.SkinCache;
 import lol.pyr.znpcsplus.util.NpcPose;
+import lol.pyr.znpcsplus.util.Vector3f;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
@@ -30,6 +31,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerSerializer(new SkinDescriptorSerializer(skinCache));
         registerSerializer(new ItemStackPropertySerializer());
         registerSerializer(new ColorPropertySerializer());
+        registerSerializer(new Vector3fPropertySerializer());
 
         registerEnumSerializer(NpcPose.class);
         registerEnumSerializer(DyeColor.class);
@@ -71,17 +73,16 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("show_base", true); // TODO
 
         // Armor Stand
-        registerType("small", false); // TODO
-        registerType("arms", false); // TODO
-        registerType("base_plate", true); // TODO
+        registerType("small", false);
+        registerType("arms", false);
+        registerType("base_plate", true);
 
-        // TODO: Make a vector3f class for all of these
-        registerType("head_rotation", null); // TODO
-        registerType("body_rotation", null); // TODO
-        registerType("left_arm_rotation", null); // TODO
-        registerType("right_arm_rotation", null); // TODO
-        registerType("left_leg_rotation", null); // TODO
-        registerType("right_leg_rotation", null); // TODO
+        registerType("head_rotation", Vector3f.zero());
+        registerType("body_rotation", Vector3f.zero());
+        registerType("left_arm_rotation", new Vector3f(-10, 0, -10));
+        registerType("right_arm_rotation", new Vector3f(-15, 0, 10));
+        registerType("left_leg_rotation", new Vector3f(-1 , 0, -1));
+        registerType("right_leg_rotation", new Vector3f(1, 0, 1));
 
         // Bat
         registerType("hanging", false); // TODO

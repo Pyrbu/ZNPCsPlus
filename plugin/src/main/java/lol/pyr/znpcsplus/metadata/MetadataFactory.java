@@ -2,6 +2,7 @@ package lol.pyr.znpcsplus.metadata;
 
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.pose.EntityPose;
+import lol.pyr.znpcsplus.util.Vector3f;
 import net.kyori.adventure.text.Component;
 
 /**
@@ -29,4 +30,11 @@ public interface MetadataFactory {
     EntityData usingItem(boolean enabled, boolean offhand, boolean riptide);
     EntityData potionColor(int color);
     EntityData potionAmbient(boolean ambient);
+    EntityData armorStandProperties(boolean small, boolean arms, boolean noBasePlate);
+    EntityData armorStandHeadRotation(Vector3f headRotation);
+    EntityData armorStandBodyRotation(Vector3f bodyRotation);
+    EntityData armorStandLeftArmRotation(Vector3f leftArmRotation);
+    EntityData armorStandRightArmRotation(Vector3f rightArmRotation);
+    EntityData armorStandLeftLegRotation(Vector3f leftLegRotation);
+    EntityData armorStandRightLegRotation(Vector3f rightLegRotation);
 }

@@ -5,6 +5,7 @@ import com.github.retrooper.packetevents.protocol.entity.data.EntityDataType;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 import com.github.retrooper.packetevents.protocol.entity.pose.EntityPose;
 import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
+import lol.pyr.znpcsplus.util.Vector3f;
 import net.kyori.adventure.text.Component;
 
 public class V1_8MetadataFactory implements MetadataFactory {
@@ -56,6 +57,41 @@ public class V1_8MetadataFactory implements MetadataFactory {
     @Override
     public EntityData potionAmbient(boolean ambient) {
         return newEntityData(8, EntityDataTypes.BYTE, (byte) (ambient ? 1 : 0));
+    }
+
+    @Override
+    public EntityData armorStandProperties(boolean small, boolean arms, boolean noBasePlate) {
+        return newEntityData(10, EntityDataTypes.BYTE, (byte) ((small ? 0x01 : 0) | (arms ? 0x04 : 0) | (noBasePlate ? 0x08 : 0)));
+    }
+
+    @Override
+    public EntityData armorStandHeadRotation(Vector3f headRotation) {
+        return newEntityData(11, EntityDataTypes.ROTATION, new com.github.retrooper.packetevents.util.Vector3f(headRotation.getX(), headRotation.getY(), headRotation.getZ()));
+    }
+
+    @Override
+    public EntityData armorStandBodyRotation(Vector3f bodyRotation) {
+        return newEntityData(12, EntityDataTypes.ROTATION, new com.github.retrooper.packetevents.util.Vector3f(bodyRotation.getX(), bodyRotation.getY(), bodyRotation.getZ()));
+    }
+
+    @Override
+    public EntityData armorStandLeftArmRotation(Vector3f leftArmRotation) {
+        return newEntityData(13, EntityDataTypes.ROTATION, new com.github.retrooper.packetevents.util.Vector3f(leftArmRotation.getX(), leftArmRotation.getY(), leftArmRotation.getZ()));
+    }
+
+    @Override
+    public EntityData armorStandRightArmRotation(Vector3f rightArmRotation) {
+        return newEntityData(14, EntityDataTypes.ROTATION, new com.github.retrooper.packetevents.util.Vector3f(rightArmRotation.getX(), rightArmRotation.getY(), rightArmRotation.getZ()));
+    }
+
+    @Override
+    public EntityData armorStandLeftLegRotation(Vector3f leftLegRotation) {
+        return newEntityData(15, EntityDataTypes.ROTATION, new com.github.retrooper.packetevents.util.Vector3f(leftLegRotation.getX(), leftLegRotation.getY(), leftLegRotation.getZ()));
+    }
+
+    @Override
+    public EntityData armorStandRightLegRotation(Vector3f rightLegRotation) {
+        return newEntityData(16, EntityDataTypes.ROTATION, new com.github.retrooper.packetevents.util.Vector3f(rightLegRotation.getX(), rightLegRotation.getY(), rightLegRotation.getZ()));
     }
 
     @Override

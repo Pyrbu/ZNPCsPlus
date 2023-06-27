@@ -11,6 +11,7 @@ import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import lol.pyr.znpcsplus.util.NpcPose;
+import lol.pyr.znpcsplus.util.Vector3f;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
@@ -77,6 +78,7 @@ public class PropertyCommand implements CommandHandler {
             if (type == NamedTextColor.class) return context.suggestCollection(NamedTextColor.NAMES.keys());
             if (type == NpcPose.class) return context.suggestEnum(NpcPose.values());
             if (type == Color.class) return context.suggestLiteral("0x0F00FF", "#FFFFFF", "16711935");
+            if (type == Vector3f.class) return context.suggestLiteral("0 0 0", "0.0 0.0 0.0");
         }
         return Collections.emptyList();
     }

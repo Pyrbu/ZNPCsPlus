@@ -239,6 +239,7 @@ public class ZNpcsPlus extends JavaPlugin {
         versions.put(ServerVersion.V_1_11, LazyLoader.of(V1_11MetadataFactory::new));
         versions.put(ServerVersion.V_1_13, LazyLoader.of(V1_13MetadataFactory::new));
         versions.put(ServerVersion.V_1_14, LazyLoader.of(V1_14MetadataFactory::new));
+        versions.put(ServerVersion.V_1_15, LazyLoader.of(V1_15MetadataFactory::new));
         versions.put(ServerVersion.V_1_16, LazyLoader.of(V1_16MetadataFactory::new));
         versions.put(ServerVersion.V_1_17, LazyLoader.of(V1_17MetadataFactory::new));
 
@@ -270,6 +271,7 @@ public class ZNpcsPlus extends JavaPlugin {
         manager.registerParser(NamedTextColor.class, new NamedTextColorParser(incorrectUsageMessage));
         manager.registerParser(InteractionType.class, new InteractionTypeParser(incorrectUsageMessage));
         manager.registerParser(Color.class, new ColorParser(incorrectUsageMessage));
+        manager.registerParser(Vector3f.class, new Vector3fParser(incorrectUsageMessage));
 
         registerEnumParser(manager, NpcPose.class, incorrectUsageMessage);
         registerEnumParser(manager, DyeColor.class, incorrectUsageMessage);
