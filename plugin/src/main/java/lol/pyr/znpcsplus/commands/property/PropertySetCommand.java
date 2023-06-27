@@ -1,4 +1,4 @@
-package lol.pyr.znpcsplus.commands;
+package lol.pyr.znpcsplus.commands.property;
 
 import com.github.retrooper.packetevents.protocol.item.ItemStack;
 import io.github.retrooper.packetevents.util.SpigotConversionUtil;
@@ -19,16 +19,16 @@ import org.bukkit.Color;
 import java.util.Collections;
 import java.util.List;
 
-public class PropertyCommand implements CommandHandler {
+public class PropertySetCommand implements CommandHandler {
     private final NpcRegistryImpl npcRegistry;
 
-    public PropertyCommand(NpcRegistryImpl npcRegistry) {
+    public PropertySetCommand(NpcRegistryImpl npcRegistry) {
         this.npcRegistry = npcRegistry;
     }
 
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
-        context.setUsage(context.getLabel() + " property <id> <property> <value>");
+        context.setUsage(context.getLabel() + " property set <id> <property> <value>");
         NpcEntryImpl entry = context.parse(NpcEntryImpl.class);
         NpcImpl npc = entry.getNpc();
         EntityPropertyImpl<?> property = context.parse(EntityPropertyImpl.class);
@@ -70,7 +70,7 @@ public class PropertyCommand implements CommandHandler {
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
         if (context.argSize() == 1) return context.suggestCollection(npcRegistry.getModifiableIds());
         if (context.argSize() == 2) return context.suggestStream(context.suggestionParse(0, NpcEntryImpl.class)
-                    .getNpc().getType().getAllowedProperties().stream().map(EntityProperty::getName));
+                .getNpc().getType().getAllowedProperties().stream().map(EntityProperty::getName));
         if (context.argSize() >= 3) {
             EntityPropertyImpl<?> property = context.suggestionParse(1, EntityPropertyImpl.class);
             Class<?> type = property.getType();

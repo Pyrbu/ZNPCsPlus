@@ -20,6 +20,8 @@ import lol.pyr.znpcsplus.commands.action.ActionDeleteCommand;
 import lol.pyr.znpcsplus.commands.action.ActionEditCommand;
 import lol.pyr.znpcsplus.commands.action.ActionListCommand;
 import lol.pyr.znpcsplus.commands.hologram.*;
+import lol.pyr.znpcsplus.commands.property.PropertyRemoveCommand;
+import lol.pyr.znpcsplus.commands.property.PropertySetCommand;
 import lol.pyr.znpcsplus.commands.storage.ImportCommand;
 import lol.pyr.znpcsplus.commands.storage.LoadAllCommand;
 import lol.pyr.znpcsplus.commands.storage.SaveAllCommand;
@@ -283,11 +285,13 @@ public class ZNpcsPlus extends JavaPlugin {
                 .addSubcommand("skin", new SkinCommand(skinCache, npcRegistry, typeRegistry, propertyRegistry))
                 .addSubcommand("delete", new DeleteCommand(npcRegistry, adventure))
                 .addSubcommand("move", new MoveCommand(npcRegistry))
-                .addSubcommand("property", new PropertyCommand(npcRegistry))
                 .addSubcommand("teleport", new TeleportCommand(npcRegistry))
                 .addSubcommand("list", new ListCommand(npcRegistry))
                 .addSubcommand("near", new NearCommand(npcRegistry))
                 .addSubcommand("type", new TypeCommand(npcRegistry, typeRegistry))
+                .addSubcommand("property", new MultiCommand(loadHelpMessage("property"))
+                        .addSubcommand("set", new PropertySetCommand(npcRegistry))
+                        .addSubcommand("remove", new PropertyRemoveCommand(npcRegistry)))
                 .addSubcommand("storage", new MultiCommand(loadHelpMessage("storage"))
                         .addSubcommand("save", new SaveAllCommand(npcRegistry))
                         .addSubcommand("reload", new LoadAllCommand(npcRegistry))
