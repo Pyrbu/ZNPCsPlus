@@ -71,14 +71,16 @@ public class PropertyCommand implements CommandHandler {
         if (context.argSize() == 1) return context.suggestCollection(npcRegistry.getModifiableIds());
         if (context.argSize() == 2) return context.suggestStream(context.suggestionParse(0, NpcEntryImpl.class)
                     .getNpc().getType().getAllowedProperties().stream().map(EntityProperty::getName));
-        if (context.argSize() == 3) {
+        if (context.argSize() >= 3) {
             EntityPropertyImpl<?> property = context.suggestionParse(1, EntityPropertyImpl.class);
             Class<?> type = property.getType();
-            if (type == Boolean.class) return context.suggestLiteral("true", "false");
-            if (type == NamedTextColor.class) return context.suggestCollection(NamedTextColor.NAMES.keys());
-            if (type == NpcPose.class) return context.suggestEnum(NpcPose.values());
-            if (type == Color.class) return context.suggestLiteral("0x0F00FF", "#FFFFFF", "16711935");
-            if (type == Vector3f.class) return context.suggestLiteral("0 0 0", "0.0 0.0 0.0");
+            if (type == Vector3f.class && context.argSize() <= 5) return context.suggestLiteral("0", "0.0");
+            if (context.argSize() == 3) {
+                if (type == Boolean.class) return context.suggestLiteral("true", "false");
+                if (type == NamedTextColor.class) return context.suggestCollection(NamedTextColor.NAMES.keys());
+                if (type == NpcPose.class) return context.suggestEnum(NpcPose.values());
+                if (type == Color.class) return context.suggestLiteral("0x0F00FF", "#FFFFFF", "16711935");
+            }
         }
         return Collections.emptyList();
     }
