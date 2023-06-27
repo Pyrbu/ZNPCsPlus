@@ -41,7 +41,9 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
         // Most hologram offsets generated using Entity#getHeight() in 1.19.4
 
         register(builder(p, "armor_stand", EntityTypes.ARMOR_STAND)
-                .setHologramOffset(-0.15).addEquipmentProperties());
+                .setHologramOffset(-0.15)
+                .addEquipmentProperties()
+                .addProperties("small", "arms", "base_plate", "head_rotation", "body_rotation", "left_arm_rotation", "right_arm_rotation", "left_leg_rotation", "right_leg_rotation"));
 
         register(builder(p, "bat", EntityTypes.BAT)
                 .setHologramOffset(-1.075));
