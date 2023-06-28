@@ -135,7 +135,6 @@ public class ZNpcsPlus extends JavaPlugin {
         NpcTypeRegistryImpl typeRegistry = new NpcTypeRegistryImpl();
         NpcRegistryImpl npcRegistry = new NpcRegistryImpl(configManager, this, packetFactory, actionRegistry,
                 scheduler, typeRegistry, propertyRegistry, textSerializer);
-        if (configManager.getConfig().autoSaveEnabled()) shutdownTasks.add(npcRegistry::save);
         shutdownTasks.add(npcRegistry::unload);
 
         UserManager userManager = new UserManager();
@@ -170,6 +169,7 @@ public class ZNpcsPlus extends JavaPlugin {
 
         log(ChatColor.WHITE + " * Loading data...");
         npcRegistry.reload();
+        if (configManager.getConfig().autoSaveEnabled()) shutdownTasks.add(npcRegistry::save);
 
         if (legacy) {
             log(ChatColor.WHITE + " * Converting legacy data...");
