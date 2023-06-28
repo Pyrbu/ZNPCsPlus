@@ -67,7 +67,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .setHologramOffset(-0.575));
 
         register(builder(p, "creeper", EntityTypes.CREEPER)
-                .setHologramOffset(-0.275));
+                .setHologramOffset(-0.275)
+                .addProperties("creeper_state", "creeper_charged"));
 
         register(builder(p, "donkey", EntityTypes.DONKEY)
                 .setHologramOffset(-0.475));

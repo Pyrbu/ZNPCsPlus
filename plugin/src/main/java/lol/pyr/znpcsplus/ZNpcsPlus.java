@@ -281,6 +281,7 @@ public class ZNpcsPlus extends JavaPlugin {
         registerEnumParser(manager, NpcPose.class, incorrectUsageMessage);
         registerEnumParser(manager, DyeColor.class, incorrectUsageMessage);
         registerEnumParser(manager, CatVariant.class, incorrectUsageMessage);
+        registerEnumParser(manager, CreeperState.class, incorrectUsageMessage);
 
         manager.registerCommand("npc", new MultiCommand(loadHelpMessage("root"))
                 .addSubcommand("create", new CreateCommand(npcRegistry, typeRegistry))

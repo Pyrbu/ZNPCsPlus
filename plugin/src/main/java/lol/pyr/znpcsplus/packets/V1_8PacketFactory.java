@@ -16,10 +16,7 @@ import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.metadata.MetadataFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.skin.BaseSkinDescriptor;
-import lol.pyr.znpcsplus.util.CatVariant;
-import lol.pyr.znpcsplus.util.NpcLocation;
-import lol.pyr.znpcsplus.util.PapiUtil;
-import lol.pyr.znpcsplus.util.Vector3f;
+import lol.pyr.znpcsplus.util.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -185,6 +182,10 @@ public class V1_8PacketFactory implements PacketFactory {
             add(data, metadataFactory.catLying(properties.getProperty(propertyRegistry.getByName("cat_lying", Boolean.class))));
             add(data, metadataFactory.catCollarColor(properties.getProperty(propertyRegistry.getByName("cat_collar_color", DyeColor.class))));
             add(data, metadataFactory.catTamed(properties.hasProperty(propertyRegistry.getByName("cat_collar_color", DyeColor.class))));
+        }
+        else if (entity.getType().equals(EntityTypes.CREEPER)) {
+            add(data, metadataFactory.creeperState(properties.getProperty(propertyRegistry.getByName("creeper_state", CreeperState.class))));
+            add(data, metadataFactory.creeperCharged(properties.getProperty(propertyRegistry.getByName("creeper_charged", Boolean.class))));
         }
         if (properties.hasProperty(propertyRegistry.getByName("name"))) {
             add(data, metadataFactory.name(PapiUtil.set(textSerializer, player, properties.getProperty(propertyRegistry.getByName("name", Component.class)))));

@@ -3,6 +3,7 @@ package lol.pyr.znpcsplus.metadata;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
+import lol.pyr.znpcsplus.util.CreeperState;
 import net.kyori.adventure.text.Component;
 
 public class V1_9MetadataFactory extends V1_8MetadataFactory {
@@ -35,6 +36,16 @@ public class V1_9MetadataFactory extends V1_8MetadataFactory {
     @Override
     public EntityData blazeOnFire(boolean onFire) {
         return newEntityData(16, EntityDataTypes.BYTE, (byte) (onFire ? 1 : 0));
+    }
+
+    @Override
+    public EntityData creeperState(CreeperState state) {
+        return newEntityData(11, EntityDataTypes.INT, state.getState());
+    }
+
+    @Override
+    public EntityData creeperCharged(boolean charged) {
+        return newEntityData(12, EntityDataTypes.BOOLEAN, charged);
     }
 
     @Override

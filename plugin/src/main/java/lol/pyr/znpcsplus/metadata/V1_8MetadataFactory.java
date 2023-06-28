@@ -6,6 +6,7 @@ import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 import com.github.retrooper.packetevents.protocol.entity.pose.EntityPose;
 import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
 import lol.pyr.znpcsplus.util.CatVariant;
+import lol.pyr.znpcsplus.util.CreeperState;
 import lol.pyr.znpcsplus.util.Vector3f;
 import net.kyori.adventure.text.Component;
 import org.bukkit.DyeColor;
@@ -144,6 +145,16 @@ public class V1_8MetadataFactory implements MetadataFactory {
     @Override
     public EntityData catCollarColor(DyeColor collarColor) {
         throw new UnsupportedOperationException("The cat collar color entity data isn't supported on this version");
+    }
+
+    @Override
+    public EntityData creeperState(CreeperState state) {
+        return newEntityData(16, EntityDataTypes.BYTE, (byte) state.getState());
+    }
+
+    @Override
+    public EntityData creeperCharged(boolean charged) {
+        return newEntityData(17, EntityDataTypes.BYTE, (byte) (charged ? 1 : 0));
     }
 
     @Override

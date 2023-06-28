@@ -3,6 +3,7 @@ package lol.pyr.znpcsplus.metadata;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.pose.EntityPose;
 import lol.pyr.znpcsplus.util.CatVariant;
+import lol.pyr.znpcsplus.util.CreeperState;
 import lol.pyr.znpcsplus.util.Vector3f;
 import net.kyori.adventure.text.Component;
 import org.bukkit.DyeColor;
@@ -61,4 +62,8 @@ public interface MetadataFactory {
     EntityData catLying(boolean lying);
     EntityData catTamed(boolean tamed);
     EntityData catCollarColor(DyeColor collarColor);
+
+    // Creeper
+    EntityData creeperState(CreeperState state);
+    EntityData creeperCharged(boolean charged);
 }

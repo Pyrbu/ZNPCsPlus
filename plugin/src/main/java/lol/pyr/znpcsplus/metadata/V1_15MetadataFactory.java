@@ -3,6 +3,7 @@ package lol.pyr.znpcsplus.metadata;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 import lol.pyr.znpcsplus.util.CatVariant;
+import lol.pyr.znpcsplus.util.CreeperState;
 import lol.pyr.znpcsplus.util.Vector3f;
 import org.bukkit.DyeColor;
 
@@ -75,5 +76,15 @@ public class V1_15MetadataFactory extends V1_14MetadataFactory {
     @Override
     public EntityData catCollarColor(DyeColor collarColor) {
         return newEntityData(21, EntityDataTypes.INT, collarColor.ordinal());
+    }
+
+    @Override
+    public EntityData creeperState(CreeperState state) {
+        return newEntityData(15, EntityDataTypes.INT, state.getState());
+    }
+
+    @Override
+    public EntityData creeperCharged(boolean charged) {
+        return newEntityData(16, EntityDataTypes.BOOLEAN, charged);
     }
 }

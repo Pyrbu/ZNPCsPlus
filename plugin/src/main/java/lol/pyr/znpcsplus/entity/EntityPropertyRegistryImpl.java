@@ -7,6 +7,7 @@ import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.entity.serializers.*;
 import lol.pyr.znpcsplus.skin.cache.SkinCache;
 import lol.pyr.znpcsplus.util.CatVariant;
+import lol.pyr.znpcsplus.util.CreeperState;
 import lol.pyr.znpcsplus.util.NpcPose;
 import lol.pyr.znpcsplus.util.Vector3f;
 import net.kyori.adventure.text.Component;
@@ -37,6 +38,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(NpcPose.class);
         registerEnumSerializer(DyeColor.class);
         registerEnumSerializer(CatVariant.class);
+        registerEnumSerializer(CreeperState.class);
 
         registerType("glow", NamedTextColor.class);
         registerType("fire", false);
@@ -104,6 +106,10 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("cat_variant", CatVariant.BLACK);
         registerType("cat_lying", false);
         registerType("cat_collar_color", DyeColor.RED);
+
+        // Creeper
+        registerType("creeper_state", CreeperState.IDLE); // TODO: -1 = idle, 1 = fuse
+        registerType("creeper_charged", false); // TODO
 
         // Pufferfish
         registerType("puff_state", null); // TODO: Make a puff state enum class
@@ -181,10 +187,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Piglin
         registerType("piglin_dancing", false); // TODO
         registerType("piglin_charging_crossbow", false); // TODO
-
-        // Creeper
-        registerType("creeper_state", null); // TODO: -1 = idle, 1 = fuse
-        registerType("creeper_charged", false); // TODO
 
         // Goat
         registerType("has_left_horn", true); // TODO
