@@ -43,4 +43,7 @@ public interface MetadataFactory {
     // Axolotl
     EntityData axolotlVariant(int variant);
     EntityData playingDead(boolean playingDead);
+
+    // Bat
+    EntityData batHanging(boolean hanging);
 }

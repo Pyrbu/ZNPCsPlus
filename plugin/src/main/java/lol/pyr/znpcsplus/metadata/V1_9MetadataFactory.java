@@ -28,6 +28,11 @@ public class V1_9MetadataFactory extends V1_8MetadataFactory {
     }
 
     @Override
+    public EntityData batHanging(boolean hanging) {
+        return newEntityData(11, EntityDataTypes.BYTE, (byte) (hanging ? 0x01 : 0));
+    }
+
+    @Override
     public EntityData name(Component name) {
         return newEntityData(2, EntityDataTypes.STRING, AdventureSerializer.getGsonSerializer().serialize(name));
     }

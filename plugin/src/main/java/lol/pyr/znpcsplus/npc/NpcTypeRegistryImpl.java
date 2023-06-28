@@ -46,7 +46,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .addProperties("small", "arms", "base_plate", "head_rotation", "body_rotation", "left_arm_rotation", "right_arm_rotation", "left_leg_rotation", "right_leg_rotation"));
 
         register(builder(p, "bat", EntityTypes.BAT)
-                .setHologramOffset(-1.075));
+                .setHologramOffset(-1.075)
+                .addProperties("hanging"));
 
         register(builder(p, "blaze", EntityTypes.BLAZE)
                 .setHologramOffset(-0.175));

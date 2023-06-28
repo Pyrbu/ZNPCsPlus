@@ -163,9 +163,13 @@ public class V1_8PacketFactory implements PacketFactory {
             add(data, metadataFactory.armorStandRightArmRotation(properties.getProperty(propertyRegistry.getByName("right_arm_rotation", Vector3f.class))));
             add(data, metadataFactory.armorStandLeftLegRotation(properties.getProperty(propertyRegistry.getByName("left_leg_rotation", Vector3f.class))));
             add(data, metadataFactory.armorStandRightLegRotation(properties.getProperty(propertyRegistry.getByName("right_leg_rotation", Vector3f.class))));
-        } else if (entity.getType().equals(EntityTypes.AXOLOTL)) {
+        }
+        else if (entity.getType().equals(EntityTypes.AXOLOTL)) {
             add(data, metadataFactory.axolotlVariant(properties.getProperty(propertyRegistry.getByName("axolotl_variant", Integer.class))));
             add(data, metadataFactory.playingDead(properties.getProperty(propertyRegistry.getByName("playing_dead", Boolean.class))));
+        }
+        else if (entity.getType().equals(EntityTypes.BAT)) {
+        add(data, metadataFactory.batHanging(properties.getProperty(propertyRegistry.getByName("hanging", Boolean.class))));
         }
         if (properties.hasProperty(propertyRegistry.getByName("name"))) {
             add(data, metadataFactory.name(PapiUtil.set(textSerializer, player, properties.getProperty(propertyRegistry.getByName("name", Component.class)))));

@@ -79,4 +79,9 @@ public class V1_17MetadataFactory extends V1_16MetadataFactory {
     public EntityData playingDead(boolean playingDead) {
         return newEntityData(18, EntityDataTypes.BOOLEAN, playingDead);
     }
+
+    @Override
+    public EntityData batHanging(boolean hanging) {
+        return newEntityData(16, EntityDataTypes.BYTE, (byte) (hanging ? 0x01 : 0));
+    }
 }

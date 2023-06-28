@@ -39,4 +39,9 @@ public class V1_15MetadataFactory extends V1_14MetadataFactory {
     public EntityData armorStandRightLegRotation(Vector3f rightLegRotation) {
         return createRotations(20, rightLegRotation);
     }
+
+    @Override
+    public EntityData batHanging(boolean hanging) {
+        return newEntityData(15, EntityDataTypes.BYTE, (byte) (hanging ? 0x01 : 0));
+    }
 }
