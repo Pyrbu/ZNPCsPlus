@@ -79,7 +79,7 @@ public class PropertySetCommand implements CommandHandler {
                 if (type == Boolean.class) return context.suggestLiteral("true", "false");
                 if (type == NamedTextColor.class) return context.suggestCollection(NamedTextColor.NAMES.keys());
                 if (type == NpcPose.class) return context.suggestEnum(NpcPose.values());
-                if (type == Color.class) return context.suggestLiteral("0x0F00FF", "#FFFFFF", "16711935");
+                if (type == Color.class) return context.suggestLiteral("0x0F00FF", "#FFFFFF");
             }
         }
         return Collections.emptyList();
