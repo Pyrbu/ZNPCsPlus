@@ -95,6 +95,9 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("angry", false);
         registerType("has_nectar", false);
 
+        // Blaze
+        registerType("blaze_on_fire", false);
+
         // Pufferfish
         registerType("puff_state", null); // TODO: Make a puff state enum class
 
@@ -176,9 +179,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Piglin
         registerType("piglin_dancing", false); // TODO
         registerType("piglin_charging_crossbow", false); // TODO
-
-        // Blaze
-        registerType("blaze_is_on_fire", false); // TODO
 
         // Creeper
         registerType("creeper_state", null); // TODO: -1 = idle, 1 = fuse

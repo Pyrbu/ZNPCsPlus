@@ -172,12 +172,11 @@ public class V1_8PacketFactory implements PacketFactory {
             add(data, metadataFactory.batHanging(properties.getProperty(propertyRegistry.getByName("hanging", Boolean.class))));
         }
         else if (entity.getType().equals(EntityTypes.BEE)) {
-            add(data, metadataFactory.beeAngry(
-            properties.getProperty(propertyRegistry.getByName("angry", Boolean.class))
-            ));
-            add(data, metadataFactory.beeHasNectar(
-            properties.getProperty(propertyRegistry.getByName("has_nectar", Boolean.class))
-            ));
+            add(data, metadataFactory.beeAngry(properties.getProperty(propertyRegistry.getByName("angry", Boolean.class))));
+            add(data, metadataFactory.beeHasNectar(properties.getProperty(propertyRegistry.getByName("has_nectar", Boolean.class))));
+        }
+        else if (entity.getType().equals(EntityTypes.BLAZE)) {
+            add(data, metadataFactory.blazeOnFire(properties.getProperty(propertyRegistry.getByName("blaze_on_fire", Boolean.class))));
         }
         if (properties.hasProperty(propertyRegistry.getByName("name"))) {
             add(data, metadataFactory.name(PapiUtil.set(textSerializer, player, properties.getProperty(propertyRegistry.getByName("name", Component.class)))));

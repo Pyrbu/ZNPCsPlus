@@ -120,6 +120,11 @@ public class V1_8MetadataFactory implements MetadataFactory {
     }
 
     @Override
+    public EntityData blazeOnFire(boolean onFire) {
+        return newEntityData(16, EntityDataTypes.BYTE, (byte) (onFire ? 1 : 0));
+    }
+
+    @Override
     public EntityData silent(boolean enabled) {
         return newEntityData(4, EntityDataTypes.BYTE, (byte) (enabled ? 1 : 0));
     }

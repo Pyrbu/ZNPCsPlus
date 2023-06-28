@@ -50,7 +50,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .addProperties("hanging"));
 
         register(builder(p, "blaze", EntityTypes.BLAZE)
-                .setHologramOffset(-0.175));
+                .setHologramOffset(-0.175)
+                .addProperties("blaze_on_fire"));
 
         register(builder(p, "cat", EntityTypes.CAT)
                 .setHologramOffset(-1.275));

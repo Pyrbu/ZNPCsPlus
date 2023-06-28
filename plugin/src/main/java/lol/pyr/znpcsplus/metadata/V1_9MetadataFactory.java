@@ -33,6 +33,11 @@ public class V1_9MetadataFactory extends V1_8MetadataFactory {
     }
 
     @Override
+    public EntityData blazeOnFire(boolean onFire) {
+        return newEntityData(16, EntityDataTypes.BYTE, (byte) (onFire ? 1 : 0));
+    }
+
+    @Override
     public EntityData name(Component name) {
         return newEntityData(2, EntityDataTypes.STRING, AdventureSerializer.getGsonSerializer().serialize(name));
     }

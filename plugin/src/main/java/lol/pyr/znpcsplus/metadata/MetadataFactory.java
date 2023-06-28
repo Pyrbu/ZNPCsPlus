@@ -50,4 +50,7 @@ public interface MetadataFactory {
     // Bee
     EntityData beeAngry(boolean angry);
     EntityData beeHasNectar(boolean hasNectar);
+
+    // Blaze
+    EntityData blazeOnFire(boolean onFire);
 }

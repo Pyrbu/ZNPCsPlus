@@ -94,4 +94,9 @@ public class V1_17MetadataFactory extends V1_16MetadataFactory {
     public EntityData beeHasNectar(boolean hasNectar) {
         return newEntityData(17, EntityDataTypes.BYTE, (byte) (hasNectar ? 0x08 : 0));
     }
+
+    @Override
+    public EntityData blazeOnFire(boolean onFire) {
+        return newEntityData(16, EntityDataTypes.BYTE, (byte) (onFire ? 0x01 : 0));
+    }
 }
