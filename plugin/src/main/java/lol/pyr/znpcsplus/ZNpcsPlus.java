@@ -50,6 +50,7 @@ import lol.pyr.znpcsplus.util.*;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bstats.bukkit.Metrics;
@@ -199,7 +200,9 @@ public class ZNpcsPlus extends JavaPlugin {
                 NpcEntryImpl entry = npcRegistry.create("debug_npc_" + i, world, type, new NpcLocation(i * 3, 200, 0, 0, 0));
                 entry.setProcessed(true);
                 NpcImpl npc = entry.getNpc();
-                npc.getHologram().addLineComponent(Component.text("Hello, World!"));
+                npc.getHologram().addLineComponent(Component.text("Hello, World!", TextColor.color(255, 0, 0)));
+                npc.getHologram().addLineComponent(Component.text("Hello, World!", TextColor.color(0, 255, 0)));
+                npc.getHologram().addLineComponent(Component.text("Hello, World!", TextColor.color(0, 0, 255)));
                 npc.setProperty(propertyRegistry.getByName("look", Boolean.class), true);
                 i++;
             }
