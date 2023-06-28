@@ -187,9 +187,13 @@ public class V1_8PacketFactory implements PacketFactory {
             add(data, metadataFactory.creeperState(properties.getProperty(propertyRegistry.getByName("creeper_state", CreeperState.class))));
             add(data, metadataFactory.creeperCharged(properties.getProperty(propertyRegistry.getByName("creeper_charged", Boolean.class))));
         }
-        if (properties.hasProperty(propertyRegistry.getByName("name"))) {
-            add(data, metadataFactory.name(PapiUtil.set(textSerializer, player, properties.getProperty(propertyRegistry.getByName("name", Component.class)))));
-            add(data, metadataFactory.nameShown());
+        if (properties.getProperty(propertyRegistry.getByName("dinnerbone", Boolean.class))) {
+            add(data, metadataFactory.name(Component.text("Dinnerbone")));
+        } else {
+            if (properties.hasProperty(propertyRegistry.getByName("name"))) {
+                add(data, metadataFactory.name(PapiUtil.set(textSerializer, player, properties.getProperty(propertyRegistry.getByName("name", Component.class)))));
+                add(data, metadataFactory.nameShown());
+            }
         }
         return data;
     }

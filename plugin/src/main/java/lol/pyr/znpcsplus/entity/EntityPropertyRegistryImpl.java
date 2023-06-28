@@ -47,6 +47,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("skin", SkinDescriptor.class);
         registerType("name", Component.class);
         registerType("look", false);
+        registerType("dinnerbone", false);
 
         // TODO: make all of these bukkit itemstack classes so api users wont have to add packetevents as a dependency
         registerType("helmet", ItemStack.class);
