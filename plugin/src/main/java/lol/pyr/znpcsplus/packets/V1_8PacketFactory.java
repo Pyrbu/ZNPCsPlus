@@ -21,6 +21,7 @@ import lol.pyr.znpcsplus.util.PapiUtil;
 import lol.pyr.znpcsplus.util.Vector3f;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Color;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -33,12 +34,14 @@ public class V1_8PacketFactory implements PacketFactory {
     protected final MetadataFactory metadataFactory;
     protected final PacketEventsAPI<Plugin> packetEvents;
     protected final EntityPropertyRegistryImpl propertyRegistry;
+    protected final LegacyComponentSerializer textSerializer;
 
-    public V1_8PacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry) {
+    public V1_8PacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer) {
         this.scheduler = scheduler;
         this.metadataFactory = metadataFactory;
         this.packetEvents = packetEvents;
         this.propertyRegistry = propertyRegistry;
+        this.textSerializer = textSerializer;
     }
 
     @Override
@@ -160,7 +163,7 @@ public class V1_8PacketFactory implements PacketFactory {
             add(data, metadataFactory.armorStandRightLegRotation(properties.getProperty(propertyRegistry.getByName("right_leg_rotation", Vector3f.class))));
         }
         if (properties.hasProperty(propertyRegistry.getByName("name"))) {
-            add(data, metadataFactory.name(PapiUtil.set(player, properties.getProperty(propertyRegistry.getByName("name", Component.class)))));
+            add(data, metadataFactory.name(PapiUtil.set(textSerializer, player, properties.getProperty(propertyRegistry.getByName("name", Component.class)))));
             add(data, metadataFactory.nameShown());
         }
         return data;
