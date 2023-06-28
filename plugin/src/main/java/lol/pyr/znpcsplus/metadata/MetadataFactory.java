@@ -46,4 +46,8 @@ public interface MetadataFactory {
 
     // Bat
     EntityData batHanging(boolean hanging);
+
+    // Bee
+    EntityData beeAngry(boolean angry);
+    EntityData beeHasNectar(boolean hasNectar);
 }

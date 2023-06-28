@@ -89,7 +89,11 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("playing_dead", false); // TODO fix disabling
 
         // Bat
-        registerType("hanging", false); // TODO
+        registerType("hanging", false);
+
+        // Bee
+        registerType("angry", false);
+        registerType("has_nectar", false);
 
         // Pufferfish
         registerType("puff_state", null); // TODO: Make a puff state enum class
@@ -108,10 +112,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // LLama
         registerType("carpet_color", DyeColor.class); // TODO
         registerType("llama_variant", 0); // TODO
-
-        // Bee
-        registerType("angry", false); // TODO
-        registerType("has_nectar", false); // TODO
 
         // Fox
         registerType("fox_variant", 0); // TODO: 0 = red, 1 = snow

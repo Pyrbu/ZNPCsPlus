@@ -263,7 +263,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_15)) return;
 
         register(builder(p, "bee", EntityTypes.BEE)
-                .setHologramOffset(-1.375));
+                .setHologramOffset(-1.375)
+                .addProperties("angry", "has_nectar"));
 
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_16)) return;
 
