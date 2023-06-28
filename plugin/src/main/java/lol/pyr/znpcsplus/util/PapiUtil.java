@@ -2,7 +2,7 @@ package lol.pyr.znpcsplus.util;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -22,7 +22,7 @@ public class PapiUtil {
     // Ugly workaround would be cool if a better solution existed
     public static Component set(Player player, Component component) {
         if (!isSupported()) return component;
-        LegacyComponentSerializer serializer = LegacyComponentSerializer.legacySection();
+        MiniMessage serializer = MiniMessage.miniMessage();
         return serializer.deserialize(set(player, serializer.serialize(component)));
     }
 }
