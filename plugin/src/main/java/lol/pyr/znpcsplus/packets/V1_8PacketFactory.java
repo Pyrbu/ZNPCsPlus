@@ -130,15 +130,6 @@ public class V1_8PacketFactory implements PacketFactory {
     @Override
     public Map<Integer, EntityData> generateMetadata(Player player, PacketEntity entity, PropertyHolder properties) {
         HashMap<Integer, EntityData> data = new HashMap<>();
-        if (entity.getType() == EntityTypes.PLAYER) add(data, metadataFactory.skinLayers(
-                properties.getProperty(propertyRegistry.getByName("skin_cape", Boolean.class)),
-                properties.getProperty(propertyRegistry.getByName("skin_jacket", Boolean.class)),
-                properties.getProperty(propertyRegistry.getByName("skin_left_sleeve", Boolean.class)),
-                properties.getProperty(propertyRegistry.getByName("skin_right_sleeve", Boolean.class)),
-                properties.getProperty(propertyRegistry.getByName("skin_left_leg", Boolean.class)),
-                properties.getProperty(propertyRegistry.getByName("skin_right_leg", Boolean.class)),
-                properties.getProperty(propertyRegistry.getByName("skin_hat", Boolean.class))
-        ));
         add(data, metadataFactory.effects(
                 properties.getProperty(propertyRegistry.getByName("fire", Boolean.class)),
                 false,
@@ -149,7 +140,18 @@ public class V1_8PacketFactory implements PacketFactory {
         add(data, metadataFactory.silent(properties.getProperty(propertyRegistry.getByName("silent", Boolean.class))));
         add(data, metadataFactory.potionColor(properties.getProperty(propertyRegistry.getByName("potion_color", Color.class)).asRGB()));
         add(data, metadataFactory.potionAmbient(properties.getProperty(propertyRegistry.getByName("potion_ambient", Boolean.class))));
-        if (entity.getType() == EntityTypes.ARMOR_STAND) {
+        if (entity.getType().equals(EntityTypes.PLAYER)) {
+            add(data, metadataFactory.skinLayers(
+                    properties.getProperty(propertyRegistry.getByName("skin_cape", Boolean.class)),
+                    properties.getProperty(propertyRegistry.getByName("skin_jacket", Boolean.class)),
+                    properties.getProperty(propertyRegistry.getByName("skin_left_sleeve", Boolean.class)),
+                    properties.getProperty(propertyRegistry.getByName("skin_right_sleeve", Boolean.class)),
+                    properties.getProperty(propertyRegistry.getByName("skin_left_leg", Boolean.class)),
+                    properties.getProperty(propertyRegistry.getByName("skin_right_leg", Boolean.class)),
+                    properties.getProperty(propertyRegistry.getByName("skin_hat", Boolean.class))
+            ));
+        }
+        else if (entity.getType().equals(EntityTypes.ARMOR_STAND)) {
             add(data, metadataFactory.armorStandProperties(
                     properties.getProperty(propertyRegistry.getByName("small", Boolean.class)),
                     properties.getProperty(propertyRegistry.getByName("arms", Boolean.class)),
@@ -161,6 +163,9 @@ public class V1_8PacketFactory implements PacketFactory {
             add(data, metadataFactory.armorStandRightArmRotation(properties.getProperty(propertyRegistry.getByName("right_arm_rotation", Vector3f.class))));
             add(data, metadataFactory.armorStandLeftLegRotation(properties.getProperty(propertyRegistry.getByName("left_leg_rotation", Vector3f.class))));
             add(data, metadataFactory.armorStandRightLegRotation(properties.getProperty(propertyRegistry.getByName("right_leg_rotation", Vector3f.class))));
+        } else if (entity.getType().equals(EntityTypes.AXOLOTL)) {
+            add(data, metadataFactory.axolotlVariant(properties.getProperty(propertyRegistry.getByName("axolotl_variant", Integer.class))));
+            add(data, metadataFactory.playingDead(properties.getProperty(propertyRegistry.getByName("playing_dead", Boolean.class))));
         }
         if (properties.hasProperty(propertyRegistry.getByName("name"))) {
             add(data, metadataFactory.name(PapiUtil.set(textSerializer, player, properties.getProperty(propertyRegistry.getByName("name", Component.class)))));

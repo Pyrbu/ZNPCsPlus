@@ -69,4 +69,14 @@ public class V1_17MetadataFactory extends V1_16MetadataFactory {
     public EntityData armorStandRightLegRotation(Vector3f rightLegRotation) {
         return createRotations(21, rightLegRotation);
     }
+
+    @Override
+    public EntityData axolotlVariant(int variant) {
+        return newEntityData(17, EntityDataTypes.INT, variant);
+    }
+
+    @Override
+    public EntityData playingDead(boolean playingDead) {
+        return newEntityData(18, EntityDataTypes.BOOLEAN, playingDead);
+    }
 }

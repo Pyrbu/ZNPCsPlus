@@ -30,6 +30,8 @@ public interface MetadataFactory {
     EntityData usingItem(boolean enabled, boolean offhand, boolean riptide);
     EntityData potionColor(int color);
     EntityData potionAmbient(boolean ambient);
+
+    // Armor Stand
     EntityData armorStandProperties(boolean small, boolean arms, boolean noBasePlate);
     EntityData armorStandHeadRotation(Vector3f headRotation);
     EntityData armorStandBodyRotation(Vector3f bodyRotation);
@@ -37,4 +39,8 @@ public interface MetadataFactory {
     EntityData armorStandRightArmRotation(Vector3f rightArmRotation);
     EntityData armorStandLeftLegRotation(Vector3f leftLegRotation);
     EntityData armorStandRightLegRotation(Vector3f rightLegRotation);
+
+    // Axolotl
+    EntityData axolotlVariant(int variant);
+    EntityData playingDead(boolean playingDead);
 }

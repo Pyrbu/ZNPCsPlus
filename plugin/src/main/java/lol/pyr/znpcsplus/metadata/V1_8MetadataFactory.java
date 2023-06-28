@@ -95,6 +95,16 @@ public class V1_8MetadataFactory implements MetadataFactory {
     }
 
     @Override
+    public EntityData axolotlVariant(int variant) {
+        throw new UnsupportedOperationException("The axolotl variant entity data isn't supported on this version");
+    }
+
+    @Override
+    public EntityData playingDead(boolean playingDead) {
+        throw new UnsupportedOperationException("The playing dead entity data isn't supported on this version");
+    }
+
+    @Override
     public EntityData silent(boolean enabled) {
         return newEntityData(4, EntityDataTypes.BYTE, (byte) (enabled ? 1 : 0));
     }

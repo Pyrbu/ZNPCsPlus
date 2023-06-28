@@ -290,7 +290,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_17)) return;
 
         register(builder(p, "axolotl", EntityTypes.AXOLOTL)
-                .setHologramOffset(-1.555));
+                .setHologramOffset(-1.555)
+                .addProperties("axolotl_variant", "playing_dead"));
 
         register(builder(p, "glow_squid", EntityTypes.GLOW_SQUID)
                 .setHologramOffset(-1.175));

@@ -84,6 +84,10 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("left_leg_rotation", new Vector3f(-1 , 0, -1));
         registerType("right_leg_rotation", new Vector3f(1, 0, 1));
 
+        // Axolotl
+        registerType("axolotl_variant", 0);
+        registerType("playing_dead", false); // TODO fix disabling
+
         // Bat
         registerType("hanging", false); // TODO
 
@@ -104,10 +108,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // LLama
         registerType("carpet_color", DyeColor.class); // TODO
         registerType("llama_variant", 0); // TODO
-
-        // Axolotl
-        registerType("axolotl_variant", 0); // TODO
-        registerType("playing_dead", false); // TODO
 
         // Bee
         registerType("angry", false); // TODO
