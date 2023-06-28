@@ -2,7 +2,9 @@ package lol.pyr.znpcsplus.metadata;
 
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
+import lol.pyr.znpcsplus.util.CatVariant;
 import lol.pyr.znpcsplus.util.Vector3f;
+import org.bukkit.DyeColor;
 
 public class V1_15MetadataFactory extends V1_14MetadataFactory {
     @Override
@@ -58,5 +60,20 @@ public class V1_15MetadataFactory extends V1_14MetadataFactory {
     @Override
     public EntityData blazeOnFire(boolean onFire) {
         return newEntityData(15, EntityDataTypes.BYTE, (byte) (onFire ? 0x01 : 0));
+    }
+
+    @Override
+    public EntityData catVariant(CatVariant variant) {
+        return newEntityData(18, EntityDataTypes.CAT_VARIANT, variant.getId());
+    }
+
+    @Override
+    public EntityData catLying(boolean lying) {
+        return newEntityData(19, EntityDataTypes.BOOLEAN, lying);
+    }
+
+    @Override
+    public EntityData catCollarColor(DyeColor collarColor) {
+        return newEntityData(21, EntityDataTypes.INT, collarColor.ordinal());
     }
 }

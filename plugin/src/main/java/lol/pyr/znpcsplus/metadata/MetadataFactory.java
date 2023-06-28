@@ -2,8 +2,10 @@ package lol.pyr.znpcsplus.metadata;
 
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.pose.EntityPose;
+import lol.pyr.znpcsplus.util.CatVariant;
 import lol.pyr.znpcsplus.util.Vector3f;
 import net.kyori.adventure.text.Component;
+import org.bukkit.DyeColor;
 
 /**
  * 1.8  <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=7415">...</a>
@@ -53,4 +55,10 @@ public interface MetadataFactory {
 
     // Blaze
     EntityData blazeOnFire(boolean onFire);
+
+    // Cat
+    EntityData catVariant(CatVariant variant);
+    EntityData catLying(boolean lying);
+    EntityData catTamed(boolean tamed);
+    EntityData catCollarColor(DyeColor collarColor);
 }

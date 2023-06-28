@@ -6,6 +6,7 @@ import lol.pyr.znpcsplus.api.entity.EntityPropertyRegistry;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.entity.serializers.*;
 import lol.pyr.znpcsplus.skin.cache.SkinCache;
+import lol.pyr.znpcsplus.util.CatVariant;
 import lol.pyr.znpcsplus.util.NpcPose;
 import lol.pyr.znpcsplus.util.Vector3f;
 import net.kyori.adventure.text.Component;
@@ -35,6 +36,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         registerEnumSerializer(NpcPose.class);
         registerEnumSerializer(DyeColor.class);
+        registerEnumSerializer(CatVariant.class);
 
         registerType("glow", NamedTextColor.class);
         registerType("fire", false);
@@ -98,6 +100,11 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Blaze
         registerType("blaze_on_fire", false);
 
+        // Cat
+        registerType("cat_variant", CatVariant.BLACK);
+        registerType("cat_lying", false);
+        registerType("cat_collar_color", DyeColor.RED);
+
         // Pufferfish
         registerType("puff_state", null); // TODO: Make a puff state enum class
 
@@ -148,11 +155,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Strider
         registerType("strider_shaking", false); // TODO
         registerType("strider_saddle", false); // TODO
-
-        // Cat
-        registerType("cat_variant", null); // TODO: Custom type
-        registerType("cat_laying", false); // TODO
-        registerType("cat_collar_color", DyeColor.RED); // TODO
 
         // Wolf
         registerType("wolf_collar_color", DyeColor.RED); // TODO

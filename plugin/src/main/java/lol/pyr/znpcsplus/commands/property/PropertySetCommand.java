@@ -10,11 +10,13 @@ import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
+import lol.pyr.znpcsplus.util.CatVariant;
 import lol.pyr.znpcsplus.util.NpcPose;
 import lol.pyr.znpcsplus.util.Vector3f;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
+import org.bukkit.DyeColor;
 
 import java.util.Collections;
 import java.util.List;
@@ -80,6 +82,8 @@ public class PropertySetCommand implements CommandHandler {
                 if (type == NamedTextColor.class) return context.suggestCollection(NamedTextColor.NAMES.keys());
                 if (type == NpcPose.class) return context.suggestEnum(NpcPose.values());
                 if (type == Color.class) return context.suggestLiteral("0x0F00FF", "#FFFFFF");
+                if (type == DyeColor.class) return context.suggestEnum(DyeColor.values());
+                if (type == CatVariant.class) return context.suggestEnum(CatVariant.values());
             }
         }
         return Collections.emptyList();

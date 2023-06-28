@@ -54,7 +54,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .addProperties("blaze_on_fire"));
 
         register(builder(p, "cat", EntityTypes.CAT)
-                .setHologramOffset(-1.275));
+                .setHologramOffset(-1.275)
+                .addProperties("cat_variant", "cat_lying", "cat_collar_color"));
 
         register(builder(p, "cave_spider", EntityTypes.CAVE_SPIDER)
                 .setHologramOffset(-1.475));
