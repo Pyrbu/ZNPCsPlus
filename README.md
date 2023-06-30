@@ -10,14 +10,14 @@ This plugin is a remake of a plugin called ZNPCs, we originally started because 
 ## Why is it so good?
 - 100% Packet Based - Nothing is ran on the main thread
 - Performance & stability oriented code
-- Support for all versions from 1.8 to 1.19.4
-- Support for multiple different storage options
+- Support for all versions from 1.8 to 1.20.1
+- Support for multiple different storage options (WIP)
 - Intuitive command system
 
 ### Requirements, Extensions & Supported Software
 Requirements:
-- Java 8
-- Minecraft 1.8 - 1.19.4
+- Java 8+
+- Minecraft 1.8 - 1.20.1
 
 Supported Softwares:
 - Spigot ([Website](https://www.spigotmc.org/))
