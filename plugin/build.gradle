@@ -17,17 +17,19 @@ processResources {
 
 dependencies {
     compileOnly "org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT"
-    compileOnly "me.clip:placeholderapi:2.11.3"
 
-    implementation "com.google.code.gson:gson:2.10.1"
-    implementation "org.bstats:bstats-bukkit:3.0.2"
-    implementation "com.github.robertlit:SpigotResourcesAPI:2.0"
+    compileOnly "me.clip:placeholderapi:2.11.3" // Placeholder support
+    implementation "com.google.code.gson:gson:2.10.1" // JSON parsing
+    implementation "org.bstats:bstats-bukkit:3.0.2" // Plugin stats
+    implementation "com.github.robertlit:SpigotResourcesAPI:2.0" // Spigot API wrapper for update checker
+    implementation "com.github.retrooper.packetevents:spigot:2.0.0-SNAPSHOT" // Packets
+    implementation "space.arim.dazzleconf:dazzleconf-ext-snakeyaml:1.2.1" // Configs
+    implementation "lol.pyr:director-adventure:2.1.1" // Commands
+
+    // Fancy text library
     implementation "net.kyori:adventure-platform-bukkit:4.3.0"
     implementation "net.kyori:adventure-text-minimessage:4.14.0"
-    implementation "com.github.retrooper.packetevents:spigot:2.0.0-SNAPSHOT"
-    implementation "space.arim.dazzleconf:dazzleconf-ext-snakeyaml:1.2.1"
 
-    implementation "lol.pyr:director-adventure:2.1.1"
     implementation project(":api")
 }
 
@@ -39,18 +41,14 @@ shadowJar {
     relocate "me.robertlit.spigotresources", "lol.pyr.znpcsplus.lib.spigotresources"
     relocate "net.kyori", "lol.pyr.znpcsplus.lib.kyori"
     relocate "org.checkerframework", "lol.pyr.znpcsplus.lib.checkerframework"
-    relocate "javax.annotation", "lol.pyr.znpcsplus.lib.javaxannotation"
     relocate "com.google", "lol.pyr.znpcsplus.lib.google"
-
     relocate "com.github.retrooper.packetevents", "lol.pyr.znpcsplus.lib.packetevents.api"
     relocate "io.github.retrooper.packetevents", "lol.pyr.znpcsplus.lib.packetevents.impl"
-
     relocate "org.yaml.snakeyaml", "lol.pyr.znpcsplus.lib.snakeyaml"
     relocate "space.arim.dazzleconf", "lol.pyr.znpcsplus.lib.dazzleconf"
-
     relocate "lol.pyr.director", "lol.pyr.znpcsplus.lib.command"
+
     minimize()
 }
-
 
 tasks.assemble.dependsOn shadowJar
