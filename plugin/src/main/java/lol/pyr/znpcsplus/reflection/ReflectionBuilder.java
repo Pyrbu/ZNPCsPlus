@@ -19,6 +19,10 @@ public class ReflectionBuilder {
     private Class<?> expectType;
     private boolean strict = true;
 
+    public ReflectionBuilder() {
+        this("");
+    }
+
     public ReflectionBuilder(Class<?> clazz) {
         this("");
         withClassName(clazz);
@@ -37,6 +41,11 @@ public class ReflectionBuilder {
 
     public ReflectionBuilder withClassName(String className) {
         this.className.add(ReflectionPackage.joinWithDot(reflectionPackage, PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_17) ? additionalData : "", className));
+        return this;
+    }
+
+    public ReflectionBuilder withRawClassName(String className) {
+        this.className.add(className);
         return this;
     }
 

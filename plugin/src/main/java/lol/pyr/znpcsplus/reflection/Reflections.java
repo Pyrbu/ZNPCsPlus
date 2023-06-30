@@ -2,7 +2,6 @@ package lol.pyr.znpcsplus.reflection;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
-import com.mojang.authlib.GameProfile;
 import lol.pyr.znpcsplus.reflection.types.FieldReflection;
 import lol.pyr.znpcsplus.util.FoliaUtil;
 import org.bukkit.Bukkit;
@@ -11,6 +10,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -20,9 +20,14 @@ import java.util.function.Consumer;
  * uses to access inaccessible components of the server jar.
  */
 public final class Reflections {
-    public static final Class<?> ENTITY_CLASS =
-            new ReflectionBuilder(ReflectionPackage.ENTITY)
-                    .withClassName("Entity")
+
+    /*
+     * Game profile methods used for obtaining raw skin data of online players
+     */
+
+    public static final Class<?> GAME_PROFILE_CLASS =
+            new ReflectionBuilder()
+                    .withRawClassName("com.mojang.authlib.GameProfile")
                     .toClassReflection().get();
 
     public static final Class<?> ENTITY_HUMAN_CLASS =
@@ -31,18 +36,70 @@ public final class Reflections {
                     .withClassName("EntityHuman")
                     .toClassReflection().get();
 
+    public static final ReflectionLazyLoader<Method> GET_PLAYER_HANDLE_METHOD =
+            new ReflectionBuilder(ReflectionPackage.BUKKIT)
+                    .withClassName("entity.CraftPlayer")
+                    .withClassName("entity.CraftHumanEntity")
+                    .withMethodName("getHandle")
+                    .withExpectResult(ENTITY_HUMAN_CLASS)
+                    .toMethodReflection();
+
     public static final ReflectionLazyLoader<Method> GET_PROFILE_METHOD =
             new ReflectionBuilder(ReflectionPackage.ENTITY)
                     .withClassName(ENTITY_HUMAN_CLASS)
-                    .withExpectResult(GameProfile.class)
+                    .withExpectResult(GAME_PROFILE_CLASS)
                     .toMethodReflection();
 
-    public static final ReflectionLazyLoader<Method> GET_HANDLE_PLAYER_METHOD =
-            new ReflectionBuilder(ReflectionPackage.BUKKIT)
-                    .withClassName("entity.CraftPlayer").withClassName("entity.CraftHumanEntity")
-                    .withMethodName("getHandle")
+    public static final Class<?> PROPERTY_MAP_CLASS =
+            new ReflectionBuilder()
+                    .withRawClassName("com.mojang.authlib.properties.PropertyMap")
+                    .toClassReflection().get();
+
+    public static final ReflectionLazyLoader<Method> GET_PROPERTY_MAP_METHOD =
+            new ReflectionBuilder(GAME_PROFILE_CLASS)
+                    .withMethodName("getProperties")
+                    .withExpectResult(PROPERTY_MAP_CLASS)
                     .toMethodReflection();
 
+    public static final ReflectionLazyLoader<Method> PROPERTY_MAP_VALUES_METHOD =
+            new ReflectionBuilder()
+                    .withClassName(PROPERTY_MAP_CLASS.getSuperclass())
+                    .withMethodName("values")
+                    .withExpectResult(Collection.class)
+                    .toMethodReflection();
+
+    public static final Class<?> PROPERTY_CLASS =
+            new ReflectionBuilder()
+                    .withRawClassName("com.mojang.authlib.properties.Property")
+                    .toClassReflection().get();
+
+    public static final ReflectionLazyLoader<Method> PROPERTY_GET_NAME_METHOD =
+            new ReflectionBuilder(PROPERTY_CLASS)
+                    .withMethodName("getName")
+                    .withExpectResult(String.class)
+                    .toMethodReflection();
+
+    public static final ReflectionLazyLoader<Method> PROPERTY_GET_VALUE_METHOD =
+            new ReflectionBuilder(PROPERTY_CLASS)
+                    .withMethodName("getValue")
+                    .withExpectResult(String.class)
+                    .toMethodReflection();
+
+    public static final ReflectionLazyLoader<Method> PROPERTY_GET_SIGNATURE_METHOD =
+            new ReflectionBuilder(PROPERTY_CLASS)
+                    .withMethodName("getSignature")
+                    .withExpectResult(String.class)
+                    .toMethodReflection();
+
+    /*
+     * These methods are used for reserving entity ids so regular Minecraft
+     * entity packets don't interfere with our packet-based entities
+     */
+
+    public static final Class<?> ENTITY_CLASS =
+            new ReflectionBuilder(ReflectionPackage.ENTITY)
+                    .withClassName("Entity")
+                    .toClassReflection().get();
     public static final FieldReflection.ValueModifier<Integer> ENTITY_ID_MODIFIER =
             new ReflectionBuilder(ReflectionPackage.ENTITY)
                     .withClassName(ENTITY_CLASS)
@@ -61,6 +118,11 @@ public final class Reflections {
                     .setStrict(PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_14))
                     .toFieldReflection()
                     .toStaticValueLoader(AtomicInteger.class);
+
+    /*
+     * All of these folia methods need to be reflected because folia is strictly
+     * available on the newest java versions but we need to keep support for Java 8
+     */
 
     public static final Class<?> ASYNC_SCHEDULER_CLASS =
             new ReflectionBuilder("io.papermc.paper.threadedregions.scheduler")

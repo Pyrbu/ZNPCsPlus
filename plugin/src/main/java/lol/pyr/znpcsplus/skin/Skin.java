@@ -4,13 +4,12 @@ import com.github.retrooper.packetevents.protocol.player.TextureProperty;
 import com.github.retrooper.packetevents.protocol.player.UserProfile;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mojang.authlib.properties.PropertyMap;
+import lol.pyr.znpcsplus.reflection.Reflections;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Skin {
     private final long timestamp = System.currentTimeMillis();
@@ -21,18 +20,23 @@ public class Skin {
         properties.add(new TextureProperty("textures", texture, signature));
     }
 
-    public Skin(TextureProperty... properties) {
-        this.properties = Arrays.asList(properties);
-    }
-
     public Skin(Collection<TextureProperty> properties) {
         this.properties = new ArrayList<>(properties);
     }
 
-    public Skin(PropertyMap properties) {
-        this.properties = properties.values().stream()
-                .map(property -> new TextureProperty(property.getName(), property.getValue(), property.getSignature()))
-                .collect(Collectors.toList());
+    public Skin(Object propertyMap) {
+        this.properties = new ArrayList<>();
+        try {
+            Collection<?> properties = (Collection<?>) Reflections.PROPERTY_MAP_VALUES_METHOD.get().invoke(propertyMap);
+            for (Object property : properties) {
+                String name = (String) Reflections.PROPERTY_GET_NAME_METHOD.get().invoke(property);
+                String value = (String) Reflections.PROPERTY_GET_VALUE_METHOD.get().invoke(property);
+                String signature = (String) Reflections.PROPERTY_GET_SIGNATURE_METHOD.get().invoke(property);
+                this.properties.add(new TextureProperty(name, value, signature));
+            }
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Skin(JsonObject obj) {
