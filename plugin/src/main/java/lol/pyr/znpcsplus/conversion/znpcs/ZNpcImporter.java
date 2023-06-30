@@ -27,7 +27,7 @@ import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcTypeRegistryImpl;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
-import lol.pyr.znpcsplus.skin.cache.SkinCache;
+import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 import lol.pyr.znpcsplus.skin.descriptor.FetchingDescriptor;
 import lol.pyr.znpcsplus.util.BungeeConnector;
 import lol.pyr.znpcsplus.util.ItemSerializationUtil;
@@ -51,13 +51,13 @@ public class ZNpcImporter implements DataImporter {
     private final LegacyComponentSerializer textSerializer;
     private final NpcTypeRegistryImpl typeRegistry;
     private final EntityPropertyRegistryImpl propertyRegistry;
-    private final SkinCache skinCache;
+    private final MojangSkinCache skinCache;
     private final File dataFile;
     private final Gson gson;
 
     public ZNpcImporter(ConfigManager configManager, BukkitAudiences adventure, BungeeConnector bungeeConnector,
                         TaskScheduler taskScheduler, PacketFactory packetFactory, LegacyComponentSerializer textSerializer,
-                        NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry, SkinCache skinCache, File dataFile) {
+                        NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry, MojangSkinCache skinCache, File dataFile) {
 
         this.configManager = configManager;
         this.adventure = adventure;

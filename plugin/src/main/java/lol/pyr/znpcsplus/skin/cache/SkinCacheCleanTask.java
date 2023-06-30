@@ -3,9 +3,9 @@ package lol.pyr.znpcsplus.skin.cache;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class SkinCacheCleanTask extends BukkitRunnable {
-    private final SkinCache skinCache;
+    private final MojangSkinCache skinCache;
 
-    public SkinCacheCleanTask(SkinCache skinCache) {
+    public SkinCacheCleanTask(MojangSkinCache skinCache) {
         this.skinCache = skinCache;
     }
 

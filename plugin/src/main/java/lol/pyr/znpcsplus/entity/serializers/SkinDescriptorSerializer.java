@@ -3,12 +3,12 @@ package lol.pyr.znpcsplus.entity.serializers;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.entity.PropertySerializer;
 import lol.pyr.znpcsplus.skin.BaseSkinDescriptor;
-import lol.pyr.znpcsplus.skin.cache.SkinCache;
+import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 
 public class SkinDescriptorSerializer implements PropertySerializer<SkinDescriptor> {
-    private final SkinCache skinCache;
+    private final MojangSkinCache skinCache;
 
-    public SkinDescriptorSerializer(SkinCache skinCache) {
+    public SkinDescriptorSerializer(MojangSkinCache skinCache) {
         this.skinCache = skinCache;
     }
 

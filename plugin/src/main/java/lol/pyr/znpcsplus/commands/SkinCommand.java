@@ -10,7 +10,7 @@ import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import lol.pyr.znpcsplus.npc.NpcTypeRegistryImpl;
-import lol.pyr.znpcsplus.skin.cache.SkinCache;
+import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 import lol.pyr.znpcsplus.skin.descriptor.FetchingDescriptor;
 import lol.pyr.znpcsplus.skin.descriptor.MirrorDescriptor;
 import lol.pyr.znpcsplus.skin.descriptor.PrefetchedDescriptor;
@@ -21,12 +21,12 @@ import java.util.Collections;
 import java.util.List;
 
 public class SkinCommand implements CommandHandler {
-    private final SkinCache skinCache;
+    private final MojangSkinCache skinCache;
     private final NpcRegistryImpl npcRegistry;
     private final NpcTypeRegistryImpl typeRegistry;
     private final EntityPropertyRegistryImpl propertyRegistry;
 
-    public SkinCommand(SkinCache skinCache, NpcRegistryImpl npcRegistry, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry) {
+    public SkinCommand(MojangSkinCache skinCache, NpcRegistryImpl npcRegistry, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry) {
         this.skinCache = skinCache;
         this.npcRegistry = npcRegistry;
         this.typeRegistry = typeRegistry;

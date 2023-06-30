@@ -2,7 +2,6 @@ package lol.pyr.znpcsplus.skin.cache;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.mojang.authlib.GameProfile;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.reflection.Reflections;
 import lol.pyr.znpcsplus.skin.Skin;
@@ -18,12 +17,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
-public class SkinCache {
+public class MojangSkinCache {
     private final static Logger logger = Logger.getLogger("ZNPCsPlus Skin Cache");
 
     private final ConfigManager configManager;
@@ -31,7 +29,7 @@ public class SkinCache {
     private final Map<String, Skin> cache = new ConcurrentHashMap<>();
     private final Map<String, CachedId> idCache = new ConcurrentHashMap<>();
 
-    public SkinCache(ConfigManager configManager) {
+    public MojangSkinCache(ConfigManager configManager) {
         this.configManager = configManager;
     }
 
@@ -69,10 +67,6 @@ public class SkinCache {
             }
             return null;
         });
-    }
-
-    public CompletableFuture<Skin> fetchByUUID(UUID uuid) {
-        return fetchByUUID(uuid.toString().replace("-", ""));
     }
 
     public boolean isNameFullyCached(String s) {
@@ -129,9 +123,10 @@ public class SkinCache {
 
     public Skin getFromPlayer(Player player) {
         try {
-            Object playerHandle = Reflections.GET_HANDLE_PLAYER_METHOD.get().invoke(player);
-            GameProfile gameProfile = (GameProfile) Reflections.GET_PROFILE_METHOD.get().invoke(playerHandle, new Object[0]);
-            return new Skin(gameProfile.getProperties());
+            Object playerHandle = Reflections.GET_PLAYER_HANDLE_METHOD.get().invoke(player);
+            Object gameProfile = Reflections.GET_PROFILE_METHOD.get().invoke(playerHandle);
+            Object propertyMap = Reflections.GET_PROPERTY_MAP_METHOD.get().invoke(gameProfile);
+            return new Skin(propertyMap);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }

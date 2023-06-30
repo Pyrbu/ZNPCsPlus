@@ -3,15 +3,15 @@ package lol.pyr.znpcsplus.skin.descriptor;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.skin.BaseSkinDescriptor;
 import lol.pyr.znpcsplus.skin.Skin;
-import lol.pyr.znpcsplus.skin.cache.SkinCache;
+import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 import org.bukkit.entity.Player;
 
 import java.util.concurrent.CompletableFuture;
 
 public class MirrorDescriptor implements BaseSkinDescriptor, SkinDescriptor {
-    private final SkinCache skinCache;
+    private final MojangSkinCache skinCache;
 
-    public MirrorDescriptor(SkinCache skinCache) {
+    public MirrorDescriptor(MojangSkinCache skinCache) {
         this.skinCache = skinCache;
     }
 

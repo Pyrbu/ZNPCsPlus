@@ -5,7 +5,7 @@ import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.entity.EntityPropertyRegistry;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.entity.serializers.*;
-import lol.pyr.znpcsplus.skin.cache.SkinCache;
+import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 import lol.pyr.znpcsplus.util.CatVariant;
 import lol.pyr.znpcsplus.util.CreeperState;
 import lol.pyr.znpcsplus.util.NpcPose;
@@ -26,7 +26,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
     private final Map<Class<?>, PropertySerializer<?>> serializerMap = new HashMap<>();
     private final Map<String, EntityPropertyImpl<?>> byName = new HashMap<>();
 
-    public EntityPropertyRegistryImpl(SkinCache skinCache) {
+    public EntityPropertyRegistryImpl(MojangSkinCache skinCache) {
         registerSerializer(new BooleanPropertySerializer());
         registerSerializer(new ComponentPropertySerializer());
         registerSerializer(new NamedTextColorPropertySerializer());

@@ -38,7 +38,7 @@ import lol.pyr.znpcsplus.parsers.*;
 import lol.pyr.znpcsplus.scheduling.FoliaScheduler;
 import lol.pyr.znpcsplus.scheduling.SpigotScheduler;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
-import lol.pyr.znpcsplus.skin.cache.SkinCache;
+import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 import lol.pyr.znpcsplus.skin.cache.SkinCacheCleanTask;
 import lol.pyr.znpcsplus.tasks.HologramRefreshTask;
 import lol.pyr.znpcsplus.tasks.NpcProcessorTask;
@@ -126,7 +126,7 @@ public class ZNpcsPlus extends JavaPlugin {
         shutdownTasks.add(scheduler::cancelAll);
 
         ConfigManager configManager = new ConfigManager(getDataFolder());
-        SkinCache skinCache = new SkinCache(configManager);
+        MojangSkinCache skinCache = new MojangSkinCache(configManager);
         EntityPropertyRegistryImpl propertyRegistry = new EntityPropertyRegistryImpl(skinCache);
         MetadataFactory metadataFactory = setupMetadataFactory();
         PacketFactory packetFactory = setupPacketFactory(scheduler, metadataFactory, propertyRegistry);
@@ -259,7 +259,7 @@ public class ZNpcsPlus extends JavaPlugin {
     }
 
 
-    private void registerCommands(NpcRegistryImpl npcRegistry, SkinCache skinCache, BukkitAudiences adventure,
+    private void registerCommands(NpcRegistryImpl npcRegistry, MojangSkinCache skinCache, BukkitAudiences adventure,
                                   ActionRegistry actionRegistry, NpcTypeRegistryImpl typeRegistry,
                                   EntityPropertyRegistryImpl propertyRegistry, DataImporterRegistry importerRegistry,
                                   ConfigManager configManager) {

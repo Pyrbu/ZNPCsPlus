@@ -6,7 +6,7 @@ import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.npc.NpcTypeRegistryImpl;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
-import lol.pyr.znpcsplus.skin.cache.SkinCache;
+import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 import lol.pyr.znpcsplus.util.BungeeConnector;
 import lol.pyr.znpcsplus.util.LazyLoader;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
@@ -24,7 +24,7 @@ public class DataImporterRegistry {
     public DataImporterRegistry(ConfigManager configManager, BukkitAudiences adventure, BungeeConnector bungeeConnector,
                                 TaskScheduler taskScheduler, PacketFactory packetFactory, LegacyComponentSerializer textSerializer,
                                 NpcTypeRegistryImpl typeRegistry, File pluginsFolder, EntityPropertyRegistryImpl propertyRegistry,
-                                SkinCache skinCache) {
+                                MojangSkinCache skinCache) {
 
         register("znpcs", LazyLoader.of(() -> new ZNpcImporter(configManager, adventure, bungeeConnector, taskScheduler,
                 packetFactory, textSerializer, typeRegistry, propertyRegistry, skinCache, new File(pluginsFolder, "ServersNPC/data.json"))));

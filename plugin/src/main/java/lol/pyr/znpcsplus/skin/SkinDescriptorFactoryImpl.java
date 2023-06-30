@@ -2,16 +2,16 @@ package lol.pyr.znpcsplus.skin;
 
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptorFactory;
-import lol.pyr.znpcsplus.skin.cache.SkinCache;
+import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 import lol.pyr.znpcsplus.skin.descriptor.FetchingDescriptor;
 import lol.pyr.znpcsplus.skin.descriptor.MirrorDescriptor;
 import lol.pyr.znpcsplus.skin.descriptor.PrefetchedDescriptor;
 
 public class SkinDescriptorFactoryImpl implements SkinDescriptorFactory {
-    private final SkinCache skinCache;
+    private final MojangSkinCache skinCache;
     private final MirrorDescriptor mirrorDescriptor;
 
-    public SkinDescriptorFactoryImpl(SkinCache skinCache) {
+    public SkinDescriptorFactoryImpl(MojangSkinCache skinCache) {
         this.skinCache = skinCache;
         mirrorDescriptor = new MirrorDescriptor(skinCache);
     }

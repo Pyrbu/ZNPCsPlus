@@ -7,7 +7,7 @@ import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcTypeRegistryImpl;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
-import lol.pyr.znpcsplus.skin.cache.SkinCache;
+import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 import lol.pyr.znpcsplus.util.BungeeConnector;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -27,12 +27,12 @@ public class CitizensImporter implements DataImporter {
     private final LegacyComponentSerializer textSerializer;
     private final NpcTypeRegistryImpl typeRegistry;
     private final EntityPropertyRegistryImpl propertyRegistry;
-    private final SkinCache skinCache;
+    private final MojangSkinCache skinCache;
     private final File dataFile;
 
     public CitizensImporter(ConfigManager configManager, BukkitAudiences adventure, BungeeConnector bungeeConnector,
                             TaskScheduler taskScheduler, PacketFactory packetFactory, LegacyComponentSerializer textSerializer,
-                            NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry, SkinCache skinCache,
+                            NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry, MojangSkinCache skinCache,
                             File dataFile) {
         this.configManager = configManager;
         this.adventure = adventure;

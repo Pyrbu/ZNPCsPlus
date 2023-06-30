@@ -9,7 +9,7 @@ import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import lol.pyr.znpcsplus.npc.NpcTypeRegistryImpl;
 import lol.pyr.znpcsplus.skin.SkinDescriptorFactoryImpl;
-import lol.pyr.znpcsplus.skin.cache.SkinCache;
+import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 
 public class ZNpcsPlusApi implements NpcApi {
     private final NpcRegistryImpl npcRegistry;
@@ -17,7 +17,7 @@ public class ZNpcsPlusApi implements NpcApi {
     private final EntityPropertyRegistryImpl propertyRegistry;
     private final SkinDescriptorFactoryImpl skinDescriptorFactory;
 
-    public ZNpcsPlusApi(NpcRegistryImpl npcRegistry, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry, SkinCache skinCache) {
+    public ZNpcsPlusApi(NpcRegistryImpl npcRegistry, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry, MojangSkinCache skinCache) {
         this.npcRegistry = npcRegistry;
         this.typeRegistry = typeRegistry;
         this.propertyRegistry = propertyRegistry;
