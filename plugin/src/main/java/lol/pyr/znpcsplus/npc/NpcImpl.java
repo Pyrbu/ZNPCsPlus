@@ -150,6 +150,7 @@ public class NpcImpl extends Viewable implements Npc {
         propertyMap.remove(key);
         UNSAFE_refreshMeta();
         if (key.getName().equalsIgnoreCase("glow")) UNSAFE_remakeTeam();
+        else if (key.getName().equalsIgnoreCase("dinnerbone")) respawn();
     }
 
     public Set<EntityPropertyImpl<?>> getAppliedProperties() {
