@@ -242,6 +242,7 @@ public class ZNpcsPlus extends JavaPlugin {
         versions.put(ServerVersion.V_1_9, LazyLoader.of(V1_9MetadataFactory::new));
         versions.put(ServerVersion.V_1_10, LazyLoader.of(V1_10MetadataFactory::new));
         versions.put(ServerVersion.V_1_11, LazyLoader.of(V1_11MetadataFactory::new));
+        versions.put(ServerVersion.V_1_12, LazyLoader.of(V1_12MetadataFactory::new));
         versions.put(ServerVersion.V_1_13, LazyLoader.of(V1_13MetadataFactory::new));
         versions.put(ServerVersion.V_1_14, LazyLoader.of(V1_14MetadataFactory::new));
         versions.put(ServerVersion.V_1_15, LazyLoader.of(V1_15MetadataFactory::new));
@@ -282,6 +283,7 @@ public class ZNpcsPlus extends JavaPlugin {
         registerEnumParser(manager, DyeColor.class, incorrectUsageMessage);
         registerEnumParser(manager, CatVariant.class, incorrectUsageMessage);
         registerEnumParser(manager, CreeperState.class, incorrectUsageMessage);
+        registerEnumParser(manager, ParrotVariant.class, incorrectUsageMessage);
 
         manager.registerCommand("npc", new MultiCommand(loadHelpMessage("root"))
                 .addSubcommand("create", new CreateCommand(npcRegistry, typeRegistry))

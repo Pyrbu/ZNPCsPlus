@@ -14,6 +14,7 @@ import lol.pyr.znpcsplus.util.CatVariant;
 import lol.pyr.znpcsplus.util.CreeperState;
 import lol.pyr.znpcsplus.util.NpcPose;
 import lol.pyr.znpcsplus.util.Vector3f;
+import lol.pyr.znpcsplus.util.ParrotVariant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
@@ -60,6 +61,10 @@ public class PropertySetCommand implements CommandHandler {
             value = Color.BLACK;
             valueName = "NONE";
         }
+        else if (type == ParrotVariant.class && context.argSize() < 1 && npc.getProperty(property) != null) {
+            value = ParrotVariant.NONE;
+            valueName = "NONE";
+        }
         else {
             value = context.parse(type);
             valueName = String.valueOf(value);
@@ -86,6 +91,7 @@ public class PropertySetCommand implements CommandHandler {
                 if (type == DyeColor.class) return context.suggestEnum(DyeColor.values());
                 if (type == CatVariant.class) return context.suggestEnum(CatVariant.values());
                 if (type == CreeperState.class) return context.suggestEnum(CreeperState.values());
+                if (type == ParrotVariant.class) return context.suggestEnum(ParrotVariant.values());
             }
         }
         return Collections.emptyList();

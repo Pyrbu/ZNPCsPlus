@@ -149,6 +149,8 @@ public class V1_8PacketFactory implements PacketFactory {
                     properties.getProperty(propertyRegistry.getByName("skin_right_leg", Boolean.class)),
                     properties.getProperty(propertyRegistry.getByName("skin_hat", Boolean.class))
             ));
+            add(data, metadataFactory.shoulderEntityLeft(properties.getProperty(propertyRegistry.getByName("shoulder_entity_left", ParrotVariant.class))));
+            add(data, metadataFactory.shoulderEntityRight(properties.getProperty(propertyRegistry.getByName("shoulder_entity_right", ParrotVariant.class))));
         }
         else if (entity.getType().equals(EntityTypes.ARMOR_STAND)) {
             add(data, metadataFactory.armorStandProperties(

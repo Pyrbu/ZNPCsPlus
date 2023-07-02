@@ -10,6 +10,7 @@ import lol.pyr.znpcsplus.util.CatVariant;
 import lol.pyr.znpcsplus.util.CreeperState;
 import lol.pyr.znpcsplus.util.NpcPose;
 import lol.pyr.znpcsplus.util.Vector3f;
+import lol.pyr.znpcsplus.util.ParrotVariant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
@@ -39,6 +40,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(DyeColor.class);
         registerEnumSerializer(CatVariant.class);
         registerEnumSerializer(CreeperState.class);
+        registerEnumSerializer(ParrotVariant.class);
 
         registerType("glow", NamedTextColor.class);
         registerType("fire", false);
@@ -72,6 +74,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("skin_left_leg", true);
         registerType("skin_right_leg", true);
         registerType("skin_hat", true);
+        registerType("shoulder_entity_left", ParrotVariant.NONE);
+        registerType("shoulder_entity_right", ParrotVariant.NONE);
 
         // End Crystal
         registerType("beam_target", null); // TODO: Make a block pos class for this

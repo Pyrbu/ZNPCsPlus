@@ -4,10 +4,21 @@ import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 import lol.pyr.znpcsplus.util.CatVariant;
 import lol.pyr.znpcsplus.util.CreeperState;
+import lol.pyr.znpcsplus.util.ParrotVariant;
 import lol.pyr.znpcsplus.util.Vector3f;
 import org.bukkit.DyeColor;
 
 public class V1_15MetadataFactory extends V1_14MetadataFactory {
+    @Override
+    public EntityData shoulderEntityLeft(ParrotVariant variant) {
+            return createShoulderEntityLeft(18, variant);
+    }
+
+    @Override
+    public EntityData shoulderEntityRight(ParrotVariant variant) {
+        return createShoulderEntityRight(19, variant);
+    }
+
     @Override
     public EntityData armorStandProperties(boolean small, boolean arms, boolean noBasePlate) {
         return newEntityData(14, EntityDataTypes.BYTE, (byte) ((small ? 0x01 : 0) | (arms ? 0x04 : 0) | (!noBasePlate ? 0x08 : 0)));

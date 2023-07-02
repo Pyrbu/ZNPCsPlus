@@ -7,7 +7,7 @@ import net.kyori.adventure.text.Component;
 
 import java.util.Optional;
 
-public class V1_13MetadataFactory extends V1_11MetadataFactory {
+public class V1_13MetadataFactory extends V1_12MetadataFactory {
     @Override
     public EntityData name(Component name) {
         return newEntityData(2, EntityDataTypes.OPTIONAL_COMPONENT, Optional.of(AdventureSerializer.getGsonSerializer().serialize(name)));
