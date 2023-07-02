@@ -7,6 +7,7 @@ import com.github.retrooper.packetevents.protocol.entity.pose.EntityPose;
 import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
 import lol.pyr.znpcsplus.util.CatVariant;
 import lol.pyr.znpcsplus.util.CreeperState;
+import lol.pyr.znpcsplus.util.ParrotVariant;
 import lol.pyr.znpcsplus.util.Vector3f;
 import net.kyori.adventure.text.Component;
 import org.bukkit.DyeColor;
@@ -60,6 +61,16 @@ public class V1_8MetadataFactory implements MetadataFactory {
     @Override
     public EntityData potionAmbient(boolean ambient) {
         return newEntityData(8, EntityDataTypes.BYTE, (byte) (ambient ? 1 : 0));
+    }
+
+    @Override
+    public EntityData shoulderEntityLeft(ParrotVariant variant) {
+        throw new UnsupportedOperationException("The shoulder entity data isn't supported on this version");
+    }
+
+    @Override
+    public EntityData shoulderEntityRight(ParrotVariant variant) {
+        throw new UnsupportedOperationException("The shoulder entity data isn't supported on this version");
     }
 
     @Override

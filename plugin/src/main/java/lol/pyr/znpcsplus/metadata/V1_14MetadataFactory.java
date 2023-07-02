@@ -5,6 +5,7 @@ import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 import com.github.retrooper.packetevents.protocol.entity.pose.EntityPose;
 import lol.pyr.znpcsplus.util.CatVariant;
 import lol.pyr.znpcsplus.util.CreeperState;
+import lol.pyr.znpcsplus.util.ParrotVariant;
 import lol.pyr.znpcsplus.util.Vector3f;
 import org.bukkit.DyeColor;
 
@@ -32,6 +33,16 @@ public class V1_14MetadataFactory extends V1_13MetadataFactory {
     @Override
     public EntityData potionAmbient(boolean ambient) {
         return newEntityData(10, EntityDataTypes.BOOLEAN, ambient);
+    }
+
+    @Override
+    public EntityData shoulderEntityLeft(ParrotVariant variant) {
+        return createShoulderEntityLeft(17, variant);
+    }
+
+    @Override
+    public EntityData shoulderEntityRight(ParrotVariant variant) {
+        return createShoulderEntityRight(18, variant);
     }
 
     @Override

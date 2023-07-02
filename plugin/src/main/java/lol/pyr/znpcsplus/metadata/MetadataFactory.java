@@ -4,6 +4,7 @@ import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.pose.EntityPose;
 import lol.pyr.znpcsplus.util.CatVariant;
 import lol.pyr.znpcsplus.util.CreeperState;
+import lol.pyr.znpcsplus.util.ParrotVariant;
 import lol.pyr.znpcsplus.util.Vector3f;
 import net.kyori.adventure.text.Component;
 import org.bukkit.DyeColor;
@@ -22,7 +23,6 @@ import org.bukkit.DyeColor;
  * 1.18-1.19 <a href="https://wiki.vg/index.php?title=Entity_metadata">...</a>
  */
 public interface MetadataFactory {
-    EntityData skinLayers(boolean cape, boolean jacket, boolean leftSleeve, boolean rightSleeve, boolean leftLeg, boolean rightLeg, boolean hat);
     EntityData effects(boolean onFire, boolean glowing, boolean invisible, boolean usingElytra, boolean usingItemLegacy);
     EntityData silent(boolean enabled);
     EntityData name(Component name);
@@ -33,6 +33,11 @@ public interface MetadataFactory {
     EntityData usingItem(boolean enabled, boolean offhand, boolean riptide);
     EntityData potionColor(int color);
     EntityData potionAmbient(boolean ambient);
+
+    // Player
+    EntityData skinLayers(boolean cape, boolean jacket, boolean leftSleeve, boolean rightSleeve, boolean leftLeg, boolean rightLeg, boolean hat);
+    EntityData shoulderEntityLeft(ParrotVariant variant);
+    EntityData shoulderEntityRight(ParrotVariant variant);
 
     // Armor Stand
     EntityData armorStandProperties(boolean small, boolean arms, boolean noBasePlate);
