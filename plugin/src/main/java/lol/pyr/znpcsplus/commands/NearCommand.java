@@ -25,9 +25,10 @@ public class NearCommand implements CommandHandler {
         double radius = Math.pow(raw, 2);
 
         String npcs = npcRegistry.getAllModifiable().stream()
-                        .filter(entry -> entry.getNpc().getBukkitLocation().distanceSquared(player.getLocation()) < radius)
-                        .map(NpcEntryImpl::getId)
-                        .collect(Collectors.joining(", "));
+                .filter(entry -> entry.getNpc().getWorld().equals(player.getWorld()))
+                .filter(entry -> entry.getNpc().getBukkitLocation().distanceSquared(player.getLocation()) < radius)
+                .map(NpcEntryImpl::getId)
+                .collect(Collectors.joining(", "));
 
         if (npcs.length() == 0) context.halt(Component.text("There are no npcs within " + raw + " blocks around you.", NamedTextColor.RED));
         context.send(Component.text("All NPCs that are within " + raw + " blocks from you:", NamedTextColor.GREEN).appendNewline()
