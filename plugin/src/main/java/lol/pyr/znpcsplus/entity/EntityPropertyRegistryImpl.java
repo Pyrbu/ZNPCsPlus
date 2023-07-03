@@ -6,11 +6,7 @@ import lol.pyr.znpcsplus.api.entity.EntityPropertyRegistry;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.entity.serializers.*;
 import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
-import lol.pyr.znpcsplus.util.CatVariant;
-import lol.pyr.znpcsplus.util.CreeperState;
-import lol.pyr.znpcsplus.util.NpcPose;
-import lol.pyr.znpcsplus.util.Vector3f;
-import lol.pyr.znpcsplus.util.ParrotVariant;
+import lol.pyr.znpcsplus.util.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
@@ -35,6 +31,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerSerializer(new ItemStackPropertySerializer());
         registerSerializer(new ColorPropertySerializer());
         registerSerializer(new Vector3fPropertySerializer());
+        registerSerializer(new BlockStatePropertySerializer());
 
         registerEnumSerializer(NpcPose.class);
         registerEnumSerializer(DyeColor.class);
@@ -113,8 +110,13 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("cat_collar_color", DyeColor.RED);
 
         // Creeper
-        registerType("creeper_state", CreeperState.IDLE); // TODO: -1 = idle, 1 = fuse
-        registerType("creeper_charged", false); // TODO
+        registerType("creeper_state", CreeperState.IDLE);
+        registerType("creeper_charged", false);
+
+        // Enderman
+        registerType("enderman_held_block", new BlockState(0)); // TODO: figure out the type on this
+        registerType("enderman_screaming", false); // TODO
+        registerType("enderman_staring", false); // TODO
 
         // Pufferfish
         registerType("puff_state", null); // TODO: Make a puff state enum class
@@ -202,10 +204,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Wither
         registerType("invulnerable_time", 0); // TODO
-
-        // Enderman
-        registerType("enderman_held_block", null); // TODO: figure out the type on this
-        registerType("enderman_screaming", false); // TODO
 
         // Ghast
         registerType("attacking", false); // TODO

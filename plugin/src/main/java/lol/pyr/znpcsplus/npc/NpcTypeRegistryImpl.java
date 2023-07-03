@@ -80,7 +80,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .setHologramOffset(6.0245));
 
         register(builder(p, "enderman", EntityTypes.ENDERMAN)
-                .setHologramOffset(0.925));
+                .setHologramOffset(0.925)
+                .addProperties("enderman_held_block", "enderman_screaming", "enderman_staring"));
 
         register(builder(p, "endermite", EntityTypes.ENDERMITE)
                 .setHologramOffset(-1.675));

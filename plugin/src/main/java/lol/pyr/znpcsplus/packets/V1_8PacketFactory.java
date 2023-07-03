@@ -189,6 +189,13 @@ public class V1_8PacketFactory implements PacketFactory {
             add(data, metadataFactory.creeperState(properties.getProperty(propertyRegistry.getByName("creeper_state", CreeperState.class))));
             add(data, metadataFactory.creeperCharged(properties.getProperty(propertyRegistry.getByName("creeper_charged", Boolean.class))));
         }
+        else if (entity.getType().equals(EntityTypes.ENDERMAN)) {
+            add(data, metadataFactory.endermanHeldBlock(
+                    properties.getProperty(propertyRegistry.getByName("enderman_held_block", BlockState.class)).getGlobalId())
+            );
+            add(data, metadataFactory.endermanScreaming(properties.getProperty(propertyRegistry.getByName("enderman_screaming", Boolean.class))));
+            add(data, metadataFactory.endermanStaring(properties.getProperty(propertyRegistry.getByName("enderman_staring", Boolean.class))));
+        }
 
         if (properties.getProperty(propertyRegistry.getByName("dinnerbone", Boolean.class))) {
             add(data, metadataFactory.name(Component.text("Dinnerbone")));

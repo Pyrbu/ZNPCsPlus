@@ -1,6 +1,9 @@
 package lol.pyr.znpcsplus.commands.property;
 
 import com.github.retrooper.packetevents.protocol.item.ItemStack;
+import com.github.retrooper.packetevents.protocol.world.states.WrappedBlockState;
+import com.github.retrooper.packetevents.protocol.world.states.type.StateType;
+import com.github.retrooper.packetevents.protocol.world.states.type.StateTypes;
 import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
@@ -10,11 +13,7 @@ import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
-import lol.pyr.znpcsplus.util.CatVariant;
-import lol.pyr.znpcsplus.util.CreeperState;
-import lol.pyr.znpcsplus.util.NpcPose;
-import lol.pyr.znpcsplus.util.Vector3f;
-import lol.pyr.znpcsplus.util.ParrotVariant;
+import lol.pyr.znpcsplus.util.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
@@ -65,6 +64,39 @@ public class PropertySetCommand implements CommandHandler {
             value = ParrotVariant.NONE;
             valueName = "NONE";
         }
+        else if (type == BlockState.class) {
+            String inputType = context.popString().toLowerCase();
+            switch (inputType) {
+                case "hand":
+                    org.bukkit.inventory.ItemStack bukkitStack = context.ensureSenderIsPlayer().getInventory().getItemInHand();
+                    if (bukkitStack.getAmount() == 0) {
+                        value = new BlockState(0);
+                        valueName = "EMPTY";
+                    } else {
+                        WrappedBlockState blockState = StateTypes.getByName(bukkitStack.getType().name().toLowerCase()).createBlockState();
+//                      WrappedBlockState blockState = WrappedBlockState.getByString(bukkitStack.getType().name().toLowerCase());
+                        value = new BlockState(blockState.getGlobalId());
+                        valueName = bukkitStack.toString();
+                    }
+                    break;
+                case "looking_at":
+
+                    // TODO
+
+                    value = new BlockState(0);
+                    valueName = "EMPTY";
+                    break;
+                case "block":
+                    context.ensureArgsNotEmpty();
+                    WrappedBlockState blockState = WrappedBlockState.getByString(context.popString());
+                    value = new BlockState(blockState.getGlobalId());
+                    valueName = blockState.toString();
+                    break;
+                default:
+                    context.send(Component.text("Invalid input type " + inputType + ", must be hand, looking_at, or block", NamedTextColor.RED));
+                    return;
+            }
+        }
         else {
             value = context.parse(type);
             valueName = String.valueOf(value);
@@ -92,6 +124,13 @@ public class PropertySetCommand implements CommandHandler {
                 if (type == CatVariant.class) return context.suggestEnum(CatVariant.values());
                 if (type == CreeperState.class) return context.suggestEnum(CreeperState.values());
                 if (type == ParrotVariant.class) return context.suggestEnum(ParrotVariant.values());
+                if (type == BlockState.class) return context.suggestLiteral("hand", "looking_at", "block");
+            }
+            else if (context.argSize() == 4) {
+                if (type == BlockState.class) {
+                    // TODO: suggest block with nbt like minecraft setblock command
+                    return context.suggestionParse(2, String.class).equals("block") ? context.suggestStream(StateTypes.values().stream().map(StateType::getName)) : Collections.emptyList();
+                }
             }
         }
         return Collections.emptyList();

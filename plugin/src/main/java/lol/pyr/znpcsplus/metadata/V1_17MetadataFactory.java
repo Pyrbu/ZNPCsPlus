@@ -143,4 +143,19 @@ public class V1_17MetadataFactory extends V1_16MetadataFactory {
     public EntityData creeperCharged(boolean charged) {
         return newEntityData(17, EntityDataTypes.BOOLEAN, charged);
     }
+
+    @Override
+    public EntityData endermanHeldBlock(int carriedBlock) {
+        return newEntityData(16, EntityDataTypes.INT, carriedBlock);
+    }
+
+    @Override
+    public EntityData endermanScreaming(boolean screaming) {
+        return newEntityData(17, EntityDataTypes.BOOLEAN, screaming);
+    }
+
+    @Override
+    public EntityData endermanStaring(boolean staring) {
+        return newEntityData(18, EntityDataTypes.BOOLEAN, staring);
+    }
 }

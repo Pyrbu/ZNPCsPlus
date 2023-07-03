@@ -5,10 +5,7 @@ import com.github.retrooper.packetevents.protocol.entity.data.EntityDataType;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 import com.github.retrooper.packetevents.protocol.entity.pose.EntityPose;
 import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
-import lol.pyr.znpcsplus.util.CatVariant;
-import lol.pyr.znpcsplus.util.CreeperState;
-import lol.pyr.znpcsplus.util.ParrotVariant;
-import lol.pyr.znpcsplus.util.Vector3f;
+import lol.pyr.znpcsplus.util.*;
 import net.kyori.adventure.text.Component;
 import org.bukkit.DyeColor;
 
@@ -166,6 +163,21 @@ public class V1_8MetadataFactory implements MetadataFactory {
     @Override
     public EntityData creeperCharged(boolean charged) {
         return newEntityData(17, EntityDataTypes.BYTE, (byte) (charged ? 1 : 0));
+    }
+
+    @Override
+    public EntityData endermanHeldBlock(int carriedBlock) {
+        throw new UnsupportedOperationException("The enderman carried block entity data isn't supported on this version");
+    }
+
+    @Override
+    public EntityData endermanScreaming(boolean screaming) {
+        throw new UnsupportedOperationException("The enderman screaming entity data isn't supported on this version");
+    }
+
+    @Override
+    public EntityData endermanStaring(boolean staring) {
+        return newEntityData(18, EntityDataTypes.BOOLEAN, staring);
     }
 
     @Override
