@@ -39,6 +39,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(CreeperState.class);
         registerEnumSerializer(ParrotVariant.class);
         registerEnumSerializer(SpellType.class);
+        registerEnumSerializer(FoxVariant.class);
 
         registerType("glow", NamedTextColor.class);
         registerType("fire", false);
@@ -122,6 +123,13 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Evoker
         registerType("evoker_spell", SpellType.NONE);
 
+        // Fox
+        registerType("fox_variant", FoxVariant.RED);
+        registerType("fox_sitting", false);
+        registerType("fox_crouching", false);
+        registerType("fox_sleeping", false);
+        registerType("fox_faceplanted", false);
+
         // Pufferfish
         registerType("puff_state", null); // TODO: Make a puff state enum class
 
@@ -139,13 +147,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // LLama
         registerType("carpet_color", DyeColor.class); // TODO
         registerType("llama_variant", 0); // TODO
-
-        // Fox
-        registerType("fox_variant", 0); // TODO: 0 = red, 1 = snow
-        registerType("fox_sitting", false); // TODO
-        registerType("fox_crouching", false); // TODO
-        registerType("fox_sleeping", false); // TODO
-        registerType("fox_faceplanting", false); // TODO
 
         // Frog
         registerType("frog_type", null); // TODO: It has a custom type read on wiki.vg

@@ -76,4 +76,8 @@ public interface MetadataFactory {
 
     // Evoker
     EntityData evokerSpell(int spell);
+
+    // Fox
+    EntityData foxVariant(int variant);
+    EntityData foxProperties(boolean sitting, boolean crouching, boolean sleeping, boolean facePlanted);
 }

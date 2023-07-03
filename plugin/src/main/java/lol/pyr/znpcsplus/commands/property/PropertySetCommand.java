@@ -126,6 +126,7 @@ public class PropertySetCommand implements CommandHandler {
                 if (type == ParrotVariant.class) return context.suggestEnum(ParrotVariant.values());
                 if (type == BlockState.class) return context.suggestLiteral("hand", "looking_at", "block");
                 if (type == SpellType.class) return context.suggestEnum(SpellType.values());
+                if (type == FoxVariant.class) return context.suggestEnum(FoxVariant.values());
             }
             else if (context.argSize() == 4) {
                 if (type == BlockState.class) {

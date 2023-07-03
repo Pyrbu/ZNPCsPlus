@@ -186,6 +186,16 @@ public class V1_8MetadataFactory implements MetadataFactory {
     }
 
     @Override
+    public EntityData foxVariant(int variant) {
+        throw new UnsupportedOperationException("The fox variant entity data isn't supported on this version");
+    }
+
+    @Override
+    public EntityData foxProperties(boolean sitting, boolean crouching, boolean sleeping, boolean facePlanted) {
+        throw new UnsupportedOperationException("The fox properties entity data isn't supported on this version");
+    }
+
+    @Override
     public EntityData silent(boolean enabled) {
         return newEntityData(4, EntityDataTypes.BYTE, (byte) (enabled ? 1 : 0));
     }
