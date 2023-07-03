@@ -38,6 +38,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(CatVariant.class);
         registerEnumSerializer(CreeperState.class);
         registerEnumSerializer(ParrotVariant.class);
+        registerEnumSerializer(SpellType.class);
 
         registerType("glow", NamedTextColor.class);
         registerType("fire", false);
@@ -117,6 +118,9 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("enderman_held_block", new BlockState(0)); // TODO: figure out the type on this
         registerType("enderman_screaming", false); // TODO
         registerType("enderman_staring", false); // TODO
+
+        // Evoker
+        registerType("evoker_spell", SpellType.NONE);
 
         // Pufferfish
         registerType("puff_state", null); // TODO: Make a puff state enum class

@@ -98,4 +98,9 @@ public class V1_15MetadataFactory extends V1_14MetadataFactory {
     public EntityData creeperCharged(boolean charged) {
         return newEntityData(16, EntityDataTypes.BOOLEAN, charged);
     }
+
+    @Override
+    public EntityData evokerSpell(int spell) {
+        return newEntityData(16, EntityDataTypes.BYTE, (byte) spell);
+    }
 }

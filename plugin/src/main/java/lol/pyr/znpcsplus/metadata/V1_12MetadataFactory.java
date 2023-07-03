@@ -24,4 +24,9 @@ public class V1_12MetadataFactory extends V1_11MetadataFactory {
     public EntityData createShoulderEntityRight(int index, ParrotVariant variant) {
         return newEntityData(index, EntityDataTypes.NBT, variant == ParrotVariant.NONE ? new NBTCompound() : new ParrotNBTCompound(variant).getTag());
     }
+
+    @Override
+    public EntityData evokerSpell(int spell) {
+        return newEntityData(13, EntityDataTypes.BYTE, (byte) spell);
+    }
 }

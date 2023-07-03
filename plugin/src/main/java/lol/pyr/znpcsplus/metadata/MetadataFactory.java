@@ -73,4 +73,7 @@ public interface MetadataFactory {
     EntityData endermanHeldBlock(int heldBlock);
     EntityData endermanScreaming(boolean screaming);
     EntityData endermanStaring(boolean staring);
+
+    // Evoker
+    EntityData evokerSpell(int spell);
 }

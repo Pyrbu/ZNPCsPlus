@@ -158,4 +158,9 @@ public class V1_17MetadataFactory extends V1_16MetadataFactory {
     public EntityData endermanStaring(boolean staring) {
         return newEntityData(18, EntityDataTypes.BOOLEAN, staring);
     }
+
+    @Override
+    public EntityData evokerSpell(int spell) {
+        return newEntityData(17, EntityDataTypes.BYTE, (byte) spell);
+    }
 }

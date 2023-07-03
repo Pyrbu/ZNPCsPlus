@@ -195,6 +195,8 @@ public class V1_8PacketFactory implements PacketFactory {
             );
             add(data, metadataFactory.endermanScreaming(properties.getProperty(propertyRegistry.getByName("enderman_screaming", Boolean.class))));
             add(data, metadataFactory.endermanStaring(properties.getProperty(propertyRegistry.getByName("enderman_staring", Boolean.class))));
+        } else if (entity.getType().equals(EntityTypes.EVOKER)) {
+            add(data, metadataFactory.evokerSpell(properties.getProperty(propertyRegistry.getByName("evoker_spell", SpellType.class)).ordinal()));
         }
 
         if (properties.getProperty(propertyRegistry.getByName("dinnerbone", Boolean.class))) {

@@ -193,7 +193,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_11)) return;
 
         register(builder(p, "evoker", EntityTypes.EVOKER)
-                .setHologramOffset(-0.025));
+                .setHologramOffset(-0.025)
+                .addProperties("evoker_spell"));
 
         register(builder(p, "llama", EntityTypes.LLAMA)
                 .setHologramOffset(-0.105));

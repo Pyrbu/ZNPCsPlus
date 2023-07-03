@@ -181,6 +181,11 @@ public class V1_8MetadataFactory implements MetadataFactory {
     }
 
     @Override
+    public EntityData evokerSpell(int spell) {
+        throw new UnsupportedOperationException("The evoker spell entity data isn't supported on this version");
+    }
+
+    @Override
     public EntityData silent(boolean enabled) {
         return newEntityData(4, EntityDataTypes.BYTE, (byte) (enabled ? 1 : 0));
     }
