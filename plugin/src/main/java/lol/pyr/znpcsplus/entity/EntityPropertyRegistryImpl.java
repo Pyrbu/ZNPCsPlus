@@ -131,11 +131,11 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("fox_sleeping", false);
         registerType("fox_faceplanted", false);
 
-        // Pufferfish
-        registerType("puff_state", null); // TODO: Make a puff state enum class
-
         // Frog
         registerType("frog_variant", FrogVariant.TEMPERATE);
+
+        // Pufferfish
+        registerType("puff_state", null); // TODO: Make a puff state enum class
 
         // Tropical Fish
         registerType("tropical_fish_variant", null); // TODO: Maybe make an enum class for this? its just an int on wiki.vg
