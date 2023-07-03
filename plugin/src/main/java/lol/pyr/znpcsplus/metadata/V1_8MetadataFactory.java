@@ -196,6 +196,11 @@ public class V1_8MetadataFactory implements MetadataFactory {
     }
 
     @Override
+    public EntityData frogVariant(int variant) {
+        throw new UnsupportedOperationException("The frog variant entity data isn't supported on this version");
+    }
+
+    @Override
     public EntityData silent(boolean enabled) {
         return newEntityData(4, EntityDataTypes.BYTE, (byte) (enabled ? 1 : 0));
     }

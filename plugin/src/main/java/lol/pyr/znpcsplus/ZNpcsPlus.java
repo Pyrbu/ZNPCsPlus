@@ -248,6 +248,7 @@ public class ZNpcsPlus extends JavaPlugin {
         versions.put(ServerVersion.V_1_15, LazyLoader.of(V1_15MetadataFactory::new));
         versions.put(ServerVersion.V_1_16, LazyLoader.of(V1_16MetadataFactory::new));
         versions.put(ServerVersion.V_1_17, LazyLoader.of(V1_17MetadataFactory::new));
+        versions.put(ServerVersion.V_1_19, LazyLoader.of(V1_19MetadataFactory::new));
 
         ServerVersion version = packetEvents.getServerManager().getVersion();
         if (versions.containsKey(version)) return versions.get(version).get();
@@ -286,6 +287,7 @@ public class ZNpcsPlus extends JavaPlugin {
         registerEnumParser(manager, ParrotVariant.class, incorrectUsageMessage);
         registerEnumParser(manager, SpellType.class, incorrectUsageMessage);
         registerEnumParser(manager, FoxVariant.class, incorrectUsageMessage);
+        registerEnumParser(manager, FrogVariant.class, incorrectUsageMessage);
 
         manager.registerCommand("npc", new MultiCommand(loadHelpMessage("root"))
                 .addSubcommand("create", new CreateCommand(npcRegistry, typeRegistry))

@@ -40,6 +40,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(ParrotVariant.class);
         registerEnumSerializer(SpellType.class);
         registerEnumSerializer(FoxVariant.class);
+        registerEnumSerializer(FrogVariant.class);
 
         registerType("glow", NamedTextColor.class);
         registerType("fire", false);
@@ -133,6 +134,9 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Pufferfish
         registerType("puff_state", null); // TODO: Make a puff state enum class
 
+        // Frog
+        registerType("frog_variant", FrogVariant.TEMPERATE);
+
         // Tropical Fish
         registerType("tropical_fish_variant", null); // TODO: Maybe make an enum class for this? its just an int on wiki.vg
 
@@ -147,9 +151,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // LLama
         registerType("carpet_color", DyeColor.class); // TODO
         registerType("llama_variant", 0); // TODO
-
-        // Frog
-        registerType("frog_type", null); // TODO: It has a custom type read on wiki.vg
 
         // Panda
         registerType("panda_sneezing", false); // TODO

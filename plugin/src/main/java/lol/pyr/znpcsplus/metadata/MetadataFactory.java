@@ -80,4 +80,7 @@ public interface MetadataFactory {
     // Fox
     EntityData foxVariant(int variant);
     EntityData foxProperties(boolean sitting, boolean crouching, boolean sleeping, boolean facePlanted);
+
+    // Frog
+    EntityData frogVariant(int variant);
 }

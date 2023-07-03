@@ -313,7 +313,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .addHandProperties());
 
         register(builder(p, "frog", EntityTypes.FROG)
-                .setHologramOffset(-1.475));
+                .setHologramOffset(-1.475)
+                .addProperties("frog_variant"));
 
         register(builder(p, "tadpole", EntityTypes.TADPOLE)
                 .setHologramOffset(-1.675));
