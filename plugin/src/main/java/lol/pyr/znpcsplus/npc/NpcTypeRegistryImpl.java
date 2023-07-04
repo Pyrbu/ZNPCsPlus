@@ -170,6 +170,9 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
         register(builder(p, "donkey", EntityTypes.DONKEY)
                 .setHologramOffset(-0.475));
 
+        register(builder(p, "mule", EntityTypes.MULE)
+                .setHologramOffset(-0.375));
+
         register(builder(p, "elder_guardian", EntityTypes.ELDER_GUARDIAN)
                 .setHologramOffset(0.0225));
 
