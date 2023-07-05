@@ -87,6 +87,10 @@ public interface MetadataFactory {
     // Ghast
     EntityData ghastAttacking(boolean attacking);
 
+    // Goat
+    EntityData goatHasLeftHorn(boolean hasLeftHorn);
+    EntityData goatHasRightHorn(boolean hasRightHorn);
+
     // Villager
     EntityData villagerData(int type, int profession, int level);
 }

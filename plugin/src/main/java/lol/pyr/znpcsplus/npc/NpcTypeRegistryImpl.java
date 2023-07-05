@@ -308,7 +308,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .setHologramOffset(-1.175));
 
         register(builder(p, "goat", EntityTypes.GOAT)
-                .setHologramOffset(-0.675));
+                .setHologramOffset(-0.675)
+                .addProperties("has_left_horn", "has_right_horn"));
 
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_19)) return;
 

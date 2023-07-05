@@ -206,6 +206,16 @@ public class V1_8MetadataFactory implements MetadataFactory {
     }
 
     @Override
+    public EntityData goatHasLeftHorn(boolean hasLeftHorn) {
+        throw new UnsupportedOperationException("The goat horn entity data isn't supported on this version");
+    }
+
+    @Override
+    public EntityData goatHasRightHorn(boolean hasRightHorn) {
+        throw new UnsupportedOperationException("The goat horn entity data isn't supported on this version");
+    }
+
+    @Override
     public EntityData villagerData(int type, int profession, int level) {
         return newEntityData(16, EntityDataTypes.INT, profession);
     }

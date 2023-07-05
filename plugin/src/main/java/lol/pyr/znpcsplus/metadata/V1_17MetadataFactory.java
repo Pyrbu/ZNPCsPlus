@@ -181,6 +181,16 @@ public class V1_17MetadataFactory extends V1_16MetadataFactory {
     }
 
     @Override
+    public EntityData goatHasLeftHorn(boolean hasLeftHorn) {
+        return newEntityData(18, EntityDataTypes.BOOLEAN, hasLeftHorn);
+    }
+
+    @Override
+    public EntityData goatHasRightHorn(boolean hasRightHorn) {
+        return newEntityData(19, EntityDataTypes.BOOLEAN, hasRightHorn);
+    }
+
+    @Override
     public EntityData villagerData(int type, int profession, int level) {
         return newEntityData(18, EntityDataTypes.VILLAGER_DATA, new VillagerData(type, profession, level));
     }

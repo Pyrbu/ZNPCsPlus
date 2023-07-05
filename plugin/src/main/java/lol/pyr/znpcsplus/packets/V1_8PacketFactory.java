@@ -217,6 +217,10 @@ public class V1_8PacketFactory implements PacketFactory {
         else if (entity.getType().equals(EntityTypes.GHAST)) {
             add(data, metadataFactory.ghastAttacking(properties.getProperty(propertyRegistry.getByName("attacking", Boolean.class))));
         }
+        else if (entity.getType().equals(EntityTypes.GOAT)) {
+            add(data, metadataFactory.goatHasLeftHorn(properties.getProperty(propertyRegistry.getByName("has_left_horn", Boolean.class))));
+            add(data, metadataFactory.goatHasRightHorn(properties.getProperty(propertyRegistry.getByName("has_right_horn", Boolean.class))));
+        }
         else if (entity.getType().equals(EntityTypes.VILLAGER)) {
             VillagerProfession profession = properties.getProperty(propertyRegistry.getByName("villager_profession", VillagerProfession.class));
             int professionId = profession.ordinal();

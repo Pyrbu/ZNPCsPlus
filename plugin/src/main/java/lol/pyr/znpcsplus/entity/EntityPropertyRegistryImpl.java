@@ -209,8 +209,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("piglin_charging_crossbow", false); // TODO
 
         // Goat
-        registerType("has_left_horn", true); // TODO
-        registerType("has_right_horn", true); // TODO
+        registerType("has_left_horn", true);
+        registerType("has_right_horn", true);
 
         // Vindicator
         registerType("celebrating", false); // TODO
