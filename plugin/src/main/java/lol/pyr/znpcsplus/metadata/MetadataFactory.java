@@ -86,4 +86,7 @@ public interface MetadataFactory {
 
     // Ghast
     EntityData ghastAttacking(boolean attacking);
+
+    // Villager
+    EntityData villagerData(int type, int profession, int level);
 }

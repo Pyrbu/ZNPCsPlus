@@ -41,6 +41,9 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(SpellType.class);
         registerEnumSerializer(FoxVariant.class);
         registerEnumSerializer(FrogVariant.class);
+        registerEnumSerializer(VillagerType.class);
+        registerEnumSerializer(VillagerProfession.class);
+        registerEnumSerializer(VillagerLevel.class);
 
         registerType("glow", NamedTextColor.class);
         registerType("fire", false);
@@ -186,8 +189,9 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("parrot_variant", 0); // TODO
 
         // Villager
-        registerType("villager_ethnicity", 1); // TODO: how tf does this work? probably need to look in mc src
-        registerType("villager_job", null); // TODO
+        registerType("villager_type", VillagerType.PLAINS);
+        registerType("villager_profession", VillagerProfession.NONE);
+        registerType("villager_level", VillagerLevel.STONE);
 
         // Show Golem
         registerType("pumpkin", true); // TODO

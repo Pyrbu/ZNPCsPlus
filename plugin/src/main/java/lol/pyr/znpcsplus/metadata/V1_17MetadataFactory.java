@@ -2,6 +2,7 @@ package lol.pyr.znpcsplus.metadata;
 
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
+import com.github.retrooper.packetevents.protocol.entity.villager.VillagerData;
 import lol.pyr.znpcsplus.util.CatVariant;
 import lol.pyr.znpcsplus.util.CreeperState;
 import lol.pyr.znpcsplus.util.ParrotVariant;
@@ -177,5 +178,10 @@ public class V1_17MetadataFactory extends V1_16MetadataFactory {
     @Override
     public EntityData ghastAttacking(boolean attacking) {
         return newEntityData(16, EntityDataTypes.BOOLEAN, attacking);
+    }
+
+    @Override
+    public EntityData villagerData(int type, int profession, int level) {
+        return newEntityData(18, EntityDataTypes.VILLAGER_DATA, new VillagerData(type, profession, level));
     }
 }

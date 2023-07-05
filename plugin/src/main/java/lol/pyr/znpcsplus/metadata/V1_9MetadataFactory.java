@@ -67,4 +67,9 @@ public class V1_9MetadataFactory extends V1_8MetadataFactory {
     public EntityData ghastAttacking(boolean attacking) {
         return newEntityData(11, EntityDataTypes.BOOLEAN, attacking);
     }
+
+    @Override
+    public EntityData villagerData(int type, int profession, int level) {
+        return newEntityData(12, EntityDataTypes.INT, profession);
+    }
 }

@@ -1,6 +1,8 @@
 package lol.pyr.znpcsplus.packets;
 
+import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.PacketEventsAPI;
+import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
@@ -214,6 +216,18 @@ public class V1_8PacketFactory implements PacketFactory {
         }
         else if (entity.getType().equals(EntityTypes.GHAST)) {
             add(data, metadataFactory.ghastAttacking(properties.getProperty(propertyRegistry.getByName("attacking", Boolean.class))));
+        }
+        else if (entity.getType().equals(EntityTypes.VILLAGER)) {
+            VillagerProfession profession = properties.getProperty(propertyRegistry.getByName("villager_profession", VillagerProfession.class));
+            int professionId = profession.ordinal();
+            if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_14)) {
+                professionId = profession.getLegacyId();
+            }
+            add(data, metadataFactory.villagerData(
+                    properties.getProperty(propertyRegistry.getByName("villager_type", VillagerType.class)).ordinal(),
+                    professionId,
+                    properties.getProperty(propertyRegistry.getByName("villager_level", VillagerLevel.class)).ordinal() + 1
+            ));
         }
 
         if (properties.getProperty(propertyRegistry.getByName("dinnerbone", Boolean.class))) {

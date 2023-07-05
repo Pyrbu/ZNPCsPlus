@@ -133,7 +133,7 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
 
         register(builder(p, "villager", EntityTypes.VILLAGER)
                 .setHologramOffset(-0.025)
-                .addProperties("hand"));
+                .addProperties("hand", "villager_type", "villager_profession", "villager_level"));
 
         register(builder(p, "witch", EntityTypes.WITCH)
                 .setHologramOffset(-0.025)

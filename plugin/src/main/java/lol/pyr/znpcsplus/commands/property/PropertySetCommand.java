@@ -128,6 +128,9 @@ public class PropertySetCommand implements CommandHandler {
                 if (type == SpellType.class) return context.suggestEnum(SpellType.values());
                 if (type == FoxVariant.class) return context.suggestEnum(FoxVariant.values());
                 if (type == FrogVariant.class) return context.suggestEnum(FrogVariant.values());
+                if (type == VillagerType.class) return context.suggestEnum(VillagerType.values());
+                if (type == VillagerProfession.class) return context.suggestEnum(VillagerProfession.values());
+                if (type == VillagerLevel.class) return context.suggestEnum(VillagerLevel.values());
             }
             else if (context.argSize() == 4) {
                 if (type == BlockState.class) {

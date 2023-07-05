@@ -206,6 +206,11 @@ public class V1_8MetadataFactory implements MetadataFactory {
     }
 
     @Override
+    public EntityData villagerData(int type, int profession, int level) {
+        return newEntityData(16, EntityDataTypes.INT, profession);
+    }
+
+    @Override
     public EntityData silent(boolean enabled) {
         return newEntityData(4, EntityDataTypes.BYTE, (byte) (enabled ? 1 : 0));
     }
