@@ -62,4 +62,9 @@ public class V1_9MetadataFactory extends V1_8MetadataFactory {
     public EntityData silent(boolean enabled) {
         return newEntityData(4, EntityDataTypes.BOOLEAN, enabled);
     }
+
+    @Override
+    public EntityData ghastAttacking(boolean attacking) {
+        return newEntityData(11, EntityDataTypes.BOOLEAN, attacking);
+    }
 }

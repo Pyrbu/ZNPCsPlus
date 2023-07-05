@@ -173,4 +173,9 @@ public class V1_17MetadataFactory extends V1_16MetadataFactory {
     public EntityData foxProperties(boolean sitting, boolean crouching, boolean sleeping, boolean facePlanted) {
         return newEntityData(18, EntityDataTypes.BYTE, (byte) ((sitting ? 0x01 : 0) | (crouching ? 0x04 : 0) | (sleeping ? 0x20 : 0) | (facePlanted ? 0x40 : 0)));
     }
+
+    @Override
+    public EntityData ghastAttacking(boolean attacking) {
+        return newEntityData(16, EntityDataTypes.BOOLEAN, attacking);
+    }
 }

@@ -80,4 +80,9 @@ public class V1_10MetadataFactory extends V1_9MetadataFactory {
     public EntityData creeperCharged(boolean charged) {
         return newEntityData(13, EntityDataTypes.BOOLEAN, charged);
     }
+
+    @Override
+    public EntityData ghastAttacking(boolean attacking) {
+        return newEntityData(12, EntityDataTypes.BOOLEAN, attacking);
+    }
 }

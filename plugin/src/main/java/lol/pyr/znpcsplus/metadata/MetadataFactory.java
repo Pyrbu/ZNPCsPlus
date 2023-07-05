@@ -83,4 +83,7 @@ public interface MetadataFactory {
 
     // Frog
     EntityData frogVariant(int variant);
+
+    // Ghast
+    EntityData ghastAttacking(boolean attacking);
 }

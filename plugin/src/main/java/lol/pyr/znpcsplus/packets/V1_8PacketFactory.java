@@ -208,8 +208,12 @@ public class V1_8PacketFactory implements PacketFactory {
                 properties.getProperty(propertyRegistry.getByName("fox_sleeping", Boolean.class)),
                 properties.getProperty(propertyRegistry.getByName("fox_faceplanted", Boolean.class))
             ));
-        } else if (entity.getType().equals(EntityTypes.FROG)) {
+        }
+        else if (entity.getType().equals(EntityTypes.FROG)) {
             add(data, metadataFactory.frogVariant(properties.getProperty(propertyRegistry.getByName("frog_variant", FrogVariant.class)).ordinal()));
+        }
+        else if (entity.getType().equals(EntityTypes.GHAST)) {
+            add(data, metadataFactory.ghastAttacking(properties.getProperty(propertyRegistry.getByName("attacking", Boolean.class))));
         }
 
         if (properties.getProperty(propertyRegistry.getByName("dinnerbone", Boolean.class))) {

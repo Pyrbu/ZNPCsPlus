@@ -77,7 +77,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .setHologramOffset(-1.675));
 
         register(builder(p, "ghast", EntityTypes.GHAST)
-                .setHologramOffset(2.025));
+                .setHologramOffset(2.025)
+                .addProperties("attacking"));
 
         register(builder(p, "giant", EntityTypes.GIANT)
                 .setHologramOffset(10.025)

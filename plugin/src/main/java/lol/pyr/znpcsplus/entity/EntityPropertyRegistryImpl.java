@@ -134,6 +134,9 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Frog
         registerType("frog_variant", FrogVariant.TEMPERATE);
 
+        // Ghast
+        registerType("attacking", false);
+
         // Pufferfish
         registerType("puff_state", null); // TODO: Make a puff state enum class
 
@@ -210,9 +213,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Wither
         registerType("invulnerable_time", 0); // TODO
-
-        // Ghast
-        registerType("attacking", false); // TODO
 
         // Phantom
         registerType("phantom_size", 0); // TODO
