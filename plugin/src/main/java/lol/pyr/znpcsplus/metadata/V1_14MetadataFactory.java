@@ -119,14 +119,14 @@ public class V1_14MetadataFactory extends V1_13MetadataFactory {
     public EntityData evokerSpell(int spell) {
         return newEntityData(15, EntityDataTypes.BYTE, (byte) spell);
     }
-}
 
-//    @Override
-//    public EntityData foxVariant(int variant) {
-//        return newEntityData(15, EntityDataTypes.INT, variant);
-//    }
-//
-//    @Override
-//    public EntityData foxProperties(boolean sitting, boolean crouching, boolean sleeping, boolean facePlanted) {
-//        return newEntityData(16, EntityDataTypes.BYTE, (byte) ((sitting ? 0x01 : 0) | (crouching ? 0x04 : 0) | (sleeping ? 0x20 : 0)));
-//    }
+    @Override
+    public EntityData foxVariant(int variant) {
+        return newEntityData(15, EntityDataTypes.INT, variant);
+    }
+
+    @Override
+    public EntityData foxProperties(boolean sitting, boolean crouching, boolean sleeping, boolean facePlanted) {
+        return newEntityData(16, EntityDataTypes.BYTE, (byte) ((sitting ? 0x01 : 0) | (crouching ? 0x04 : 0) | (sleeping ? 0x20 : 0)));
+    }
+}
