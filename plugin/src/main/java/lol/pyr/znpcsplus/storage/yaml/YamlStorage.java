@@ -14,12 +14,14 @@ import lol.pyr.znpcsplus.storage.NpcStorage;
 import lol.pyr.znpcsplus.util.NpcLocation;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class YamlStorage implements NpcStorage {
@@ -59,6 +61,10 @@ public class YamlStorage implements NpcStorage {
             if (properties != null) {
                 for (String key : properties.getKeys(false)) {
                     EntityPropertyImpl<?> property = propertyRegistry.getByName(key);
+                    if (property == null) {
+                        Bukkit.getLogger().log(Level.WARNING, "Unknown property '" + key + "' for npc '" + config.getString("id") + "'. skipping ...");
+                        continue;
+                    }
                     npc.UNSAFE_setProperty(property, property.deserialize(properties.getString(key)));
                 }
             }
