@@ -282,7 +282,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_16)) return;
 
         register(builder(p, "hoglin", EntityTypes.HOGLIN)
-                .setHologramOffset(-0.575));
+                .setHologramOffset(-0.575)
+                .addProperties("immune_to_zombification"));
 
         register(builder(p, "piglin", EntityTypes.PIGLIN)
                 .setHologramOffset(-1.0)

@@ -140,6 +140,12 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Ghast
         registerType("attacking", false);
 
+        // Guardian
+        registerType("is_elder", false); // TODO: ensure it only works till 1.10. Note: index is wrong on wiki.vg
+
+        // Piglin / Hoglin
+        registerType("immune_to_zombification", true);
+
         // Pufferfish
         registerType("puff_state", null); // TODO: Make a puff state enum class
 
@@ -200,9 +206,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("attach_direction", null); // TODO: make a direction enum
         registerType("shield_height", 0); // TODO: figure this out
         registerType("shulker_color", DyeColor.RED); // TODO
-
-        // Piglin / Hoglin
-        registerType("immune_to_zombification", false); // TODO
 
         // Piglin
         registerType("piglin_dancing", false); // TODO

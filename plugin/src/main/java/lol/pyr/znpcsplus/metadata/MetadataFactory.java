@@ -91,6 +91,11 @@ public interface MetadataFactory {
     EntityData goatHasLeftHorn(boolean hasLeftHorn);
     EntityData goatHasRightHorn(boolean hasRightHorn);
 
+    // Guardian
+
+    // Hoglin
+    EntityData hoglinImmuneToZombification(boolean immuneToZombification);
+
     // Villager
     EntityData villagerData(int type, int profession, int level);
 }

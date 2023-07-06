@@ -221,6 +221,12 @@ public class V1_8PacketFactory implements PacketFactory {
             add(data, metadataFactory.goatHasLeftHorn(properties.getProperty(propertyRegistry.getByName("has_left_horn", Boolean.class))));
             add(data, metadataFactory.goatHasRightHorn(properties.getProperty(propertyRegistry.getByName("has_right_horn", Boolean.class))));
         }
+        else if (entity.getType().equals(EntityTypes.GUARDIAN)) {
+            // TODO
+        }
+        else if (entity.getType().equals(EntityTypes.HOGLIN)) {
+            add(data, metadataFactory.hoglinImmuneToZombification(properties.getProperty(propertyRegistry.getByName("immune_to_zombification", Boolean.class))));
+        }
         else if (entity.getType().equals(EntityTypes.VILLAGER)) {
             VillagerProfession profession = properties.getProperty(propertyRegistry.getByName("villager_profession", VillagerProfession.class));
             int professionId = profession.ordinal();
