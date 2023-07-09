@@ -9,6 +9,7 @@ import lol.pyr.znpcsplus.util.*;
 import net.kyori.adventure.text.Component;
 import org.bukkit.DyeColor;
 
+@Deprecated
 public class V1_8MetadataFactory implements MetadataFactory {
     @Override
     public EntityData skinLayers(boolean cape, boolean jacket, boolean leftSleeve, boolean rightSleeve, boolean leftLeg, boolean rightLeg, boolean hat) {

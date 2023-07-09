@@ -1,29 +1,28 @@
 package lol.pyr.znpcsplus.packets;
 
-import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.PacketEventsAPI;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
-import com.github.retrooper.packetevents.protocol.item.ItemStack;
-import com.github.retrooper.packetevents.protocol.player.*;
+import com.github.retrooper.packetevents.protocol.player.ClientVersion;
+import com.github.retrooper.packetevents.protocol.player.Equipment;
+import com.github.retrooper.packetevents.protocol.player.GameMode;
+import com.github.retrooper.packetevents.protocol.player.UserProfile;
 import com.github.retrooper.packetevents.util.Vector3d;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.*;
+import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
+import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
-import lol.pyr.znpcsplus.metadata.MetadataFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.skin.BaseSkinDescriptor;
-import lol.pyr.znpcsplus.util.*;
+import lol.pyr.znpcsplus.util.NpcLocation;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.bukkit.Color;
-import org.bukkit.DyeColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -32,14 +31,12 @@ import java.util.concurrent.CompletableFuture;
 
 public class V1_8PacketFactory implements PacketFactory {
     protected final TaskScheduler scheduler;
-    protected final MetadataFactory metadataFactory;
     protected final PacketEventsAPI<Plugin> packetEvents;
     protected final EntityPropertyRegistryImpl propertyRegistry;
     protected final LegacyComponentSerializer textSerializer;
 
-    public V1_8PacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer) {
+    public V1_8PacketFactory(TaskScheduler scheduler, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer) {
         this.scheduler = scheduler;
-        this.metadataFactory = metadataFactory;
         this.packetEvents = packetEvents;
         this.propertyRegistry = propertyRegistry;
         this.textSerializer = textSerializer;
@@ -48,7 +45,7 @@ public class V1_8PacketFactory implements PacketFactory {
     @Override
     public void spawnPlayer(Player player, PacketEntity entity, PropertyHolder properties) {
         addTabPlayer(player, entity, properties).thenAccept(ignored -> {
-            createTeam(player, entity, properties);
+            createTeam(player, entity, properties.getProperty(propertyRegistry.getByName("glow", NamedTextColor.class)));
             NpcLocation location = entity.getLocation();
             sendPacket(player, new WrapperPlayServerSpawnPlayer(entity.getEntityId(),
                     entity.getUuid(), npcLocationToVector(location), location.getYaw(), location.getPitch(), Collections.emptyList()));
@@ -69,7 +66,7 @@ public class V1_8PacketFactory implements PacketFactory {
                 new WrapperPlayServerSpawnEntity(entity.getEntityId(), Optional.of(entity.getUuid()), entity.getType(), npcLocationToVector(location),
                         location.getPitch(), location.getYaw(), location.getYaw(), 0, Optional.empty()));
         sendAllMetadata(player, entity, properties);
-        createTeam(player, entity, properties);
+        createTeam(player, entity, properties.getProperty(propertyRegistry.getByName("glow", NamedTextColor.class)));
     }
 
     protected Vector3d npcLocationToVector(NpcLocation location) {
@@ -111,12 +108,12 @@ public class V1_8PacketFactory implements PacketFactory {
     }
 
     @Override
-    public void createTeam(Player player, PacketEntity entity, PropertyHolder properties) {
+    public void createTeam(Player player, PacketEntity entity, NamedTextColor glowColor) {
         sendPacket(player, new WrapperPlayServerTeams("npc_team_" + entity.getEntityId(), WrapperPlayServerTeams.TeamMode.CREATE, new WrapperPlayServerTeams.ScoreBoardTeamInfo(
                 Component.empty(), Component.empty(), Component.empty(),
                 WrapperPlayServerTeams.NameTagVisibility.NEVER,
                 WrapperPlayServerTeams.CollisionRule.NEVER,
-                properties.hasProperty(propertyRegistry.getByName("glow")) ? properties.getProperty(propertyRegistry.getByName("glow", NamedTextColor.class)) : NamedTextColor.WHITE,
+                glowColor == null ? NamedTextColor.WHITE : glowColor,
                 WrapperPlayServerTeams.OptionData.NONE
         )));
         sendPacket(player, new WrapperPlayServerTeams("npc_team_" + entity.getEntityId(), WrapperPlayServerTeams.TeamMode.ADD_ENTITIES, (WrapperPlayServerTeams.ScoreBoardTeamInfo) null,
@@ -128,21 +125,20 @@ public class V1_8PacketFactory implements PacketFactory {
         sendPacket(player, new WrapperPlayServerTeams("npc_team_" + entity.getEntityId(), WrapperPlayServerTeams.TeamMode.REMOVE, (WrapperPlayServerTeams.ScoreBoardTeamInfo) null));
     }
 
-    @Override
-    public Map<Integer, EntityData> generateMetadata(Player player, PacketEntity entity, PropertyHolder properties) {
-        HashMap<Integer, EntityData> data = new HashMap<>();
-        add(data, metadataFactory.effects(
+        /*
+        List<EntityData> data = new ArrayList<>();
+        data.add(metadataFactory.effects(
                 properties.getProperty(propertyRegistry.getByName("fire", Boolean.class)),
                 false,
                 properties.getProperty(propertyRegistry.getByName("invisible", Boolean.class)),
                 false,
                 properties.getProperty(propertyRegistry.getByName("using_item", Boolean.class))
         ));
-        add(data, metadataFactory.silent(properties.getProperty(propertyRegistry.getByName("silent", Boolean.class))));
-        add(data, metadataFactory.potionColor(properties.getProperty(propertyRegistry.getByName("potion_color", Color.class)).asRGB()));
-        add(data, metadataFactory.potionAmbient(properties.getProperty(propertyRegistry.getByName("potion_ambient", Boolean.class))));
+        data.add(metadataFactory.silent(properties.getProperty(propertyRegistry.getByName("silent", Boolean.class))));
+        data.add(metadataFactory.potionColor(properties.getProperty(propertyRegistry.getByName("potion_color", Color.class)).asRGB()));
+        data.add(metadataFactory.potionAmbient(properties.getProperty(propertyRegistry.getByName("potion_ambient", Boolean.class))));
         if (entity.getType().equals(EntityTypes.PLAYER)) {
-            add(data, metadataFactory.skinLayers(
+            data.add(metadataFactory.skinLayers(
                     properties.getProperty(propertyRegistry.getByName("skin_cape", Boolean.class)),
                     properties.getProperty(propertyRegistry.getByName("skin_jacket", Boolean.class)),
                     properties.getProperty(propertyRegistry.getByName("skin_left_sleeve", Boolean.class)),
@@ -151,60 +147,60 @@ public class V1_8PacketFactory implements PacketFactory {
                     properties.getProperty(propertyRegistry.getByName("skin_right_leg", Boolean.class)),
                     properties.getProperty(propertyRegistry.getByName("skin_hat", Boolean.class))
             ));
-            add(data, metadataFactory.shoulderEntityLeft(properties.getProperty(propertyRegistry.getByName("shoulder_entity_left", ParrotVariant.class))));
-            add(data, metadataFactory.shoulderEntityRight(properties.getProperty(propertyRegistry.getByName("shoulder_entity_right", ParrotVariant.class))));
+            data.add(metadataFactory.shoulderEntityLeft(properties.getProperty(propertyRegistry.getByName("shoulder_entity_left", ParrotVariant.class))));
+            data.add(metadataFactory.shoulderEntityRight(properties.getProperty(propertyRegistry.getByName("shoulder_entity_right", ParrotVariant.class))));
         }
         else if (entity.getType().equals(EntityTypes.ARMOR_STAND)) {
-            add(data, metadataFactory.armorStandProperties(
+            data.add(metadataFactory.armorStandProperties(
                     properties.getProperty(propertyRegistry.getByName("small", Boolean.class)),
                     properties.getProperty(propertyRegistry.getByName("arms", Boolean.class)),
                     !properties.getProperty(propertyRegistry.getByName("base_plate", Boolean.class))
             ));
-            add(data, metadataFactory.armorStandHeadRotation(properties.getProperty(propertyRegistry.getByName("head_rotation", Vector3f.class))));
-            add(data, metadataFactory.armorStandBodyRotation(properties.getProperty(propertyRegistry.getByName("body_rotation", Vector3f.class))));
-            add(data, metadataFactory.armorStandLeftArmRotation(properties.getProperty(propertyRegistry.getByName("left_arm_rotation", Vector3f.class))));
-            add(data, metadataFactory.armorStandRightArmRotation(properties.getProperty(propertyRegistry.getByName("right_arm_rotation", Vector3f.class))));
-            add(data, metadataFactory.armorStandLeftLegRotation(properties.getProperty(propertyRegistry.getByName("left_leg_rotation", Vector3f.class))));
-            add(data, metadataFactory.armorStandRightLegRotation(properties.getProperty(propertyRegistry.getByName("right_leg_rotation", Vector3f.class))));
+            data.add(metadataFactory.armorStandHeadRotation(properties.getProperty(propertyRegistry.getByName("head_rotation", Vector3f.class))));
+            data.add(metadataFactory.armorStandBodyRotation(properties.getProperty(propertyRegistry.getByName("body_rotation", Vector3f.class))));
+            data.add(metadataFactory.armorStandLeftArmRotation(properties.getProperty(propertyRegistry.getByName("left_arm_rotation", Vector3f.class))));
+            data.add(metadataFactory.armorStandRightArmRotation(properties.getProperty(propertyRegistry.getByName("right_arm_rotation", Vector3f.class))));
+            data.add(metadataFactory.armorStandLeftLegRotation(properties.getProperty(propertyRegistry.getByName("left_leg_rotation", Vector3f.class))));
+            data.add(metadataFactory.armorStandRightLegRotation(properties.getProperty(propertyRegistry.getByName("right_leg_rotation", Vector3f.class))));
         }
         else if (entity.getType().equals(EntityTypes.AXOLOTL)) {
-            add(data, metadataFactory.axolotlVariant(properties.getProperty(propertyRegistry.getByName("axolotl_variant", Integer.class))));
-            add(data, metadataFactory.playingDead(properties.getProperty(propertyRegistry.getByName("playing_dead", Boolean.class))));
+            data.add(metadataFactory.axolotlVariant(properties.getProperty(propertyRegistry.getByName("axolotl_variant", Integer.class))));
+            data.add(metadataFactory.playingDead(properties.getProperty(propertyRegistry.getByName("playing_dead", Boolean.class))));
         }
         else if (entity.getType().equals(EntityTypes.BAT)) {
-            add(data, metadataFactory.batHanging(properties.getProperty(propertyRegistry.getByName("hanging", Boolean.class))));
+            data.add(metadataFactory.batHanging(properties.getProperty(propertyRegistry.getByName("hanging", Boolean.class))));
         }
         else if (entity.getType().equals(EntityTypes.BEE)) {
-            add(data, metadataFactory.beeAngry(properties.getProperty(propertyRegistry.getByName("angry", Boolean.class))));
-            add(data, metadataFactory.beeHasNectar(properties.getProperty(propertyRegistry.getByName("has_nectar", Boolean.class))));
+            data.add(metadataFactory.beeAngry(properties.getProperty(propertyRegistry.getByName("angry", Boolean.class))));
+            data.add(metadataFactory.beeHasNectar(properties.getProperty(propertyRegistry.getByName("has_nectar", Boolean.class))));
         }
         else if (entity.getType().equals(EntityTypes.BLAZE)) {
-            add(data, metadataFactory.blazeOnFire(properties.getProperty(propertyRegistry.getByName("blaze_on_fire", Boolean.class))));
+            data.add(metadataFactory.blazeOnFire(properties.getProperty(propertyRegistry.getByName("blaze_on_fire", Boolean.class))));
         }
         else if (entity.getType().equals(EntityTypes.CAT)) {
-            add(data, metadataFactory.catVariant(properties.getProperty(propertyRegistry.getByName("cat_variant", CatVariant.class))));
-            add(data, metadataFactory.catLying(properties.getProperty(propertyRegistry.getByName("cat_lying", Boolean.class))));
-            add(data, metadataFactory.catCollarColor(properties.getProperty(propertyRegistry.getByName("cat_collar_color", DyeColor.class))));
-            add(data, metadataFactory.catTamed(properties.hasProperty(propertyRegistry.getByName("cat_collar_color", DyeColor.class))));
+            data.add(metadataFactory.catVariant(properties.getProperty(propertyRegistry.getByName("cat_variant", CatVariant.class))));
+            data.add(metadataFactory.catLying(properties.getProperty(propertyRegistry.getByName("cat_lying", Boolean.class))));
+            data.add(metadataFactory.catCollarColor(properties.getProperty(propertyRegistry.getByName("cat_collar_color", DyeColor.class))));
+            data.add(metadataFactory.catTamed(properties.hasProperty(propertyRegistry.getByName("cat_collar_color", DyeColor.class))));
         }
         else if (entity.getType().equals(EntityTypes.CREEPER)) {
-            add(data, metadataFactory.creeperState(properties.getProperty(propertyRegistry.getByName("creeper_state", CreeperState.class))));
-            add(data, metadataFactory.creeperCharged(properties.getProperty(propertyRegistry.getByName("creeper_charged", Boolean.class))));
+            data.add(metadataFactory.creeperState(properties.getProperty(propertyRegistry.getByName("creeper_state", CreeperState.class))));
+            data.add(metadataFactory.creeperCharged(properties.getProperty(propertyRegistry.getByName("creeper_charged", Boolean.class))));
         }
         else if (entity.getType().equals(EntityTypes.ENDERMAN)) {
-            add(data, metadataFactory.endermanHeldBlock(
+            data.add(metadataFactory.endermanHeldBlock(
                     properties.getProperty(propertyRegistry.getByName("enderman_held_block", BlockState.class)).getGlobalId())
             );
-            add(data, metadataFactory.endermanScreaming(properties.getProperty(propertyRegistry.getByName("enderman_screaming", Boolean.class))));
-            add(data, metadataFactory.endermanStaring(properties.getProperty(propertyRegistry.getByName("enderman_staring", Boolean.class))));
+            data.add(metadataFactory.endermanScreaming(properties.getProperty(propertyRegistry.getByName("enderman_screaming", Boolean.class))));
+            data.add(metadataFactory.endermanStaring(properties.getProperty(propertyRegistry.getByName("enderman_staring", Boolean.class))));
         }
         else if (entity.getType().equals(EntityTypes.EVOKER)) {
-            add(data, metadataFactory.evokerSpell(properties.getProperty(propertyRegistry.getByName("evoker_spell", SpellType.class)).ordinal()));
+            data.add(metadataFactory.evokerSpell(properties.getProperty(propertyRegistry.getByName("evoker_spell", SpellType.class)).ordinal()));
         }
         else if (entity.getType().equals(EntityTypes.FOX)) {
             // Not sure if this should be in here or in 1.14 PacketFactory
-            add(data, metadataFactory.foxVariant(properties.getProperty(propertyRegistry.getByName("fox_variant", FoxVariant.class)).ordinal()));
-            add(data, metadataFactory.foxProperties(
+            data.add(metadataFactory.foxVariant(properties.getProperty(propertyRegistry.getByName("fox_variant", FoxVariant.class)).ordinal()));
+            data.add(metadataFactory.foxProperties(
                 properties.getProperty(propertyRegistry.getByName("fox_sitting", Boolean.class)),
                 properties.getProperty(propertyRegistry.getByName("fox_crouching", Boolean.class)),
                 properties.getProperty(propertyRegistry.getByName("fox_sleeping", Boolean.class)),
@@ -212,20 +208,20 @@ public class V1_8PacketFactory implements PacketFactory {
             ));
         }
         else if (entity.getType().equals(EntityTypes.FROG)) {
-            add(data, metadataFactory.frogVariant(properties.getProperty(propertyRegistry.getByName("frog_variant", FrogVariant.class)).ordinal()));
+            data.add(metadataFactory.frogVariant(properties.getProperty(propertyRegistry.getByName("frog_variant", FrogVariant.class)).ordinal()));
         }
         else if (entity.getType().equals(EntityTypes.GHAST)) {
-            add(data, metadataFactory.ghastAttacking(properties.getProperty(propertyRegistry.getByName("attacking", Boolean.class))));
+            data.add(metadataFactory.ghastAttacking(properties.getProperty(propertyRegistry.getByName("attacking", Boolean.class))));
         }
         else if (entity.getType().equals(EntityTypes.GOAT)) {
-            add(data, metadataFactory.goatHasLeftHorn(properties.getProperty(propertyRegistry.getByName("has_left_horn", Boolean.class))));
-            add(data, metadataFactory.goatHasRightHorn(properties.getProperty(propertyRegistry.getByName("has_right_horn", Boolean.class))));
+            data.add(metadataFactory.goatHasLeftHorn(properties.getProperty(propertyRegistry.getByName("has_left_horn", Boolean.class))));
+            data.add(metadataFactory.goatHasRightHorn(properties.getProperty(propertyRegistry.getByName("has_right_horn", Boolean.class))));
         }
         else if (entity.getType().equals(EntityTypes.GUARDIAN)) {
             // TODO
         }
         else if (entity.getType().equals(EntityTypes.HOGLIN)) {
-            add(data, metadataFactory.hoglinImmuneToZombification(properties.getProperty(propertyRegistry.getByName("immune_to_zombification", Boolean.class))));
+            data.add(metadataFactory.hoglinImmuneToZombification(properties.getProperty(propertyRegistry.getByName("immune_to_zombification", Boolean.class))));
         }
         else if (entity.getType().equals(EntityTypes.VILLAGER)) {
             VillagerProfession profession = properties.getProperty(propertyRegistry.getByName("villager_profession", VillagerProfession.class));
@@ -233,7 +229,7 @@ public class V1_8PacketFactory implements PacketFactory {
             if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_14)) {
                 professionId = profession.getLegacyId();
             }
-            add(data, metadataFactory.villagerData(
+            data.add(metadataFactory.villagerData(
                     properties.getProperty(propertyRegistry.getByName("villager_type", VillagerType.class)).ordinal(),
                     professionId,
                     properties.getProperty(propertyRegistry.getByName("villager_level", VillagerLevel.class)).ordinal() + 1
@@ -241,47 +237,31 @@ public class V1_8PacketFactory implements PacketFactory {
         }
 
         if (properties.getProperty(propertyRegistry.getByName("dinnerbone", Boolean.class))) {
-            add(data, metadataFactory.name(Component.text("Dinnerbone")));
+            data.add(metadataFactory.name(Component.text("Dinnerbone")));
         }
         else if (properties.hasProperty(propertyRegistry.getByName("name"))) {
-            add(data, metadataFactory.name(PapiUtil.set(textSerializer, player, properties.getProperty(propertyRegistry.getByName("name", Component.class)))));
-            add(data, metadataFactory.nameShown());
+            data.add(metadataFactory.name(PapiUtil.set(textSerializer, player, properties.getProperty(propertyRegistry.getByName("name", Component.class)))));
+            data.add(metadataFactory.nameShown());
         }
         return data;
-    }
+         */
 
     @Override
     public void sendAllMetadata(Player player, PacketEntity entity, PropertyHolder properties) {
-        sendMetadata(player, entity, new ArrayList<>(generateMetadata(player, entity, properties).values()));
-        sendEquipment(player, entity, properties);
+        Map<Integer, EntityData> datas = new HashMap<>();
+        for (EntityProperty<?> property : properties.getAppliedProperties())
+            ((EntityPropertyImpl<?>) property).UNSAFE_update(properties.getProperty(property), player, entity, false, datas);
+        sendMetadata(player, entity, new ArrayList<>(datas.values()));
     }
 
     @Override
     public void sendMetadata(Player player, PacketEntity entity, List<EntityData> data) {
-        packetEvents.getPlayerManager().sendPacket(player, new WrapperPlayServerEntityMetadata(entity.getEntityId(), data));
+        sendPacket(player, new WrapperPlayServerEntityMetadata(entity.getEntityId(), data));
     }
 
     @Override
-    public void sendEquipment(Player player, PacketEntity entity, PropertyHolder properties) {
-        for (Equipment equipment : generateEquipments(properties))
-            sendPacket(player, new WrapperPlayServerEntityEquipment(entity.getEntityId(), Collections.singletonList(equipment)));
-    }
-
-    protected List<Equipment> generateEquipments(PropertyHolder properties) {
-        HashMap<String, EquipmentSlot> equipmentSlotMap = new HashMap<>();
-        equipmentSlotMap.put("helmet", EquipmentSlot.HELMET);
-        equipmentSlotMap.put("chestplate", EquipmentSlot.CHEST_PLATE);
-        equipmentSlotMap.put("leggings", EquipmentSlot.LEGGINGS);
-        equipmentSlotMap.put("boots", EquipmentSlot.BOOTS);
-        equipmentSlotMap.put("hand", EquipmentSlot.MAIN_HAND);
-        equipmentSlotMap.put("offhand", EquipmentSlot.OFF_HAND);
-        List<Equipment> equipements = new ArrayList<>();
-
-        for (Map.Entry<String, EquipmentSlot> entry : equipmentSlotMap.entrySet()) {
-            if (!properties.hasProperty(propertyRegistry.getByName(entry.getKey()))) continue;
-            equipements.add(new Equipment(entry.getValue(), properties.getProperty(propertyRegistry.getByName(entry.getKey(), ItemStack.class))));
-        }
-        return equipements;
+    public void sendEquipment(Player player, PacketEntity entity, Equipment equipment) {
+        sendPacket(player, new WrapperPlayServerEntityEquipment(entity.getEntityId(), Collections.singletonList(equipment)));
     }
 
     protected void sendPacket(Player player, PacketWrapper<?> packet) {

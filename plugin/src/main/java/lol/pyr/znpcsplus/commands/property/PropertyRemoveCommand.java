@@ -28,7 +28,7 @@ public class PropertyRemoveCommand implements CommandHandler {
         NpcImpl npc = entry.getNpc();
         EntityPropertyImpl<?> property = context.parse(EntityPropertyImpl.class);
         if (!npc.hasProperty(property)) context.halt(Component.text("This npc doesn't have the " + property.getName() + " property set", NamedTextColor.RED));
-        npc.removeProperty(property);
+        npc.setProperty(property, null);
         context.send(Component.text("Removed property " + property.getName() + " from NPC " + entry.getId(), NamedTextColor.GREEN));
     }
 

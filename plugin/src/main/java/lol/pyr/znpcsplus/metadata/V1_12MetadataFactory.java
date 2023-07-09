@@ -6,6 +6,7 @@ import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
 import lol.pyr.znpcsplus.entity.ParrotNBTCompound;
 import lol.pyr.znpcsplus.util.ParrotVariant;
 
+@Deprecated
 public class V1_12MetadataFactory extends V1_11MetadataFactory {
     @Override
     public EntityData shoulderEntityLeft(ParrotVariant variant) {

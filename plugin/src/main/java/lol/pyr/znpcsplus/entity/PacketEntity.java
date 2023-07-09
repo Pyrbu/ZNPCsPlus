@@ -66,11 +66,6 @@ public class PacketEntity {
         packetFactory.sendAllMetadata(player, this, properties);
     }
 
-    public void remakeTeam(Player player) {
-        packetFactory.removeTeam(player, this);
-        packetFactory.createTeam(player, this, properties);
-    }
-
     private static int reserveEntityID() {
         if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_14)) {
             return Reflections.ATOMIC_ENTITY_ID_FIELD.get().incrementAndGet();

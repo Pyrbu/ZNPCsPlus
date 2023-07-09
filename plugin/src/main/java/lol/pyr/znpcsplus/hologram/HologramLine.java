@@ -3,6 +3,7 @@ package lol.pyr.znpcsplus.hologram;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
+import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.util.NpcLocation;
@@ -10,13 +11,19 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class HologramLine implements PropertyHolder {
     private Component text;
     private final PacketEntity armorStand;
+    private final Set<EntityProperty<?>> properties;
 
-    public HologramLine(PacketFactory packetFactory, NpcLocation location, Component text) {
+    public HologramLine(EntityPropertyRegistryImpl propertyRegistry, PacketFactory packetFactory, NpcLocation location, Component text) {
         this.text = text;
+        this.properties = new HashSet<>();
+        this.properties.add(propertyRegistry.getByName("name"));
+        this.properties.add(propertyRegistry.getByName("invisible"));
         armorStand = new PacketEntity(packetFactory, this, EntityTypes.ARMOR_STAND, location);
     }
 
@@ -60,5 +67,10 @@ public class HologramLine implements PropertyHolder {
     @Override
     public <T> void setProperty(EntityProperty<T> key, T value) {
         throw new UnsupportedOperationException("Can't set properties on a hologram");
+    }
+
+    @Override
+    public Set<EntityProperty<?>> getAppliedProperties() {
+        return properties;
     }
 }

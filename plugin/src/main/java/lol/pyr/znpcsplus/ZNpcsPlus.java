@@ -31,9 +31,11 @@ import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.interaction.ActionRegistry;
 import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
-import lol.pyr.znpcsplus.metadata.*;
 import lol.pyr.znpcsplus.npc.*;
-import lol.pyr.znpcsplus.packets.*;
+import lol.pyr.znpcsplus.packets.PacketFactory;
+import lol.pyr.znpcsplus.packets.V1_17PacketFactory;
+import lol.pyr.znpcsplus.packets.V1_19PacketFactory;
+import lol.pyr.znpcsplus.packets.V1_8PacketFactory;
 import lol.pyr.znpcsplus.parsers.*;
 import lol.pyr.znpcsplus.scheduling.FoliaScheduler;
 import lol.pyr.znpcsplus.scheduling.SpigotScheduler;
@@ -128,8 +130,8 @@ public class ZNpcsPlus extends JavaPlugin {
         ConfigManager configManager = new ConfigManager(getDataFolder());
         MojangSkinCache skinCache = new MojangSkinCache(configManager);
         EntityPropertyRegistryImpl propertyRegistry = new EntityPropertyRegistryImpl(skinCache);
-        MetadataFactory metadataFactory = setupMetadataFactory();
-        PacketFactory packetFactory = setupPacketFactory(scheduler, metadataFactory, propertyRegistry);
+        PacketFactory packetFactory = setupPacketFactory(scheduler, propertyRegistry);
+        propertyRegistry.registerTypes(packetFactory);
         BungeeConnector bungeeConnector = new BungeeConnector(this);
 
         ActionRegistry actionRegistry = new ActionRegistry();
@@ -203,7 +205,6 @@ public class ZNpcsPlus extends JavaPlugin {
                 npc.getHologram().addLineComponent(Component.text("Hello, World!", TextColor.color(255, 0, 0)));
                 npc.getHologram().addLineComponent(Component.text("Hello, World!", TextColor.color(0, 255, 0)));
                 npc.getHologram().addLineComponent(Component.text("Hello, World!", TextColor.color(0, 0, 255)));
-                npc.setProperty(propertyRegistry.getByName("look", Boolean.class), true);
                 i++;
             }
         }
@@ -216,15 +217,11 @@ public class ZNpcsPlus extends JavaPlugin {
         PacketEvents.getAPI().terminate();
     }
 
-    private PacketFactory setupPacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory, EntityPropertyRegistryImpl propertyRegistry) {
+    private PacketFactory setupPacketFactory(TaskScheduler scheduler, EntityPropertyRegistryImpl propertyRegistry) {
         HashMap<ServerVersion, LazyLoader<? extends PacketFactory>> versions = new HashMap<>();
-        versions.put(ServerVersion.V_1_8, LazyLoader.of(() -> new V1_8PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry, textSerializer)));
-        versions.put(ServerVersion.V_1_9, LazyLoader.of(() -> new V1_9PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry, textSerializer)));
-        versions.put(ServerVersion.V_1_10, LazyLoader.of(() -> new V1_10PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry, textSerializer)));
-        versions.put(ServerVersion.V_1_14, LazyLoader.of(() -> new V1_14PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry, textSerializer)));
-        versions.put(ServerVersion.V_1_16, LazyLoader.of(() -> new V1_16PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry, textSerializer)));
-        versions.put(ServerVersion.V_1_17, LazyLoader.of(() -> new V1_17PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry, textSerializer)));
-        versions.put(ServerVersion.V_1_19, LazyLoader.of(() -> new V1_19PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry, textSerializer)));
+        versions.put(ServerVersion.V_1_8, LazyLoader.of(() -> new V1_8PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer)));
+        versions.put(ServerVersion.V_1_17, LazyLoader.of(() -> new V1_17PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer)));
+        versions.put(ServerVersion.V_1_19, LazyLoader.of(() -> new V1_19PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer)));
 
         ServerVersion version = packetEvents.getServerManager().getVersion();
         if (versions.containsKey(version)) return versions.get(version).get();
@@ -235,31 +232,6 @@ public class ZNpcsPlus extends JavaPlugin {
         }
         throw new RuntimeException("Unsupported version!");
     }
-
-    private MetadataFactory setupMetadataFactory() {
-        HashMap<ServerVersion, LazyLoader<? extends MetadataFactory>> versions = new HashMap<>();
-        versions.put(ServerVersion.V_1_8, LazyLoader.of(V1_8MetadataFactory::new));
-        versions.put(ServerVersion.V_1_9, LazyLoader.of(V1_9MetadataFactory::new));
-        versions.put(ServerVersion.V_1_10, LazyLoader.of(V1_10MetadataFactory::new));
-        versions.put(ServerVersion.V_1_11, LazyLoader.of(V1_11MetadataFactory::new));
-        versions.put(ServerVersion.V_1_12, LazyLoader.of(V1_12MetadataFactory::new));
-        versions.put(ServerVersion.V_1_13, LazyLoader.of(V1_13MetadataFactory::new));
-        versions.put(ServerVersion.V_1_14, LazyLoader.of(V1_14MetadataFactory::new));
-        versions.put(ServerVersion.V_1_15, LazyLoader.of(V1_15MetadataFactory::new));
-        versions.put(ServerVersion.V_1_16, LazyLoader.of(V1_16MetadataFactory::new));
-        versions.put(ServerVersion.V_1_17, LazyLoader.of(V1_17MetadataFactory::new));
-        versions.put(ServerVersion.V_1_19, LazyLoader.of(V1_19MetadataFactory::new));
-
-        ServerVersion version = packetEvents.getServerManager().getVersion();
-        if (versions.containsKey(version)) return versions.get(version).get();
-        for (ServerVersion v : ServerVersion.reversedValues()) {
-            if (v.isNewerThan(version)) continue;
-            if (!versions.containsKey(v)) continue;
-            return versions.get(v).get();
-        }
-        throw new RuntimeException("Unsupported version!");
-    }
-
 
     private void registerCommands(NpcRegistryImpl npcRegistry, MojangSkinCache skinCache, BukkitAudiences adventure,
                                   ActionRegistry actionRegistry, NpcTypeRegistryImpl typeRegistry,

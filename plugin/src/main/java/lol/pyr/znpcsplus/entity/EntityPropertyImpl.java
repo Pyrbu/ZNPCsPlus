@@ -1,36 +1,29 @@
 package lol.pyr.znpcsplus.entity;
 
+import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
+import com.github.retrooper.packetevents.protocol.entity.data.EntityDataType;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
-import lol.pyr.znpcsplus.api.entity.PropertyHolder;
+import org.bukkit.entity.Player;
 
-public class EntityPropertyImpl<T> implements EntityProperty<T> {
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public abstract class EntityPropertyImpl<T> implements EntityProperty<T> {
     private final String name;
     private final T defaultValue;
     private final Class<T> clazz;
-    private final PropertySerializer<T> serializer;
 
-    protected EntityPropertyImpl(String name, T defaultValue, Class<T> clazz, PropertySerializer<T> serializer) {
+    protected EntityPropertyImpl(String name, T defaultValue, Class<T> clazz) {
         this.name = name.toLowerCase();
         this.defaultValue = defaultValue;
         this.clazz = clazz;
-        this.serializer = serializer;
     }
 
     @Override
     public String getName() {
         return name;
-    }
-
-    public String serialize(PropertyHolder holder) {
-        return serialize(holder.getProperty(this));
-    }
-
-    public String serialize(T value) {
-        return serializer.serialize(value);
-    }
-
-    public T deserialize(String str) {
-        return serializer.deserialize(str);
     }
 
     @Override
@@ -40,5 +33,22 @@ public class EntityPropertyImpl<T> implements EntityProperty<T> {
 
     public Class<T> getType() {
         return clazz;
+    }
+
+    protected static <V> EntityData newEntityData(int index, EntityDataType<V> type, V value) {
+        return new EntityData(index, type, value);
+    }
+
+    public List<EntityData> makeStandaloneData(T value, Player player, PacketEntity packetEntity, boolean isSpawned) {
+        Map<Integer, EntityData> map = new HashMap<>();
+        apply(value, player, packetEntity, isSpawned, map);
+        return new ArrayList<>(map.values());
+    }
+
+    abstract public void apply(T value, Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData> properties);
+
+    @SuppressWarnings("unchecked")
+    public void UNSAFE_update(Object value, Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData> properties) {
+        apply((T) value, player, entity, isSpawned, properties);
     }
 }

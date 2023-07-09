@@ -100,7 +100,7 @@ public class ZNpcImporter implements DataImporter {
             ZNpcsLocation oldLoc = model.getLocation();
             NpcLocation location = new NpcLocation(oldLoc.getX(), oldLoc.getY(), oldLoc.getZ(), oldLoc.getYaw(), oldLoc.getPitch());
             UUID uuid = model.getUuid() == null ? UUID.randomUUID() : model.getUuid();
-            NpcImpl npc = new NpcImpl(uuid, configManager, packetFactory, textSerializer, oldLoc.getWorld(), typeRegistry.getByName(type), location);
+            NpcImpl npc = new NpcImpl(uuid, propertyRegistry, configManager, packetFactory, textSerializer, oldLoc.getWorld(), typeRegistry.getByName(type), location);
 
             HologramImpl hologram = npc.getHologram();
             hologram.setOffset(model.getHologramHeight());

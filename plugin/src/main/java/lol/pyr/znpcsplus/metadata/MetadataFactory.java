@@ -20,6 +20,7 @@ import org.bukkit.DyeColor;
  * 1.18-1.19 <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=18191">...</a>
  * 1.20 <a href="https://wiki.vg/index.php?title=Entity_metadata">...</a>
  */
+@Deprecated
 public interface MetadataFactory {
     EntityData effects(boolean onFire, boolean glowing, boolean invisible, boolean usingElytra, boolean usingItemLegacy);
     EntityData silent(boolean enabled);

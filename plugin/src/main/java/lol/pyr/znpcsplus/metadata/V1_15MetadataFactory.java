@@ -9,6 +9,7 @@ import lol.pyr.znpcsplus.util.ParrotVariant;
 import lol.pyr.znpcsplus.util.Vector3f;
 import org.bukkit.DyeColor;
 
+@Deprecated
 public class V1_15MetadataFactory extends V1_14MetadataFactory {
     @Override
     public EntityData shoulderEntityLeft(ParrotVariant variant) {

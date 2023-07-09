@@ -1,15 +1,13 @@
 package lol.pyr.znpcsplus.entity;
 
-import com.github.retrooper.packetevents.protocol.item.ItemStack;
+import com.github.retrooper.packetevents.protocol.player.EquipmentSlot;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.entity.EntityPropertyRegistry;
-import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
+import lol.pyr.znpcsplus.entity.properties.*;
 import lol.pyr.znpcsplus.entity.serializers.*;
+import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 import lol.pyr.znpcsplus.util.*;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Color;
 import org.bukkit.DyeColor;
 
 import java.util.Collection;
@@ -18,6 +16,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * 1.8  <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=7415">...</a>
+ * 1.9  <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=7968">...</a>
+ * 1.10 <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=8241">...</a>
+ * 1.11 <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=8534">...</a>
+ * 1.12 <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=14048">...</a>
+ * 1.13 <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=14800">...</a>
+ * 1.14 <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=15240">...</a>
+ * 1.15 <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=15991">...</a>
+ * 1.16 <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=16539">...</a>
+ * 1.17 <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=17521">...</a>
+ * 1.18-1.19 <a href="https://wiki.vg/index.php?title=Entity_metadata&oldid=18191">...</a>
+ * 1.20 <a href="https://wiki.vg/index.php?title=Entity_metadata">...</a>
+ */
 @SuppressWarnings("unchecked")
 public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
     private final Map<Class<?>, PropertySerializer<?>> serializerMap = new HashMap<>();
@@ -44,7 +56,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(VillagerType.class);
         registerEnumSerializer(VillagerProfession.class);
         registerEnumSerializer(VillagerLevel.class);
-
+        /*
         registerType("glow", NamedTextColor.class);
         registerType("fire", false);
         registerType("invisible", false);
@@ -226,6 +238,22 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Slime
         registerType("slime_size", 0); // TODO
+         */
+    }
+
+    public void registerTypes(PacketFactory packetFactory) {
+        register(new EquipmentProperty(packetFactory, "helmet", EquipmentSlot.HELMET));
+        register(new EquipmentProperty(packetFactory, "chestplate", EquipmentSlot.CHEST_PLATE));
+        register(new EquipmentProperty(packetFactory, "leggings", EquipmentSlot.LEGGINGS));
+        register(new EquipmentProperty(packetFactory, "boots", EquipmentSlot.BOOTS));
+        register(new EquipmentProperty(packetFactory, "hand", EquipmentSlot.MAIN_HAND));
+        register(new EquipmentProperty(packetFactory, "offhand", EquipmentSlot.OFF_HAND));
+
+        register(new NameProperty());
+        register(new DummyBooleanProperty("look", false));
+        register(new GlowProperty(packetFactory));
+        register(new EffectsProperty("fire", 0x01));
+        register(new EffectsProperty("invisible", 0x20));
     }
 
     private void registerSerializer(PropertySerializer<?> serializer) {
@@ -236,18 +264,12 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         serializerMap.put(clazz, new EnumPropertySerializer<>(clazz));
     }
 
-    private <T> void registerType(String name, Class<T> type) {
-        registerType(name, null, type);
+    private <T> void register(EntityPropertyImpl<?> property) {
+        byName.put(property.getName(), property);
     }
 
-    private <T> void registerType(String name, T defaultValue) {
-        registerType(name, defaultValue, (Class<T>) defaultValue.getClass());
-    }
-
-    private <T> void registerType(String name, T defaultValue, Class<T> clazz) {
-        if (clazz == null) return;
-        EntityPropertyImpl<T> property = new EntityPropertyImpl<>(name, defaultValue, clazz, (PropertySerializer<T>) serializerMap.get(clazz));
-        byName.put(name.toLowerCase(), property);
+    public <V> PropertySerializer<V> getSerializer(Class<V> type) {
+        return (PropertySerializer<V>) serializerMap.get(type);
     }
 
     @Override

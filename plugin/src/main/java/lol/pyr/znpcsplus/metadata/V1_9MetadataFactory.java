@@ -6,6 +6,7 @@ import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
 import lol.pyr.znpcsplus.util.CreeperState;
 import net.kyori.adventure.text.Component;
 
+@Deprecated
 public class V1_9MetadataFactory extends V1_8MetadataFactory {
     @Override
     public EntityData skinLayers(boolean cape, boolean jacket, boolean leftSleeve, boolean rightSleeve, boolean leftLeg, boolean rightLeg, boolean hat) {

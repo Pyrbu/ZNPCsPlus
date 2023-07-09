@@ -2,6 +2,7 @@ package lol.pyr.znpcsplus.hologram;
 
 import lol.pyr.znpcsplus.api.hologram.Hologram;
 import lol.pyr.znpcsplus.config.ConfigManager;
+import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.util.Viewable;
 import lol.pyr.znpcsplus.util.NpcLocation;
@@ -17,6 +18,7 @@ public class HologramImpl extends Viewable implements Hologram {
     private final ConfigManager configManager;
     private final PacketFactory packetFactory;
     private final LegacyComponentSerializer textSerializer;
+    private final EntityPropertyRegistryImpl propertyRegistry;
 
     private double offset = 0.0;
     private long refreshDelay = -1;
@@ -24,7 +26,8 @@ public class HologramImpl extends Viewable implements Hologram {
     private NpcLocation location;
     private final List<HologramLine> lines = new ArrayList<>();
 
-    public HologramImpl(ConfigManager configManager, PacketFactory packetFactory, LegacyComponentSerializer textSerializer, NpcLocation location) {
+    public HologramImpl(EntityPropertyRegistryImpl propertyRegistry, ConfigManager configManager, PacketFactory packetFactory, LegacyComponentSerializer textSerializer, NpcLocation location) {
+        this.propertyRegistry = propertyRegistry;
         this.configManager = configManager;
         this.packetFactory = packetFactory;
         this.textSerializer = textSerializer;
@@ -32,7 +35,7 @@ public class HologramImpl extends Viewable implements Hologram {
     }
 
     public void addLineComponent(Component line) {
-        HologramLine newLine = new HologramLine(packetFactory, null, line);
+        HologramLine newLine = new HologramLine(propertyRegistry, packetFactory, null, line);
         lines.add(newLine);
         relocateLines(newLine);
         for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
@@ -66,7 +69,7 @@ public class HologramImpl extends Viewable implements Hologram {
     }
 
     public void insertLineComponent(int index, Component line) {
-        HologramLine newLine = new HologramLine(packetFactory, null, line);
+        HologramLine newLine = new HologramLine(propertyRegistry, packetFactory, null, line);
         lines.add(index, newLine);
         relocateLines(newLine);
         for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());

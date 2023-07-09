@@ -5,6 +5,7 @@ import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 import lol.pyr.znpcsplus.util.CreeperState;
 import lol.pyr.znpcsplus.util.Vector3f;
 
+@Deprecated
 public class V1_10MetadataFactory extends V1_9MetadataFactory {
     @Override
     public EntityData skinLayers(boolean cape, boolean jacket, boolean leftSleeve, boolean rightSleeve, boolean leftLeg, boolean rightLeg, boolean hat) {

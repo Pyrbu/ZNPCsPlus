@@ -7,6 +7,7 @@ import net.kyori.adventure.text.Component;
 
 import java.util.Optional;
 
+@Deprecated
 public class V1_13MetadataFactory extends V1_12MetadataFactory {
     @Override
     public EntityData name(Component name) {

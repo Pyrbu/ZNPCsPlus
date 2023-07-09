@@ -10,6 +10,7 @@ import lol.pyr.znpcsplus.util.ParrotVariant;
 import lol.pyr.znpcsplus.util.Vector3f;
 import org.bukkit.DyeColor;
 
+@Deprecated
 public class V1_14MetadataFactory extends V1_13MetadataFactory {
     @Override
     public EntityData skinLayers(boolean cape, boolean jacket, boolean leftSleeve, boolean rightSleeve, boolean leftLeg, boolean rightLeg, boolean hat) {

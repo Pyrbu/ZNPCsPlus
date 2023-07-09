@@ -1,8 +1,10 @@
 package lol.pyr.znpcsplus.storage.yaml;
 
+import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
+import lol.pyr.znpcsplus.entity.PropertySerializer;
 import lol.pyr.znpcsplus.hologram.HologramImpl;
 import lol.pyr.znpcsplus.hologram.HologramLine;
 import lol.pyr.znpcsplus.interaction.ActionRegistry;
@@ -52,7 +54,7 @@ public class YamlStorage implements NpcStorage {
         for (File file : files) if (file.isFile() && file.getName().toLowerCase().endsWith(".yml")) {
             YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
             UUID uuid = config.contains("uuid") ? UUID.fromString(config.getString("uuid")) : UUID.randomUUID();
-            NpcImpl npc = new NpcImpl(uuid, configManager, packetFactory, textSerializer, config.getString("world"),
+            NpcImpl npc = new NpcImpl(uuid, propertyRegistry, configManager, packetFactory, textSerializer, config.getString("world"),
                     typeRegistry.getByName(config.getString("type")), deserializeLocation(config.getConfigurationSection("location")));
 
             if (config.isBoolean("enabled")) npc.setEnabled(config.getBoolean("enabled"));
@@ -65,7 +67,7 @@ public class YamlStorage implements NpcStorage {
                         Bukkit.getLogger().log(Level.WARNING, "Unknown property '" + key + "' for npc '" + config.getString("id") + "'. skipping ...");
                         continue;
                     }
-                    npc.UNSAFE_setProperty(property, property.deserialize(properties.getString(key)));
+                    npc.UNSAFE_setProperty(property, propertyRegistry.getSerializer(property.getType()).deserialize(properties.getString(key)));
                 }
             }
             HologramImpl hologram = npc.getHologram();
@@ -101,8 +103,9 @@ public class YamlStorage implements NpcStorage {
             config.set("location", serializeLocation(npc.getLocation()));
             config.set("type", npc.getType().getName());
 
-            for (EntityPropertyImpl<?> property : npc.getAppliedProperties()) {
-                config.set("properties." + property.getName(), property.serialize(npc));
+            for (EntityProperty<?> property : npc.getAppliedProperties()) {
+                PropertySerializer<?> serializer = propertyRegistry.getSerializer(((EntityPropertyImpl<?>) property).getType());
+                config.set("properties." + property.getName(), serializer.UNSAFE_serialize(npc.getProperty(property)));
             }
 
             HologramImpl hologram = npc.getHologram();

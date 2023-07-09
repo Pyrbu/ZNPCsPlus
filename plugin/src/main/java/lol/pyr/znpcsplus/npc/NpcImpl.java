@@ -1,9 +1,11 @@
 package lol.pyr.znpcsplus.npc;
 
+import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.npc.Npc;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
+import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.hologram.HologramImpl;
 import lol.pyr.znpcsplus.interaction.InteractionAction;
@@ -31,18 +33,18 @@ public class NpcImpl extends Viewable implements Npc {
     private final Map<EntityPropertyImpl<?>, Object> propertyMap = new HashMap<>();
     private final List<InteractionAction> actions = new ArrayList<>();
 
-    protected NpcImpl(UUID uuid, ConfigManager configManager, LegacyComponentSerializer textSerializer, World world, NpcTypeImpl type, NpcLocation location, PacketFactory packetFactory) {
-        this(uuid, configManager, packetFactory, textSerializer, world.getName(), type, location);
+    protected NpcImpl(UUID uuid, EntityPropertyRegistryImpl propertyRegistry, ConfigManager configManager, LegacyComponentSerializer textSerializer, World world, NpcTypeImpl type, NpcLocation location, PacketFactory packetFactory) {
+        this(uuid, propertyRegistry, configManager, packetFactory, textSerializer, world.getName(), type, location);
     }
 
-    public NpcImpl(UUID uuid, ConfigManager configManager, PacketFactory packetFactory, LegacyComponentSerializer textSerializer, String world, NpcTypeImpl type, NpcLocation location) {
+    public NpcImpl(UUID uuid, EntityPropertyRegistryImpl propertyRegistry, ConfigManager configManager, PacketFactory packetFactory, LegacyComponentSerializer textSerializer, String world, NpcTypeImpl type, NpcLocation location) {
         this.packetFactory = packetFactory;
         this.worldName = world;
         this.type = type;
         this.location = location;
         this.uuid = uuid;
         entity = new PacketEntity(packetFactory, this, type.getType(), location);
-        hologram = new HologramImpl(configManager, packetFactory, textSerializer, location.withY(location.getY() + type.getHologramOffset()));
+        hologram = new HologramImpl(propertyRegistry, configManager, packetFactory, textSerializer, location.withY(location.getY() + type.getHologramOffset()));
     }
 
 
@@ -112,12 +114,11 @@ public class NpcImpl extends Viewable implements Npc {
         hologram.hide(player);
     }
 
-    private void UNSAFE_refreshMeta() {
-        for (Player viewer : getViewers()) entity.refreshMeta(viewer);
-    }
-
-    private void UNSAFE_remakeTeam() {
-        for (Player viewer : getViewers()) entity.remakeTeam(viewer);
+    private <T> void UNSAFE_refreshProperty(EntityPropertyImpl<T> property) {
+        for (Player viewer : getViewers()) {
+            List<EntityData> data = property.makeStandaloneData(property.getDefaultValue(), viewer, entity, true);
+            if (data.size() > 0) packetFactory.sendMetadata(viewer, entity, data);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -135,10 +136,9 @@ public class NpcImpl extends Viewable implements Npc {
     }
 
     public <T> void setProperty(EntityPropertyImpl<T> key, T value) {
-        if (value == null || value.equals(key.getDefaultValue())) removeProperty(key);
+        if (value == null || value.equals(key.getDefaultValue())) propertyMap.remove(key);
         else propertyMap.put(key, value);
-        UNSAFE_refreshMeta();
-        if (key.getName().equalsIgnoreCase("glow")) UNSAFE_remakeTeam();
+        UNSAFE_refreshProperty(key);
     }
 
     @SuppressWarnings("unchecked")
@@ -146,14 +146,8 @@ public class NpcImpl extends Viewable implements Npc {
         setProperty((EntityPropertyImpl<T>) property, (T) value);
     }
 
-    public void removeProperty(EntityPropertyImpl<?> key) {
-        propertyMap.remove(key);
-        UNSAFE_refreshMeta();
-        if (key.getName().equalsIgnoreCase("glow")) UNSAFE_remakeTeam();
-        else if (key.getName().equalsIgnoreCase("dinnerbone")) respawn();
-    }
-
-    public Set<EntityPropertyImpl<?>> getAppliedProperties() {
+    @Override
+    public Set<EntityProperty<?>> getAppliedProperties() {
         return Collections.unmodifiableSet(propertyMap.keySet());
     }
 
