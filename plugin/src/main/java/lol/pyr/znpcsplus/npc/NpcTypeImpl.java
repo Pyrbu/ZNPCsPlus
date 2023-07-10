@@ -68,7 +68,7 @@ public class NpcTypeImpl implements NpcType {
 
         public Builder addProperties(String... names) {
             for (String name : names) {
-                if (propertyRegistry.getByName(name) != null) continue;
+                if (propertyRegistry.getByName(name) == null) continue;
                 allowedProperties.add(propertyRegistry.getByName(name));
             }
             return this;
