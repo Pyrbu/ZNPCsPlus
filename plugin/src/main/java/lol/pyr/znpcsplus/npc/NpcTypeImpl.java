@@ -9,6 +9,7 @@ import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class NpcTypeImpl implements NpcType {
@@ -41,6 +42,8 @@ public class NpcTypeImpl implements NpcType {
     }
 
     protected static final class Builder {
+        private final static Logger logger = Logger.getLogger("NpcTypeBuilder");
+
         private final EntityPropertyRegistryImpl propertyRegistry;
         private final String name;
         private final EntityType type;
@@ -68,7 +71,10 @@ public class NpcTypeImpl implements NpcType {
 
         public Builder addProperties(String... names) {
             for (String name : names) {
-                if (propertyRegistry.getByName(name) == null) continue;
+                if (propertyRegistry.getByName(name) == null) {
+                    logger.warning("Tried to register the non-existent \"" + name + "\" property to the \"" + this.name + "\" npc type");
+                    continue;
+                }
                 allowedProperties.add(propertyRegistry.getByName(name));
             }
             return this;
