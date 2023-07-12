@@ -86,14 +86,12 @@ public class NpcTypeImpl implements NpcType {
         }
 
         public NpcTypeImpl build() {
+            ServerVersion version = PacketEvents.getAPI().getServerManager().getVersion();
             addProperties("fire", "invisible", "silent", "look", "skin_cape",
                     "using_item", "potion_color", "potion_ambient", "dinnerbone");
-            if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9))
-                addProperties("glow");
-            if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_14))
-                addProperties("pose");
-            if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_17))
-                addProperties("shaking");
+            if (version.isNewerThanOrEquals(ServerVersion.V_1_9)) addProperties("glow");
+            if (version.isNewerThanOrEquals(ServerVersion.V_1_14)) addProperties("pose");
+            if (version.isNewerThanOrEquals(ServerVersion.V_1_17)) addProperties("shaking");
             return new NpcTypeImpl(name, type, hologramOffset, new HashSet<>(allowedProperties));
         }
     }
