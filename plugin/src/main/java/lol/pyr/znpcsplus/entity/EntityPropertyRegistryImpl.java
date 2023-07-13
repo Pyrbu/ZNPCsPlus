@@ -265,6 +265,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
     }
 
     private <T> void register(EntityPropertyImpl<?> property) {
+        if (byName.containsKey(property.getName()))
+            throw new IllegalArgumentException("Duplicate property name: " + property.getName());
         byName.put(property.getName(), property);
     }
 

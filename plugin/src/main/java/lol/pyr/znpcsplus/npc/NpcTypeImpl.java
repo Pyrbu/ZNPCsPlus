@@ -9,6 +9,7 @@ import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class NpcTypeImpl implements NpcType {
@@ -41,6 +42,8 @@ public class NpcTypeImpl implements NpcType {
     }
 
     protected static final class Builder {
+        private final static Logger logger = Logger.getLogger("NpcTypeBuilder");
+
         private final EntityPropertyRegistryImpl propertyRegistry;
         private final String name;
         private final EntityType type;
@@ -67,7 +70,13 @@ public class NpcTypeImpl implements NpcType {
         }
 
         public Builder addProperties(String... names) {
-            for (String name : names) allowedProperties.add(propertyRegistry.getByName(name));
+            for (String name : names) {
+                if (propertyRegistry.getByName(name) == null) {
+                    logger.warning("Tried to register the non-existent \"" + name + "\" property to the \"" + this.name + "\" npc type");
+                    continue;
+                }
+                allowedProperties.add(propertyRegistry.getByName(name));
+            }
             return this;
         }
 
@@ -77,21 +86,12 @@ public class NpcTypeImpl implements NpcType {
         }
 
         public NpcTypeImpl build() {
-            allowedProperties.add(propertyRegistry.getByName("fire"));
-            allowedProperties.add(propertyRegistry.getByName("invisible"));
-            allowedProperties.add(propertyRegistry.getByName("silent"));
-            allowedProperties.add(propertyRegistry.getByName("look"));
-            allowedProperties.add(propertyRegistry.getByName("skin_cape"));
-            allowedProperties.add(propertyRegistry.getByName("using_item"));
-            allowedProperties.add(propertyRegistry.getByName("potion_color"));
-            allowedProperties.add(propertyRegistry.getByName("potion_ambient"));
-            allowedProperties.add(propertyRegistry.getByName("dinnerbone"));
-            if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9))
-                allowedProperties.add(propertyRegistry.getByName("glow"));
-            if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_14))
-                allowedProperties.add(propertyRegistry.getByName("pose"));
-            if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_17))
-                allowedProperties.add(propertyRegistry.getByName("shaking"));
+            ServerVersion version = PacketEvents.getAPI().getServerManager().getVersion();
+            addProperties("fire", "invisible", "silent", "look", "skin_cape",
+                    "using_item", "potion_color", "potion_ambient", "dinnerbone");
+            if (version.isNewerThanOrEquals(ServerVersion.V_1_9)) addProperties("glow");
+            if (version.isNewerThanOrEquals(ServerVersion.V_1_14)) addProperties("pose");
+            if (version.isNewerThanOrEquals(ServerVersion.V_1_17)) addProperties("shaking");
             return new NpcTypeImpl(name, type, hologramOffset, new HashSet<>(allowedProperties));
         }
     }

@@ -116,7 +116,7 @@ public class NpcImpl extends Viewable implements Npc {
 
     private <T> void UNSAFE_refreshProperty(EntityPropertyImpl<T> property) {
         for (Player viewer : getViewers()) {
-            List<EntityData> data = property.makeStandaloneData(property.getDefaultValue(), viewer, entity, true);
+            List<EntityData> data = property.makeStandaloneData(getProperty(property), viewer, entity, true);
             if (data.size() > 0) packetFactory.sendMetadata(viewer, entity, data);
         }
     }
