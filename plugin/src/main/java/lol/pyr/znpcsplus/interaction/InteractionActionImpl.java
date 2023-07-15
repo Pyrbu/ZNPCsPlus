@@ -10,7 +10,5 @@ public abstract class InteractionActionImpl extends InteractionAction {
         super(delay, interactionType);
     }
 
-    public Component getInfo(String id, int index, CommandContext context) {
-        return null;
-    }
+    public abstract Component getInfo(String id, int index, CommandContext context);
 }
