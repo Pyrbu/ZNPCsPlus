@@ -34,7 +34,7 @@ public class PlayerCommandAction extends InteractionActionImpl {
                         .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
                                 Component.text("Click to edit this action", NamedTextColor.GRAY)))
                         .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.SUGGEST_COMMAND,
-                                "/" + context.getLabel() + " action edit " + id + " " + index + " playercommand " + " " + getInteractionType().name() + " " + getCooldown()/1000 + " " + command))
+                                "/" + context.getLabel() + " action edit " + id + " " + index + " playercommand " + getInteractionType().name() + " " + getCooldown()/1000 + " " + command))
                 .append(Component.text(" | ", NamedTextColor.GRAY))
                 .append(Component.text("[DELETE]", NamedTextColor.RED)
                         .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
