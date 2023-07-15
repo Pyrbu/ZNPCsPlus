@@ -2,7 +2,7 @@ package lol.pyr.znpcsplus.interaction.switchserver;
 
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.znpcsplus.api.interaction.InteractionType;
-import lol.pyr.znpcsplus.interaction.InteractionAction;
+import lol.pyr.znpcsplus.interaction.InteractionActionImpl;
 import lol.pyr.znpcsplus.util.BungeeConnector;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -10,7 +10,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 
-public class SwitchServerAction extends InteractionAction {
+public class SwitchServerAction extends InteractionActionImpl {
     private final BungeeConnector bungeeConnector;
     private final String server;
 

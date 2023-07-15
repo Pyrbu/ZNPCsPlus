@@ -3,7 +3,7 @@ package lol.pyr.znpcsplus.interaction.playerchat;
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.common.command.CommandExecutionException;
 import lol.pyr.znpcsplus.api.interaction.InteractionType;
-import lol.pyr.znpcsplus.interaction.InteractionAction;
+import lol.pyr.znpcsplus.interaction.InteractionActionImpl;
 import lol.pyr.znpcsplus.interaction.InteractionActionType;
 import lol.pyr.znpcsplus.interaction.InteractionCommandHandler;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
@@ -47,7 +47,7 @@ public class PlayerChatActionType implements InteractionActionType<PlayerChatAct
     }
 
     @Override
-    public InteractionAction parse(CommandContext context) throws CommandExecutionException {
+    public InteractionActionImpl parse(CommandContext context) throws CommandExecutionException {
         InteractionType type = context.parse(InteractionType.class);
         long cooldown = (long) (context.parse(Double.class) * 1000D);
         String message = context.dumpAllArgs();

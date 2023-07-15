@@ -2,7 +2,7 @@ package lol.pyr.znpcsplus.interaction.playercommand;
 
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.znpcsplus.api.interaction.InteractionType;
-import lol.pyr.znpcsplus.interaction.InteractionAction;
+import lol.pyr.znpcsplus.interaction.InteractionActionImpl;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.util.PapiUtil;
 import net.kyori.adventure.text.Component;
@@ -11,7 +11,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 
-public class PlayerCommandAction extends InteractionAction {
+public class PlayerCommandAction extends InteractionActionImpl {
     private final TaskScheduler scheduler;
     private final String command;
 

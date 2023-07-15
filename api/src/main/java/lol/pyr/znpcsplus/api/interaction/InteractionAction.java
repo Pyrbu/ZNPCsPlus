@@ -1,8 +1,5 @@
-package lol.pyr.znpcsplus.interaction;
+package lol.pyr.znpcsplus.api.interaction;
 
-import lol.pyr.director.adventure.command.CommandContext;
-import lol.pyr.znpcsplus.api.interaction.InteractionType;
-import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -31,6 +28,4 @@ public abstract class InteractionAction {
     }
 
     public abstract void run(Player player);
-
-    public abstract Component getInfo(String id, int index, CommandContext context);
 }

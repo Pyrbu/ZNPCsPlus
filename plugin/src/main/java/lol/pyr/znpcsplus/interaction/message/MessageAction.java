@@ -2,7 +2,7 @@ package lol.pyr.znpcsplus.interaction.message;
 
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.znpcsplus.api.interaction.InteractionType;
-import lol.pyr.znpcsplus.interaction.InteractionAction;
+import lol.pyr.znpcsplus.interaction.InteractionActionImpl;
 import lol.pyr.znpcsplus.util.PapiUtil;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
@@ -12,7 +12,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 
-public class MessageAction extends InteractionAction {
+public class MessageAction extends InteractionActionImpl {
     private final BukkitAudiences adventure;
     private final String message;
     private final LegacyComponentSerializer textSerializer;
