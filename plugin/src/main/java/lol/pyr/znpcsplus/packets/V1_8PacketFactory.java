@@ -6,7 +6,8 @@ import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
-import com.github.retrooper.packetevents.protocol.item.ItemStack;
+import io.github.retrooper.packetevents.util.SpigotConversionUtil;
+import org.bukkit.inventory.ItemStack;
 import com.github.retrooper.packetevents.protocol.player.*;
 import com.github.retrooper.packetevents.util.Vector3d;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
@@ -279,7 +280,7 @@ public class V1_8PacketFactory implements PacketFactory {
 
         for (Map.Entry<String, EquipmentSlot> entry : equipmentSlotMap.entrySet()) {
             if (!properties.hasProperty(propertyRegistry.getByName(entry.getKey()))) continue;
-            equipements.add(new Equipment(entry.getValue(), properties.getProperty(propertyRegistry.getByName(entry.getKey(), ItemStack.class))));
+            equipements.add(new Equipment(entry.getValue(), SpigotConversionUtil.fromBukkitItemStack(properties.getProperty(propertyRegistry.getByName(entry.getKey(), ItemStack.class)))));
         }
         return equipements;
     }

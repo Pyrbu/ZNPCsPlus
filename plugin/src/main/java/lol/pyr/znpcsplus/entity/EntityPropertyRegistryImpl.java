@@ -1,6 +1,6 @@
 package lol.pyr.znpcsplus.entity;
 
-import com.github.retrooper.packetevents.protocol.item.ItemStack;
+import org.bukkit.inventory.ItemStack;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.entity.EntityPropertyRegistry;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
