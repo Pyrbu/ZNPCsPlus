@@ -5,6 +5,7 @@ import lol.pyr.znpcsplus.api.hologram.Hologram;
 import lol.pyr.znpcsplus.api.interaction.InteractionAction;
 import lol.pyr.znpcsplus.util.NpcLocation;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,4 +21,8 @@ public interface Npc extends PropertyHolder {
     UUID getUuid();
     World getWorld();
     List<? extends InteractionAction> getActions();
+    boolean isVisibleTo(Player player);
+    void hide(Player player);
+    void show(Player player);
+    void respawn(Player player);
 }
