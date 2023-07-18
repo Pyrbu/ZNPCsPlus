@@ -3,11 +3,11 @@ package lol.pyr.znpcsplus.util;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class Viewable {
-    private final Set<Player> viewers = new HashSet<>();
+    private final Set<Player> viewers = ConcurrentHashMap.newKeySet();
 
     public void delete() {
         UNSAFE_hideAll();
