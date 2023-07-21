@@ -17,6 +17,8 @@ import lol.pyr.znpcsplus.skin.descriptor.PrefetchedDescriptor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,9 +46,7 @@ public class SkinCommand implements CommandHandler {
             npc.setProperty(propertyRegistry.getByName("skin", SkinDescriptor.class), new MirrorDescriptor(skinCache));
             npc.respawn();
             context.halt(Component.text("The NPC's skin will now mirror the player that it's being displayed to", NamedTextColor.GREEN));
-        }
-
-        if (type.equalsIgnoreCase("static")) {
+        } else if (type.equalsIgnoreCase("static")) {
             context.ensureArgsNotEmpty();
             String name = context.dumpAllArgs();
             context.send(Component.text("Fetching skin \"" + name + "\"...", NamedTextColor.GREEN));
@@ -57,25 +57,42 @@ public class SkinCommand implements CommandHandler {
                 }
                 npc.setProperty(propertyRegistry.getByName("skin", SkinDescriptor.class), skin);
                 npc.respawn();
-                context.send(Component.text("The NPC's skin has been set to \"" + name + "\""));
+                context.send(Component.text("The NPC's skin has been set to \"" + name + "\"", NamedTextColor.GREEN));
             });
             return;
-        }
-
-        if (type.equalsIgnoreCase("dynamic")) {
+        } else if (type.equalsIgnoreCase("dynamic")) {
             context.ensureArgsNotEmpty();
             String name = context.dumpAllArgs();
             npc.setProperty(propertyRegistry.getByName("skin", SkinDescriptor.class), new FetchingDescriptor(skinCache, name));
             npc.respawn();
             context.halt(Component.text("The NPC's skin will now be resolved per-player from \"" + name + "\""));
+        } else if (type.equalsIgnoreCase("url")) {
+            context.ensureArgsNotEmpty();
+            String urlString = context.dumpAllArgs();
+            try {
+                URL url = new URL(urlString);
+                context.send(Component.text("Fetching skin from url \"" + urlString + "\"...", NamedTextColor.GREEN));
+                PrefetchedDescriptor.fromUrl(skinCache, url).thenAccept(skin -> {
+                    if (skin.getSkin() == null) {
+                        context.send(Component.text("Failed to fetch skin, are you sure the url is valid?", NamedTextColor.RED));
+                        return;
+                    }
+                    npc.setProperty(propertyRegistry.getByName("skin", SkinDescriptor.class), skin);
+                    npc.respawn();
+                    context.send(Component.text("The NPC's skin has been set.", NamedTextColor.GREEN));
+                });
+            } catch (MalformedURLException e) {
+                context.send(Component.text("Invalid url!", NamedTextColor.RED));
+            }
+            return;
         }
-        context.send(Component.text("Unknown skin type! Please use one of the following: mirror, static, dynamic"));
+        context.send(Component.text("Unknown skin type! Please use one of the following: mirror, static, dynamic, url"));
     }
 
     @Override
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
         if (context.argSize() == 1) return context.suggestCollection(npcRegistry.getModifiableIds());
-        if (context.argSize() == 2) return context.suggestLiteral("mirror", "static", "dynamic");
+        if (context.argSize() == 2) return context.suggestLiteral("mirror", "static", "dynamic", "url");
         if (context.matchSuggestion("*", "static")) return context.suggestPlayers();
         return Collections.emptyList();
     }

@@ -254,6 +254,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new GlowProperty(packetFactory));
         register(new EffectsProperty("fire", 0x01));
         register(new EffectsProperty("invisible", 0x20));
+        register(new SkinProperty());
     }
 
     private void registerSerializer(PropertySerializer<?> serializer) {
