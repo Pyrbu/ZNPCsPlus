@@ -7,6 +7,9 @@ import lol.pyr.znpcsplus.skin.descriptor.FetchingDescriptor;
 import lol.pyr.znpcsplus.skin.descriptor.MirrorDescriptor;
 import lol.pyr.znpcsplus.skin.descriptor.PrefetchedDescriptor;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 public class SkinDescriptorFactoryImpl implements SkinDescriptorFactory {
     private final MojangSkinCache skinCache;
     private final MirrorDescriptor mirrorDescriptor;
@@ -34,5 +37,15 @@ public class SkinDescriptorFactoryImpl implements SkinDescriptorFactory {
     @Override
     public SkinDescriptor createStaticDescriptor(String texture, String signature) {
         return new PrefetchedDescriptor(new Skin(texture, signature));
+    }
+
+    @Override
+    public SkinDescriptor createUrlDescriptor(String url) throws MalformedURLException {
+        return createUrlDescriptor(new URL(url));
+    }
+
+    @Override
+    public SkinDescriptor createUrlDescriptor(URL url) {
+        return PrefetchedDescriptor.fromUrl(skinCache, url).join();
     }
 }
