@@ -40,12 +40,16 @@ public class SkinDescriptorFactoryImpl implements SkinDescriptorFactory {
     }
 
     @Override
-    public SkinDescriptor createUrlDescriptor(String url) throws MalformedURLException {
-        return createUrlDescriptor(new URL(url));
+    public SkinDescriptor createUrlDescriptor(String url, String variant) {
+        try {
+            return createUrlDescriptor(new URL(url), variant);
+        } catch (MalformedURLException e) {
+            return null;
+        }
     }
 
     @Override
-    public SkinDescriptor createUrlDescriptor(URL url) {
-        return PrefetchedDescriptor.fromUrl(skinCache, url).join();
+    public SkinDescriptor createUrlDescriptor(URL url, String variant) {
+        return PrefetchedDescriptor.fromUrl(skinCache, url, variant).join();
     }
 }

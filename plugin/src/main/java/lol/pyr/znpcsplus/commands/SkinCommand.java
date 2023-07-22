@@ -68,11 +68,16 @@ public class SkinCommand implements CommandHandler {
             context.halt(Component.text("The NPC's skin will now be resolved per-player from \"" + name + "\""));
         } else if (type.equalsIgnoreCase("url")) {
             context.ensureArgsNotEmpty();
+            String variant = context.popString().toLowerCase();
+            if (!variant.equalsIgnoreCase("slim") && !variant.equalsIgnoreCase("classic")) {
+                context.send(Component.text("Invalid skin variant! Please use one of the following: slim, classic", NamedTextColor.RED));
+                return;
+            }
             String urlString = context.dumpAllArgs();
             try {
                 URL url = new URL(urlString);
                 context.send(Component.text("Fetching skin from url \"" + urlString + "\"...", NamedTextColor.GREEN));
-                PrefetchedDescriptor.fromUrl(skinCache, url).thenAccept(skin -> {
+                PrefetchedDescriptor.fromUrl(skinCache, url , variant).thenAccept(skin -> {
                     if (skin.getSkin() == null) {
                         context.send(Component.text("Failed to fetch skin, are you sure the url is valid?", NamedTextColor.RED));
                         return;
@@ -94,6 +99,9 @@ public class SkinCommand implements CommandHandler {
         if (context.argSize() == 1) return context.suggestCollection(npcRegistry.getModifiableIds());
         if (context.argSize() == 2) return context.suggestLiteral("mirror", "static", "dynamic", "url");
         if (context.matchSuggestion("*", "static")) return context.suggestPlayers();
+        if (context.argSize() == 3 && context.matchSuggestion("*", "url")) {
+            return context.suggestLiteral("slim", "classic");
+        }
         return Collections.emptyList();
     }
 }

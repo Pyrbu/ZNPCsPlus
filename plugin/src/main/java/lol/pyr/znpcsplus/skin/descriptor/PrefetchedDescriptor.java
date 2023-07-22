@@ -21,8 +21,8 @@ public class PrefetchedDescriptor implements BaseSkinDescriptor, SkinDescriptor 
         return CompletableFuture.supplyAsync(() -> new PrefetchedDescriptor(cache.fetchByName(name).join()));
     }
 
-    public static CompletableFuture<PrefetchedDescriptor> fromUrl(MojangSkinCache cache, URL url) {
-        return CompletableFuture.supplyAsync(() -> new PrefetchedDescriptor(cache.fetchByUrl(url).join()));
+    public static CompletableFuture<PrefetchedDescriptor> fromUrl(MojangSkinCache cache, URL url, String variant) {
+        return CompletableFuture.supplyAsync(() -> new PrefetchedDescriptor(cache.fetchByUrl(url, variant).join()));
     }
 
     @Override

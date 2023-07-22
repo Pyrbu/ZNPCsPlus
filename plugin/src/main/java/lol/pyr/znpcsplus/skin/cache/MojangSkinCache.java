@@ -67,7 +67,7 @@ public class MojangSkinCache {
         });
     }
 
-    public CompletableFuture<Skin> fetchByUrl(URL url) {
+    public CompletableFuture<Skin> fetchByUrl(URL url, String variant) {
 
         return CompletableFuture.supplyAsync(() -> {
             URL apiUrl = parseUrl("https://api.mineskin.org/generate/url");
@@ -80,7 +80,7 @@ public class MojangSkinCache {
                 connection.setDoOutput(true);
                 OutputStream outStream = connection.getOutputStream();
                 DataOutputStream out = new DataOutputStream(outStream);
-                out.writeBytes("{\"variant\":\"classic\",\"url\":\"" + url.toString() + "\"}"); // TODO: configurable variant (slim, classic) default: classic
+                out.writeBytes("{\"variant\":\"" + variant + "\",\"url\":\"" + url.toString() + "\"}"); // TODO: configurable variant (slim, classic) default: classic
                 out.flush();
                 out.close();
                 outStream.close();
