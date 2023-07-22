@@ -3,12 +3,13 @@ package lol.pyr.znpcsplus.npc;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.npc.Npc;
+import lol.pyr.znpcsplus.api.npc.NpcType;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.hologram.HologramImpl;
-import lol.pyr.znpcsplus.interaction.InteractionAction;
+import lol.pyr.znpcsplus.interaction.InteractionActionImpl;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.util.NpcLocation;
 import lol.pyr.znpcsplus.util.Viewable;
@@ -31,7 +32,7 @@ public class NpcImpl extends Viewable implements Npc {
     private final UUID uuid;
 
     private final Map<EntityPropertyImpl<?>, Object> propertyMap = new HashMap<>();
-    private final List<InteractionAction> actions = new ArrayList<>();
+    private final List<InteractionActionImpl> actions = new ArrayList<>();
 
     protected NpcImpl(UUID uuid, EntityPropertyRegistryImpl propertyRegistry, ConfigManager configManager, LegacyComponentSerializer textSerializer, World world, NpcTypeImpl type, NpcLocation location, PacketFactory packetFactory) {
         this(uuid, propertyRegistry, configManager, packetFactory, textSerializer, world.getName(), type, location);
@@ -53,6 +54,11 @@ public class NpcImpl extends Viewable implements Npc {
         this.type = type;
         entity = new PacketEntity(packetFactory, this, type.getType(), entity.getLocation());
         UNSAFE_showAll();
+    }
+
+    public void setType(NpcType type) {
+        if (type == null) throw new IllegalArgumentException("Npc Type cannot be null");
+        setType((NpcTypeImpl) type);
     }
 
     public NpcTypeImpl getType() {
@@ -151,7 +157,7 @@ public class NpcImpl extends Viewable implements Npc {
         return Collections.unmodifiableSet(propertyMap.keySet());
     }
 
-    public List<InteractionAction> getActions() {
+    public List<InteractionActionImpl> getActions() {
         return Collections.unmodifiableList(actions);
     }
 
@@ -159,11 +165,11 @@ public class NpcImpl extends Viewable implements Npc {
         actions.remove(index);
     }
 
-    public void addAction(InteractionAction action) {
+    public void addAction(InteractionActionImpl action) {
         actions.add(action);
     }
 
-    public void editAction(int index, InteractionAction action) {
+    public void editAction(int index, InteractionActionImpl action) {
         actions.set(index, action);
     }
 }

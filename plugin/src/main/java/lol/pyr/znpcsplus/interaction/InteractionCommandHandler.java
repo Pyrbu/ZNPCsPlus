@@ -11,7 +11,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 public interface InteractionCommandHandler extends CommandHandler {
     String getSubcommandName();
 
-    InteractionAction parse(CommandContext context) throws CommandExecutionException;
+    InteractionActionImpl parse(CommandContext context) throws CommandExecutionException;
     void appendUsage(CommandContext context);
 
     @Override

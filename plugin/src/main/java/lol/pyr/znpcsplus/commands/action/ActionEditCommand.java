@@ -4,7 +4,7 @@ import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
 import lol.pyr.znpcsplus.interaction.ActionRegistry;
-import lol.pyr.znpcsplus.interaction.InteractionAction;
+import lol.pyr.znpcsplus.interaction.InteractionActionImpl;
 import lol.pyr.znpcsplus.interaction.InteractionCommandHandler;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
@@ -42,7 +42,7 @@ public class ActionEditCommand implements CommandHandler {
             context.send(Component.text("Invalid action type, available action types:\n" +
                     commands.stream().map(InteractionCommandHandler::getSubcommandName).collect(Collectors.joining(", ")), NamedTextColor.RED));
         }
-        InteractionAction newAction = this.commandHandler.parse(context);
+        InteractionActionImpl newAction = this.commandHandler.parse(context);
         entry.getNpc().editAction(index, newAction);
         context.send(Component.text("Edited action with index " + index + " of Npc " + entry.getId(), NamedTextColor.GREEN));
     }

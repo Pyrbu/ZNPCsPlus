@@ -16,7 +16,7 @@ import lol.pyr.znpcsplus.conversion.znpcs.model.ZNpcsModel;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.hologram.HologramImpl;
-import lol.pyr.znpcsplus.interaction.InteractionAction;
+import lol.pyr.znpcsplus.interaction.InteractionActionImpl;
 import lol.pyr.znpcsplus.interaction.consolecommand.ConsoleCommandAction;
 import lol.pyr.znpcsplus.interaction.message.MessageAction;
 import lol.pyr.znpcsplus.interaction.playerchat.PlayerChatAction;
@@ -148,7 +148,7 @@ public class ZNpcImporter implements DataImporter {
         throw new IllegalArgumentException("Couldn't adapt znpcs click type: " + clickType);
     }
 
-    private InteractionAction adaptAction(String type, InteractionType clickType, String parameter, int delay) {
+    private InteractionActionImpl adaptAction(String type, InteractionType clickType, String parameter, int delay) {
         switch (type.toLowerCase()) {
             case "cmd":
                 return new PlayerCommandAction(taskScheduler, parameter, clickType, delay * 1000L);

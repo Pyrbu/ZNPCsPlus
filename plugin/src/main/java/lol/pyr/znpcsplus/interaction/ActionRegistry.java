@@ -1,5 +1,6 @@
 package lol.pyr.znpcsplus.interaction;
 
+import lol.pyr.znpcsplus.api.interaction.InteractionAction;
 import lol.pyr.znpcsplus.interaction.consolecommand.ConsoleCommandActionType;
 import lol.pyr.znpcsplus.interaction.message.MessageActionType;
 import lol.pyr.znpcsplus.interaction.playerchat.PlayerChatActionType;

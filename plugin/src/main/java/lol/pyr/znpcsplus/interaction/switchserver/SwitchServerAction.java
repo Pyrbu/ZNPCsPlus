@@ -2,7 +2,7 @@ package lol.pyr.znpcsplus.interaction.switchserver;
 
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.znpcsplus.api.interaction.InteractionType;
-import lol.pyr.znpcsplus.interaction.InteractionAction;
+import lol.pyr.znpcsplus.interaction.InteractionActionImpl;
 import lol.pyr.znpcsplus.util.BungeeConnector;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -10,7 +10,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 
-public class SwitchServerAction extends InteractionAction {
+public class SwitchServerAction extends InteractionActionImpl {
     private final BungeeConnector bungeeConnector;
     private final String server;
 
@@ -32,7 +32,7 @@ public class SwitchServerAction extends InteractionAction {
                         .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
                                 Component.text("Click to edit this action", NamedTextColor.GRAY)))
                         .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.SUGGEST_COMMAND,
-                                "/" + context.getLabel() + " action edit " + id + " " + index + " switcserver " + " " + getInteractionType().name() + " " + getCooldown()/1000 + " " + server))
+                                "/" + context.getLabel() + " action edit " + id + " " + index + " switcserver " + getInteractionType().name() + " " + getCooldown()/1000 + " " + server))
                 .append(Component.text(" | ", NamedTextColor.GRAY))
                 .append(Component.text("[DELETE]", NamedTextColor.RED)
                         .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
