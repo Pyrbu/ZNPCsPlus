@@ -51,6 +51,10 @@ public class HologramLine implements PropertyHolder {
         armorStand.setLocation(location, viewers);
     }
 
+    public int getEntityId() {
+        return armorStand.getEntityId();
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getProperty(EntityProperty<T> key) {

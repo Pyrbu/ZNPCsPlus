@@ -103,7 +103,9 @@ public class NpcRegistryImpl implements NpcRegistry {
     }
 
     public NpcEntryImpl getByEntityId(int id) {
-        return npcList.stream().filter(entry -> entry.getNpc().getEntity().getEntityId() == id).findFirst().orElse(null);
+        return npcList.stream().filter(entry -> entry.getNpc().getEntity().getEntityId() == id ||
+                        entry.getNpc().getHologram().getLines().stream().anyMatch(line -> line.getEntityId() == id)) // Also match the holograms of npcs
+                .findFirst().orElse(null);
     }
 
     public Collection<String> getAllIds() {
