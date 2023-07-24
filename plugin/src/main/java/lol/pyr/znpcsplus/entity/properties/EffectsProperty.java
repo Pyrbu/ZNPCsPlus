@@ -17,9 +17,9 @@ public class EffectsProperty extends EntityPropertyImpl<Boolean> {
     }
 
     @Override
-    public void apply(Boolean enabled, Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData> properties) {
+    public void apply(Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData> properties) {
         EntityData oldData = properties.get(0);
         byte oldValue = oldData == null ? 0 : (byte) oldData.getValue();
-        properties.put(0, newEntityData(0, EntityDataTypes.BYTE, (byte) (oldValue | (enabled ? bitmask : 0))));
+        properties.put(0, newEntityData(0, EntityDataTypes.BYTE, (byte) (oldValue | (entity.getProperty(this) ? bitmask : 0))));
     }
 }

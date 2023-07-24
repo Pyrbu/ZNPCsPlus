@@ -18,6 +18,6 @@ public class DummyProperty<T> extends EntityPropertyImpl<T> {
     }
 
     @Override
-    public void apply(T value, Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData> properties) {
+    public void apply(Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData> properties) {
     }
 }

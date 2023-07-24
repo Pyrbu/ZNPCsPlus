@@ -249,8 +249,7 @@ public class V1_8PacketFactory implements PacketFactory {
     @Override
     public void sendAllMetadata(Player player, PacketEntity entity, PropertyHolder properties) {
         Map<Integer, EntityData> datas = new HashMap<>();
-        for (EntityProperty<?> property : properties.getAppliedProperties())
-            ((EntityPropertyImpl<?>) property).UNSAFE_apply(properties.getProperty(property), player, entity, false, datas);
+        for (EntityProperty<?> property : properties.getAppliedProperties()) ((EntityPropertyImpl<?>) property).apply(player, entity, false, datas);
         sendMetadata(player, entity, new ArrayList<>(datas.values()));
     }
 

@@ -26,7 +26,8 @@ public class NameProperty extends EntityPropertyImpl<Component> {
     }
 
     @Override
-    public void apply(Component value, Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData> properties) {
+    public void apply(Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData> properties) {
+        Component value = entity.getProperty(this);
         if (value != null) {
             String serialized = legacy ?
                     AdventureSerializer.getLegacyGsonSerializer().serialize(value) :

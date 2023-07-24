@@ -4,6 +4,7 @@ import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
+import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.reflection.Reflections;
@@ -11,9 +12,10 @@ import lol.pyr.znpcsplus.util.NpcLocation;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
+import java.util.Set;
 import java.util.UUID;
 
-public class PacketEntity {
+public class PacketEntity implements PropertyHolder {
     private final PacketFactory packetFactory;
 
     private final PropertyHolder properties;
@@ -74,5 +76,25 @@ public class PacketEntity {
             Reflections.ENTITY_ID_MODIFIER.set(id + 1);
             return id;
         }
+    }
+
+    @Override
+    public <T> T getProperty(EntityProperty<T> key) {
+        return properties.getProperty(key);
+    }
+
+    @Override
+    public boolean hasProperty(EntityProperty<?> key) {
+        return properties.hasProperty(key);
+    }
+
+    @Override
+    public <T> void setProperty(EntityProperty<T> key, T value) {
+        properties.setProperty(key, value);
+    }
+
+    @Override
+    public Set<EntityProperty<?>> getAppliedProperties() {
+        return properties.getAppliedProperties();
     }
 }

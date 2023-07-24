@@ -11,10 +11,7 @@ import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 import lol.pyr.znpcsplus.util.*;
 import org.bukkit.DyeColor;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -252,10 +249,12 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         register(new NameProperty());
         register(new DummyProperty<>("look", false));
+        register(new DummyProperty<>("skin", SkinDescriptor.class));
+
         register(new GlowProperty(packetFactory));
         register(new EffectsProperty("fire", 0x01));
         register(new EffectsProperty("invisible", 0x20));
-        register(new DummyProperty<>("skin", SkinDescriptor.class));
+        linkProperties("glow", "fire", "invisible");
     }
 
     private void registerSerializer(PropertySerializer<?> serializer) {
@@ -270,6 +269,19 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         if (byName.containsKey(property.getName()))
             throw new IllegalArgumentException("Duplicate property name: " + property.getName());
         byName.put(property.getName(), property);
+    }
+
+    private void linkProperties(String... names) {
+        linkProperties(Arrays.stream(names)
+                .map(this::getByName)
+                .collect(Collectors.toSet()));
+    }
+
+    private void linkProperties(Collection<EntityPropertyImpl<?>> properties) {
+        for (EntityPropertyImpl<?> property : properties) for (EntityPropertyImpl<?> dependency : properties) {
+            if (property.equals(dependency)) continue;
+            property.addDependency(dependency);
+        }
     }
 
     public <V> PropertySerializer<V> getSerializer(Class<V> type) {

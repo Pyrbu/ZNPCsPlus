@@ -19,7 +19,8 @@ public class GlowProperty extends EntityPropertyImpl<NamedTextColor> {
     }
 
     @Override
-    public void apply(NamedTextColor value, Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData> properties) {
+    public void apply(Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData> properties) {
+        NamedTextColor value = entity.getProperty(this);
         EntityData oldData = properties.get(0);
         byte oldValue = oldData == null ? 0 : (byte) oldData.getValue();
         properties.put(0, newEntityData(0, EntityDataTypes.BYTE, (byte) (oldValue | (value == null ? 0 : 0x40))));

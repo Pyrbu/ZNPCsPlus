@@ -14,6 +14,7 @@ public abstract class EntityPropertyImpl<T> implements EntityProperty<T> {
     private final String name;
     private final T defaultValue;
     private final Class<T> clazz;
+    private final List<EntityPropertyImpl<?>> dependencies = new ArrayList<>();
 
     protected EntityPropertyImpl(String name, T defaultValue, Class<T> clazz) {
         this.name = name.toLowerCase();
@@ -35,20 +36,20 @@ public abstract class EntityPropertyImpl<T> implements EntityProperty<T> {
         return clazz;
     }
 
+    public void addDependency(EntityPropertyImpl<?> property) {
+        dependencies.add(property);
+    }
+
     protected static <V> EntityData newEntityData(int index, EntityDataType<V> type, V value) {
         return new EntityData(index, type, value);
     }
 
-    public List<EntityData> makeStandaloneData(T value, Player player, PacketEntity packetEntity, boolean isSpawned) {
+    public List<EntityData> applyStandalone(Player player, PacketEntity packetEntity, boolean isSpawned) {
         Map<Integer, EntityData> map = new HashMap<>();
-        apply(value, player, packetEntity, isSpawned, map);
+        apply(player, packetEntity, isSpawned, map);
+        for (EntityPropertyImpl<?> property : dependencies) property.apply(player, packetEntity, isSpawned, map);
         return new ArrayList<>(map.values());
     }
 
-    abstract public void apply(T value, Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData> properties);
-
-    @SuppressWarnings("unchecked")
-    public void UNSAFE_apply(Object value, Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData> properties) {
-        apply((T) value, player, entity, isSpawned, properties);
-    }
+    abstract public void apply(Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData> properties);
 }
