@@ -3,6 +3,7 @@ package lol.pyr.znpcsplus.entity;
 import com.github.retrooper.packetevents.protocol.player.EquipmentSlot;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.entity.EntityPropertyRegistry;
+import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.entity.properties.*;
 import lol.pyr.znpcsplus.entity.serializers.*;
 import lol.pyr.znpcsplus.packets.PacketFactory;
@@ -250,11 +251,11 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new EquipmentProperty(packetFactory, "offhand", EquipmentSlot.OFF_HAND));
 
         register(new NameProperty());
-        register(new DummyBooleanProperty("look", false));
+        register(new DummyProperty<>("look", false));
         register(new GlowProperty(packetFactory));
         register(new EffectsProperty("fire", 0x01));
         register(new EffectsProperty("invisible", 0x20));
-        register(new SkinProperty());
+        register(new DummyProperty<>("skin", SkinDescriptor.class));
     }
 
     private void registerSerializer(PropertySerializer<?> serializer) {
