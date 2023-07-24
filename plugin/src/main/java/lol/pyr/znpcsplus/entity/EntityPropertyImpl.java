@@ -48,7 +48,7 @@ public abstract class EntityPropertyImpl<T> implements EntityProperty<T> {
     abstract public void apply(T value, Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData> properties);
 
     @SuppressWarnings("unchecked")
-    public void UNSAFE_update(Object value, Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData> properties) {
+    public void UNSAFE_apply(Object value, Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData> properties) {
         apply((T) value, player, entity, isSpawned, properties);
     }
 }
