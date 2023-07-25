@@ -27,14 +27,14 @@ public abstract class Viewable {
 
     public void show(Player player) {
         if (viewers.contains(player)) return;
-        UNSAFE_show(player);
         viewers.add(player);
+        UNSAFE_show(player);
     }
 
     public void hide(Player player) {
         if (!viewers.contains(player)) return;
-        UNSAFE_hide(player);
         viewers.remove(player);
+        UNSAFE_hide(player);
     }
 
     public boolean isShown(Player player) {
