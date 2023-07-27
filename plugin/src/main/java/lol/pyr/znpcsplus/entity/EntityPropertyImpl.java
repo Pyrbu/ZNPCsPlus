@@ -15,6 +15,7 @@ public abstract class EntityPropertyImpl<T> implements EntityProperty<T> {
     private final T defaultValue;
     private final Class<T> clazz;
     private final List<EntityPropertyImpl<?>> dependencies = new ArrayList<>();
+    private boolean playerModifiable = true;
 
     protected EntityPropertyImpl(String name, T defaultValue, Class<T> clazz) {
         this.name = name.toLowerCase();
@@ -30,6 +31,15 @@ public abstract class EntityPropertyImpl<T> implements EntityProperty<T> {
     @Override
     public T getDefaultValue() {
         return defaultValue;
+    }
+
+    @Override
+    public boolean isPlayerModifiable() {
+        return playerModifiable;
+    }
+
+    public void setPlayerModifiable(boolean playerModifiable) {
+        this.playerModifiable = playerModifiable;
     }
 
     public Class<T> getType() {

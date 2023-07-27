@@ -8,13 +8,23 @@ import org.bukkit.entity.Player;
 import java.util.Map;
 
 public class DummyProperty<T> extends EntityPropertyImpl<T> {
-    @SuppressWarnings("unchecked")
     public DummyProperty(String name, T defaultValue) {
-        super(name, defaultValue, (Class<T>) defaultValue.getClass());
+        this(name, defaultValue, true);
     }
 
     public DummyProperty(String name, Class<T> clazz) {
+        this(name, clazz, true);
+    }
+
+    @SuppressWarnings("unchecked")
+    public DummyProperty(String name, T defaultValue, boolean playerModifiable) {
+        super(name, defaultValue, (Class<T>) defaultValue.getClass());
+        setPlayerModifiable(playerModifiable);
+    }
+
+    public DummyProperty(String name, Class<T> clazz, boolean playerModifiable) {
         super(name, null, clazz);
+        setPlayerModifiable(playerModifiable);
     }
 
     @Override
