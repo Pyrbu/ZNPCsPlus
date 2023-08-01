@@ -61,7 +61,6 @@ public class CitizensImporter implements DataImporter {
     public Collection<NpcEntryImpl> importData() {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(dataFile);
         ConfigurationSection npcsSection = config.getConfigurationSection("npc");
-        // use guard clause to avoid nested if statements
         if (npcsSection == null) {
             return Collections.emptyList();
         }
