@@ -249,7 +249,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         register(new NameProperty());
         register(new DummyProperty<>("look", false));
-        register(new DummyProperty<>("skin", SkinDescriptor.class));
+        register(new DummyProperty<>("skin", SkinDescriptor.class, false));
 
         register(new GlowProperty(packetFactory));
         register(new EffectsProperty("fire", 0x01));
