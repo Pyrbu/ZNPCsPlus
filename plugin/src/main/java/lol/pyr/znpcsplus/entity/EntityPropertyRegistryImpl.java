@@ -55,22 +55,10 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(VillagerProfession.class);
         registerEnumSerializer(VillagerLevel.class);
         /*
-        registerType("glow", NamedTextColor.class);
-        registerType("fire", false);
-        registerType("invisible", false);
         registerType("silent", false);
-        registerType("skin", SkinDescriptor.class);
         registerType("name", Component.class);
         registerType("look", false);
         registerType("dinnerbone", false);
-
-        // TODO: make all of these bukkit itemstack classes so api users wont have to add packetevents as a dependency
-        registerType("helmet", ItemStack.class);
-        registerType("chestplate", ItemStack.class);
-        registerType("leggings", ItemStack.class);
-        registerType("boots", ItemStack.class);
-        registerType("hand", ItemStack.class);
-        registerType("offhand", ItemStack.class);
 
         registerType("using_item", false); // TODO: fix it for 1.8 and add new property to use offhand item and riptide animation
         registerType("potion_color", Color.BLACK);
