@@ -82,10 +82,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("show_base", true); // TODO
 
         // Armor Stand
-        registerType("small", false);
-        registerType("arms", false);
-        registerType("base_plate", true);
-
         registerType("head_rotation", Vector3f.zero());
         registerType("body_rotation", Vector3f.zero());
         registerType("left_arm_rotation", new Vector3f(-10, 0, -10));
