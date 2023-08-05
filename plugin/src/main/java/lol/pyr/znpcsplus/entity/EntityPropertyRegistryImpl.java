@@ -241,11 +241,22 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new DummyProperty<>("skin", SkinDescriptor.class, false));
 
         register(new GlowProperty(packetFactory));
-        register(new EffectsProperty("fire", 0x01));
-        register(new EffectsProperty("invisible", 0x20));
+        register(new SimpleBitsetProperty("fire", 0, 0x01));
+        register(new SimpleBitsetProperty("invisible", 0, 0x20));
         linkProperties("glow", "fire", "invisible");
 
         register(new SimpleBooleanProperty("silent", 4, false, ver.isOlderThan(ServerVersion.V_1_9)));
+
+        int armorStandIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) armorStandIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) armorStandIndex = 14;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) armorStandIndex = 13;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) armorStandIndex = 11;
+        else armorStandIndex = 10;
+        register(new SimpleBitsetProperty("small", armorStandIndex, 0x01));
+        register(new SimpleBitsetProperty("arms", armorStandIndex, 0x04));
+        register(new SimpleBitsetProperty("base_plate", armorStandIndex, 0x08, true));
+        linkProperties("small", "arms", "base_plate");
     }
 
     private void registerSerializer(PropertySerializer<?> serializer) {
