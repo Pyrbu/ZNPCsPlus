@@ -4,35 +4,31 @@ import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
 import lol.pyr.znpcsplus.hologram.HologramImpl;
-import lol.pyr.znpcsplus.hologram.HologramItem;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
 
-public class HoloAddCommand implements CommandHandler {
+public class HoloAddItemCommand implements CommandHandler {
     private final NpcRegistryImpl registry;
 
-    public HoloAddCommand(NpcRegistryImpl registry) {
+    public HoloAddItemCommand(NpcRegistryImpl registry) {
         this.registry = registry;
     }
 
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
-        context.setUsage(context.getLabel() + " holo add <id> <text>");
+        context.setUsage(context.getLabel() + " holo additem <id>");
+        Player player = context.ensureSenderIsPlayer();
+        org.bukkit.inventory.ItemStack itemStack = player.getInventory().getItemInHand();
+        if (itemStack == null) context.halt(Component.text("You must be holding an item!", NamedTextColor.RED));
         HologramImpl hologram = context.parse(NpcEntryImpl.class).getNpc().getHologram();
-        context.ensureArgsNotEmpty();
-        String in = context.dumpAllArgs();
-        if (in.toLowerCase().startsWith("item:")) {
-            if (!HologramItem.ensureValidItemInput(in.substring(5))) {
-                context.halt(Component.text("The item input is invalid!", NamedTextColor.RED));
-            }
-        }
-        hologram.addLine(in);
-        context.send(Component.text("NPC line added!", NamedTextColor.GREEN));
+        hologram.addItemLineStack(itemStack);
+        context.send(Component.text("NPC item line added!", NamedTextColor.GREEN));
     }
 
     @Override
