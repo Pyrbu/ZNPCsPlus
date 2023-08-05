@@ -10,6 +10,9 @@ public class ZNpcsModel {
     private UUID uuid;
     private double hologramHeight;
     private String skinName;
+    private String skin;
+    private String signature;
+
     private String glowName;
     private ZNpcsLocation location;
     private String npcType;
@@ -56,5 +59,13 @@ public class ZNpcsModel {
 
     public Map<String, String[]> getCustomizationMap() {
         return customizationMap;
+    }
+
+    public String getSkin() {
+        return skin;
+    }
+
+    public String getSignature() {
+        return signature;
     }
 }
