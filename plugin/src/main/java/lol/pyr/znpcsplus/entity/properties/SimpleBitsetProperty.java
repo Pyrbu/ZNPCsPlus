@@ -14,7 +14,7 @@ public class SimpleBitsetProperty extends EntityPropertyImpl<Boolean> {
     private final boolean inverted;
 
     public SimpleBitsetProperty(String name, int index, int bitmask, boolean inverted) {
-        super(name, !inverted, Boolean.class);
+        super(name, inverted, Boolean.class);
         this.index = index;
         this.bitmask = bitmask;
         this.inverted = inverted;
