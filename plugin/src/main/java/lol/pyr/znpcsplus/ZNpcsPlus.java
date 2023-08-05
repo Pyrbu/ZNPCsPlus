@@ -103,7 +103,7 @@ public class ZNpcsPlus extends JavaPlugin {
         PluginManager pluginManager = Bukkit.getPluginManager();
         long before = System.currentTimeMillis();
 
-        boolean legacy = new File(getDataFolder(), "data.json").isFile();
+        boolean legacy = new File(getDataFolder(), "data.json").isFile() && !new File(getDataFolder(), "data").isDirectory();
         if (legacy) try {
             Files.move(getDataFolder().toPath(), new File(getDataFolder().getParentFile(), "ZNPCsPlusLegacy").toPath());
         } catch (IOException e) {
