@@ -1,5 +1,7 @@
 package lol.pyr.znpcsplus.entity;
 
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.player.EquipmentSlot;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.entity.EntityPropertyRegistry;
@@ -55,9 +57,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(VillagerProfession.class);
         registerEnumSerializer(VillagerLevel.class);
         /*
-        registerType("silent", false);
-        registerType("name", Component.class);
-        registerType("look", false);
         registerType("dinnerbone", false);
 
         registerType("using_item", false); // TODO: fix it for 1.8 and add new property to use offhand item and riptide animation
@@ -228,6 +227,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
     }
 
     public void registerTypes(PacketFactory packetFactory) {
+        ServerVersion ver = PacketEvents.getAPI().getServerManager().getVersion();
+
         register(new EquipmentProperty(packetFactory, "helmet", EquipmentSlot.HELMET));
         register(new EquipmentProperty(packetFactory, "chestplate", EquipmentSlot.CHEST_PLATE));
         register(new EquipmentProperty(packetFactory, "leggings", EquipmentSlot.LEGGINGS));
@@ -243,6 +244,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new EffectsProperty("fire", 0x01));
         register(new EffectsProperty("invisible", 0x20));
         linkProperties("glow", "fire", "invisible");
+
+        register(new SimpleBooleanProperty("silent", 4, false, ver.isOlderThan(ServerVersion.V_1_9)));
     }
 
     private void registerSerializer(PropertySerializer<?> serializer) {
