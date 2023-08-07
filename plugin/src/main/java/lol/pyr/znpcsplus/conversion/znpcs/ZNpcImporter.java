@@ -27,8 +27,10 @@ import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcTypeRegistryImpl;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
+import lol.pyr.znpcsplus.skin.Skin;
 import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 import lol.pyr.znpcsplus.skin.descriptor.FetchingDescriptor;
+import lol.pyr.znpcsplus.skin.descriptor.PrefetchedDescriptor;
 import lol.pyr.znpcsplus.util.BungeeConnector;
 import lol.pyr.znpcsplus.util.ItemSerializationUtil;
 import lol.pyr.znpcsplus.util.NpcLocation;
@@ -122,6 +124,9 @@ public class ZNpcImporter implements DataImporter {
 
             if (model.getSkinName() != null) {
                 npc.setProperty(propertyRegistry.getByName("skin", SkinDescriptor.class), new FetchingDescriptor(skinCache, model.getSkinName()));
+            }
+            else if (model.getSkin() != null && model.getSignature() != null) {
+                npc.setProperty(propertyRegistry.getByName("skin", SkinDescriptor.class), new PrefetchedDescriptor(new Skin(model.getSkin(), model.getSignature())));
             }
 
             NpcEntryImpl entry = new NpcEntryImpl(String.valueOf(model.getId()), npc);

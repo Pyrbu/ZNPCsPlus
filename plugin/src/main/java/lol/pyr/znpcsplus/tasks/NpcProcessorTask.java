@@ -37,20 +37,20 @@ public class NpcProcessorTask extends BukkitRunnable {
             Player closest = null;
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (!player.getWorld().equals(npc.getWorld())) {
-                    if (npc.isShown(player)) npc.hide(player);
+                    if (npc.isVisibleTo(player)) npc.hide(player);
                     continue;
                 }
                 double distance = player.getLocation().distanceSquared(npc.getBukkitLocation());
 
                 // visibility
                 boolean inRange = distance <= distSq;
-                if (!inRange && npc.isShown(player)) {
+                if (!inRange && npc.isVisibleTo(player)) {
                     NpcDespawnEvent event = new NpcDespawnEvent(player, entry);
                     Bukkit.getPluginManager().callEvent(event);
                     if (!event.isCancelled()) npc.hide(player);
                 }
                 if (inRange) {
-                    if (!npc.isShown(player)) {
+                    if (!npc.isVisibleTo(player)) {
                         NpcSpawnEvent event = new NpcSpawnEvent(player, entry);
                         Bukkit.getPluginManager().callEvent(event);
                         if (event.isCancelled()) continue;

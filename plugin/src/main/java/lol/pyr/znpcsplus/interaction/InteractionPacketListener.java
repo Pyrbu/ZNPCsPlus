@@ -28,6 +28,7 @@ public class InteractionPacketListener implements PacketListener {
     public void onPacketReceive(PacketReceiveEvent event) {
         if (event.getPacketType() != PacketType.Play.Client.INTERACT_ENTITY) return;
         Player player = (Player) event.getPlayer();
+        if (player == null) return;
 
         WrapperPlayClientInteractEntity packet = new WrapperPlayClientInteractEntity(event);
         User user = userManager.get(player);

@@ -1,10 +1,8 @@
 package lol.pyr.znpcsplus.commands.property;
 
-import com.github.retrooper.packetevents.protocol.item.ItemStack;
 import com.github.retrooper.packetevents.protocol.world.states.WrappedBlockState;
 import com.github.retrooper.packetevents.protocol.world.states.type.StateType;
 import com.github.retrooper.packetevents.protocol.world.states.type.StateTypes;
-import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
@@ -18,6 +16,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,12 +42,12 @@ public class PropertySetCommand implements CommandHandler {
         Object value;
         String valueName;
         if (type == ItemStack.class) {
-            org.bukkit.inventory.ItemStack bukkitStack = context.ensureSenderIsPlayer().getInventory().getItemInHand();
+            ItemStack bukkitStack = context.ensureSenderIsPlayer().getInventory().getItemInHand();
             if (bukkitStack.getAmount() == 0) {
                 value = null;
                 valueName = "EMPTY";
             } else {
-                value = SpigotConversionUtil.fromBukkitItemStack(bukkitStack);
+                value = bukkitStack;
                 valueName = bukkitStack.toString();
             }
         }
