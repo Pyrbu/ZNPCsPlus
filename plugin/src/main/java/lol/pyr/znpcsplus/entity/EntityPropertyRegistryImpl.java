@@ -60,7 +60,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         /*
         registerType("using_item", false); // TODO: fix it for 1.8 and add new property to use offhand item and riptide animation
 
-        registerType("shaking", false);
         registerType("baby", false); // TODO
         registerType("pose", NpcPose.STANDING);
 
@@ -78,10 +77,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Bat
         registerType("hanging", false);
-
-        // Bee
-        registerType("angry", false);
-        registerType("has_nectar", false);
 
         // Blaze
         registerType("blaze_on_fire", false);
@@ -269,6 +264,16 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else ghastAttackingIndex = 16;
         register(new BooleanProperty("attacking", ghastAttackingIndex, false, legacyBooleans));
 
+        // Bat
+        final int batIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) batIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) batIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) batIndex = 14;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) batIndex = 12;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) batIndex = 11;
+        else batIndex = 16;
+        register(new BooleanProperty("hanging", batIndex, false, true /* This isnt a mistake */));
+
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_14)) return;
 
         // Fox
@@ -287,6 +292,11 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new BitsetProperty("fox_faceplanted", foxIndex, 0x40));
         linkProperties("fox_sitting", "fox_crouching", "fox_sleeping", "fox_faceplanted");
 
+        int beeIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) beeIndex = 17;
+        else beeIndex = 18;
+        register(new BitsetProperty("has_nectar", beeIndex++, 0x08));
+        register(new EncodedIntegerProperty<>("angry", false, beeIndex, enabled -> enabled ? 1 : 0));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_17)) return;
 

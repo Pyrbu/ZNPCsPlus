@@ -35,13 +35,6 @@ public interface MetadataFactory {
     EntityData axolotlVariant(int variant);
     EntityData playingDead(boolean playingDead);
 
-    // Bat
-    EntityData batHanging(boolean hanging);
-
-    // Bee
-    EntityData beeAngry(boolean angry);
-    EntityData beeHasNectar(boolean hasNectar);
-
     // Blaze
     EntityData blazeOnFire(boolean onFire);
 

@@ -37,21 +37,6 @@ public class V1_17MetadataFactory extends V1_16MetadataFactory {
     }
 
     @Override
-    public EntityData batHanging(boolean hanging) {
-        return newEntityData(16, EntityDataTypes.BYTE, (byte) (hanging ? 0x01 : 0));
-    }
-
-    @Override
-    public EntityData beeAngry(boolean angry) {
-        return newEntityData(18, EntityDataTypes.INT, angry ? 1 : 0);
-    }
-
-    @Override
-    public EntityData beeHasNectar(boolean hasNectar) {
-        return newEntityData(17, EntityDataTypes.BYTE, (byte) (hasNectar ? 0x08 : 0));
-    }
-
-    @Override
     public EntityData blazeOnFire(boolean onFire) {
         return newEntityData(16, EntityDataTypes.BYTE, (byte) (onFire ? 0x01 : 0));
     }

@@ -28,7 +28,7 @@ public class BooleanProperty extends EntityPropertyImpl<Boolean> {
     public void apply(Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData> properties) {
         boolean enabled = entity.getProperty(this);
         if (inverted) enabled = !enabled;
-        if (legacy) properties.put(index, new EntityData(index, EntityDataTypes.BYTE, (enabled ? 1 : 0)));
-        else properties.put(index, new EntityData(index, EntityDataTypes.BOOLEAN, enabled));
+        if (legacy) properties.put(index, newEntityData(index, EntityDataTypes.BYTE, (byte) (enabled ? 1 : 0)));
+        else properties.put(index, newEntityData(index, EntityDataTypes.BOOLEAN, enabled));
     }
 }

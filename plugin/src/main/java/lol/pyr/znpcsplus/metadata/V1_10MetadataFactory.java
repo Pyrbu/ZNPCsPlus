@@ -8,11 +8,6 @@ import lol.pyr.znpcsplus.util.CreeperState;
 public class V1_10MetadataFactory extends V1_9MetadataFactory {
 
     @Override
-    public EntityData batHanging(boolean hanging) {
-        return newEntityData(12, EntityDataTypes.BYTE, (byte) (hanging ? 0x01 : 0));
-    }
-
-    @Override
     public EntityData blazeOnFire(boolean onFire) {
         return newEntityData(12, EntityDataTypes.BYTE, (byte) (onFire ? 0x01 : 0));
     }

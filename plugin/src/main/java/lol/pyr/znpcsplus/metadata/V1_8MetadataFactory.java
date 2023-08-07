@@ -41,21 +41,6 @@ public class V1_8MetadataFactory implements MetadataFactory {
     }
 
     @Override
-    public EntityData batHanging(boolean hanging) {
-        return newEntityData(16, EntityDataTypes.BYTE, (byte) (hanging ? 1 : 0));
-    }
-
-    @Override
-    public EntityData beeAngry(boolean angry) {
-        throw new UnsupportedOperationException("The bee properties entity data isn't supported on this version");
-    }
-
-    @Override
-    public EntityData beeHasNectar(boolean hasNectar) {
-        throw new UnsupportedOperationException("The bee properties entity data isn't supported on this version");
-    }
-
-    @Override
     public EntityData blazeOnFire(boolean onFire) {
         return newEntityData(16, EntityDataTypes.BYTE, (byte) (onFire ? 1 : 0));
     }

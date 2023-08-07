@@ -33,11 +33,6 @@ public class V1_14MetadataFactory extends V1_13MetadataFactory {
     }
 
     @Override
-    public EntityData batHanging(boolean hanging) {
-        return newEntityData(14, EntityDataTypes.BYTE, (byte) (hanging ? 0x01 : 0));
-    }
-
-    @Override
     public EntityData blazeOnFire(boolean onFire) {
         return newEntityData(14, EntityDataTypes.BYTE, (byte) (onFire ? 0x01 : 0));
     }
