@@ -4,32 +4,11 @@ import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataType;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 import com.github.retrooper.packetevents.protocol.entity.pose.EntityPose;
-import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
 import lol.pyr.znpcsplus.util.*;
-import net.kyori.adventure.text.Component;
 import org.bukkit.DyeColor;
 
 @Deprecated
 public class V1_8MetadataFactory implements MetadataFactory {
-    @Override
-    public EntityData skinLayers(boolean cape, boolean jacket, boolean leftSleeve, boolean rightSleeve, boolean leftLeg, boolean rightLeg, boolean hat) {
-        return createSkinLayers(10, cape, jacket, leftSleeve, rightSleeve, leftLeg, rightLeg, hat);
-    }
-
-    @Override
-    public EntityData effects(boolean onFire, boolean glowing, boolean invisible, boolean usingElytra, boolean usingItemLegacy) {
-        return newEntityData(0, EntityDataTypes.BYTE, (byte) ((onFire ? 0x01 : 0) | (usingItemLegacy ? 0x10 : 0) | (invisible ? 0x20 : 0)));
-    }
-
-    @Override
-    public EntityData name(Component name) {
-        return newEntityData(2, EntityDataTypes.STRING, AdventureSerializer.getLegacyGsonSerializer().serialize(name));
-    }
-
-    @Override
-    public EntityData nameShown() {
-        return newEntityData(3, EntityDataTypes.BYTE, (byte) 1);
-    }
 
     @Override
     public EntityData noGravity() {
@@ -69,41 +48,6 @@ public class V1_8MetadataFactory implements MetadataFactory {
     @Override
     public EntityData shoulderEntityRight(ParrotVariant variant) {
         throw new UnsupportedOperationException("The shoulder entity data isn't supported on this version");
-    }
-
-    @Override
-    public EntityData armorStandProperties(boolean small, boolean arms, boolean noBasePlate) {
-        return newEntityData(10, EntityDataTypes.BYTE, (byte) ((small ? 0x01 : 0) | (arms ? 0x04 : 0) | (noBasePlate ? 0x08 : 0)));
-    }
-
-    @Override
-    public EntityData armorStandHeadRotation(Vector3f headRotation) {
-        return createRotations(11, headRotation);
-    }
-
-    @Override
-    public EntityData armorStandBodyRotation(Vector3f bodyRotation) {
-        return createRotations(12, bodyRotation);
-    }
-
-    @Override
-    public EntityData armorStandLeftArmRotation(Vector3f leftArmRotation) {
-        return createRotations(13, leftArmRotation);
-    }
-
-    @Override
-    public EntityData armorStandRightArmRotation(Vector3f rightArmRotation) {
-        return createRotations(14, rightArmRotation);
-    }
-
-    @Override
-    public EntityData armorStandLeftLegRotation(Vector3f leftLegRotation) {
-        return createRotations(15, leftLegRotation);
-    }
-
-    @Override
-    public EntityData armorStandRightLegRotation(Vector3f rightLegRotation) {
-        return createRotations(16, rightLegRotation);
     }
 
     @Override
@@ -224,11 +168,6 @@ public class V1_8MetadataFactory implements MetadataFactory {
     @Override
     public EntityData villagerData(int type, int profession, int level) {
         return newEntityData(16, EntityDataTypes.INT, profession);
-    }
-
-    @Override
-    public EntityData silent(boolean enabled) {
-        return newEntityData(4, EntityDataTypes.BYTE, (byte) (enabled ? 1 : 0));
     }
 
     protected EntityData createSkinLayers(int index, boolean cape, boolean jacket, boolean leftSleeve, boolean rightSleeve, boolean leftLeg, boolean rightLeg, boolean hat) {

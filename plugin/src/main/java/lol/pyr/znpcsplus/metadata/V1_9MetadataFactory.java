@@ -2,27 +2,10 @@ package lol.pyr.znpcsplus.metadata;
 
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
-import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
 import lol.pyr.znpcsplus.util.CreeperState;
-import net.kyori.adventure.text.Component;
 
 @Deprecated
 public class V1_9MetadataFactory extends V1_8MetadataFactory {
-    @Override
-    public EntityData skinLayers(boolean cape, boolean jacket, boolean leftSleeve, boolean rightSleeve, boolean leftLeg, boolean rightLeg, boolean hat) {
-        return createSkinLayers(12, cape, jacket, leftSleeve, rightSleeve, leftLeg, rightLeg, hat);
-    }
-
-    @Override
-    public EntityData effects(boolean onFire, boolean glowing, boolean invisible, boolean usingElytra, boolean usingItemLegacy) {
-        return newEntityData(0, EntityDataTypes.BYTE, (byte) (
-                (onFire ? 0x01 : 0) |
-                (usingItemLegacy ? 0x10 : 0) |
-                (invisible ? 0x20 : 0) |
-                (glowing ? 0x40 : 0) |
-                (usingElytra ? 0x80 : 0)
-        ));
-    }
 
     @Override
     public EntityData potionAmbient(boolean ambient) {
@@ -47,21 +30,6 @@ public class V1_9MetadataFactory extends V1_8MetadataFactory {
     @Override
     public EntityData creeperCharged(boolean charged) {
         return newEntityData(12, EntityDataTypes.BOOLEAN, charged);
-    }
-
-    @Override
-    public EntityData name(Component name) {
-        return newEntityData(2, EntityDataTypes.STRING, AdventureSerializer.getGsonSerializer().serialize(name));
-    }
-
-    @Override
-    public EntityData nameShown() {
-        return newEntityData(3, EntityDataTypes.BOOLEAN, true);
-    }
-
-    @Override
-    public EntityData silent(boolean enabled) {
-        return newEntityData(4, EntityDataTypes.BOOLEAN, enabled);
     }
 
     @Override

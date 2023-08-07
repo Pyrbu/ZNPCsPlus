@@ -6,20 +6,10 @@ import com.github.retrooper.packetevents.protocol.entity.villager.VillagerData;
 import lol.pyr.znpcsplus.util.CatVariant;
 import lol.pyr.znpcsplus.util.CreeperState;
 import lol.pyr.znpcsplus.util.ParrotVariant;
-import lol.pyr.znpcsplus.util.Vector3f;
 import org.bukkit.DyeColor;
 
 @Deprecated
 public class V1_17MetadataFactory extends V1_16MetadataFactory {
-    @Override
-    public EntityData skinLayers(boolean cape, boolean jacket, boolean leftSleeve, boolean rightSleeve, boolean leftLeg, boolean rightLeg, boolean hat) {
-        return createSkinLayers(17, cape, jacket, leftSleeve, rightSleeve, leftLeg, rightLeg, hat);
-    }
-
-    @Override
-    public EntityData effects(boolean onFire, boolean glowing, boolean invisible, boolean usingElytra, boolean usingItemLegacy) {
-        return newEntityData(0, EntityDataTypes.BYTE, (byte) ((onFire ? 0x01 : 0) | (invisible ? 0x20 : 0) | (glowing ? 0x40 : 0) | (usingElytra ? 0x80 : 0)));
-    }
 
     @Override
     public EntityData shaking(boolean enabled) {
@@ -49,41 +39,6 @@ public class V1_17MetadataFactory extends V1_16MetadataFactory {
     @Override
     public EntityData shoulderEntityRight(ParrotVariant variant) {
         return createShoulderEntityRight(20, variant);
-    }
-
-    @Override
-    public EntityData armorStandProperties(boolean small, boolean arms, boolean noBasePlate) {
-        return newEntityData(15, EntityDataTypes.BYTE, (byte) ((small ? 0x01 : 0) | (arms ? 0x04 : 0) | (noBasePlate ? 0x08 : 0)));
-    }
-
-    @Override
-    public EntityData armorStandHeadRotation(Vector3f headRotation) {
-        return createRotations(16, headRotation);
-    }
-
-    @Override
-    public EntityData armorStandBodyRotation(Vector3f bodyRotation) {
-        return createRotations(17, bodyRotation);
-    }
-
-    @Override
-    public EntityData armorStandLeftArmRotation(Vector3f leftArmRotation) {
-        return createRotations(18, leftArmRotation);
-    }
-
-    @Override
-    public EntityData armorStandRightArmRotation(Vector3f rightArmRotation) {
-        return createRotations(19, rightArmRotation);
-    }
-
-    @Override
-    public EntityData armorStandLeftLegRotation(Vector3f leftLegRotation) {
-        return createRotations(20, leftLegRotation);
-    }
-
-    @Override
-    public EntityData armorStandRightLegRotation(Vector3f rightLegRotation) {
-        return createRotations(21, rightLegRotation);
     }
 
     @Override

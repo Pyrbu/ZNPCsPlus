@@ -2,8 +2,9 @@ package lol.pyr.znpcsplus.metadata;
 
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.pose.EntityPose;
-import lol.pyr.znpcsplus.util.*;
-import net.kyori.adventure.text.Component;
+import lol.pyr.znpcsplus.util.CatVariant;
+import lol.pyr.znpcsplus.util.CreeperState;
+import lol.pyr.znpcsplus.util.ParrotVariant;
 import org.bukkit.DyeColor;
 
 /**
@@ -22,10 +23,7 @@ import org.bukkit.DyeColor;
  */
 @Deprecated
 public interface MetadataFactory {
-    EntityData effects(boolean onFire, boolean glowing, boolean invisible, boolean usingElytra, boolean usingItemLegacy);
-    EntityData silent(boolean enabled);
-    EntityData name(Component name);
-    EntityData nameShown();
+
     EntityData noGravity();
     EntityData pose(EntityPose pose);
     EntityData shaking(boolean enabled);
@@ -33,19 +31,8 @@ public interface MetadataFactory {
     EntityData potionColor(int color);
     EntityData potionAmbient(boolean ambient);
 
-    // Player
-    EntityData skinLayers(boolean cape, boolean jacket, boolean leftSleeve, boolean rightSleeve, boolean leftLeg, boolean rightLeg, boolean hat);
     EntityData shoulderEntityLeft(ParrotVariant variant);
     EntityData shoulderEntityRight(ParrotVariant variant);
-
-    // Armor Stand
-    EntityData armorStandProperties(boolean small, boolean arms, boolean noBasePlate);
-    EntityData armorStandHeadRotation(Vector3f headRotation);
-    EntityData armorStandBodyRotation(Vector3f bodyRotation);
-    EntityData armorStandLeftArmRotation(Vector3f leftArmRotation);
-    EntityData armorStandRightArmRotation(Vector3f rightArmRotation);
-    EntityData armorStandLeftLegRotation(Vector3f leftLegRotation);
-    EntityData armorStandRightLegRotation(Vector3f rightLegRotation);
 
     // Axolotl
     EntityData axolotlVariant(int variant);
