@@ -8,19 +8,19 @@ import org.bukkit.entity.Player;
 
 import java.util.Map;
 
-public class SimpleBitsetProperty extends EntityPropertyImpl<Boolean> {
+public class BitsetProperty extends EntityPropertyImpl<Boolean> {
     private final int index;
     private final int bitmask;
     private final boolean inverted;
 
-    public SimpleBitsetProperty(String name, int index, int bitmask, boolean inverted) {
+    public BitsetProperty(String name, int index, int bitmask, boolean inverted) {
         super(name, inverted, Boolean.class);
         this.index = index;
         this.bitmask = bitmask;
         this.inverted = inverted;
     }
 
-    public SimpleBitsetProperty(String name, int index, int bitmask) {
+    public BitsetProperty(String name, int index, int bitmask) {
         this(name, index, bitmask, false);
     }
 

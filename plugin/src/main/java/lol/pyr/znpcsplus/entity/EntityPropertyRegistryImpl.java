@@ -218,11 +218,11 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new DummyProperty<>("skin", SkinDescriptor.class, false));
 
         register(new GlowProperty(packetFactory));
-        register(new SimpleBitsetProperty("fire", 0, 0x01));
-        register(new SimpleBitsetProperty("invisible", 0, 0x20));
+        register(new BitsetProperty("fire", 0, 0x01));
+        register(new BitsetProperty("invisible", 0, 0x20));
         register(new HoloItemProperty());
         linkProperties("glow", "fire", "invisible");
-        register(new SimpleBooleanProperty("silent", 4, false, legacyBooleans));
+        register(new BooleanProperty("silent", 4, false, legacyBooleans));
 
         final int skinLayersIndex;
         if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) skinLayersIndex = 17;
@@ -231,13 +231,13 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) skinLayersIndex = 13;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) skinLayersIndex = 12;
         else skinLayersIndex = 10;
-        register(new SimpleBitsetProperty("skin_cape", skinLayersIndex, 0x01));
-        register(new SimpleBitsetProperty("skin_jacket", skinLayersIndex, 0x02));
-        register(new SimpleBitsetProperty("skin_left_sleeve", skinLayersIndex, 0x04));
-        register(new SimpleBitsetProperty("skin_right_sleeve", skinLayersIndex, 0x08));
-        register(new SimpleBitsetProperty("skin_left_leg", skinLayersIndex, 0x10));
-        register(new SimpleBitsetProperty("skin_right_leg", skinLayersIndex, 0x20));
-        register(new SimpleBitsetProperty("skin_hat", skinLayersIndex, 0x40));
+        register(new BitsetProperty("skin_cape", skinLayersIndex, 0x01));
+        register(new BitsetProperty("skin_jacket", skinLayersIndex, 0x02));
+        register(new BitsetProperty("skin_left_sleeve", skinLayersIndex, 0x04));
+        register(new BitsetProperty("skin_right_sleeve", skinLayersIndex, 0x08));
+        register(new BitsetProperty("skin_left_leg", skinLayersIndex, 0x10));
+        register(new BitsetProperty("skin_right_leg", skinLayersIndex, 0x20));
+        register(new BitsetProperty("skin_hat", skinLayersIndex, 0x40));
         linkProperties("skin_cape", "skin_jacket", "skin_left_sleeve", "skin_right_sleeve", "skin_left_leg", "skin_right_leg", "skin_hat");
 
         // Armor Stand
@@ -247,9 +247,9 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) armorStandIndex = 13;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) armorStandIndex = 11;
         else armorStandIndex = 10;
-        register(new SimpleBitsetProperty("small", armorStandIndex, 0x01));
-        register(new SimpleBitsetProperty("arms", armorStandIndex, 0x04));
-        register(new SimpleBitsetProperty("base_plate", armorStandIndex++, 0x08, true));
+        register(new BitsetProperty("small", armorStandIndex, 0x01));
+        register(new BitsetProperty("arms", armorStandIndex, 0x04));
+        register(new BitsetProperty("base_plate", armorStandIndex++, 0x08, true));
         register(new RotationProperty("head_rotation", armorStandIndex++, Vector3f.zero()));
         register(new RotationProperty("body_rotation", armorStandIndex++, Vector3f.zero()));
         register(new RotationProperty("left_arm_rotation", armorStandIndex++, new Vector3f(-10, 0, -10)));
@@ -266,12 +266,12 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) ghastAttackingIndex = 12;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) ghastAttackingIndex = 11;
         else ghastAttackingIndex = 16;
-        register(new SimpleBooleanProperty("attacking", ghastAttackingIndex, false, legacyBooleans));
+        register(new BooleanProperty("attacking", ghastAttackingIndex, false, legacyBooleans));
 
         // Goat
         if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) {
-            register(new SimpleBooleanProperty("has_left_horn", 18, true, legacyBooleans));
-            register(new SimpleBooleanProperty("has_right_horn", 19, true, legacyBooleans));
+            register(new BooleanProperty("has_left_horn", 18, true, legacyBooleans));
+            register(new BooleanProperty("has_right_horn", 19, true, legacyBooleans));
         }
     }
 

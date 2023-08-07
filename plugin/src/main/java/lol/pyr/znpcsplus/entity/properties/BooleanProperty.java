@@ -8,11 +8,11 @@ import org.bukkit.entity.Player;
 
 import java.util.Map;
 
-public class SimpleBooleanProperty extends EntityPropertyImpl<Boolean> {
+public class BooleanProperty extends EntityPropertyImpl<Boolean> {
     private final int index;
     private final boolean legacy;
 
-    public SimpleBooleanProperty(String name, int index, boolean defaultValue, boolean legacy) {
+    public BooleanProperty(String name, int index, boolean defaultValue, boolean legacy) {
         super(name, defaultValue, Boolean.class);
         this.index = index;
         this.legacy = legacy;
