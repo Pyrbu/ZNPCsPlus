@@ -184,10 +184,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("piglin_dancing", false); // TODO
         registerType("piglin_charging_crossbow", false); // TODO
 
-        // Goat
-        registerType("has_left_horn", true);
-        registerType("has_right_horn", true);
-
         // Vindicator
         registerType("celebrating", false); // TODO
 
@@ -226,7 +222,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new SimpleBitsetProperty("invisible", 0, 0x20));
         register(new HoloItemProperty());
         linkProperties("glow", "fire", "invisible");
-
         register(new SimpleBooleanProperty("silent", 4, false, legacyBooleans));
 
         final int skinLayersIndex;
@@ -243,7 +238,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new SimpleBitsetProperty("skin_left_leg", skinLayersIndex, 0x10));
         register(new SimpleBitsetProperty("skin_right_leg", skinLayersIndex, 0x20));
         register(new SimpleBitsetProperty("skin_hat", skinLayersIndex, 0x40));
-
         linkProperties("skin_cape", "skin_jacket", "skin_left_sleeve", "skin_right_sleeve", "skin_left_leg", "skin_right_leg", "skin_hat");
 
         // Armor Stand
