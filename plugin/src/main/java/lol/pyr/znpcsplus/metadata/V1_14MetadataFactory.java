@@ -73,16 +73,6 @@ public class V1_14MetadataFactory extends V1_13MetadataFactory {
     }
 
     @Override
-    public EntityData foxVariant(int variant) {
-        return newEntityData(15, EntityDataTypes.INT, variant);
-    }
-
-    @Override
-    public EntityData foxProperties(boolean sitting, boolean crouching, boolean sleeping, boolean facePlanted) {
-        return newEntityData(16, EntityDataTypes.BYTE, (byte) ((sitting ? 0x01 : 0) | (crouching ? 0x04 : 0) | (sleeping ? 0x20 : 0)));
-    }
-
-    @Override
     public EntityData villagerData(int type, int profession, int level) {
         return newEntityData(16, EntityDataTypes.VILLAGER_DATA, new VillagerData(type, profession, level));
     }

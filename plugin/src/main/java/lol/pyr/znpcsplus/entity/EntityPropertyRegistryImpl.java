@@ -11,6 +11,7 @@ import lol.pyr.znpcsplus.entity.serializers.*;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 import lol.pyr.znpcsplus.util.*;
+import org.bukkit.Color;
 import org.bukkit.DyeColor;
 
 import java.util.*;
@@ -101,13 +102,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Evoker
         registerType("evoker_spell", SpellType.NONE);
-
-        // Fox
-        registerType("fox_variant", FoxVariant.RED);
-        registerType("fox_sitting", false);
-        registerType("fox_crouching", false);
-        registerType("fox_sleeping", false);
-        registerType("fox_faceplanted", false);
 
         // Frog
         registerType("frog_variant", FrogVariant.TEMPERATE);
@@ -217,7 +211,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new GlowProperty(packetFactory));
         register(new BitsetProperty("fire", 0, 0x01));
         register(new BitsetProperty("invisible", 0, 0x20));
-        register(new HoloItemProperty());
+        register(new HologramItemProperty());
         linkProperties("glow", "fire", "invisible");
         register(new BooleanProperty("silent", 4, false, legacyBooleans));
 
@@ -226,7 +220,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) potionIndex = 9;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) potionIndex = 8;
         else potionIndex = 7;
-        register(new ColorProperty("potion_color", potionIndex++, null));
+        register(new EncodedIntegerProperty<>("potion_color", Color.class, potionIndex++, Color::asRGB));
         register(new BooleanProperty("potion_ambient", potionIndex, false, legacyBooleans));
 
         // Player
@@ -257,13 +251,13 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new BitsetProperty("small", armorStandIndex, 0x01));
         register(new BitsetProperty("arms", armorStandIndex, 0x04));
         register(new BitsetProperty("base_plate", armorStandIndex++, 0x08, true));
+        linkProperties("small", "arms", "base_plate");
         register(new RotationProperty("head_rotation", armorStandIndex++, Vector3f.zero()));
         register(new RotationProperty("body_rotation", armorStandIndex++, Vector3f.zero()));
         register(new RotationProperty("left_arm_rotation", armorStandIndex++, new Vector3f(-10, 0, -10)));
         register(new RotationProperty("right_arm_rotation", armorStandIndex++, new Vector3f(-15, 0, 10)));
         register(new RotationProperty("left_leg_rotation", armorStandIndex++, new Vector3f(-1, 0, -1)));
         register(new RotationProperty("right_leg_rotation", armorStandIndex, new Vector3f(1, 0, 1)));
-        linkProperties("small", "arms", "base_plate");
 
         // Ghast
         final int ghastAttackingIndex;
@@ -275,13 +269,32 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else ghastAttackingIndex = 16;
         register(new BooleanProperty("attacking", ghastAttackingIndex, false, legacyBooleans));
 
+        if (!ver.isNewerThanOrEquals(ServerVersion.V_1_14)) return;
+
+        // Fox
+        int foxIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) foxIndex = 17;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) foxIndex = 16;
+        else foxIndex = 15;
+        register(new EncodedIntegerProperty<>("fox_variant", FoxVariant.RED, foxIndex++, Enum::ordinal));
+        register(new BitsetProperty("fox_sitting", foxIndex, 0x01));
+        register(new BitsetProperty("fox_crouching", foxIndex, 0x04));
+        register(new BitsetProperty("fox_sleeping", foxIndex, 0x20));
+        linkProperties("fox_sitting", "fox_crouching", "fox_sleeping");
+
+        if (!ver.isNewerThanOrEquals(ServerVersion.V_1_15)) return;
+
+        register(new BitsetProperty("fox_faceplanted", foxIndex, 0x40));
+        linkProperties("fox_sitting", "fox_crouching", "fox_sleeping", "fox_faceplanted");
+
+
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_17)) return;
 
         // Goat
         register(new BooleanProperty("has_left_horn", 18, true, legacyBooleans));
         register(new BooleanProperty("has_right_horn", 19, true, legacyBooleans));
 
-        register(new ShakingProperty(7));
+        register(new EncodedIntegerProperty<>("shaking", false,7, enabled -> enabled ? 140 : 0));
     }
 
     private void registerSerializer(PropertySerializer<?> serializer) {

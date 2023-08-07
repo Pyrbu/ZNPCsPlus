@@ -11,11 +11,6 @@ import org.bukkit.DyeColor;
 public class V1_8MetadataFactory implements MetadataFactory {
 
     @Override
-    public EntityData noGravity() {
-        throw new UnsupportedOperationException("The gravity entity data isn't supported on this version");
-    }
-
-    @Override
     public EntityData pose(EntityPose pose) {
         throw new UnsupportedOperationException("The pose entity data isn't supported on this version");
     }
@@ -113,16 +108,6 @@ public class V1_8MetadataFactory implements MetadataFactory {
     @Override
     public EntityData evokerSpell(int spell) {
         throw new UnsupportedOperationException("The evoker spell entity data isn't supported on this version");
-    }
-
-    @Override
-    public EntityData foxVariant(int variant) {
-        throw new UnsupportedOperationException("The fox variant entity data isn't supported on this version");
-    }
-
-    @Override
-    public EntityData foxProperties(boolean sitting, boolean crouching, boolean sleeping, boolean facePlanted) {
-        throw new UnsupportedOperationException("The fox properties entity data isn't supported on this version");
     }
 
     @Override

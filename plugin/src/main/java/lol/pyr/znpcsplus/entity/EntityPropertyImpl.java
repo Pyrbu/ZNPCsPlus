@@ -5,16 +5,13 @@ import com.github.retrooper.packetevents.protocol.entity.data.EntityDataType;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class EntityPropertyImpl<T> implements EntityProperty<T> {
     private final String name;
     private final T defaultValue;
     private final Class<T> clazz;
-    private final List<EntityPropertyImpl<?>> dependencies = new ArrayList<>();
+    private final Set<EntityPropertyImpl<?>> dependencies = new HashSet<>();
     private boolean playerModifiable = true;
 
     protected EntityPropertyImpl(String name, T defaultValue, Class<T> clazz) {

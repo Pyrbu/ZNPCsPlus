@@ -24,7 +24,6 @@ import org.bukkit.DyeColor;
 @Deprecated
 public interface MetadataFactory {
 
-    EntityData noGravity();
     EntityData pose(EntityPose pose);
 
     EntityData usingItem(boolean enabled, boolean offhand, boolean riptide);
@@ -63,10 +62,6 @@ public interface MetadataFactory {
 
     // Evoker
     EntityData evokerSpell(int spell);
-
-    // Fox
-    EntityData foxVariant(int variant);
-    EntityData foxProperties(boolean sitting, boolean crouching, boolean sleeping, boolean facePlanted);
 
     // Frog
     EntityData frogVariant(int variant);
