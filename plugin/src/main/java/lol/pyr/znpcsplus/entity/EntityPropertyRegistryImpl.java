@@ -57,8 +57,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(VillagerProfession.class);
         registerEnumSerializer(VillagerLevel.class);
         /*
-        registerType("dinnerbone", false);
-
         registerType("using_item", false); // TODO: fix it for 1.8 and add new property to use offhand item and riptide animation
         registerType("potion_color", Color.BLACK);
         registerType("potion_ambient", false);
@@ -67,13 +65,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("pose", NpcPose.STANDING);
 
         // Player
-        registerType("skin_cape", true);
-        registerType("skin_jacket", true);
-        registerType("skin_left_sleeve", true);
-        registerType("skin_right_sleeve", true);
-        registerType("skin_left_leg", true);
-        registerType("skin_right_leg", true);
-        registerType("skin_hat", true);
         registerType("shoulder_entity_left", ParrotVariant.NONE);
         registerType("shoulder_entity_right", ParrotVariant.NONE);
 
@@ -247,7 +238,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         register(new SimpleBooleanProperty("silent", 4, false, ver.isOlderThan(ServerVersion.V_1_9)));
 
-        int armorStandIndex;
+        final int armorStandIndex;
         if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) armorStandIndex = 15;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) armorStandIndex = 14;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) armorStandIndex = 13;
@@ -257,6 +248,23 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new SimpleBitsetProperty("arms", armorStandIndex, 0x04));
         register(new SimpleBitsetProperty("base_plate", armorStandIndex, 0x08, true));
         linkProperties("small", "arms", "base_plate");
+
+        final int skinLayersIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) skinLayersIndex = 17;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_16)) skinLayersIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) skinLayersIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) skinLayersIndex = 13;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) skinLayersIndex = 12;
+        else skinLayersIndex = 10;
+        register(new SimpleBitsetProperty("skin_cape", skinLayersIndex, 0x01));
+        register(new SimpleBitsetProperty("skin_jacket", skinLayersIndex, 0x02));
+        register(new SimpleBitsetProperty("skin_left_sleeve", skinLayersIndex, 0x04));
+        register(new SimpleBitsetProperty("skin_right_sleeve", skinLayersIndex, 0x08));
+        register(new SimpleBitsetProperty("skin_left_leg", skinLayersIndex, 0x10));
+        register(new SimpleBitsetProperty("skin_right_leg", skinLayersIndex, 0x20));
+        register(new SimpleBitsetProperty("skin_hat", skinLayersIndex, 0x40));
+
+        linkProperties("skin_cape", "skin_jacket", "skin_left_sleeve", "skin_right_sleeve", "skin_left_leg", "skin_right_leg", "skin_hat");
 
     }
 
