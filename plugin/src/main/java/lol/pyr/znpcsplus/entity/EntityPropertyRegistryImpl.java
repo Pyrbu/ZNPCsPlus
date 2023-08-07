@@ -2,6 +2,7 @@ package lol.pyr.znpcsplus.entity;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 import com.github.retrooper.packetevents.protocol.player.EquipmentSlot;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.entity.EntityPropertyRegistry;
@@ -210,6 +211,15 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         linkProperties("glow", "fire", "invisible");
         register(new BooleanProperty("silent", 4, false, legacyBooleans));
 
+        final int tamedIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) tamedIndex = 17;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) tamedIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) tamedIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) tamedIndex = 13;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) tamedIndex = 12;
+        else tamedIndex = 16;
+        register(new BitsetProperty("tamed", tamedIndex, 0x04));
+
         int potionIndex;
         if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) potionIndex = 10;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) potionIndex = 9;
@@ -275,6 +285,16 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new BooleanProperty("hanging", batIndex, false, true /* This isnt a mistake */));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_14)) return;
+
+        // Cat
+        int catIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) catIndex = 19;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) catIndex = 18;
+        else catIndex = 17;
+        register(new EncodedIntegerProperty<>("cat_variant", CatVariant.BLACK, catIndex++, Enum::ordinal, EntityDataTypes.CAT_VARIANT));
+        register(new BooleanProperty("cat_laying", catIndex++, false, legacyBooleans));
+        register(new BooleanProperty("cat_relaxed", catIndex++, false, legacyBooleans));
+        register(new EncodedIntegerProperty<>("cat_collar", DyeColor.RED, catIndex, Enum::ordinal));
 
         // Fox
         int foxIndex;

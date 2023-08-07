@@ -3,10 +3,8 @@ package lol.pyr.znpcsplus.metadata;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 import com.github.retrooper.packetevents.protocol.entity.villager.VillagerData;
-import lol.pyr.znpcsplus.util.CatVariant;
 import lol.pyr.znpcsplus.util.CreeperState;
 import lol.pyr.znpcsplus.util.ParrotVariant;
-import org.bukkit.DyeColor;
 
 @Deprecated
 public class V1_17MetadataFactory extends V1_16MetadataFactory {
@@ -39,26 +37,6 @@ public class V1_17MetadataFactory extends V1_16MetadataFactory {
     @Override
     public EntityData blazeOnFire(boolean onFire) {
         return newEntityData(16, EntityDataTypes.BYTE, (byte) (onFire ? 0x01 : 0));
-    }
-
-    @Override
-    public EntityData catVariant(CatVariant variant) {
-        return newEntityData(19, EntityDataTypes.CAT_VARIANT, variant.getId());
-    }
-
-    @Override
-    public EntityData catLying(boolean lying) {
-        return newEntityData(20, EntityDataTypes.BOOLEAN, lying);
-    }
-
-    @Override
-    public EntityData catTamed(boolean tamed) {
-        return newEntityData(17, EntityDataTypes.BYTE, (byte) (tamed ? 0x04 : 0));
-    }
-
-    @Override
-    public EntityData catCollarColor(DyeColor collarColor) {
-        return newEntityData(22, EntityDataTypes.INT, collarColor.ordinal());
     }
 
     @Override

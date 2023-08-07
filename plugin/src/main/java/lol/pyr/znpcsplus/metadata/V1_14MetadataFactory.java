@@ -4,10 +4,8 @@ import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 import com.github.retrooper.packetevents.protocol.entity.pose.EntityPose;
 import com.github.retrooper.packetevents.protocol.entity.villager.VillagerData;
-import lol.pyr.znpcsplus.util.CatVariant;
 import lol.pyr.znpcsplus.util.CreeperState;
 import lol.pyr.znpcsplus.util.ParrotVariant;
-import org.bukkit.DyeColor;
 
 @Deprecated
 public class V1_14MetadataFactory extends V1_13MetadataFactory {
@@ -35,21 +33,6 @@ public class V1_14MetadataFactory extends V1_13MetadataFactory {
     @Override
     public EntityData blazeOnFire(boolean onFire) {
         return newEntityData(14, EntityDataTypes.BYTE, (byte) (onFire ? 0x01 : 0));
-    }
-
-    @Override
-    public EntityData catVariant(CatVariant variant) {
-        return newEntityData(17, EntityDataTypes.CAT_VARIANT, variant.getId());
-    }
-
-    @Override
-    public EntityData catLying(boolean lying) {
-        throw new UnsupportedOperationException("The cat lying entity data isn't supported on this version");
-    }
-
-    @Override
-    public EntityData catCollarColor(DyeColor collarColor) {
-        return newEntityData(20, EntityDataTypes.INT, collarColor.ordinal());
     }
 
     @Override

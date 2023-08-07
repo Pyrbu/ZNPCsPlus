@@ -5,7 +5,6 @@ import com.github.retrooper.packetevents.protocol.entity.data.EntityDataType;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 import com.github.retrooper.packetevents.protocol.entity.pose.EntityPose;
 import lol.pyr.znpcsplus.util.*;
-import org.bukkit.DyeColor;
 
 @Deprecated
 public class V1_8MetadataFactory implements MetadataFactory {
@@ -43,26 +42,6 @@ public class V1_8MetadataFactory implements MetadataFactory {
     @Override
     public EntityData blazeOnFire(boolean onFire) {
         return newEntityData(16, EntityDataTypes.BYTE, (byte) (onFire ? 1 : 0));
-    }
-
-    @Override
-    public EntityData catVariant(CatVariant variant) {
-        throw new UnsupportedOperationException("The cat variant entity data isn't supported on this version");
-    }
-
-    @Override
-    public EntityData catLying(boolean lying) {
-        throw new UnsupportedOperationException("The cat lying entity data isn't supported on this version");
-    }
-
-    @Override
-    public EntityData catTamed(boolean tamed) {
-        throw new UnsupportedOperationException("The cat tamed entity data isn't supported on this version");
-    }
-
-    @Override
-    public EntityData catCollarColor(DyeColor collarColor) {
-        throw new UnsupportedOperationException("The cat collar color entity data isn't supported on this version");
     }
 
     @Override

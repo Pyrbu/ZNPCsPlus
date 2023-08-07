@@ -143,7 +143,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .setHologramOffset(1.525));
 
         register(builder(p, "wolf", EntityTypes.WOLF)
-                .setHologramOffset(-1.125));
+                .setHologramOffset(-1.125)
+                .addProperties("tamed"));
 
         register(builder(p, "zombie", EntityTypes.ZOMBIE)
                 .setHologramOffset(-0.025)
@@ -250,7 +251,7 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
 
         register(builder(p, "cat", EntityTypes.CAT)
                 .setHologramOffset(-1.275)
-                .addProperties("cat_variant", "cat_lying", "cat_collar_color"));
+                .addProperties("cat_variant", "cat_laying", "cat_relaxed", "cat_collar", "tamed"));
 
         register(builder(p, "fox", EntityTypes.FOX)
                 .setHologramOffset(-1.275)
