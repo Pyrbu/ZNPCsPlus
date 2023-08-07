@@ -58,8 +58,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(VillagerLevel.class);
         /*
         registerType("using_item", false); // TODO: fix it for 1.8 and add new property to use offhand item and riptide animation
-        registerType("potion_color", Color.BLACK);
-        registerType("potion_ambient", false);
+
         registerType("shaking", false);
         registerType("baby", false); // TODO
         registerType("pose", NpcPose.STANDING);
@@ -215,7 +214,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new DinnerboneProperty(legacyName, optionalComponent));
 
         register(new DummyProperty<>("look", false));
-        register(new DummyProperty<>("skin", SkinDescriptor.class, false));
 
         register(new GlowProperty(packetFactory));
         register(new BitsetProperty("fire", 0, 0x01));
@@ -224,6 +222,16 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         linkProperties("glow", "fire", "invisible");
         register(new BooleanProperty("silent", 4, false, legacyBooleans));
 
+        int potionIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) potionIndex = 10;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) potionIndex = 9;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) potionIndex = 8;
+        else potionIndex = 7;
+        register(new ColorProperty("potion_color", potionIndex++, null));
+        register(new BooleanProperty("potion_ambient", potionIndex, false, legacyBooleans));
+
+        // Player
+        register(new DummyProperty<>("skin", SkinDescriptor.class, false));
         final int skinLayersIndex;
         if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) skinLayersIndex = 17;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_16)) skinLayersIndex = 16;
@@ -273,6 +281,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
             register(new BooleanProperty("has_left_horn", 18, true, legacyBooleans));
             register(new BooleanProperty("has_right_horn", 19, true, legacyBooleans));
         }
+
+
     }
 
     private void registerSerializer(PropertySerializer<?> serializer) {
