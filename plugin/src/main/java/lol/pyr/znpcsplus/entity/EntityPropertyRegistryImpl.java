@@ -72,14 +72,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("beam_target", null); // TODO: Make a block pos class for this
         registerType("show_base", true); // TODO
 
-        // Armor Stand
-        registerType("head_rotation", Vector3f.zero());
-        registerType("body_rotation", Vector3f.zero());
-        registerType("left_arm_rotation", new Vector3f(-10, 0, -10));
-        registerType("right_arm_rotation", new Vector3f(-15, 0, 10));
-        registerType("left_leg_rotation", new Vector3f(-1 , 0, -1));
-        registerType("right_leg_rotation", new Vector3f(1, 0, 1));
-
         // Axolotl
         registerType("axolotl_variant", 0);
         registerType("playing_dead", false); // TODO fix disabling
@@ -265,6 +257,19 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new SimpleBitsetProperty("skin_hat", skinLayersIndex, 0x40));
 
         linkProperties("skin_cape", "skin_jacket", "skin_left_sleeve", "skin_right_sleeve", "skin_left_leg", "skin_right_leg", "skin_hat");
+
+        int armorStandRotationIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) armorStandRotationIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) armorStandRotationIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) armorStandRotationIndex = 14;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) armorStandRotationIndex = 12;
+        else armorStandRotationIndex = 11;
+        register(new RotationProperty("head_rotation", armorStandRotationIndex++, Vector3f.zero()));
+        register(new RotationProperty("body_rotation", armorStandRotationIndex++, Vector3f.zero()));
+        register(new RotationProperty("left_arm_rotation", armorStandRotationIndex++, new Vector3f(-10, 0, -10)));
+        register(new RotationProperty("right_arm_rotation", armorStandRotationIndex++, new Vector3f(-15, 0, 10)));
+        register(new RotationProperty("left_leg_rotation", armorStandRotationIndex++, new Vector3f(-1, 0, -1)));
+        register(new RotationProperty("right_leg_rotation", armorStandRotationIndex, new Vector3f(1, 0, 1)));
 
     }
 
