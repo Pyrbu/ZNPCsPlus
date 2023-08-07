@@ -146,16 +146,6 @@ public class V1_8MetadataFactory implements MetadataFactory {
     }
 
     @Override
-    public EntityData goatHasLeftHorn(boolean hasLeftHorn) {
-        throw new UnsupportedOperationException("The goat horn entity data isn't supported on this version");
-    }
-
-    @Override
-    public EntityData goatHasRightHorn(boolean hasRightHorn) {
-        throw new UnsupportedOperationException("The goat horn entity data isn't supported on this version");
-    }
-
-    @Override
     public EntityData hoglinImmuneToZombification(boolean immuneToZombification) {
         throw new UnsupportedOperationException("The hoglin zombification entity data isn't supported on this version");
     }

@@ -228,17 +228,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         register(new SimpleBooleanProperty("silent", 4, false, legacyBooleans));
 
-        final int armorStandIndex;
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) armorStandIndex = 15;
-        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) armorStandIndex = 14;
-        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) armorStandIndex = 13;
-        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) armorStandIndex = 11;
-        else armorStandIndex = 10;
-        register(new SimpleBitsetProperty("small", armorStandIndex, 0x01));
-        register(new SimpleBitsetProperty("arms", armorStandIndex, 0x04));
-        register(new SimpleBitsetProperty("base_plate", armorStandIndex, 0x08, true));
-        linkProperties("small", "arms", "base_plate");
-
         final int skinLayersIndex;
         if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) skinLayersIndex = 17;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_16)) skinLayersIndex = 16;
@@ -256,19 +245,25 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         linkProperties("skin_cape", "skin_jacket", "skin_left_sleeve", "skin_right_sleeve", "skin_left_leg", "skin_right_leg", "skin_hat");
 
-        int armorStandRotationIndex;
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) armorStandRotationIndex = 16;
-        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) armorStandRotationIndex = 15;
-        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) armorStandRotationIndex = 14;
-        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) armorStandRotationIndex = 12;
-        else armorStandRotationIndex = 11;
-        register(new RotationProperty("head_rotation", armorStandRotationIndex++, Vector3f.zero()));
-        register(new RotationProperty("body_rotation", armorStandRotationIndex++, Vector3f.zero()));
-        register(new RotationProperty("left_arm_rotation", armorStandRotationIndex++, new Vector3f(-10, 0, -10)));
-        register(new RotationProperty("right_arm_rotation", armorStandRotationIndex++, new Vector3f(-15, 0, 10)));
-        register(new RotationProperty("left_leg_rotation", armorStandRotationIndex++, new Vector3f(-1, 0, -1)));
-        register(new RotationProperty("right_leg_rotation", armorStandRotationIndex, new Vector3f(1, 0, 1)));
+        // Armor Stand
+        int armorStandIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) armorStandIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) armorStandIndex = 14;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) armorStandIndex = 13;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) armorStandIndex = 11;
+        else armorStandIndex = 10;
+        register(new SimpleBitsetProperty("small", armorStandIndex, 0x01));
+        register(new SimpleBitsetProperty("arms", armorStandIndex, 0x04));
+        register(new SimpleBitsetProperty("base_plate", armorStandIndex++, 0x08, true));
+        register(new RotationProperty("head_rotation", armorStandIndex++, Vector3f.zero()));
+        register(new RotationProperty("body_rotation", armorStandIndex++, Vector3f.zero()));
+        register(new RotationProperty("left_arm_rotation", armorStandIndex++, new Vector3f(-10, 0, -10)));
+        register(new RotationProperty("right_arm_rotation", armorStandIndex++, new Vector3f(-15, 0, 10)));
+        register(new RotationProperty("left_leg_rotation", armorStandIndex++, new Vector3f(-1, 0, -1)));
+        register(new RotationProperty("right_leg_rotation", armorStandIndex, new Vector3f(1, 0, 1)));
+        linkProperties("small", "arms", "base_plate");
 
+        // Ghast
         final int ghastAttackingIndex;
         if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) ghastAttackingIndex = 16;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) ghastAttackingIndex = 15;
@@ -277,6 +272,12 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) ghastAttackingIndex = 11;
         else ghastAttackingIndex = 16;
         register(new SimpleBooleanProperty("attacking", ghastAttackingIndex, false, legacyBooleans));
+
+        // Goat
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) {
+            register(new SimpleBooleanProperty("has_left_horn", 18, true, legacyBooleans));
+            register(new SimpleBooleanProperty("has_right_horn", 19, true, legacyBooleans));
+        }
     }
 
     private void registerSerializer(PropertySerializer<?> serializer) {

@@ -73,10 +73,6 @@ public interface MetadataFactory {
     // Frog
     EntityData frogVariant(int variant);
 
-    // Goat
-    EntityData goatHasLeftHorn(boolean hasLeftHorn);
-    EntityData goatHasRightHorn(boolean hasRightHorn);
-
     // Hoglin
     EntityData hoglinImmuneToZombification(boolean immuneToZombification);
 
