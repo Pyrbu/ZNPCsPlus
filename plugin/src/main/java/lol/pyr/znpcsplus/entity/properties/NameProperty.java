@@ -1,7 +1,5 @@
 package lol.pyr.znpcsplus.entity.properties;
 
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
@@ -15,14 +13,13 @@ import java.util.Optional;
 
 public class NameProperty extends EntityPropertyImpl<Component> {
     private final boolean legacy;
-    private final boolean optionalComponent;
+    private final boolean optional;
 
-    public NameProperty() {
+    public NameProperty(boolean legacy, boolean optional) {
         super("name", null, Component.class);
 
-        ServerVersion version = PacketEvents.getAPI().getServerManager().getVersion();
-        legacy = version.isOlderThan(ServerVersion.V_1_9);
-        optionalComponent = version.isNewerThanOrEquals(ServerVersion.V_1_13);
+        this.legacy = legacy;
+        this.optional = optional;
     }
 
     @Override
@@ -32,7 +29,7 @@ public class NameProperty extends EntityPropertyImpl<Component> {
             String serialized = legacy ?
                     AdventureSerializer.getLegacyGsonSerializer().serialize(value) :
                     AdventureSerializer.getGsonSerializer().serialize(value);
-            if (optionalComponent) properties.put(2, newEntityData(2, EntityDataTypes.OPTIONAL_COMPONENT, Optional.of(serialized)));
+            if (optional) properties.put(2, newEntityData(2, EntityDataTypes.OPTIONAL_COMPONENT, Optional.of(serialized)));
             else properties.put(2, newEntityData(2, EntityDataTypes.STRING, serialized));
         }
 

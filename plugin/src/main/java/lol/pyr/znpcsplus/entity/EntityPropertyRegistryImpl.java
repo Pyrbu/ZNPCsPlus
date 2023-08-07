@@ -232,7 +232,11 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new EquipmentProperty(packetFactory, "hand", EquipmentSlot.MAIN_HAND));
         register(new EquipmentProperty(packetFactory, "offhand", EquipmentSlot.OFF_HAND));
 
-        register(new NameProperty());
+        boolean legacyName = ver.isOlderThan(ServerVersion.V_1_9);
+        boolean optionalComponent = ver.isNewerThanOrEquals(ServerVersion.V_1_13);
+        register(new NameProperty(legacyName, optionalComponent));
+        register(new DinnerboneProperty(legacyName, optionalComponent));
+
         register(new DummyProperty<>("look", false));
         register(new DummyProperty<>("skin", SkinDescriptor.class, false));
 
@@ -253,6 +257,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new SimpleBitsetProperty("arms", armorStandIndex, 0x04));
         register(new SimpleBitsetProperty("base_plate", armorStandIndex, 0x08, true));
         linkProperties("small", "arms", "base_plate");
+
     }
 
     private void registerSerializer(PropertySerializer<?> serializer) {
