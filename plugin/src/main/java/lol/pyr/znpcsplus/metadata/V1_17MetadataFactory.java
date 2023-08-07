@@ -12,23 +12,8 @@ import org.bukkit.DyeColor;
 public class V1_17MetadataFactory extends V1_16MetadataFactory {
 
     @Override
-    public EntityData shaking(boolean enabled) {
-        return newEntityData(7, EntityDataTypes.INT, enabled ? 140 : 0);
-    }
-
-    @Override
     public EntityData usingItem(boolean usingItem, boolean offHand, boolean riptide) {
         return newEntityData(8, EntityDataTypes.BYTE, (byte) ((usingItem ? 0x01 : 0) | (offHand ? 0x02 : 0) | (riptide ? 0x04 : 0)));
-    }
-
-    @Override
-    public EntityData potionColor(int color) {
-        return newEntityData(10, EntityDataTypes.INT, color);
-    }
-
-    @Override
-    public EntityData potionAmbient(boolean ambient) {
-        return newEntityData(11, EntityDataTypes.BOOLEAN, ambient);
     }
 
     @Override

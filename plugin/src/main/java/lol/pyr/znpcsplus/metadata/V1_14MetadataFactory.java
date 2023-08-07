@@ -23,16 +23,6 @@ public class V1_14MetadataFactory extends V1_13MetadataFactory {
     }
 
     @Override
-    public EntityData potionColor(int color) {
-        return newEntityData(9, EntityDataTypes.INT, color);
-    }
-
-    @Override
-    public EntityData potionAmbient(boolean ambient) {
-        return newEntityData(10, EntityDataTypes.BOOLEAN, ambient);
-    }
-
-    @Override
     public EntityData shoulderEntityLeft(ParrotVariant variant) {
         return createShoulderEntityLeft(17, variant);
     }

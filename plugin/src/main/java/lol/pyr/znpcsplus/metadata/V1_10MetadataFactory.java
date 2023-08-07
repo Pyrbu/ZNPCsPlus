@@ -13,16 +13,6 @@ public class V1_10MetadataFactory extends V1_9MetadataFactory {
     }
 
     @Override
-    public EntityData potionColor(int color) {
-        return newEntityData(8, EntityDataTypes.INT, color);
-    }
-
-    @Override
-    public EntityData potionAmbient(boolean ambient) {
-        return newEntityData(9, EntityDataTypes.BOOLEAN, ambient);
-    }
-
-    @Override
     public EntityData batHanging(boolean hanging) {
         return newEntityData(12, EntityDataTypes.BYTE, (byte) (hanging ? 0x01 : 0));
     }

@@ -200,6 +200,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
     public void registerTypes(PacketFactory packetFactory) {
         ServerVersion ver = PacketEvents.getAPI().getServerManager().getVersion();
         boolean legacyBooleans = ver.isOlderThan(ServerVersion.V_1_9);
+        boolean legacyNames = ver.isOlderThan(ServerVersion.V_1_9);
+        boolean optionalComponents = ver.isNewerThanOrEquals(ServerVersion.V_1_13);
 
         register(new EquipmentProperty(packetFactory, "helmet", EquipmentSlot.HELMET));
         register(new EquipmentProperty(packetFactory, "chestplate", EquipmentSlot.CHEST_PLATE));
@@ -208,13 +210,10 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new EquipmentProperty(packetFactory, "hand", EquipmentSlot.MAIN_HAND));
         register(new EquipmentProperty(packetFactory, "offhand", EquipmentSlot.OFF_HAND));
 
-        boolean legacyName = ver.isOlderThan(ServerVersion.V_1_9);
-        boolean optionalComponent = ver.isNewerThanOrEquals(ServerVersion.V_1_13);
-        register(new NameProperty(legacyName, optionalComponent));
-        register(new DinnerboneProperty(legacyName, optionalComponent));
+        register(new NameProperty(legacyNames, optionalComponents));
+        register(new DinnerboneProperty(legacyNames, optionalComponents));
 
         register(new DummyProperty<>("look", false));
-
         register(new GlowProperty(packetFactory));
         register(new BitsetProperty("fire", 0, 0x01));
         register(new BitsetProperty("invisible", 0, 0x20));
@@ -276,13 +275,13 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else ghastAttackingIndex = 16;
         register(new BooleanProperty("attacking", ghastAttackingIndex, false, legacyBooleans));
 
+        if (!ver.isNewerThanOrEquals(ServerVersion.V_1_17)) return;
+
         // Goat
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) {
-            register(new BooleanProperty("has_left_horn", 18, true, legacyBooleans));
-            register(new BooleanProperty("has_right_horn", 19, true, legacyBooleans));
-        }
+        register(new BooleanProperty("has_left_horn", 18, true, legacyBooleans));
+        register(new BooleanProperty("has_right_horn", 19, true, legacyBooleans));
 
-
+        register(new ShakingProperty(7));
     }
 
     private void registerSerializer(PropertySerializer<?> serializer) {

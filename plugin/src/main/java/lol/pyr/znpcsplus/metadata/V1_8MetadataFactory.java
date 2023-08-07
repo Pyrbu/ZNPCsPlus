@@ -21,23 +21,8 @@ public class V1_8MetadataFactory implements MetadataFactory {
     }
 
     @Override
-    public EntityData shaking(boolean enabled) {
-        throw new UnsupportedOperationException("The shaking entity data isn't supported on this version");
-    }
-
-    @Override
     public EntityData usingItem(boolean enabled, boolean offHand, boolean riptide) {
         throw new UnsupportedOperationException("The standalone using item data isn't supported on this version");
-    }
-
-    @Override
-    public EntityData potionColor(int color) {
-        return newEntityData(7, EntityDataTypes.INT, color);
-    }
-
-    @Override
-    public EntityData potionAmbient(boolean ambient) {
-        return newEntityData(8, EntityDataTypes.BYTE, (byte) (ambient ? 1 : 0));
     }
 
     @Override

@@ -11,16 +11,24 @@ import java.util.Map;
 public class BooleanProperty extends EntityPropertyImpl<Boolean> {
     private final int index;
     private final boolean legacy;
+    private final boolean inverted;
 
     public BooleanProperty(String name, int index, boolean defaultValue, boolean legacy) {
+        this(name, index, defaultValue, legacy, false);
+    }
+
+    public BooleanProperty(String name, int index, boolean defaultValue, boolean legacy, boolean inverted) {
         super(name, defaultValue, Boolean.class);
         this.index = index;
         this.legacy = legacy;
+        this.inverted = inverted;
     }
 
     @Override
     public void apply(Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData> properties) {
-        if (legacy) properties.put(index, new EntityData(index, EntityDataTypes.BYTE, (entity.getProperty(this) ? 1 : 0)));
-        else properties.put(index, new EntityData(index, EntityDataTypes.BOOLEAN, entity.getProperty(this)));
+        boolean enabled = entity.getProperty(this);
+        if (inverted) enabled = !enabled;
+        if (legacy) properties.put(index, new EntityData(index, EntityDataTypes.BYTE, (enabled ? 1 : 0)));
+        else properties.put(index, new EntityData(index, EntityDataTypes.BOOLEAN, enabled));
     }
 }

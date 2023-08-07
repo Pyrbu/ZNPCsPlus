@@ -26,10 +26,8 @@ public interface MetadataFactory {
 
     EntityData noGravity();
     EntityData pose(EntityPose pose);
-    EntityData shaking(boolean enabled);
+
     EntityData usingItem(boolean enabled, boolean offhand, boolean riptide);
-    EntityData potionColor(int color);
-    EntityData potionAmbient(boolean ambient);
 
     EntityData shoulderEntityLeft(ParrotVariant variant);
     EntityData shoulderEntityRight(ParrotVariant variant);
