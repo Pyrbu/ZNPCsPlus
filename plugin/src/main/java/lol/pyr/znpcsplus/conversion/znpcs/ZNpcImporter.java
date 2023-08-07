@@ -106,7 +106,7 @@ public class ZNpcImporter implements DataImporter {
             hologram.setOffset(model.getHologramHeight());
             for (String raw : model.getHologramLines()) {
                 Component line = textSerializer.deserialize(raw);
-                hologram.addLineComponent(line);
+                hologram.addTextLineComponent(line);
             }
 
             for (ZNpcsAction action : model.getClickActions()) {

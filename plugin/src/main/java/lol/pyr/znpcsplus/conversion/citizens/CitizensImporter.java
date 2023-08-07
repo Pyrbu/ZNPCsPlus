@@ -82,7 +82,7 @@ public class CitizensImporter implements DataImporter {
                 world = Bukkit.getWorlds().get(0).getName();
             }
             NpcImpl npc = new NpcImpl(uuid, propertyRegistry, configManager, packetFactory, textSerializer, world, typeRegistry.getByName("armor_stand"), new NpcLocation(0, 0, 0, 0, 0));
-            npc.getHologram().addLineComponent(textSerializer.deserialize(name));
+            npc.getHologram().addTextLineComponent(textSerializer.deserialize(name));
             ConfigurationSection traits = npcSection.getConfigurationSection("traits");
             if (traits != null) {
                 for (String traitName : traits.getKeys(false)) {

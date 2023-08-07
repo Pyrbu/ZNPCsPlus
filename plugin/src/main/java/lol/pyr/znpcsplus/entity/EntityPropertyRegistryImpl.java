@@ -224,6 +224,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new GlowProperty(packetFactory));
         register(new SimpleBitsetProperty("fire", 0, 0x01));
         register(new SimpleBitsetProperty("invisible", 0, 0x20));
+        register(new HoloItemProperty());
         linkProperties("glow", "fire", "invisible");
 
         register(new SimpleBooleanProperty("silent", 4, false, legacyBooleans));

@@ -4,11 +4,11 @@ import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
 import lol.pyr.znpcsplus.hologram.HologramImpl;
+import lol.pyr.znpcsplus.hologram.HologramItem;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,11 +16,9 @@ import java.util.stream.Stream;
 
 public class HoloInsertCommand implements CommandHandler {
     private final NpcRegistryImpl npcRegistry;
-    private final LegacyComponentSerializer componentSerializer;
 
-    public HoloInsertCommand(NpcRegistryImpl npcRegistry, LegacyComponentSerializer componentSerializer) {
+    public HoloInsertCommand(NpcRegistryImpl npcRegistry) {
         this.npcRegistry = npcRegistry;
-        this.componentSerializer = componentSerializer;
     }
 
     @Override
@@ -30,7 +28,13 @@ public class HoloInsertCommand implements CommandHandler {
         int line = context.parse(Integer.class);
         if (line < 0 || line >= hologram.getLines().size()) context.halt(Component.text("Invalid line number!", NamedTextColor.RED));
         context.ensureArgsNotEmpty();
-        hologram.insertLineComponent(line, componentSerializer.deserialize(context.dumpAllArgs()));
+        String in = context.dumpAllArgs();
+        if (in.toLowerCase().startsWith("item:")) {
+            if (!HologramItem.ensureValidItemInput(in.substring(5))) {
+                context.halt(Component.text("The item input is invalid!", NamedTextColor.RED));
+            }
+        }
+        hologram.insertLine(line, in);
         context.send(Component.text("NPC line inserted!", NamedTextColor.GREEN));
     }
 

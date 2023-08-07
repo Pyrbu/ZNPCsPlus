@@ -6,7 +6,6 @@ import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.entity.PropertySerializer;
 import lol.pyr.znpcsplus.hologram.HologramImpl;
-import lol.pyr.znpcsplus.hologram.HologramLine;
 import lol.pyr.znpcsplus.interaction.ActionRegistry;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcImpl;
@@ -14,7 +13,6 @@ import lol.pyr.znpcsplus.npc.NpcTypeRegistryImpl;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.storage.NpcStorage;
 import lol.pyr.znpcsplus.util.NpcLocation;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -73,7 +71,7 @@ public class YamlStorage implements NpcStorage {
             HologramImpl hologram = npc.getHologram();
             hologram.setOffset(config.getDouble("hologram.offset", 0.0));
             hologram.setRefreshDelay(config.getLong("hologram.refresh-delay", -1));
-            for (String line : config.getStringList("hologram.lines")) hologram.addLineComponent(MiniMessage.miniMessage().deserialize(line));
+            for (String line : config.getStringList("hologram.lines")) hologram.addLine(line);
             for (String s : config.getStringList("actions")) npc.addAction(actionRegistry.deserialize(s));
 
             NpcEntryImpl entry = new NpcEntryImpl(config.getString("id"), npc);
@@ -112,8 +110,8 @@ public class YamlStorage implements NpcStorage {
             if (hologram.getOffset() != 0.0) config.set("hologram.offset", hologram.getOffset());
             if (hologram.getRefreshDelay() != -1) config.set("hologram.refresh-delay", hologram.getRefreshDelay());
             List<String> lines = new ArrayList<>(npc.getHologram().getLines().size());
-            for (HologramLine line : hologram.getLines()) {
-                lines.add(MiniMessage.miniMessage().serialize(line.getText()));
+            for (int i = 0; i < hologram.getLines().size(); i++) {
+                lines.add(hologram.getLine(i));
             }
             config.set("hologram.lines", lines);
             config.set("actions", npc.getActions().stream()

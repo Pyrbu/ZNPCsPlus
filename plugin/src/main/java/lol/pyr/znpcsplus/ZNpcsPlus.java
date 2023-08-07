@@ -202,9 +202,9 @@ public class ZNpcsPlus extends JavaPlugin {
                 NpcEntryImpl entry = npcRegistry.create("debug_npc_" + i, world, type, new NpcLocation(i * 3, 200, 0, 0, 0));
                 entry.setProcessed(true);
                 NpcImpl npc = entry.getNpc();
-                npc.getHologram().addLineComponent(Component.text("Hello, World!", TextColor.color(255, 0, 0)));
-                npc.getHologram().addLineComponent(Component.text("Hello, World!", TextColor.color(0, 255, 0)));
-                npc.getHologram().addLineComponent(Component.text("Hello, World!", TextColor.color(0, 0, 255)));
+                npc.getHologram().addTextLineComponent(Component.text("Hello, World!", TextColor.color(255, 0, 0)));
+                npc.getHologram().addTextLineComponent(Component.text("Hello, World!", TextColor.color(0, 255, 0)));
+                npc.getHologram().addTextLineComponent(Component.text("Hello, World!", TextColor.color(0, 0, 255)));
                 i++;
             }
         }
@@ -214,6 +214,7 @@ public class ZNpcsPlus extends JavaPlugin {
     public void onDisable() {
         NpcApiProvider.unregister();
         for (Runnable runnable : shutdownTasks) runnable.run();
+        shutdownTasks.clear();
         PacketEvents.getAPI().terminate();
     }
 
@@ -283,11 +284,14 @@ public class ZNpcsPlus extends JavaPlugin {
                         .addSubcommand("reload", new LoadAllCommand(npcRegistry))
                         .addSubcommand("import", new ImportCommand(npcRegistry, importerRegistry)))
                 .addSubcommand("holo", new MultiCommand(loadHelpMessage("holo"))
-                        .addSubcommand("add", new HoloAddCommand(npcRegistry, textSerializer))
+                        .addSubcommand("add", new HoloAddCommand(npcRegistry))
+                        .addSubcommand("additem", new HoloAddItemCommand(npcRegistry))
                         .addSubcommand("delete", new HoloDeleteCommand(npcRegistry))
                         .addSubcommand("info", new HoloInfoCommand(npcRegistry))
-                        .addSubcommand("insert", new HoloInsertCommand(npcRegistry, textSerializer))
-                        .addSubcommand("set", new HoloSetCommand(npcRegistry, textSerializer))
+                        .addSubcommand("insert", new HoloInsertCommand(npcRegistry))
+                        .addSubcommand("insertitem", new HoloInsertItemCommand(npcRegistry))
+                        .addSubcommand("set", new HoloSetCommand(npcRegistry))
+                        .addSubcommand("setitem", new HoloSetItemCommand(npcRegistry))
                         .addSubcommand("offset", new HoloOffsetCommand(npcRegistry))
                         .addSubcommand("refreshdelay", new HoloRefreshDelayCommand(npcRegistry)))
                 .addSubcommand("action", new MultiCommand(loadHelpMessage("action"))
