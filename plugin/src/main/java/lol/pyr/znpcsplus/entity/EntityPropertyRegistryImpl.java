@@ -113,9 +113,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Frog
         registerType("frog_variant", FrogVariant.TEMPERATE);
 
-        // Ghast
-        registerType("attacking", false);
-
         // Guardian
         registerType("is_elder", false); // TODO: ensure it only works till 1.10. Note: index is wrong on wiki.vg
 
@@ -207,6 +204,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
     public void registerTypes(PacketFactory packetFactory) {
         ServerVersion ver = PacketEvents.getAPI().getServerManager().getVersion();
+        boolean legacyBooleans = ver.isOlderThan(ServerVersion.V_1_9);
 
         register(new EquipmentProperty(packetFactory, "helmet", EquipmentSlot.HELMET));
         register(new EquipmentProperty(packetFactory, "chestplate", EquipmentSlot.CHEST_PLATE));
@@ -228,7 +226,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new SimpleBitsetProperty("invisible", 0, 0x20));
         linkProperties("glow", "fire", "invisible");
 
-        register(new SimpleBooleanProperty("silent", 4, false, ver.isOlderThan(ServerVersion.V_1_9)));
+        register(new SimpleBooleanProperty("silent", 4, false, legacyBooleans));
 
         final int armorStandIndex;
         if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) armorStandIndex = 15;
@@ -271,6 +269,14 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new RotationProperty("left_leg_rotation", armorStandRotationIndex++, new Vector3f(-1, 0, -1)));
         register(new RotationProperty("right_leg_rotation", armorStandRotationIndex, new Vector3f(1, 0, 1)));
 
+        final int ghastAttackingIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) ghastAttackingIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) ghastAttackingIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) ghastAttackingIndex = 14;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) ghastAttackingIndex = 12;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) ghastAttackingIndex = 11;
+        else ghastAttackingIndex = 16;
+        register(new SimpleBooleanProperty("attacking", ghastAttackingIndex, false, legacyBooleans));
     }
 
     private void registerSerializer(PropertySerializer<?> serializer) {

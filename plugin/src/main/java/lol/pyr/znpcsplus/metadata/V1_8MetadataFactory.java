@@ -146,11 +146,6 @@ public class V1_8MetadataFactory implements MetadataFactory {
     }
 
     @Override
-    public EntityData ghastAttacking(boolean attacking) {
-        return newEntityData(16, EntityDataTypes.BYTE, (byte) (attacking ? 1 : 0));
-    }
-
-    @Override
     public EntityData goatHasLeftHorn(boolean hasLeftHorn) {
         throw new UnsupportedOperationException("The goat horn entity data isn't supported on this version");
     }

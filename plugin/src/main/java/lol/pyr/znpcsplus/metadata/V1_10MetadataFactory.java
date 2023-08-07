@@ -43,11 +43,6 @@ public class V1_10MetadataFactory extends V1_9MetadataFactory {
     }
 
     @Override
-    public EntityData ghastAttacking(boolean attacking) {
-        return newEntityData(12, EntityDataTypes.BOOLEAN, attacking);
-    }
-
-    @Override
     public EntityData villagerData(int type, int profession, int level) {
         return newEntityData(13, EntityDataTypes.INT, profession);
     }

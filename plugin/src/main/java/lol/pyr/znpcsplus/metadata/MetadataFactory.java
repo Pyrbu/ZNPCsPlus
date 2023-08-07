@@ -73,14 +73,9 @@ public interface MetadataFactory {
     // Frog
     EntityData frogVariant(int variant);
 
-    // Ghast
-    EntityData ghastAttacking(boolean attacking);
-
     // Goat
     EntityData goatHasLeftHorn(boolean hasLeftHorn);
     EntityData goatHasRightHorn(boolean hasRightHorn);
-
-    // Guardian
 
     // Hoglin
     EntityData hoglinImmuneToZombification(boolean immuneToZombification);

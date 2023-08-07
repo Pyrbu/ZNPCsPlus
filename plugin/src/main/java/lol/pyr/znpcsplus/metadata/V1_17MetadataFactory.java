@@ -132,11 +132,6 @@ public class V1_17MetadataFactory extends V1_16MetadataFactory {
     }
 
     @Override
-    public EntityData ghastAttacking(boolean attacking) {
-        return newEntityData(16, EntityDataTypes.BOOLEAN, attacking);
-    }
-
-    @Override
     public EntityData goatHasLeftHorn(boolean hasLeftHorn) {
         return newEntityData(18, EntityDataTypes.BOOLEAN, hasLeftHorn);
     }
