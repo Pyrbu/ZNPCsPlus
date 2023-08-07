@@ -70,11 +70,6 @@ public class V1_17MetadataFactory extends V1_16MetadataFactory {
     }
 
     @Override
-    public EntityData hoglinImmuneToZombification(boolean immuneToZombification) {
-        return newEntityData(17, EntityDataTypes.BOOLEAN, immuneToZombification);
-    }
-
-    @Override
     public EntityData villagerData(int type, int profession, int level) {
         return newEntityData(18, EntityDataTypes.VILLAGER_DATA, new VillagerData(type, profession, level));
     }

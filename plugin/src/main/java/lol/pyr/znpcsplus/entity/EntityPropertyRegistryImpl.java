@@ -76,16 +76,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("axolotl_variant", 0);
         registerType("playing_dead", false); // TODO fix disabling
 
-        // Bat
-        registerType("hanging", false);
-
         // Blaze
         registerType("blaze_on_fire", false);
-
-        // Cat
-        registerType("cat_variant", CatVariant.BLACK);
-        registerType("cat_lying", false);
-        registerType("cat_collar_color", DyeColor.RED);
 
         // Creeper
         registerType("creeper_state", CreeperState.IDLE);
@@ -104,9 +96,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Guardian
         registerType("is_elder", false); // TODO: ensure it only works till 1.10. Note: index is wrong on wiki.vg
-
-        // Piglin / Hoglin
-        registerType("immune_to_zombification", true);
 
         // Pufferfish
         registerType("puff_state", null); // TODO: Make a puff state enum class
@@ -317,6 +306,13 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else beeIndex = 18;
         register(new BitsetProperty("has_nectar", beeIndex++, 0x08));
         register(new EncodedIntegerProperty<>("angry", false, beeIndex, enabled -> enabled ? 1 : 0));
+
+        if (!ver.isNewerThanOrEquals(ServerVersion.V_1_16)) return;
+
+        final int zombificationIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) zombificationIndex = 17;
+        else zombificationIndex = 16;
+        register(new BooleanProperty("immune_to_zombification", zombificationIndex, false, legacyBooleans));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_17)) return;
 

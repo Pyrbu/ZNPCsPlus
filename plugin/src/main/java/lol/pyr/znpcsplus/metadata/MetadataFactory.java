@@ -51,9 +51,6 @@ public interface MetadataFactory {
     // Frog
     EntityData frogVariant(int variant);
 
-    // Hoglin
-    EntityData hoglinImmuneToZombification(boolean immuneToZombification);
-
     // Villager
     EntityData villagerData(int type, int profession, int level);
 }
