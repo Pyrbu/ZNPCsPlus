@@ -42,7 +42,7 @@ public class MojangSkinCache {
         Player player = Bukkit.getPlayerExact(name);
         if (player != null && player.isOnline()) return CompletableFuture.completedFuture(getFromPlayer(player));
 
-        if (cache.containsKey(name.toLowerCase())) return fetchByUUID(idCache.get(name.toLowerCase()).getId());
+        if (idCache.containsKey(name.toLowerCase())) return fetchByUUID(idCache.get(name.toLowerCase()).getId());
 
         return CompletableFuture.supplyAsync(() -> {
             URL url = parseUrl("https://api.mojang.com/users/profiles/minecraft/" + name);
