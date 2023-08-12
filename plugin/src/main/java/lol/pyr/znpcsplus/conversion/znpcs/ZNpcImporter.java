@@ -153,18 +153,18 @@ public class ZNpcImporter implements DataImporter {
         throw new IllegalArgumentException("Couldn't adapt znpcs click type: " + clickType);
     }
 
-    private InteractionActionImpl adaptAction(String type, InteractionType clickType, String parameter, int delay) {
+    private InteractionActionImpl adaptAction(String type, InteractionType clickType, String parameter, int cooldown) {
         switch (type.toLowerCase()) {
             case "cmd":
-                return new PlayerCommandAction(taskScheduler, parameter, clickType, delay * 1000L);
+                return new PlayerCommandAction(taskScheduler, parameter, clickType, cooldown * 1000L, 0);
             case "console":
-                return new ConsoleCommandAction(taskScheduler, parameter, clickType, delay * 1000L);
+                return new ConsoleCommandAction(taskScheduler, parameter, clickType, cooldown * 1000L, 0);
             case "chat":
-                return new PlayerChatAction(taskScheduler, parameter, clickType, delay * 1000L);
+                return new PlayerChatAction(taskScheduler, parameter, clickType, cooldown * 1000L, 0);
             case "message":
-                return new MessageAction(adventure, parameter, clickType, textSerializer, delay * 1000L);
+                return new MessageAction(adventure, parameter, clickType, textSerializer, cooldown * 1000L, 0);
             case "server":
-                return new SwitchServerAction(bungeeConnector, parameter, clickType, delay * 1000L);
+                return new SwitchServerAction(bungeeConnector, parameter, clickType, cooldown * 1000L, 0);
         }
         throw new IllegalArgumentException("Couldn't adapt znpcs click action: " + type);
     }
