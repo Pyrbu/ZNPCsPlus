@@ -44,7 +44,7 @@ public class PlayerCommandAction extends InteractionActionImpl {
                 .append(Component.text(" | ", NamedTextColor.GRAY))
                 .append(Component.text("Player Command: ", NamedTextColor.GREEN)
                         .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
-                                Component.text("Click Type: " + getInteractionType().name() + " Cooldown: " + getCooldown()/1000, NamedTextColor.GREEN))))
+                                Component.text("Click Type: " + getInteractionType().name() + " Cooldown: " + getCooldown()/1000 + " Delay: " + getDelay(), NamedTextColor.GRAY))))
                 .append(Component.text(command, NamedTextColor.WHITE)));
     }
 

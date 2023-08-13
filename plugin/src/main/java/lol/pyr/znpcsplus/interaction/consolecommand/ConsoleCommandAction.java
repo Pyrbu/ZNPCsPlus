@@ -45,7 +45,7 @@ public class ConsoleCommandAction extends InteractionActionImpl {
                 .append(Component.text(" | ", NamedTextColor.GRAY))
                 .append(Component.text("Console Command: ", NamedTextColor.GREEN)
                         .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
-                                Component.text("Click Type: " + getInteractionType().name() + " Cooldown: " + getCooldown()/1000, NamedTextColor.GREEN))))
+                                Component.text("Click Type: " + getInteractionType().name() + " Cooldown: " + getCooldown()/1000 + " Delay: " + getDelay(), NamedTextColor.GRAY))))
                 .append(Component.text(command, NamedTextColor.WHITE)));
     }
 
