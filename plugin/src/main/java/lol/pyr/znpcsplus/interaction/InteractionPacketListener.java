@@ -46,18 +46,11 @@ public class InteractionPacketListener implements PacketListener {
         Bukkit.getPluginManager().callEvent(interactEvent);
         if (interactEvent.isCancelled()) return;
 
-        scheduler.runSyncGlobal(() -> {
-            for (InteractionAction action : npc.getActions()) {
-                if (action.getInteractionType() != InteractionType.ANY_CLICK && action.getInteractionType() != type) continue;
-                if (action.getCooldown() > 0 && !user.actionCooldownCheck(action)) continue;
-                action.run(user.getPlayer());
-                try {
-                    Thread.sleep(action.getDelay());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        for (InteractionAction action : npc.getActions()) {
+            if (action.getInteractionType() != InteractionType.ANY_CLICK && action.getInteractionType() != type) continue;
+            if (action.getCooldown() > 0 && !user.actionCooldownCheck(action)) continue;
+            scheduler.runLaterAsync(() -> action.run(player), action.getDelay());
+        }
     }
 
     private InteractionType wrapClickType(WrapperPlayClientInteractEntity.InteractAction action) {
