@@ -25,6 +25,11 @@ public class SpigotScheduler extends TaskScheduler {
     }
 
     @Override
+    public void runAsyncGlobal(Runnable runnable) {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, runnable);
+    }
+
+    @Override
     public void runLaterAsync(Runnable runnable, long delay) {
         Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, runnable, delay);
     }

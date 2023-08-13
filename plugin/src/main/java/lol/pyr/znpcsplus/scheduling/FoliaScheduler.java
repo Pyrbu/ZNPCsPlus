@@ -44,6 +44,16 @@ public class FoliaScheduler extends TaskScheduler {
     }
 
     @Override
+    public void runAsyncGlobal(Runnable runnable) {
+        try {
+            Object scheduler = Reflections.FOLIA_GET_ASYNC_SCHEDULER.get().invoke(null);
+            Reflections.FOLIA_RUN_NOW_ASYNC.get().invoke(scheduler, plugin, (Consumer<Object>) o -> runnable.run());
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void runLaterAsync(Runnable runnable, long delay) {
         try {
             Object scheduler = Reflections.FOLIA_GET_ASYNC_SCHEDULER.get().invoke(null);

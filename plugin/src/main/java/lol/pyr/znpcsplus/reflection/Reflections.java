@@ -169,6 +169,14 @@ public final class Reflections {
                     .setStrict(FoliaUtil.isFolia())
                     .toMethodReflection();
 
+    public static final ReflectionLazyLoader<Method> FOLIA_RUN_NOW_ASYNC =
+            new ReflectionBuilder(ASYNC_SCHEDULER_CLASS)
+                    .withMethodName("runNow")
+                    .withParameterTypes(Plugin.class, Consumer.class)
+                    .withExpectResult(SCHEDULED_TASK_CLASS)
+                    .setStrict(FoliaUtil.isFolia())
+                    .toMethodReflection();
+
     public static final ReflectionLazyLoader<Method> FOLIA_RUN_DELAYED_ASYNC =
             new ReflectionBuilder(ASYNC_SCHEDULER_CLASS)
                     .withMethodName("runDelayed")
