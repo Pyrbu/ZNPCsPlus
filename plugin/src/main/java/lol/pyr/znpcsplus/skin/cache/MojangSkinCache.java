@@ -42,7 +42,7 @@ public class MojangSkinCache {
         Player player = Bukkit.getPlayerExact(name);
         if (player != null && player.isOnline()) return CompletableFuture.completedFuture(getFromPlayer(player));
 
-        if (cache.containsKey(name.toLowerCase())) return fetchByUUID(idCache.get(name.toLowerCase()).getId());
+        if (idCache.containsKey(name.toLowerCase())) return fetchByUUID(idCache.get(name.toLowerCase()).getId());
 
         return CompletableFuture.supplyAsync(() -> {
             URL url = parseUrl("https://api.mojang.com/users/profiles/minecraft/" + name);
@@ -52,14 +52,52 @@ public class MojangSkinCache {
                 connection.setRequestMethod("GET");
                 try (Reader reader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {
                     JsonObject obj = JsonParser.parseReader(reader).getAsJsonObject();
-                    if (obj.has("errorMessage")) return null;
+                    if (obj.has("errorMessage")) return fetchByNameFallback(name).join();
                     String id = obj.get("id").getAsString();
                     idCache.put(name.toLowerCase(), new CachedId(id));
-                    return fetchByUUID(id).join();
+                    Skin skin = fetchByUUID(id).join();
+                    if (skin == null) return fetchByNameFallback(name).join();
+                    return skin;
                 }
             } catch (IOException exception) {
                 if (!configManager.getConfig().disableSkinFetcherWarnings()) {
-                    logger.warning("Failed to get uuid from player name:");
+                    logger.warning("Failed to get uuid from player name, trying to use fallback server:");
+                    exception.printStackTrace();
+                }
+                return fetchByNameFallback(name).join();
+            } finally {
+                if (connection != null) connection.disconnect();
+            }
+        });
+    }
+
+    public CompletableFuture<Skin> fetchByNameFallback(String name) {
+        Player player = Bukkit.getPlayerExact(name);
+        if (player != null && player.isOnline()) return CompletableFuture.completedFuture(getFromPlayer(player));
+
+        if (idCache.containsKey(name.toLowerCase())) return fetchByUUID(idCache.get(name.toLowerCase()).getId());
+
+        return CompletableFuture.supplyAsync(() -> {
+            URL url = parseUrl("https://api.ashcon.app/mojang/v2/user/" + name);
+            HttpURLConnection connection = null;
+            try {
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                try (Reader reader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {
+                    JsonObject obj = JsonParser.parseReader(reader).getAsJsonObject();
+                    if (obj.has("error")) return null;
+                    String uuid = obj.get("uuid").getAsString();
+                    idCache.put(name.toLowerCase(), new CachedId(uuid));
+                    JsonObject textures = obj.get("textures").getAsJsonObject();
+                    String value = textures.get("raw").getAsJsonObject().get("value").getAsString();
+                    String signature = textures.get("raw").getAsJsonObject().get("signature").getAsString();
+                    Skin skin = new Skin(value, signature);
+                    cache.put(uuid, skin);
+                    return skin;
+                }
+            } catch (IOException exception) {
+                if (!configManager.getConfig().disableSkinFetcherWarnings()) {
+                    logger.warning("Failed to fetch skin from fallback server:");
                     exception.printStackTrace();
                 }
             } finally {
@@ -105,13 +143,14 @@ public class MojangSkinCache {
                 connection.setRequestMethod("GET");
                 try (Reader reader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {
                     JsonObject obj = JsonParser.parseReader(reader).getAsJsonObject();
+                    if (obj.has("errorMessage")) return null;
                     Skin skin = new Skin(obj);
                     cache.put(uuid, skin);
                     return skin;
                 }
             } catch (IOException exception) {
                 if (!configManager.getConfig().disableSkinFetcherWarnings()) {
-                    logger.warning("Failed to fetch skin:");
+                    logger.warning("Failed to fetch skin, trying to use fallback server:");
                     exception.printStackTrace();
                 }
             } finally {

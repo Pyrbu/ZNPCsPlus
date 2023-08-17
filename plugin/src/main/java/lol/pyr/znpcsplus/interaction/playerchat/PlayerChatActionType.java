@@ -22,13 +22,13 @@ public class PlayerChatActionType implements InteractionActionType<PlayerChatAct
 
     @Override
     public String serialize(PlayerChatAction obj) {
-        return Base64.getEncoder().encodeToString(obj.getMessage().getBytes(StandardCharsets.UTF_8)) + ";" + obj.getCooldown() + ";" + obj.getInteractionType().name();
+        return Base64.getEncoder().encodeToString(obj.getMessage().getBytes(StandardCharsets.UTF_8)) + ";" + obj.getCooldown() + ";" + obj.getInteractionType().name() + ";" + obj.getDelay();
     }
 
     @Override
     public PlayerChatAction deserialize(String str) {
         String[] split = str.split(";");
-        return new PlayerChatAction(scheduler, new String(Base64.getDecoder().decode(split[0]), StandardCharsets.UTF_8), InteractionType.valueOf(split[2]), Long.parseLong(split[1]));
+        return new PlayerChatAction(scheduler, new String(Base64.getDecoder().decode(split[0]), StandardCharsets.UTF_8), InteractionType.valueOf(split[2]), Long.parseLong(split[1]), Long.parseLong(split.length > 3 ? split[3] : "0"));
     }
 
     @Override
@@ -43,21 +43,23 @@ public class PlayerChatActionType implements InteractionActionType<PlayerChatAct
 
     @Override
     public void appendUsage(CommandContext context) {
-        context.setUsage(context.getUsage() + " " + getSubcommandName() + " <id> <click type> <cooldown seconds> <server>");
+        context.setUsage(context.getUsage() + " " + getSubcommandName() + " <id> <click type> <cooldown seconds> <delay ticks> <server>");
     }
 
     @Override
     public InteractionActionImpl parse(CommandContext context) throws CommandExecutionException {
         InteractionType type = context.parse(InteractionType.class);
         long cooldown = (long) (context.parse(Double.class) * 1000D);
+        long delay = (long) (context.parse(Integer.class) * 1D);
         String message = context.dumpAllArgs();
-        return new PlayerChatAction(scheduler, message, type, cooldown);
+        return new PlayerChatAction(scheduler, message, type, cooldown, delay);
     }
 
     @Override
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
         if (context.argSize() == 1) return context.suggestEnum(InteractionType.values());
         if (context.argSize() == 2) return context.suggestLiteral("1");
+        if (context.argSize() == 3) return context.suggestLiteral("0");
         return Collections.emptyList();
     }
 }

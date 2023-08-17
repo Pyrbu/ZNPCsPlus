@@ -25,14 +25,14 @@ public class MessageActionType implements InteractionActionType<MessageAction>, 
 
     @Override
     public String serialize(MessageAction obj) {
-        return Base64.getEncoder().encodeToString(obj.getMessage().getBytes(StandardCharsets.UTF_8)) + ";" + obj.getCooldown() + ";" + obj.getInteractionType().name();
+        return Base64.getEncoder().encodeToString(obj.getMessage().getBytes(StandardCharsets.UTF_8)) + ";" + obj.getCooldown() + ";" + obj.getInteractionType().name() + ";" + obj.getDelay();
     }
 
     @Override
     public MessageAction deserialize(String str) {
         String[] split = str.split(";");
         InteractionType type = split.length > 2 ? InteractionType.valueOf(split[2]) : InteractionType.ANY_CLICK;
-        return new MessageAction(adventure, new String(Base64.getDecoder().decode(split[0]), StandardCharsets.UTF_8), type, textSerializer, Long.parseLong(split[1]));
+        return new MessageAction(adventure, new String(Base64.getDecoder().decode(split[0]), StandardCharsets.UTF_8), type, textSerializer, Long.parseLong(split[1]), Long.parseLong(split.length > 3 ? split[3] : "0"));
     }
 
     @Override
@@ -47,21 +47,23 @@ public class MessageActionType implements InteractionActionType<MessageAction>, 
 
     @Override
     public void appendUsage(CommandContext context) {
-        context.setUsage(context.getUsage() + " " + getSubcommandName() + " <id> <click type> <cooldown seconds> <message>");
+        context.setUsage(context.getUsage() + " " + getSubcommandName() + " <id> <click type> <cooldown seconds> <delay ticks> <message>");
     }
 
     @Override
     public InteractionActionImpl parse(CommandContext context) throws CommandExecutionException {
         InteractionType type = context.parse(InteractionType.class);
         long cooldown = (long) (context.parse(Double.class) * 1000D);
+        long delay = (long) (context.parse(Integer.class) * 1D);
         String message = context.dumpAllArgs();
-        return new MessageAction(adventure, message, type, textSerializer, cooldown);
+        return new MessageAction(adventure, message, type, textSerializer, cooldown, delay);
     }
 
     @Override
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
         if (context.argSize() == 1) return context.suggestEnum(InteractionType.values());
         if (context.argSize() == 2) return context.suggestLiteral("1");
+        if (context.argSize() == 3) return context.suggestLiteral("0");
         return Collections.emptyList();
     }
 }

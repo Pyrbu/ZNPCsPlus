@@ -14,8 +14,8 @@ public class SwitchServerAction extends InteractionActionImpl {
     private final BungeeConnector bungeeConnector;
     private final String server;
 
-    public SwitchServerAction(BungeeConnector bungeeConnector, String server, InteractionType interactionType, long delay) {
-        super(delay, interactionType);
+    public SwitchServerAction(BungeeConnector bungeeConnector, String server, InteractionType interactionType, long cooldown, long delay) {
+        super(cooldown, delay, interactionType);
         this.bungeeConnector = bungeeConnector;
         this.server = server;
     }
@@ -32,7 +32,7 @@ public class SwitchServerAction extends InteractionActionImpl {
                         .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
                                 Component.text("Click to edit this action", NamedTextColor.GRAY)))
                         .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.SUGGEST_COMMAND,
-                                "/" + context.getLabel() + " action edit " + id + " " + index + " switcserver " + getInteractionType().name() + " " + getCooldown()/1000 + " " + server))
+                                "/" + context.getLabel() + " action edit " + id + " " + index + " switcserver " + getInteractionType().name() + " " + getCooldown()/1000 + " " + getDelay() + " " + server))
                 .append(Component.text(" | ", NamedTextColor.GRAY))
                 .append(Component.text("[DELETE]", NamedTextColor.RED)
                         .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
@@ -42,7 +42,7 @@ public class SwitchServerAction extends InteractionActionImpl {
                 .append(Component.text(" | ", NamedTextColor.GRAY))
                 .append(Component.text("Switch Server: ", NamedTextColor.GREEN)
                         .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
-                                Component.text("Click Type: " + getInteractionType().name() + " Cooldown: " + getCooldown()/1000, NamedTextColor.GREEN))))
+                                Component.text("Click Type: " + getInteractionType().name() + " Cooldown: " + getCooldown()/1000 + " Delay: " + getDelay(), NamedTextColor.GRAY))))
                 .append(Component.text(server, NamedTextColor.WHITE)));
     }
 

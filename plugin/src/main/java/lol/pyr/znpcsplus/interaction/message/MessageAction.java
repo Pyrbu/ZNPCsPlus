@@ -17,8 +17,8 @@ public class MessageAction extends InteractionActionImpl {
     private final String message;
     private final LegacyComponentSerializer textSerializer;
 
-    public MessageAction(BukkitAudiences adventure, String message, InteractionType interactionType, LegacyComponentSerializer textSerializer, long delay) {
-        super(delay, interactionType);
+    public MessageAction(BukkitAudiences adventure, String message, InteractionType interactionType, LegacyComponentSerializer textSerializer, long cooldown, long delay) {
+        super(cooldown, delay, interactionType);
         this.adventure = adventure;
         this.message = message;
         this.textSerializer = textSerializer;
@@ -38,7 +38,7 @@ public class MessageAction extends InteractionActionImpl {
                         .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
                                 Component.text("Click to edit this action", NamedTextColor.GRAY)))
                         .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.SUGGEST_COMMAND,
-                                "/" + context.getLabel() + " action edit " + id + " " + index + " message " + getInteractionType().name() + " " + getCooldown()/1000 + " " + message))
+                                "/" + context.getLabel() + " action edit " + id + " " + index + " message " + getInteractionType().name() + " " + getCooldown()/1000 + " " + getDelay() + " " + message))
                 .append(Component.text(" | ", NamedTextColor.GRAY))
                 .append(Component.text("[DELETE]", NamedTextColor.RED)
                         .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
@@ -48,7 +48,7 @@ public class MessageAction extends InteractionActionImpl {
                 .append(Component.text(" | ", NamedTextColor.GRAY))
                 .append(Component.text("Message: ", NamedTextColor.GREEN)
                         .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
-                                Component.text("Click Type: " + getInteractionType().name() + " Cooldown: " + getCooldown()/1000, NamedTextColor.GREEN))))
+                                Component.text("Click Type: " + getInteractionType().name() + " Cooldown: " + getCooldown()/1000 + " Delay: " + getDelay(), NamedTextColor.GRAY))))
                 .append(Component.text(message, NamedTextColor.WHITE)));
     }
 

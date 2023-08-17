@@ -14,8 +14,8 @@ public class PlayerChatAction extends InteractionActionImpl {
     private final String message;
     private final TaskScheduler scheduler;
 
-    public PlayerChatAction(TaskScheduler scheduler, String message, InteractionType interactionType, long delay) {
-        super(delay, interactionType);
+    public PlayerChatAction(TaskScheduler scheduler, String message, InteractionType interactionType, long cooldown, long delay) {
+        super(cooldown, delay, interactionType);
         this.message = message;
         this.scheduler = scheduler;
     }
@@ -33,7 +33,7 @@ public class PlayerChatAction extends InteractionActionImpl {
                         .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
                                 Component.text("Click to edit this action", NamedTextColor.GRAY)))
                         .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.SUGGEST_COMMAND,
-                                "/" + context.getLabel() + " action edit " + id + " " + index + " playerchat " + getInteractionType().name() + " " + getCooldown()/1000 + " " + message))
+                                "/" + context.getLabel() + " action edit " + id + " " + index + " playerchat " + getInteractionType().name() + " " + getCooldown()/1000 + " " + getDelay() + " " + message))
                         .append(Component.text(" | ", NamedTextColor.GRAY))
                         .append(Component.text("[DELETE]", NamedTextColor.RED)
                                 .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
@@ -43,7 +43,7 @@ public class PlayerChatAction extends InteractionActionImpl {
                         .append(Component.text(" | ", NamedTextColor.GRAY))
                         .append(Component.text("Player Chat: ", NamedTextColor.GREEN)
                                 .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
-                                        Component.text("Click Type: " + getInteractionType().name() + " Cooldown: " + getCooldown()/1000, NamedTextColor.GREEN))))
+                                        Component.text("Click Type: " + getInteractionType().name() + " Cooldown: " + getCooldown()/1000 + " Delay: " + getDelay(), NamedTextColor.GRAY))))
                         .append(Component.text(message, NamedTextColor.WHITE)));
     }
 

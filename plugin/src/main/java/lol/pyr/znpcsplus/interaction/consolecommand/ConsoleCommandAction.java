@@ -16,8 +16,8 @@ public class ConsoleCommandAction extends InteractionActionImpl {
     private final TaskScheduler scheduler;
     private final String command;
 
-    public ConsoleCommandAction(TaskScheduler scheduler, String command, InteractionType interactionType, long delay) {
-        super(delay, interactionType);
+    public ConsoleCommandAction(TaskScheduler scheduler, String command, InteractionType interactionType, long cooldown, long delay) {
+        super(cooldown, delay, interactionType);
         this.scheduler = scheduler;
         this.command = command;
     }
@@ -35,7 +35,7 @@ public class ConsoleCommandAction extends InteractionActionImpl {
                         .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
                                 Component.text("Click to edit this action", NamedTextColor.GRAY)))
                         .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.SUGGEST_COMMAND,
-                                "/" + context.getLabel() + " action edit " + id + " " + index + " consolecommand " + getInteractionType().name() + " " + getCooldown()/1000 + " " + command))
+                                "/" + context.getLabel() + " action edit " + id + " " + index + " consolecommand " + getInteractionType().name() + " " + getCooldown()/1000 + " " + getDelay() + " " + command))
                 .append(Component.text(" | ", NamedTextColor.GRAY))
                 .append(Component.text("[DELETE]", NamedTextColor.RED)
                         .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
@@ -45,7 +45,7 @@ public class ConsoleCommandAction extends InteractionActionImpl {
                 .append(Component.text(" | ", NamedTextColor.GRAY))
                 .append(Component.text("Console Command: ", NamedTextColor.GREEN)
                         .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT,
-                                Component.text("Click Type: " + getInteractionType().name() + " Cooldown: " + getCooldown()/1000, NamedTextColor.GREEN))))
+                                Component.text("Click Type: " + getInteractionType().name() + " Cooldown: " + getCooldown()/1000 + " Delay: " + getDelay(), NamedTextColor.GRAY))))
                 .append(Component.text(command, NamedTextColor.WHITE)));
     }
 

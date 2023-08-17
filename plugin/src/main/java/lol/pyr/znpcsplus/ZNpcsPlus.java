@@ -149,7 +149,7 @@ public class ZNpcsPlus extends JavaPlugin {
 
         typeRegistry.registerDefault(packetEvents, propertyRegistry);
         actionRegistry.registerTypes(scheduler, adventure, bungeeConnector, textSerializer);
-        packetEvents.getEventManager().registerListener(new InteractionPacketListener(userManager, npcRegistry), PacketListenerPriority.MONITOR);
+        packetEvents.getEventManager().registerListener(new InteractionPacketListener(userManager, npcRegistry, scheduler), PacketListenerPriority.MONITOR);
         new Metrics(this, 18244);
         pluginManager.registerEvents(new UserListener(userManager), this);
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");

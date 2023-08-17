@@ -10,6 +10,7 @@ import lol.pyr.znpcsplus.api.interaction.InteractionType;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
+import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.user.User;
 import lol.pyr.znpcsplus.user.UserManager;
 import org.bukkit.Bukkit;
@@ -18,10 +19,12 @@ import org.bukkit.entity.Player;
 public class InteractionPacketListener implements PacketListener {
     private final UserManager userManager;
     private final NpcRegistryImpl npcRegistry;
+    private final TaskScheduler scheduler;
 
-    public InteractionPacketListener(UserManager userManager, NpcRegistryImpl npcRegistry) {
+    public InteractionPacketListener(UserManager userManager, NpcRegistryImpl npcRegistry, TaskScheduler scheduler) {
         this.userManager = userManager;
         this.npcRegistry = npcRegistry;
+        this.scheduler = scheduler;
     }
 
     @Override
@@ -46,7 +49,7 @@ public class InteractionPacketListener implements PacketListener {
         for (InteractionAction action : npc.getActions()) {
             if (action.getInteractionType() != InteractionType.ANY_CLICK && action.getInteractionType() != type) continue;
             if (action.getCooldown() > 0 && !user.actionCooldownCheck(action)) continue;
-            action.run(player);
+            scheduler.runLaterAsync(() -> action.run(player), action.getDelay());
         }
     }
 
