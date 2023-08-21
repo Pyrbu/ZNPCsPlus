@@ -62,8 +62,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         /*
         registerType("using_item", false); // TODO: fix it for 1.8 and add new property to use offhand item and riptide animation
 
-        registerType("baby", false); // TODO
-
         // Player
         registerType("shoulder_entity_left", ParrotVariant.NONE);
         registerType("shoulder_entity_right", ParrotVariant.NONE);
@@ -209,6 +207,15 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else potionIndex = 7;
         register(new EncodedIntegerProperty<>("potion_color", Color.class, potionIndex++, Color::asRGB));
         register(new BooleanProperty("potion_ambient", potionIndex, false, legacyBooleans));
+
+        int babyIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) babyIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) babyIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) babyIndex = 14;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) babyIndex = 12;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) babyIndex = 11;
+        else babyIndex = 12;
+        register(new BooleanProperty("baby", babyIndex, false, legacyBooleans));
 
         // Player
         register(new DummyProperty<>("skin", SkinDescriptor.class, false));

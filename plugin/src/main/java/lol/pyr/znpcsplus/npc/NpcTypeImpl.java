@@ -3,6 +3,7 @@ package lol.pyr.znpcsplus.npc;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
+import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.npc.NpcType;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
@@ -92,6 +93,9 @@ public class NpcTypeImpl implements NpcType {
             if (version.isNewerThanOrEquals(ServerVersion.V_1_9)) addProperties("glow");
             if (version.isNewerThanOrEquals(ServerVersion.V_1_14)) addProperties("pose");
             if (version.isNewerThanOrEquals(ServerVersion.V_1_17)) addProperties("shaking");
+            if (EntityTypes.isTypeInstanceOf(type, EntityTypes.ABSTRACT_AGEABLE)) {
+                addProperties("baby");
+            }
             return new NpcTypeImpl(name, type, hologramOffset, new HashSet<>(allowedProperties));
         }
     }
