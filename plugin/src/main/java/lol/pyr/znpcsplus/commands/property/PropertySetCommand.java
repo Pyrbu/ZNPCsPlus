@@ -131,6 +131,7 @@ public class PropertySetCommand implements CommandHandler {
                 if (type == VillagerType.class) return context.suggestEnum(VillagerType.values());
                 if (type == VillagerProfession.class) return context.suggestEnum(VillagerProfession.values());
                 if (type == VillagerLevel.class) return context.suggestEnum(VillagerLevel.values());
+                if (type == AxolotlVariant.class) return context.suggestEnum(AxolotlVariant.values());
             }
             else if (context.argSize() == 4) {
                 if (type == BlockState.class) {

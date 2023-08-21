@@ -264,6 +264,7 @@ public class ZNpcsPlus extends JavaPlugin {
         registerEnumParser(manager, VillagerType.class, incorrectUsageMessage);
         registerEnumParser(manager, VillagerProfession.class, incorrectUsageMessage);
         registerEnumParser(manager, VillagerLevel.class, incorrectUsageMessage);
+        registerEnumParser(manager, AxolotlVariant.class, incorrectUsageMessage);
 
         manager.registerCommand("npc", new MultiCommand(loadHelpMessage("root"))
                 .addSubcommand("create", new CreateCommand(npcRegistry, typeRegistry))

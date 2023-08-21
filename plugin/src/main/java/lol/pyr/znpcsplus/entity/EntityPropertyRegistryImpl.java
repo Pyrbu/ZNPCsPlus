@@ -58,6 +58,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(VillagerType.class);
         registerEnumSerializer(VillagerProfession.class);
         registerEnumSerializer(VillagerLevel.class);
+        registerEnumSerializer(AxolotlVariant.class);
         /*
         registerType("using_item", false); // TODO: fix it for 1.8 and add new property to use offhand item and riptide animation
 
@@ -301,6 +302,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new BitsetProperty("fox_faceplanted", foxIndex, 0x40));
         linkProperties("fox_sitting", "fox_crouching", "fox_sleeping", "fox_faceplanted");
 
+        // Bee
         int beeIndex;
         if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) beeIndex = 17;
         else beeIndex = 18;
@@ -315,6 +317,9 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new BooleanProperty("immune_to_zombification", zombificationIndex, false, legacyBooleans));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_17)) return;
+        // Axolotl
+        register(new EncodedIntegerProperty<>("axolotl_variant", AxolotlVariant.LUCY, 17, Enum::ordinal));
+        register(new BooleanProperty("playing_dead", 18, false, legacyBooleans));
 
         // Goat
         register(new BooleanProperty("has_left_horn", 18, true, legacyBooleans));
