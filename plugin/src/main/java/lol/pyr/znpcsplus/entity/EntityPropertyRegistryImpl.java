@@ -63,7 +63,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("using_item", false); // TODO: fix it for 1.8 and add new property to use offhand item and riptide animation
 
         registerType("baby", false); // TODO
-        registerType("pose", NpcPose.STANDING);
 
         // Player
         registerType("shoulder_entity_left", ParrotVariant.NONE);
@@ -278,6 +277,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new BitsetProperty("blaze_on_fire", blazeIndex, 0x01));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_14)) return;
+        // Pose
+        register(new NpcPoseProperty());
 
         // Cat
         int catIndex;
