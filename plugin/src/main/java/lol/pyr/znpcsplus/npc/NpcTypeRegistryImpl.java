@@ -335,7 +335,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .setHologramOffset(0.125));
 
         register(builder(p, "camel", EntityTypes.CAMEL)
-                .setHologramOffset(0.25));
+                .setHologramOffset(0.25)
+                .addProperties("bashing"));
     }
 
     public Collection<NpcType> getAll() {

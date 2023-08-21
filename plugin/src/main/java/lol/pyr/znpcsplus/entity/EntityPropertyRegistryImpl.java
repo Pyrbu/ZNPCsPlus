@@ -329,6 +329,11 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new BooleanProperty("has_right_horn", 19, true, legacyBooleans));
 
         register(new EncodedIntegerProperty<>("shaking", false,7, enabled -> enabled ? 140 : 0));
+
+        if (!ver.isNewerThanOrEquals(ServerVersion.V_1_20)) return;
+
+        // Camel
+        register(new BooleanProperty("bashing", 18, false, legacyBooleans));
     }
 
     private void registerSerializer(PropertySerializer<?> serializer) {
