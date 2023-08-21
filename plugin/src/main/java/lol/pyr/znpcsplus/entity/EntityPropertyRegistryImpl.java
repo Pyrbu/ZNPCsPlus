@@ -283,6 +283,17 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else blazeIndex = 16;
         register(new BitsetProperty("blaze_on_fire", blazeIndex, 0x01));
 
+        // Creeper
+        int creeperIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) creeperIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) creeperIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) creeperIndex = 14;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) creeperIndex = 12;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) creeperIndex = 11;
+        else creeperIndex= 16;
+        register(new EncodedIntegerProperty<>("creeper_state", CreeperState.IDLE, creeperIndex++, CreeperState::getState));
+        register(new BooleanProperty("creeper_charged", creeperIndex, false, legacyBooleans));
+
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_14)) return;
         // Pose
         register(new NpcPoseProperty());
