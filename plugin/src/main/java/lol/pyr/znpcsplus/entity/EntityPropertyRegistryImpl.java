@@ -73,13 +73,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("beam_target", null); // TODO: Make a block pos class for this
         registerType("show_base", true); // TODO
 
-        // Axolotl
-        registerType("axolotl_variant", 0);
-        registerType("playing_dead", false); // TODO fix disabling
-
-        // Blaze
-        registerType("blaze_on_fire", false);
-
         // Creeper
         registerType("creeper_state", CreeperState.IDLE);
         registerType("creeper_charged", false);
@@ -273,6 +266,16 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) batIndex = 11;
         else batIndex = 16;
         register(new BooleanProperty("hanging", batIndex, false, true /* This isnt a mistake */));
+
+        // Blaze
+        final int blazeIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) blazeIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) blazeIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) blazeIndex = 14;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) blazeIndex = 12;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) blazeIndex = 11;
+        else blazeIndex = 16;
+        register(new BitsetProperty("blaze_on_fire", blazeIndex, 0x01));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_14)) return;
 
