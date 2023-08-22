@@ -37,6 +37,10 @@ public abstract class Viewable {
         UNSAFE_hide(player);
     }
 
+    public void UNSAFE_removeViewer(Player player) {
+        viewers.remove(player);
+    }
+
     protected void UNSAFE_hideAll() {
         for (Player viewer : viewers) UNSAFE_hide(viewer);
     }
