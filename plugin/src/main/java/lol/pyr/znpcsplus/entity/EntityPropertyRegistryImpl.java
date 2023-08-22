@@ -58,11 +58,14 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(VillagerType.class);
         registerEnumSerializer(VillagerProfession.class);
         registerEnumSerializer(VillagerLevel.class);
+        registerEnumSerializer(AxolotlVariant.class);
+        registerEnumSerializer(HorseType.class);
+        registerEnumSerializer(HorseColor.class);
+        registerEnumSerializer(HorseStyle.class);
+        registerEnumSerializer(HorseArmor.class);
+
         /*
         registerType("using_item", false); // TODO: fix it for 1.8 and add new property to use offhand item and riptide animation
-
-        registerType("baby", false); // TODO
-        registerType("pose", NpcPose.STANDING);
 
         // Player
         registerType("shoulder_entity_left", ParrotVariant.NONE);
@@ -71,13 +74,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // End Crystal
         registerType("beam_target", null); // TODO: Make a block pos class for this
         registerType("show_base", true); // TODO
-
-        // Axolotl
-        registerType("axolotl_variant", 0);
-        registerType("playing_dead", false); // TODO fix disabling
-
-        // Blaze
-        registerType("blaze_on_fire", false);
 
         // Creeper
         registerType("creeper_state", CreeperState.IDLE);
@@ -105,11 +101,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Sniffer
         registerType("sniffer_state", null); // TODO: Nothing on wiki.vg, look in mc source
-
-        // Horse
-        registerType("horse_style", 0); // TODO: Figure this out
-        registerType("horse_chest", false); // TODO
-        registerType("horse_saddle", false); // TODO
 
         // LLama
         registerType("carpet_color", DyeColor.class); // TODO
@@ -217,6 +208,15 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new EncodedIntegerProperty<>("potion_color", Color.class, potionIndex++, Color::asRGB));
         register(new BooleanProperty("potion_ambient", potionIndex, false, legacyBooleans));
 
+        int babyIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) babyIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) babyIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) babyIndex = 14;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) babyIndex = 12;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) babyIndex = 11;
+        else babyIndex = 12;
+        register(new BooleanProperty("baby", babyIndex, false, legacyBooleans));
+
         // Player
         register(new DummyProperty<>("skin", SkinDescriptor.class, false));
         final int skinLayersIndex;
@@ -273,7 +273,80 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else batIndex = 16;
         register(new BooleanProperty("hanging", batIndex, false, true /* This isnt a mistake */));
 
+        // Blaze
+        final int blazeIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) blazeIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) blazeIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) blazeIndex = 14;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) blazeIndex = 12;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) blazeIndex = 11;
+        else blazeIndex = 16;
+        register(new BitsetProperty("blaze_on_fire", blazeIndex, 0x01));
+
+        // Creeper
+        int creeperIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) creeperIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) creeperIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) creeperIndex = 14;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) creeperIndex = 12;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) creeperIndex = 11;
+        else creeperIndex= 16;
+        register(new EncodedIntegerProperty<>("creeper_state", CreeperState.IDLE, creeperIndex++, CreeperState::getState));
+        register(new BooleanProperty("creeper_charged", creeperIndex, false, legacyBooleans));
+
+        // Abstract Horse
+        int horseIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) horseIndex = 17;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) horseIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) horseIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) horseIndex = 13;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) horseIndex = 12;
+        else horseIndex = 16;
+        int horseEating = ver.isNewerThanOrEquals(ServerVersion.V_1_12) ? 0x10 : 0x20;
+        boolean v1_8 = ver.isOlderThan(ServerVersion.V_1_9);
+        register(new BitsetProperty("is_tame", horseIndex, 0x02, false, v1_8));
+        register(new BitsetProperty("is_saddled", horseIndex, 0x04, false, v1_8));
+        register(new BitsetProperty("is_eating", horseIndex, horseEating, false, v1_8));
+        register(new BitsetProperty("is_rearing", horseIndex, horseEating << 1, false, v1_8));
+        register(new BitsetProperty("has_mouth_open", horseIndex, horseEating << 2, false, v1_8));
+
+        // Horse
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_8) && ver.isOlderThan(ServerVersion.V_1_9)) {
+            register(new EncodedByteProperty<>("horse_type", HorseType.HORSE, 19, obj -> (byte) obj.ordinal()));
+        } else if (ver.isOlderThan(ServerVersion.V_1_11)) {
+            int horseTypeIndex = 14;
+            if (ver.isOlderThan(ServerVersion.V_1_10)) horseTypeIndex = 13;
+            register(new EncodedIntegerProperty<>("horse_type", HorseType.HORSE, horseTypeIndex, Enum::ordinal));
+        }
+        int horseVariantIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_18)) horseVariantIndex = 18;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) horseVariantIndex = 19;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) horseVariantIndex = 18;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) horseVariantIndex = 17;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) horseVariantIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) horseVariantIndex = 14;
+        else horseVariantIndex = 20;
+        register(new HorseStyleProperty(horseVariantIndex));
+        register(new HorseColorProperty(horseVariantIndex));
+        linkProperties("horse_style", "horse_color");
+
+        // Use chesteplate property for 1.14 and above
+        if (ver.isOlderThan(ServerVersion.V_1_14)) {
+            register(new EncodedIntegerProperty<>("horse_armor", HorseArmor.NONE, horseVariantIndex + 2, Enum::ordinal));
+        }
+
+        // Chested Horse
+        if (ver.isOlderThan(ServerVersion.V_1_11)) {
+            register(new BitsetProperty("has_chest", horseIndex, 0x08, false, v1_8));
+            linkProperties("is_saddled", "has_chest", "is_eating", "is_rearing", "has_mouth_open");
+        } else {
+            register(new BooleanProperty("has_chest", horseVariantIndex, false, legacyBooleans));
+            linkProperties("is_saddled", "is_eating", "is_rearing", "has_mouth_open");
+        }
+
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_14)) return;
+        // Pose
+        register(new NpcPoseProperty());
 
         // Cat
         int catIndex;
@@ -301,6 +374,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new BitsetProperty("fox_faceplanted", foxIndex, 0x40));
         linkProperties("fox_sitting", "fox_crouching", "fox_sleeping", "fox_faceplanted");
 
+        // Bee
         int beeIndex;
         if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) beeIndex = 17;
         else beeIndex = 18;
@@ -315,12 +389,20 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new BooleanProperty("immune_to_zombification", zombificationIndex, false, legacyBooleans));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_17)) return;
+        // Axolotl
+        register(new EncodedIntegerProperty<>("axolotl_variant", AxolotlVariant.LUCY, 17, Enum::ordinal));
+        register(new BooleanProperty("playing_dead", 18, false, legacyBooleans));
 
         // Goat
         register(new BooleanProperty("has_left_horn", 18, true, legacyBooleans));
         register(new BooleanProperty("has_right_horn", 19, true, legacyBooleans));
 
         register(new EncodedIntegerProperty<>("shaking", false,7, enabled -> enabled ? 140 : 0));
+
+        if (!ver.isNewerThanOrEquals(ServerVersion.V_1_20)) return;
+
+        // Camel
+        register(new BooleanProperty("bashing", 18, false, legacyBooleans));
     }
 
     private void registerSerializer(PropertySerializer<?> serializer) {

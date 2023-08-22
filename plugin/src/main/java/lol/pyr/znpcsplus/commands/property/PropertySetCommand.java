@@ -16,7 +16,6 @@ import lol.pyr.znpcsplus.util.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
-import org.bukkit.DyeColor;
 import com.github.retrooper.packetevents.protocol.item.ItemStack;
 
 import java.util.Collections;
@@ -118,19 +117,13 @@ public class PropertySetCommand implements CommandHandler {
             if (context.argSize() == 3) {
                 if (type == Boolean.class) return context.suggestLiteral("true", "false");
                 if (type == NamedTextColor.class) return context.suggestCollection(NamedTextColor.NAMES.keys());
-                if (type == NpcPose.class) return context.suggestEnum(NpcPose.values());
                 if (type == Color.class) return context.suggestLiteral("0x0F00FF", "#FFFFFF");
-                if (type == DyeColor.class) return context.suggestEnum(DyeColor.values());
-                if (type == CatVariant.class) return context.suggestEnum(CatVariant.values());
-                if (type == CreeperState.class) return context.suggestEnum(CreeperState.values());
-                if (type == ParrotVariant.class) return context.suggestEnum(ParrotVariant.values());
                 if (type == BlockState.class) return context.suggestLiteral("hand", "looking_at", "block");
-                if (type == SpellType.class) return context.suggestEnum(SpellType.values());
-                if (type == FoxVariant.class) return context.suggestEnum(FoxVariant.values());
-                if (type == FrogVariant.class) return context.suggestEnum(FrogVariant.values());
-                if (type == VillagerType.class) return context.suggestEnum(VillagerType.values());
-                if (type == VillagerProfession.class) return context.suggestEnum(VillagerProfession.values());
-                if (type == VillagerLevel.class) return context.suggestEnum(VillagerLevel.values());
+
+                // Suggest enum values directly
+                if (type.isEnum()) {
+                    return context.suggestEnum((Enum<?>[]) type.getEnumConstants());
+                }
             }
             else if (context.argSize() == 4) {
                 if (type == BlockState.class) {

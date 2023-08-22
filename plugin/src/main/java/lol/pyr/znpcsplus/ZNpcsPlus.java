@@ -253,6 +253,7 @@ public class ZNpcsPlus extends JavaPlugin {
         manager.registerParser(Color.class, new ColorParser(incorrectUsageMessage));
         manager.registerParser(Vector3f.class, new Vector3fParser(incorrectUsageMessage));
 
+        // TODO: Need to find a better way to do this
         registerEnumParser(manager, NpcPose.class, incorrectUsageMessage);
         registerEnumParser(manager, DyeColor.class, incorrectUsageMessage);
         registerEnumParser(manager, CatVariant.class, incorrectUsageMessage);
@@ -264,6 +265,11 @@ public class ZNpcsPlus extends JavaPlugin {
         registerEnumParser(manager, VillagerType.class, incorrectUsageMessage);
         registerEnumParser(manager, VillagerProfession.class, incorrectUsageMessage);
         registerEnumParser(manager, VillagerLevel.class, incorrectUsageMessage);
+        registerEnumParser(manager, AxolotlVariant.class, incorrectUsageMessage);
+        registerEnumParser(manager, HorseType.class, incorrectUsageMessage);
+        registerEnumParser(manager, HorseStyle.class, incorrectUsageMessage);
+        registerEnumParser(manager, HorseColor.class, incorrectUsageMessage);
+        registerEnumParser(manager, HorseArmor.class, incorrectUsageMessage);
 
         manager.registerCommand("npc", new MultiCommand(loadHelpMessage("root"))
                 .addSubcommand("create", new CreateCommand(npcRegistry, typeRegistry))
