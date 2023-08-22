@@ -7,7 +7,6 @@ import lol.pyr.znpcsplus.interaction.playerchat.PlayerChatActionType;
 import lol.pyr.znpcsplus.interaction.playercommand.PlayerCommandActionType;
 import lol.pyr.znpcsplus.interaction.switchserver.SwitchServerActionType;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
-import lol.pyr.znpcsplus.util.BungeeConnector;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
@@ -23,10 +22,10 @@ public class ActionRegistry {
     public ActionRegistry() {
     }
 
-    public void registerTypes(TaskScheduler taskScheduler, BukkitAudiences adventure, BungeeConnector bungeeConnector, LegacyComponentSerializer textSerializer) {
+    public void registerTypes(TaskScheduler taskScheduler, BukkitAudiences adventure, LegacyComponentSerializer textSerializer) {
         register(new ConsoleCommandActionType(taskScheduler));
         register(new PlayerCommandActionType(taskScheduler));
-        register(new SwitchServerActionType(bungeeConnector));
+        register(new SwitchServerActionType());
         register(new MessageActionType(adventure, textSerializer));
         register(new PlayerChatActionType(taskScheduler));
     }

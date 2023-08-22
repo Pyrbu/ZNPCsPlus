@@ -131,7 +131,6 @@ public class ZNpcsPlus extends JavaPlugin {
         EntityPropertyRegistryImpl propertyRegistry = new EntityPropertyRegistryImpl(skinCache);
         MetadataFactory metadataFactory = setupMetadataFactory();
         PacketFactory packetFactory = setupPacketFactory(scheduler, metadataFactory, propertyRegistry);
-        BungeeConnector bungeeConnector = new BungeeConnector(this);
 
         ActionRegistry actionRegistry = new ActionRegistry();
         NpcTypeRegistryImpl typeRegistry = new NpcTypeRegistryImpl();
@@ -142,18 +141,17 @@ public class ZNpcsPlus extends JavaPlugin {
         UserManager userManager = new UserManager();
         shutdownTasks.add(userManager::shutdown);
 
-        DataImporterRegistry importerRegistry = new DataImporterRegistry(configManager, adventure, bungeeConnector,
+        DataImporterRegistry importerRegistry = new DataImporterRegistry(configManager, adventure,
                 scheduler, packetFactory, textSerializer, typeRegistry, getDataFolder().getParentFile(),
                 propertyRegistry, skinCache);
 
         log(ChatColor.WHITE + " * Registerring components...");
 
         typeRegistry.registerDefault(packetEvents, propertyRegistry);
-        actionRegistry.registerTypes(scheduler, adventure, bungeeConnector, textSerializer);
+        actionRegistry.registerTypes(scheduler, adventure, textSerializer);
         packetEvents.getEventManager().registerListener(new InteractionPacketListener(userManager, npcRegistry, scheduler), PacketListenerPriority.MONITOR);
         new Metrics(this, 18244);
         pluginManager.registerEvents(new UserListener(userManager), this);
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
         registerCommands(npcRegistry, skinCache, adventure, actionRegistry,
                 typeRegistry, propertyRegistry, importerRegistry, configManager);

@@ -3,7 +3,7 @@ package lol.pyr.znpcsplus.interaction.switchserver;
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.znpcsplus.api.interaction.InteractionType;
 import lol.pyr.znpcsplus.interaction.InteractionActionImpl;
-import lol.pyr.znpcsplus.util.BungeeConnector;
+import lol.pyr.znpcsplus.util.BungeeUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -11,18 +11,16 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 
 public class SwitchServerAction extends InteractionActionImpl {
-    private final BungeeConnector bungeeConnector;
     private final String server;
 
-    public SwitchServerAction(BungeeConnector bungeeConnector, String server, InteractionType interactionType, long cooldown, long delay) {
+    public SwitchServerAction(String server, InteractionType interactionType, long cooldown, long delay) {
         super(cooldown, delay, interactionType);
-        this.bungeeConnector = bungeeConnector;
         this.server = server;
     }
 
     @Override
     public void run(Player player) {
-        bungeeConnector.sendPlayer(player, server);
+        BungeeUtil.connectPlayer(player, server);
     }
 
     @Override

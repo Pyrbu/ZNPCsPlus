@@ -31,7 +31,6 @@ import lol.pyr.znpcsplus.skin.Skin;
 import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 import lol.pyr.znpcsplus.skin.descriptor.FetchingDescriptor;
 import lol.pyr.znpcsplus.skin.descriptor.PrefetchedDescriptor;
-import lol.pyr.znpcsplus.util.BungeeConnector;
 import lol.pyr.znpcsplus.util.ItemSerializationUtil;
 import lol.pyr.znpcsplus.util.NpcLocation;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
@@ -47,7 +46,6 @@ import java.util.*;
 public class ZNpcImporter implements DataImporter {
     private final ConfigManager configManager;
     private final BukkitAudiences adventure;
-    private final BungeeConnector bungeeConnector;
     private final TaskScheduler taskScheduler;
     private final PacketFactory packetFactory;
     private final LegacyComponentSerializer textSerializer;
@@ -57,13 +55,12 @@ public class ZNpcImporter implements DataImporter {
     private final File dataFile;
     private final Gson gson;
 
-    public ZNpcImporter(ConfigManager configManager, BukkitAudiences adventure, BungeeConnector bungeeConnector,
+    public ZNpcImporter(ConfigManager configManager, BukkitAudiences adventure,
                         TaskScheduler taskScheduler, PacketFactory packetFactory, LegacyComponentSerializer textSerializer,
                         NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry, MojangSkinCache skinCache, File dataFile) {
 
         this.configManager = configManager;
         this.adventure = adventure;
-        this.bungeeConnector = bungeeConnector;
         this.taskScheduler = taskScheduler;
         this.packetFactory = packetFactory;
         this.textSerializer = textSerializer;
@@ -164,7 +161,7 @@ public class ZNpcImporter implements DataImporter {
             case "message":
                 return new MessageAction(adventure, parameter, clickType, textSerializer, cooldown * 1000L, 0);
             case "server":
-                return new SwitchServerAction(bungeeConnector, parameter, clickType, cooldown * 1000L, 0);
+                return new SwitchServerAction(parameter, clickType, cooldown * 1000L, 0);
         }
         throw new IllegalArgumentException("Couldn't adapt znpcs click action: " + type);
     }
