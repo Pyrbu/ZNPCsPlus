@@ -57,6 +57,10 @@ public class NpcLocation {
         return this.pitch;
     }
 
+    public NpcLocation centered() {
+        return new NpcLocation(Math.floor(x) + 0.5, y, Math.floor(z) + 0.5, yaw, pitch);
+    }
+
     public Location toBukkitLocation(World world) {
         return new Location(world, this.x, this.y, this.z, this.yaw, this.pitch);
     }

@@ -9,6 +9,7 @@
  <gold>* <yellow>/npc type <id> <type>
 
  <gold>* <yellow>/npc near <distance>
+ <gold>* <yellow>/npc center <id>
  <gold>* <yellow>/npc move <id>
  <gold>* <yellow>/npc teleport <id>
 

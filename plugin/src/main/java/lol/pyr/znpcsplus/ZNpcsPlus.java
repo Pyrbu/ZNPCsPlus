@@ -293,6 +293,7 @@ public class ZNpcsPlus extends JavaPlugin {
         registerEnumParser(manager, VillagerLevel.class, incorrectUsageMessage);
 
         manager.registerCommand("npc", new MultiCommand(loadHelpMessage("root"))
+                .addSubcommand("center", new CenterCommand(npcRegistry))
                 .addSubcommand("create", new CreateCommand(npcRegistry, typeRegistry))
                 .addSubcommand("reloadconfig", new ReloadConfigCommand(configManager))
                 .addSubcommand("toggle", new ToggleCommand(npcRegistry))
