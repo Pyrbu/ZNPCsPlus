@@ -91,10 +91,23 @@ public class NpcTypeImpl implements NpcType {
             addProperties("fire", "invisible", "silent", "look",
                     "using_item", "potion_color", "potion_ambient", "dinnerbone");
             if (version.isNewerThanOrEquals(ServerVersion.V_1_9)) addProperties("glow");
-            if (version.isNewerThanOrEquals(ServerVersion.V_1_14)) addProperties("pose");
+            if (version.isNewerThanOrEquals(ServerVersion.V_1_14)) {
+                addProperties("pose");
+                if (EntityTypes.isTypeInstanceOf(type, EntityTypes.HORSE)) {
+                    addProperties("chestplate");
+                }
+            }
             if (version.isNewerThanOrEquals(ServerVersion.V_1_17)) addProperties("shaking");
             if (EntityTypes.isTypeInstanceOf(type, EntityTypes.ABSTRACT_AGEABLE)) {
                 addProperties("baby");
+            }
+            if (EntityTypes.isTypeInstanceOf(type, EntityTypes.ABSTRACT_HORSE)) {
+                addProperties("is_saddled", "is_eating", "is_rearing", "has_mouth_open");
+            }
+            if (EntityTypes.isTypeInstanceOf(type, EntityTypes.CHESTED_HORSE)) {
+                addProperties("has_chest");
+            } else if (version.isOlderThan(ServerVersion.V_1_11) && type.equals(EntityTypes.HORSE)) {
+                addProperties("has_chest");
             }
             return new NpcTypeImpl(name, type, hologramOffset, new HashSet<>(allowedProperties));
         }

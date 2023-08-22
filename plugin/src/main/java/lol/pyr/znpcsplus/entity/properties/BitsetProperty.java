@@ -12,6 +12,12 @@ public class BitsetProperty extends EntityPropertyImpl<Boolean> {
     private final int index;
     private final int bitmask;
     private final boolean inverted;
+    private boolean integer = false;
+
+    public BitsetProperty(String name, int index, int bitmask, boolean inverted, boolean integer) {
+        this(name, index, bitmask, inverted);
+        this.integer = integer;
+    }
 
     public BitsetProperty(String name, int index, int bitmask, boolean inverted) {
         super(name, inverted, Boolean.class);
@@ -27,9 +33,11 @@ public class BitsetProperty extends EntityPropertyImpl<Boolean> {
     @Override
     public void apply(Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData> properties) {
         EntityData oldData = properties.get(index);
-        byte oldValue = oldData == null ? 0 : (byte) oldData.getValue();
         boolean enabled = entity.getProperty(this);
         if (inverted) enabled = !enabled;
-        properties.put(index, newEntityData(index, EntityDataTypes.BYTE, (byte) (oldValue | (enabled ? bitmask : 0))));
+        properties.put(index,
+                integer ? newEntityData(index, EntityDataTypes.INT, (oldData == null ? 0 : (int) oldData.getValue()) | (enabled ? bitmask : 0)) :
+                newEntityData(index, EntityDataTypes.BYTE, (byte) ((oldData == null ? 0 : (byte) oldData.getValue()) | (enabled ? bitmask : 0))));
+
     }
 }

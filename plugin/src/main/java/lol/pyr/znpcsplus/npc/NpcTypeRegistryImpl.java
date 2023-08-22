@@ -88,7 +88,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .setHologramOffset(-1.125));
 
         register(builder(p, "horse", EntityTypes.HORSE)
-                .setHologramOffset(-0.375));
+                .setHologramOffset(-0.375)
+                .addProperties("horse_type", "horse_style", "horse_color", "horse_armor"));
 
         register(builder(p, "iron_golem", EntityTypes.IRON_GOLEM)
                 .setHologramOffset(0.725));

@@ -59,6 +59,11 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(VillagerProfession.class);
         registerEnumSerializer(VillagerLevel.class);
         registerEnumSerializer(AxolotlVariant.class);
+        registerEnumSerializer(HorseType.class);
+        registerEnumSerializer(HorseColor.class);
+        registerEnumSerializer(HorseStyle.class);
+        registerEnumSerializer(HorseArmor.class);
+
         /*
         registerType("using_item", false); // TODO: fix it for 1.8 and add new property to use offhand item and riptide animation
 
@@ -96,11 +101,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Sniffer
         registerType("sniffer_state", null); // TODO: Nothing on wiki.vg, look in mc source
-
-        // Horse
-        registerType("horse_style", 0); // TODO: Figure this out
-        registerType("horse_chest", false); // TODO
-        registerType("horse_saddle", false); // TODO
 
         // LLama
         registerType("carpet_color", DyeColor.class); // TODO
@@ -293,6 +293,56 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else creeperIndex= 16;
         register(new EncodedIntegerProperty<>("creeper_state", CreeperState.IDLE, creeperIndex++, CreeperState::getState));
         register(new BooleanProperty("creeper_charged", creeperIndex, false, legacyBooleans));
+
+        // Abstract Horse
+        int horseIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) horseIndex = 17;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) horseIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) horseIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) horseIndex = 13;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) horseIndex = 12;
+        else horseIndex = 16;
+        int horseEating = ver.isNewerThanOrEquals(ServerVersion.V_1_12) ? 0x10 : 0x20;
+        boolean v1_8 = ver.isOlderThan(ServerVersion.V_1_9);
+        register(new BitsetProperty("is_tame", horseIndex, 0x02, false, v1_8));
+        register(new BitsetProperty("is_saddled", horseIndex, 0x04, false, v1_8));
+        register(new BitsetProperty("is_eating", horseIndex, horseEating, false, v1_8));
+        register(new BitsetProperty("is_rearing", horseIndex, horseEating << 1, false, v1_8));
+        register(new BitsetProperty("has_mouth_open", horseIndex, horseEating << 2, false, v1_8));
+
+        // Horse
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_8) && ver.isOlderThan(ServerVersion.V_1_9)) {
+            register(new EncodedByteProperty<>("horse_type", HorseType.HORSE, 19, obj -> (byte) obj.ordinal()));
+        } else if (ver.isOlderThan(ServerVersion.V_1_11)) {
+            int horseTypeIndex = 14;
+            if (ver.isOlderThan(ServerVersion.V_1_10)) horseTypeIndex = 13;
+            register(new EncodedIntegerProperty<>("horse_type", HorseType.HORSE, horseTypeIndex, Enum::ordinal));
+        }
+        int horseVariantIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_18)) horseVariantIndex = 18;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) horseVariantIndex = 19;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) horseVariantIndex = 18;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) horseVariantIndex = 17;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) horseVariantIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) horseVariantIndex = 14;
+        else horseVariantIndex = 20;
+        register(new HorseStyleProperty(horseVariantIndex));
+        register(new HorseColorProperty(horseVariantIndex));
+        linkProperties("horse_style", "horse_color");
+
+        // Use chesteplate property for 1.14 and above
+        if (ver.isOlderThan(ServerVersion.V_1_14)) {
+            register(new EncodedIntegerProperty<>("horse_armor", HorseArmor.NONE, horseVariantIndex + 2, Enum::ordinal));
+        }
+
+        // Chested Horse
+        if (ver.isOlderThan(ServerVersion.V_1_11)) {
+            register(new BitsetProperty("has_chest", horseIndex, 0x08, false, v1_8));
+            linkProperties("is_saddled", "has_chest", "is_eating", "is_rearing", "has_mouth_open");
+        } else {
+            register(new BooleanProperty("has_chest", horseVariantIndex, false, legacyBooleans));
+            linkProperties("is_saddled", "is_eating", "is_rearing", "has_mouth_open");
+        }
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_14)) return;
         // Pose
