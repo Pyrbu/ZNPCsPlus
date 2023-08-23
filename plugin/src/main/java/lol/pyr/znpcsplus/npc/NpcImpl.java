@@ -171,6 +171,10 @@ public class NpcImpl extends Viewable implements Npc {
         actions.remove(index);
     }
 
+    public void clearActions() {
+        actions.clear();
+    }
+
     public void addAction(InteractionActionImpl action) {
         actions.add(action);
     }

@@ -15,10 +15,7 @@ import lol.pyr.director.common.message.Message;
 import lol.pyr.znpcsplus.api.NpcApiProvider;
 import lol.pyr.znpcsplus.api.interaction.InteractionType;
 import lol.pyr.znpcsplus.commands.*;
-import lol.pyr.znpcsplus.commands.action.ActionAddCommand;
-import lol.pyr.znpcsplus.commands.action.ActionDeleteCommand;
-import lol.pyr.znpcsplus.commands.action.ActionEditCommand;
-import lol.pyr.znpcsplus.commands.action.ActionListCommand;
+import lol.pyr.znpcsplus.commands.action.*;
 import lol.pyr.znpcsplus.commands.hologram.*;
 import lol.pyr.znpcsplus.commands.property.PropertyRemoveCommand;
 import lol.pyr.znpcsplus.commands.property.PropertySetCommand;
@@ -321,6 +318,7 @@ public class ZNpcsPlus extends JavaPlugin {
                         .addSubcommand("refreshdelay", new HoloRefreshDelayCommand(npcRegistry)))
                 .addSubcommand("action", new MultiCommand(loadHelpMessage("action"))
                         .addSubcommand("add", new ActionAddCommand(npcRegistry, actionRegistry))
+                        .addSubcommand("clear", new ActionClearCommand(npcRegistry))
                         .addSubcommand("delete", new ActionDeleteCommand(npcRegistry))
                         .addSubcommand("edit", new ActionEditCommand(npcRegistry, actionRegistry))
                         .addSubcommand("list", new ActionListCommand(npcRegistry)))
