@@ -88,8 +88,6 @@ public class YamlStorage implements NpcStorage {
 
     @Override
     public void saveNpcs(Collection<NpcEntryImpl> npcs) {
-        File[] files = folder.listFiles();
-        if (files != null && files.length != 0) for (File file : files) file.delete();
         for (NpcEntryImpl entry : npcs) try {
             YamlConfiguration config = new YamlConfiguration();
             config.set("id", entry.getId());
