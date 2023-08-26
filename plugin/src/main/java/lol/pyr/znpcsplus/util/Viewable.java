@@ -2,12 +2,30 @@ package lol.pyr.znpcsplus.util;
 
 import org.bukkit.entity.Player;
 
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public abstract class Viewable {
+    private final static List<WeakReference<Viewable>> all = new ArrayList<>();
+
+    public static List<Viewable> all() {
+        all.removeIf(reference -> reference.get() == null);
+        return all.stream()
+                .map(Reference::get)
+                .collect(Collectors.toList());
+    }
+
     private final Set<Player> viewers = ConcurrentHashMap.newKeySet();
+
+    public Viewable() {
+        all.add(new WeakReference<>(this));
+    }
 
     public void delete() {
         UNSAFE_hideAll();

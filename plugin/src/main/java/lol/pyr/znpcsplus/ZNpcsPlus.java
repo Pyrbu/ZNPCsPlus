@@ -38,7 +38,7 @@ import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 import lol.pyr.znpcsplus.skin.cache.SkinCacheCleanTask;
 import lol.pyr.znpcsplus.tasks.HologramRefreshTask;
-import lol.pyr.znpcsplus.tasks.NpcHideListener;
+import lol.pyr.znpcsplus.tasks.ViewableHideOnLeaveListener;
 import lol.pyr.znpcsplus.tasks.NpcProcessorTask;
 import lol.pyr.znpcsplus.updater.UpdateChecker;
 import lol.pyr.znpcsplus.updater.UpdateNotificationListener;
@@ -163,7 +163,7 @@ public class ZNpcsPlus extends JavaPlugin {
         scheduler.runDelayedTimerAsync(new NpcProcessorTask(npcRegistry, configManager, propertyRegistry), 60L, 3L);
         scheduler.runDelayedTimerAsync(new HologramRefreshTask(npcRegistry), 60L, 20L);
         scheduler.runDelayedTimerAsync(new SkinCacheCleanTask(skinCache), 1200, 1200);
-        pluginManager.registerEvents(new NpcHideListener(npcRegistry), this);
+        pluginManager.registerEvents(new ViewableHideOnLeaveListener(), this);
 
         log(ChatColor.WHITE + " * Loading data...");
         npcRegistry.reload();
