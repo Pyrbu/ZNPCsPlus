@@ -19,12 +19,14 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class YamlStorage implements NpcStorage {
+    private final static Logger logger = Logger.getLogger("YamlStorage");
+
     private final PacketFactory packetFactory;
     private final ConfigManager configManager;
     private final ActionRegistry actionRegistry;
@@ -118,10 +120,20 @@ public class YamlStorage implements NpcStorage {
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList()));
 
-            config.save(new File(folder, entry.getId() + ".yml"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            config.save(fileFor(entry));
+        } catch (Exception e) {
+            logger.severe("Failed to save npc with id " + entry.getId());
+            e.printStackTrace();
         }
+    }
+
+    @Override
+    public void deleteNpc(NpcEntryImpl npc) {
+        fileFor(npc).delete();
+    }
+
+    private File fileFor(NpcEntryImpl entry) {
+        return new File(folder, entry.getId() + ".yml");
     }
 
     public NpcLocation deserializeLocation(ConfigurationSection section) {
