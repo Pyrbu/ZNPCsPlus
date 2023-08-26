@@ -139,6 +139,7 @@ public class NpcRegistryImpl implements NpcRegistry {
         id = id.toLowerCase();
         if (npcIdLookupMap.containsKey(id)) throw new IllegalArgumentException("An npc with the id " + id + " already exists!");
         NpcImpl npc = new NpcImpl(UUID.randomUUID(), propertyRegistry, configManager, textSerializer, world, type, location, packetFactory);
+        type.applyDefaultProperties(npc);
         NpcEntryImpl entry = new NpcEntryImpl(id, npc);
         register(entry);
         return entry;

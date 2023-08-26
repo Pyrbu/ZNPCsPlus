@@ -16,14 +16,16 @@ import java.util.stream.Collectors;
 public class NpcTypeImpl implements NpcType {
     private final EntityType type;
     private final Set<EntityPropertyImpl<?>> allowedProperties;
+    private final Map<EntityPropertyImpl<?>, Object> defaultProperties;
     private final String name;
     private final double hologramOffset;
 
-    private NpcTypeImpl(String name, EntityType type, double hologramOffset, Set<EntityPropertyImpl<?>> allowedProperties) {
+    private NpcTypeImpl(String name, EntityType type, double hologramOffset, Set<EntityPropertyImpl<?>> allowedProperties, Map<EntityPropertyImpl<?>, Object> defaultProperties) {
         this.name = name.toLowerCase();
         this.type = type;
         this.hologramOffset = hologramOffset;
         this.allowedProperties = allowedProperties;
+        this.defaultProperties = defaultProperties;
     }
 
     public String getName() {
@@ -42,6 +44,12 @@ public class NpcTypeImpl implements NpcType {
         return allowedProperties.stream().map(property -> (EntityProperty<?>) property).collect(Collectors.toSet());
     }
 
+    public void applyDefaultProperties(NpcImpl npc) {
+        for (Map.Entry<EntityPropertyImpl<?>, Object> entry : defaultProperties.entrySet()) {
+            npc.UNSAFE_setProperty(entry.getKey(), entry.getValue());
+        }
+    }
+
     protected static final class Builder {
         private final static Logger logger = Logger.getLogger("NpcTypeBuilder");
 
@@ -49,6 +57,7 @@ public class NpcTypeImpl implements NpcType {
         private final String name;
         private final EntityType type;
         private final List<EntityPropertyImpl<?>> allowedProperties = new ArrayList<>();
+        private final Map<EntityPropertyImpl<?>, Object> defaultProperties = new HashMap<>();
         private double hologramOffset = 0;
 
         Builder(EntityPropertyRegistryImpl propertyRegistry, String name, EntityType type) {
@@ -81,6 +90,17 @@ public class NpcTypeImpl implements NpcType {
             return this;
         }
 
+        @SuppressWarnings("unchecked")
+        public <T> Builder addDefaultProperty(String name, T value) {
+            EntityPropertyImpl<T> property = (EntityPropertyImpl<T>) propertyRegistry.getByName(name);
+            if (property == null) {
+                logger.warning("Tried to register the non-existent \"" + name + "\" default property to the \"" + this.name + "\" npc type");
+                return this;
+            }
+            defaultProperties.put(property, value);
+            return this;
+        }
+
         public Builder setHologramOffset(double hologramOffset) {
             this.hologramOffset = hologramOffset;
             return this;
@@ -109,7 +129,7 @@ public class NpcTypeImpl implements NpcType {
             } else if (version.isOlderThan(ServerVersion.V_1_11) && type.equals(EntityTypes.HORSE)) {
                 addProperties("has_chest");
             }
-            return new NpcTypeImpl(name, type, hologramOffset, new HashSet<>(allowedProperties));
+            return new NpcTypeImpl(name, type, hologramOffset, new HashSet<>(allowedProperties), defaultProperties);
         }
     }
 }
