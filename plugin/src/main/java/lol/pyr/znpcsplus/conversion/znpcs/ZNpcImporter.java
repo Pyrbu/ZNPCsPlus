@@ -1,11 +1,9 @@
 package lol.pyr.znpcsplus.conversion.znpcs;
 
-import com.github.retrooper.packetevents.protocol.item.ItemStack;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import lol.pyr.znpcsplus.api.interaction.InteractionType;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.config.ConfigManager;
@@ -36,6 +34,7 @@ import lol.pyr.znpcsplus.util.NpcLocation;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -116,7 +115,7 @@ public class ZNpcImporter implements DataImporter {
             for (Map.Entry<String, String> entry : model.getNpcEquip().entrySet()) {
                 EntityPropertyImpl<ItemStack> property = propertyRegistry.getByName(entry.getKey(), ItemStack.class);
                 if (property == null) continue;
-                npc.setProperty(property, SpigotConversionUtil.fromBukkitItemStack(ItemSerializationUtil.itemFromB64(entry.getValue())));
+                npc.setProperty(property, ItemSerializationUtil.itemFromB64(entry.getValue()));
             }
 
             if (model.getSkinName() != null) {
