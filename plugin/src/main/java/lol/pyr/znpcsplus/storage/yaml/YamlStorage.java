@@ -101,8 +101,11 @@ public class YamlStorage implements NpcStorage {
             config.set("location", serializeLocation(npc.getLocation()));
             config.set("type", npc.getType().getName());
 
-            for (EntityPropertyImpl<?> property : npc.getAppliedProperties()) {
+            for (EntityPropertyImpl<?> property : npc.getAppliedProperties()) try {
                 config.set("properties." + property.getName(), property.serialize(npc));
+            } catch (Exception exception) {
+                logger.severe("Failed to serialize property " + property.getName() + " for npc with id " + entry.getId());
+                exception.printStackTrace();
             }
 
             HologramImpl hologram = npc.getHologram();
@@ -119,9 +122,9 @@ public class YamlStorage implements NpcStorage {
                     .collect(Collectors.toList()));
 
             config.save(fileFor(entry));
-        } catch (Exception e) {
+        } catch (Exception exception) {
             logger.severe("Failed to save npc with id " + entry.getId());
-            e.printStackTrace();
+            exception.printStackTrace();
         }
     }
 
