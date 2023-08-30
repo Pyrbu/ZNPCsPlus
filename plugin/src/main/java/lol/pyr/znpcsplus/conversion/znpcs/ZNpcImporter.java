@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import lol.pyr.znpcsplus.api.NpcApiProvider;
 import lol.pyr.znpcsplus.api.interaction.InteractionType;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.config.ConfigManager;
@@ -125,7 +126,13 @@ public class ZNpcImporter implements DataImporter {
                 npc.setProperty(propertyRegistry.getByName("skin", SkinDescriptor.class), new PrefetchedDescriptor(new Skin(model.getSkin(), model.getSignature())));
             }
 
-            NpcEntryImpl entry = new NpcEntryImpl(String.valueOf(model.getId()), npc);
+            String id = String.valueOf(model.getId());
+
+            while (NpcApiProvider.get().getNpcRegistry().getById(id) != null) {
+                id += "_";
+            }
+
+            NpcEntryImpl entry = new NpcEntryImpl(id, npc);
             entry.enableEverything();
             entries.add(entry);
         }
