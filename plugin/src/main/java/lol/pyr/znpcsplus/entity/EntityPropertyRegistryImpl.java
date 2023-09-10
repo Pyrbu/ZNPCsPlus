@@ -65,6 +65,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(HorseStyle.class);
         registerEnumSerializer(HorseArmor.class);
         registerEnumSerializer(LlamaVariant.class);
+        registerEnumSerializer(MooshroomVariant.class);
 
         /*
         registerType("using_item", false); // TODO: fix it for 1.8 and add new property to use offhand item and riptide animation
@@ -146,9 +147,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Wither
         registerType("invulnerable_time", 0); // TODO
-
-        // Phantom
-        registerType("phantom_size", 0); // TODO
 
          */
     }
@@ -383,6 +381,12 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new BitsetProperty("fox_crouching", foxIndex, 0x04));
         register(new BitsetProperty("fox_sleeping", foxIndex, 0x20));
         linkProperties("fox_sitting", "fox_crouching", "fox_sleeping");
+
+        int mooshroomIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) mooshroomIndex = 17;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) mooshroomIndex = 16;
+        else mooshroomIndex = 15;
+        register(new EncodedStringProperty<>("mooshroom_variant", MooshroomVariant.RED, mooshroomIndex, MooshroomVariant::getVariantName));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_15)) return;
 

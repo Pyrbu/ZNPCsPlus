@@ -104,7 +104,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
         register(builder(p, "magma_cube", EntityTypes.MAGMA_CUBE)); // TODO: Hologram offset scaling with size property
 
         register(builder(p, "mooshroom", EntityTypes.MOOSHROOM)
-                .setHologramOffset(-0.575));
+                .setHologramOffset(-0.575)
+                .addProperties("mooshroom_variant"));
 
         register(builder(p, "ocelot", EntityTypes.OCELOT)
                 .setHologramOffset(-1.275));
