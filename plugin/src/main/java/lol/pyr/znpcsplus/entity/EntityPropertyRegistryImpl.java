@@ -63,6 +63,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(HorseColor.class);
         registerEnumSerializer(HorseStyle.class);
         registerEnumSerializer(HorseArmor.class);
+        registerEnumSerializer(LlamaVariant.class);
 
         /*
         registerType("using_item", false); // TODO: fix it for 1.8 and add new property to use offhand item and riptide animation
@@ -74,10 +75,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // End Crystal
         registerType("beam_target", null); // TODO: Make a block pos class for this
         registerType("show_base", true); // TODO
-
-        // Creeper
-        registerType("creeper_state", CreeperState.IDLE);
-        registerType("creeper_charged", false);
 
         // Enderman
         registerType("enderman_held_block", new BlockState(0)); // TODO: figure out the type on this
@@ -95,10 +92,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Sniffer
         registerType("sniffer_state", null); // TODO: Nothing on wiki.vg, look in mc source
-
-        // LLama
-        registerType("carpet_color", DyeColor.class); // TODO
-        registerType("llama_variant", 0); // TODO
 
         // Panda
         registerType("panda_sneezing", false); // TODO
@@ -346,6 +339,16 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) spellIndex = 15;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_12)) spellIndex = 13;
         register(new EncodedByteProperty<>("spell", SpellType.NONE, spellIndex, obj -> (byte) Math.min(obj.ordinal(), ver.isOlderThan(ServerVersion.V_1_13) ? 3 : 5)));
+
+        // Llama
+        int llamaIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_18)) llamaIndex = 20;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) llamaIndex = 21;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) llamaIndex = 20;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) llamaIndex = 19;
+        else llamaIndex = 17;
+        register(new EncodedIntegerProperty<DyeColor>("carpet_color", DyeColor.class, llamaIndex++, obj -> obj == null ? -1 : obj.ordinal()));
+        register(new EncodedIntegerProperty<>("llama_variant", LlamaVariant.CREAMY, llamaIndex, Enum::ordinal));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_14)) return;
         // Pose

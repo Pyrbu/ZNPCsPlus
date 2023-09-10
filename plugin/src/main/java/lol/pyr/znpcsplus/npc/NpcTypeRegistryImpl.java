@@ -202,7 +202,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .addProperties("evoker_spell"));
 
         register(builder(p, "llama", EntityTypes.LLAMA)
-                .setHologramOffset(-0.105));
+                .setHologramOffset(-0.105)
+                .addProperties("carpet_color", "llama_variant"));
 
         register(builder(p, "vex", EntityTypes.VEX)
                 .setHologramOffset(-1.175)
@@ -276,7 +277,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .setHologramOffset(0.225));
 
         register(builder(p, "trader_llama", EntityTypes.TRADER_LLAMA)
-                .setHologramOffset(-0.105));
+                .setHologramOffset(-0.105)
+                .addProperties("llama_variant"));
 
         register(builder(p, "wandering_trader", EntityTypes.WANDERING_TRADER)
                 .setHologramOffset(-0.025)
