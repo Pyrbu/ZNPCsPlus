@@ -149,8 +149,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Phantom
         registerType("phantom_size", 0); // TODO
 
-        // Slime
-        registerType("slime_size", 0); // TODO
          */
     }
 
@@ -330,6 +328,16 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
             register(new BooleanProperty("has_chest", horseVariantIndex, false, legacyBooleans));
             linkProperties("is_saddled", "is_eating", "is_rearing", "has_mouth_open");
         }
+
+        // Slime and Magma Cube
+        int sizeIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) sizeIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) sizeIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) sizeIndex = 14;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) sizeIndex = 12;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) sizeIndex = 11;
+        else sizeIndex = 16;
+        register(new IntegerProperty("size", sizeIndex, 1, v1_8));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_11)) return;
         // Spellcaster Illager

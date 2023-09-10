@@ -10,14 +10,22 @@ import java.util.Map;
 
 public class IntegerProperty extends EntityPropertyImpl<Integer> {
     private final int index;
+    private final boolean legacy;
 
-    protected IntegerProperty(String name, int index, Integer defaultValue) {
+    public IntegerProperty(String name, int index, Integer defaultValue) {
+        this(name, index, defaultValue, false);
+    }
+
+    public IntegerProperty(String name, int index, Integer defaultValue, boolean legacy) {
         super(name, defaultValue, Integer.class);
         this.index = index;
+        this.legacy = legacy;
     }
 
     @Override
     public void apply(Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData> properties) {
-        properties.put(index, newEntityData(index, EntityDataTypes.INT, entity.getProperty(this)));
+        properties.put(index, legacy ?
+                newEntityData(index, EntityDataTypes.BYTE, (byte) entity.getProperty(this).intValue()) :
+                newEntityData(index, EntityDataTypes.INT, entity.getProperty(this)));
     }
 }

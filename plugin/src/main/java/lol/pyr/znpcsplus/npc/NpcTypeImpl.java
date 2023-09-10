@@ -135,6 +135,9 @@ public class NpcTypeImpl implements NpcType {
             if (EntityTypes.isTypeInstanceOf(type, EntityTypes.ABSTRACT_PIGLIN)) {
                 addProperties("piglin_immune_to_zombification");
             }
+            if (EntityTypes.isTypeInstanceOf(type, EntityTypes.SLIME) || EntityTypes.isTypeInstanceOf(type, EntityTypes.PHANTOM)) {
+                addProperties("size");
+            }
             return new NpcTypeImpl(name, type, hologramOffset, new HashSet<>(allowedProperties), defaultProperties);
         }
     }
