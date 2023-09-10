@@ -113,6 +113,10 @@ public class PropertySetCommand implements CommandHandler {
                 valueName = String.valueOf(value);
             }
         }
+        else if (type == NpcEntryImpl.class) {
+            value = context.parse(type);
+            valueName = value == null ? "NONE" : ((NpcEntryImpl) value).getId();
+        }
         else {
             value = context.parse(type);
             valueName = String.valueOf(value);
