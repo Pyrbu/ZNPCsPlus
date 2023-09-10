@@ -118,7 +118,7 @@ public class NpcTypeImpl implements NpcType {
                 }
             }
             if (version.isNewerThanOrEquals(ServerVersion.V_1_17)) addProperties("shaking");
-            if (EntityTypes.isTypeInstanceOf(type, EntityTypes.ABSTRACT_AGEABLE)) {
+            if (EntityTypes.isTypeInstanceOf(type, EntityTypes.ABSTRACT_AGEABLE) || EntityTypes.isTypeInstanceOf(type, EntityTypes.ZOMBIE) || EntityTypes.isTypeInstanceOf(type, EntityTypes.ZOGLIN)) {
                 addProperties("baby");
             }
             if (EntityTypes.isTypeInstanceOf(type, EntityTypes.ABSTRACT_HORSE)) {
