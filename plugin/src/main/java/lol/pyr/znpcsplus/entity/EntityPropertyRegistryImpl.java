@@ -84,9 +84,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("enderman_screaming", false); // TODO
         registerType("enderman_staring", false); // TODO
 
-        // Evoker
-        registerType("evoker_spell", SpellType.NONE);
-
         // Frog
         registerType("frog_variant", FrogVariant.TEMPERATE);
 
@@ -271,7 +268,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) batIndex = 12;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) batIndex = 11;
         else batIndex = 16;
-        register(new BooleanProperty("hanging", batIndex, false, true /* This isnt a mistake */));
+        register(new BooleanProperty("hanging", batIndex, false, true /* This isn't a mistake */));
 
         // Blaze
         final int blazeIndex;
@@ -343,6 +340,15 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
             register(new BooleanProperty("has_chest", horseVariantIndex, false, legacyBooleans));
             linkProperties("is_saddled", "is_eating", "is_rearing", "has_mouth_open");
         }
+
+        if (!ver.isNewerThanOrEquals(ServerVersion.V_1_11)) return;
+        // Spellcaster Illager
+        int spellIndex = 12;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) spellIndex = 17;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) spellIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) spellIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_12)) spellIndex = 13;
+        register(new EncodedByteProperty<>("spell", SpellType.NONE, spellIndex, obj -> (byte) Math.min(obj.ordinal(), ver.isOlderThan(ServerVersion.V_1_13) ? 3 : 5)));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_14)) return;
         // Pose

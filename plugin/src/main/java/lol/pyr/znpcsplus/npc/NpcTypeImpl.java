@@ -129,6 +129,9 @@ public class NpcTypeImpl implements NpcType {
             } else if (version.isOlderThan(ServerVersion.V_1_11) && type.equals(EntityTypes.HORSE)) {
                 addProperties("has_chest");
             }
+            if (EntityTypes.isTypeInstanceOf(type, EntityTypes.ABSTRACT_EVO_ILLU_ILLAGER)) {
+                addProperties("spell");
+            }
             return new NpcTypeImpl(name, type, hologramOffset, new HashSet<>(allowedProperties), defaultProperties);
         }
     }
