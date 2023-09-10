@@ -84,9 +84,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("enderman_screaming", false); // TODO
         registerType("enderman_staring", false); // TODO
 
-        // Frog
-        registerType("frog_variant", FrogVariant.TEMPERATE);
-
         // Guardian
         registerType("is_elder", false); // TODO: ensure it only works till 1.10. Note: index is wrong on wiki.vg
 
@@ -404,6 +401,9 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new BooleanProperty("has_right_horn", 19, true, legacyBooleans));
 
         register(new EncodedIntegerProperty<>("shaking", false,7, enabled -> enabled ? 140 : 0));
+        if (!ver.isNewerThanOrEquals(ServerVersion.V_1_19)) return;
+        // Frog
+        register(new EncodedIntegerProperty<>("frog_variant", FrogVariant.TEMPERATE, 17, Enum::ordinal, EntityDataTypes.FROG_VARIANT));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_20)) return;
 
