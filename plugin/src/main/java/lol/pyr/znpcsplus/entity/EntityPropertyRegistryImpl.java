@@ -46,6 +46,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerSerializer(new ColorPropertySerializer());
         registerSerializer(new Vector3fPropertySerializer());
         registerSerializer(new BlockStatePropertySerializer());
+        registerSerializer(new IntegerPropertySerializer());
 
         registerEnumSerializer(NpcPose.class);
         registerEnumSerializer(DyeColor.class);
