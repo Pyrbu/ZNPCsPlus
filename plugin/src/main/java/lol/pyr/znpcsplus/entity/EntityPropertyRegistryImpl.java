@@ -66,6 +66,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(HorseArmor.class);
         registerEnumSerializer(LlamaVariant.class);
         registerEnumSerializer(MooshroomVariant.class);
+        registerEnumSerializer(OcelotType.class);
 
         /*
         registerType("using_item", false); // TODO: fix it for 1.8 and add new property to use offhand item and riptide animation
@@ -328,7 +329,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
             linkProperties("is_saddled", "is_eating", "is_rearing", "has_mouth_open");
         }
 
-        // Slime and Magma Cube
+        // Slime, Magma Cube and Phantom
         int sizeIndex;
         if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) sizeIndex = 16;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) sizeIndex = 15;
@@ -337,6 +338,16 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) sizeIndex = 11;
         else sizeIndex = 16;
         register(new IntegerProperty("size", sizeIndex, 1, v1_8));
+
+        // Ocelot
+        if (ver.isOlderThan(ServerVersion.V_1_14)) {
+            int ocelotIndex;
+            if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) ocelotIndex = 15;
+            else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) ocelotIndex = 14;
+            else ocelotIndex = 18;
+            if (v1_8) register(new EncodedByteProperty<>("ocelot_type", OcelotType.OCELOT, ocelotIndex, obj -> (byte) obj.ordinal()));
+            else register(new EncodedIntegerProperty<>("ocelot_type", OcelotType.OCELOT, ocelotIndex, Enum::ordinal));
+        }
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_11)) return;
         // Spellcaster Illager

@@ -110,6 +110,7 @@ public class NpcTypeImpl implements NpcType {
             ServerVersion version = PacketEvents.getAPI().getServerManager().getVersion();
             addProperties("fire", "invisible", "silent", "look",
                     "potion_color", "potion_ambient", "dinnerbone");
+            // TODO: make this look nicer after completing the rest of the properties
             if (version.isNewerThanOrEquals(ServerVersion.V_1_9)) addProperties("glow");
             if (version.isNewerThanOrEquals(ServerVersion.V_1_14)) {
                 addProperties("pose");
@@ -137,6 +138,11 @@ public class NpcTypeImpl implements NpcType {
             }
             if (EntityTypes.isTypeInstanceOf(type, EntityTypes.SLIME) || EntityTypes.isTypeInstanceOf(type, EntityTypes.PHANTOM)) {
                 addProperties("size");
+            }
+            if (version.isOlderThan(ServerVersion.V_1_14)) {
+                if (EntityTypes.isTypeInstanceOf(type, EntityTypes.OCELOT)) {
+                    addProperties("ocelot_type");
+                }
             }
             return new NpcTypeImpl(name, type, hologramOffset, new HashSet<>(allowedProperties), defaultProperties);
         }
