@@ -3,6 +3,9 @@ package lol.pyr.znpcsplus.entity;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
+import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
+import com.github.retrooper.packetevents.protocol.nbt.NBTInt;
+import com.github.retrooper.packetevents.protocol.nbt.NBTString;
 import com.github.retrooper.packetevents.protocol.player.EquipmentSlot;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.entity.EntityPropertyRegistry;
@@ -71,10 +74,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         /*
         registerType("using_item", false); // TODO: fix it for 1.8 and add new property to use offhand item and riptide animation
-
-        // Player
-        registerType("shoulder_entity_left", ParrotVariant.NONE);
-        registerType("shoulder_entity_right", ParrotVariant.NONE);
 
         // End Crystal
         registerType("beam_target", null); // TODO: Make a block pos class for this
@@ -367,6 +366,17 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) parrotIndex = 17;
         else parrotIndex = 15;
         register(new EncodedIntegerProperty<>("parrot_variant", ParrotVariant.RED_BLUE, parrotIndex, Enum::ordinal));
+
+        // Player
+        NBTProperty.NBTDecoder<ParrotVariant> parrotVariantDecoder = (variant) -> {
+            NBTCompound compound = new NBTCompound();
+            compound.setTag("id", new NBTString("minecraft:parrot"));
+            compound.setTag("Variant", new NBTInt(variant.ordinal()));
+            return compound;
+        };
+        int shoulderIndex = skinLayersIndex+2;
+        register(new NBTProperty<>("shoulder_entity_left", ParrotVariant.class, shoulderIndex++, parrotVariantDecoder));
+        register(new NBTProperty<>("shoulder_entity_right", ParrotVariant.class, shoulderIndex, parrotVariantDecoder));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_14)) return;
         // Pose
