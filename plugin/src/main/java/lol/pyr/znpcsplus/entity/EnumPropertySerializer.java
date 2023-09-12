@@ -15,7 +15,11 @@ public class EnumPropertySerializer<T extends Enum<T>> implements PropertySerial
 
     @Override
     public T deserialize(String property) {
-        return Enum.valueOf(enumClass, property.toUpperCase());
+        try {
+            return Enum.valueOf(enumClass, property.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     @Override

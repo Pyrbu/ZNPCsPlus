@@ -63,7 +63,7 @@ public class PropertySetCommand implements CommandHandler {
             valueName = "NONE";
         }
         else if (type == ParrotVariant.class && context.argSize() < 1 && npc.getProperty(property) != null) {
-            value = ParrotVariant.NONE;
+            value = null;
             valueName = "NONE";
         }
         else if (type == BlockState.class) {

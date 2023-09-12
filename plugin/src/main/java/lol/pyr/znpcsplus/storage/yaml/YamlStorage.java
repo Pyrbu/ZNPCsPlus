@@ -70,7 +70,12 @@ public class YamlStorage implements NpcStorage {
                         Bukkit.getLogger().log(Level.WARNING, "Unknown serializer for property '" + key + "' for npc '" + config.getString("id") + "'. skipping ...");
                         continue;
                     }
-                    npc.UNSAFE_setProperty(property, serializer.deserialize(properties.getString(key)));
+                    Object value = serializer.deserialize(properties.getString(key));
+                    if (value == null) {
+                        Bukkit.getLogger().log(Level.WARNING, "Failed to deserialize property '" + key + "' for npc '" + config.getString("id") + "'. Resetting to default ...");
+                        value = property.getDefaultValue();
+                    }
+                    npc.UNSAFE_setProperty(property, value);
                 }
             }
             HologramImpl hologram = npc.getHologram();

@@ -10,13 +10,12 @@ public class IntegerPropertySerializer implements PropertySerializer<Integer> {
 
     @Override
     public Integer deserialize(String property) {
-        int i = 0;
         try {
-            i = Integer.parseInt(property);
+            return Integer.parseInt(property);
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-        return i;
+        return null;
     }
 
     @Override
