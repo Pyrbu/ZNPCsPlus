@@ -175,7 +175,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_10)) return;
 
         register(builder(p, "polar_bear", EntityTypes.POLAR_BEAR)
-                .setHologramOffset(-0.575));
+                .setHologramOffset(-0.575)
+                .addProperties("polar_bear_standing"));
 
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_11)) return;
 

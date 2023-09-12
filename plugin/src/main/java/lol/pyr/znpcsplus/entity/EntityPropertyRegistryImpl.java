@@ -99,9 +99,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Rabbit
         registerType("rabbit_type", 0); // TODO: Figure this out
 
-        // Polar Bear
-        registerType("polar_bear_standing", false); // TODO
-
         // Sheep
         registerType("sheep_color", DyeColor.WHITE); // TODO: Figure this out
         registerType("sheep_sheared", false); // TODO
@@ -338,6 +335,15 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) pigIndex = 12;
         else pigIndex = 16;
         register(new BooleanProperty("pig_saddled", pigIndex, false, legacyBooleans));
+
+        if (!ver.isNewerThanOrEquals(ServerVersion.V_1_10)) return;
+        // Polar Bear
+        int polarBearIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) polarBearIndex = 17;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) polarBearIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) polarBearIndex = 15;
+        else polarBearIndex = 13;
+        register(new BooleanProperty("polar_bear_standing", polarBearIndex, false, false));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_11)) return;
         // Spellcaster Illager
