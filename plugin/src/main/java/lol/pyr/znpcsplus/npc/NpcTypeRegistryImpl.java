@@ -111,7 +111,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .setHologramOffset(-1.275));
 
         register(builder(p, "pig", EntityTypes.PIG)
-                .setHologramOffset(-1.075));
+                .setHologramOffset(-1.075)
+                .addProperties("pig_saddled"));
 
         register(builder(p, "rabbit", EntityTypes.RABBIT)
                 .setHologramOffset(-1.475));

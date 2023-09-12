@@ -97,9 +97,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Sniffer
         registerType("sniffer_state", null); // TODO: Nothing on wiki.vg, look in mc source
 
-        // Pig
-        registerType("pig_saddle", false); // TODO
-
         // Rabbit
         registerType("rabbit_type", 0); // TODO: Figure this out
 
@@ -117,9 +114,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Wolf
         registerType("wolf_collar_color", DyeColor.RED); // TODO
         registerType("wolf_angry", false); // TODO
-
-        // Parrot
-        registerType("parrot_variant", 0); // TODO
 
         // Villager
         registerType("villager_type", VillagerType.PLAINS);
@@ -283,12 +277,11 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) horseIndex = 12;
         else horseIndex = 16;
         int horseEating = ver.isNewerThanOrEquals(ServerVersion.V_1_12) ? 0x10 : 0x20;
-        boolean v1_8 = ver.isOlderThan(ServerVersion.V_1_9);
-        register(new BitsetProperty("is_tame", horseIndex, 0x02, false, v1_8));
-        register(new BitsetProperty("is_saddled", horseIndex, 0x04, false, v1_8));
-        register(new BitsetProperty("is_eating", horseIndex, horseEating, false, v1_8));
-        register(new BitsetProperty("is_rearing", horseIndex, horseEating << 1, false, v1_8));
-        register(new BitsetProperty("has_mouth_open", horseIndex, horseEating << 2, false, v1_8));
+        register(new BitsetProperty("is_tame", horseIndex, 0x02, false, legacyBooleans));
+        register(new BitsetProperty("is_saddled", horseIndex, 0x04, false, legacyBooleans));
+        register(new BitsetProperty("is_eating", horseIndex, horseEating, false, legacyBooleans));
+        register(new BitsetProperty("is_rearing", horseIndex, horseEating << 1, false, legacyBooleans));
+        register(new BitsetProperty("has_mouth_open", horseIndex, horseEating << 2, false, legacyBooleans));
 
         // Horse
         if (ver.isNewerThanOrEquals(ServerVersion.V_1_8) && ver.isOlderThan(ServerVersion.V_1_9)) {
@@ -317,7 +310,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Chested Horse
         if (ver.isOlderThan(ServerVersion.V_1_11)) {
-            register(new BitsetProperty("has_chest", horseIndex, 0x08, false, v1_8));
+            register(new BitsetProperty("has_chest", horseIndex, 0x08, false, legacyBooleans));
             linkProperties("is_saddled", "has_chest", "is_eating", "is_rearing", "has_mouth_open");
         } else {
             register(new BooleanProperty("has_chest", horseVariantIndex, false, legacyBooleans));
@@ -332,7 +325,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) sizeIndex = 12;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) sizeIndex = 11;
         else sizeIndex = 16;
-        register(new IntegerProperty("size", sizeIndex, 1, v1_8));
+        register(new IntegerProperty("size", sizeIndex, 1, legacyBooleans));
 
         // Ocelot
         if (ver.isOlderThan(ServerVersion.V_1_14)) {
@@ -340,9 +333,19 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
             if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) ocelotIndex = 15;
             else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) ocelotIndex = 14;
             else ocelotIndex = 18;
-            if (v1_8) register(new EncodedByteProperty<>("ocelot_type", OcelotType.OCELOT, ocelotIndex, obj -> (byte) obj.ordinal()));
+            if (legacyBooleans) register(new EncodedByteProperty<>("ocelot_type", OcelotType.OCELOT, ocelotIndex, obj -> (byte) obj.ordinal()));
             else register(new EncodedIntegerProperty<>("ocelot_type", OcelotType.OCELOT, ocelotIndex, Enum::ordinal));
         }
+
+        // Pig
+        int pigIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) pigIndex = 17;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) pigIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) pigIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) pigIndex = 13;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) pigIndex = 12;
+        else pigIndex = 16;
+        register(new BooleanProperty("pig_saddled", pigIndex, false, legacyBooleans));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_11)) return;
         // Spellcaster Illager
