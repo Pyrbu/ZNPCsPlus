@@ -250,7 +250,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .setHologramOffset(-1.475));
 
         register(builder(p, "pufferfish", EntityTypes.PUFFERFISH)
-                .setHologramOffset(-1.625));
+                .setHologramOffset(-1.625)
+                .addProperties("puff_state"));
 
         register(builder(p, "salmon", EntityTypes.SALMON)
                 .setHologramOffset(-1.575));

@@ -71,6 +71,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(MooshroomVariant.class);
         registerEnumSerializer(OcelotType.class);
         registerEnumSerializer(PandaGene.class);
+        registerEnumSerializer(PuffState.class);
 
         /*
         registerType("using_item", false); // TODO: fix it for 1.8 and add new property to use offhand item and riptide animation
@@ -86,9 +87,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Guardian
         registerType("is_elder", false); // TODO: ensure it only works till 1.10. Note: index is wrong on wiki.vg
-
-        // Pufferfish
-        registerType("puff_state", null); // TODO: Make a puff state enum class
 
         // Tropical Fish
         registerType("tropical_fish_variant", null); // TODO: Maybe make an enum class for this? its just an int on wiki.vg
@@ -383,6 +381,15 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         int shoulderIndex = skinLayersIndex+2;
         register(new NBTProperty<>("shoulder_entity_left", ParrotVariant.class, shoulderIndex++, parrotVariantDecoder));
         register(new NBTProperty<>("shoulder_entity_right", ParrotVariant.class, shoulderIndex, parrotVariantDecoder));
+
+        if (!ver.isNewerThanOrEquals(ServerVersion.V_1_13)) return;
+        // Pufferfish
+        int pufferfishIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) pufferfishIndex = 17;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) pufferfishIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) pufferfishIndex = 15;
+        else pufferfishIndex = 13;
+        register(new EncodedIntegerProperty<>("puff_state", PuffState.DEFLATED, pufferfishIndex, Enum::ordinal));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_14)) return;
         // Pose
