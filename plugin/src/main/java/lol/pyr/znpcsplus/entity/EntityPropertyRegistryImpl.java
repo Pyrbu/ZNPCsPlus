@@ -128,10 +128,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("shield_height", 0); // TODO: figure this out
         registerType("shulker_color", DyeColor.RED); // TODO
 
-        // Piglin
-        registerType("piglin_dancing", false); // TODO
-        registerType("piglin_charging_crossbow", false); // TODO
-
         // Vindicator
         registerType("celebrating", false); // TODO
 
@@ -440,11 +436,18 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_16)) return;
 
+        // Hoglin and Piglin Zombification
         final int zombificationIndex;
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) zombificationIndex = 17;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) zombificationIndex = 17; // Change piglinIndex if you change this
         else zombificationIndex = 16;
         register(new BooleanProperty("hoglin_immune_to_zombification", zombificationIndex, false, legacyBooleans));
         register(new BooleanProperty("piglin_immune_to_zombification", zombificationIndex-1, false, legacyBooleans));
+
+        // Piglin
+        int piglinIndex = zombificationIndex;
+        register(new BooleanProperty("piglin_baby", piglinIndex++, false, legacyBooleans));
+        register(new BooleanProperty("piglin_charging_crossbow", piglinIndex++, false, legacyBooleans));
+        register(new BooleanProperty("piglin_dancing", piglinIndex, false, legacyBooleans));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_17)) return;
         // Axolotl

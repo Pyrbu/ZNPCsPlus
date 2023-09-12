@@ -302,7 +302,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
 
         register(builder(p, "piglin", EntityTypes.PIGLIN)
                 .setHologramOffset(-1.0)
-                .addEquipmentProperties());
+                .addEquipmentProperties()
+                .addProperties("piglin_baby", "piglin_charging_crossbow", "piglin_dancing"));
 
         register(builder(p, "piglin_brute", EntityTypes.PIGLIN_BRUTE)
                 .setHologramOffset(-0.025)
