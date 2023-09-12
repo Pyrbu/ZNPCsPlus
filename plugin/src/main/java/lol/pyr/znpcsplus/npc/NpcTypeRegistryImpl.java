@@ -212,7 +212,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .addHandProperties());
 
         register(builder(p, "vindicator", EntityTypes.VINDICATOR)
-                .setHologramOffset(-0.025));
+                .setHologramOffset(-0.025)
+                .addProperties("celebrating"));
 
         register(builder(p, "wither_skeleton", EntityTypes.WITHER_SKELETON)
                 .setHologramOffset(0.425)
@@ -275,7 +276,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
 
         register(builder(p, "pillager", EntityTypes.PILLAGER)
                 .setHologramOffset(-0.025)
-                .addHandProperties());
+                .addHandProperties()
+                .addProperties("pillager_charging"));
 
         register(builder(p, "ravager", EntityTypes.RAVAGER)
                 .setHologramOffset(0.225));

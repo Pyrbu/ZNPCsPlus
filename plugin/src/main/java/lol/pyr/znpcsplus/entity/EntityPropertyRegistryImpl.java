@@ -128,9 +128,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerType("shield_height", 0); // TODO: figure this out
         registerType("shulker_color", DyeColor.RED); // TODO
 
-        // Vindicator
-        registerType("celebrating", false); // TODO
-
         // Wither
         registerType("invulnerable_time", 0); // TODO
 
@@ -438,7 +435,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Hoglin and Piglin Zombification
         final int zombificationIndex;
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) zombificationIndex = 17; // Change piglinIndex if you change this
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) zombificationIndex = 17; // Change piglinIndex and pillagerIndex if you change this
         else zombificationIndex = 16;
         register(new BooleanProperty("hoglin_immune_to_zombification", zombificationIndex, false, legacyBooleans));
         register(new BooleanProperty("piglin_immune_to_zombification", zombificationIndex-1, false, legacyBooleans));
@@ -448,6 +445,14 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new BooleanProperty("piglin_baby", piglinIndex++, false, legacyBooleans));
         register(new BooleanProperty("piglin_charging_crossbow", piglinIndex++, false, legacyBooleans));
         register(new BooleanProperty("piglin_dancing", piglinIndex, false, legacyBooleans));
+
+        // Pillager
+        int pillagerIndex = zombificationIndex;
+        register(new BooleanProperty("pillager_charging", pillagerIndex, false, legacyBooleans));
+
+        // Vindicator
+        int vindicatorIndex = pillagerIndex-1;
+        register(new BooleanProperty("celebrating", vindicatorIndex, false, legacyBooleans));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_17)) return;
         // Axolotl
