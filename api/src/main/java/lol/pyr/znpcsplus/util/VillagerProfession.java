@@ -2,28 +2,28 @@ package lol.pyr.znpcsplus.util;
 
 public enum VillagerProfession {
     NONE(0),
-    ARMORER(3),
-    BUTCHER(4),
-    CARTOGRAPHER(1),
-    CLERIC(2),
-    FARMER(0),
-    FISHERMAN(0),
-    FLETCHER(0),
-    LEATHER_WORKER(4),
-    LIBRARIAN(1),
-    MASON(-1),
-    NITWIT(5),
-    SHEPHERD(0),
-    TOOL_SMITH(3),
-    WEAPON_SMITH(3);
+    ARMORER(1),
+    BUTCHER(2),
+    CARTOGRAPHER(3),
+    CLERIC(4),
+    FARMER(5),
+    FISHERMAN(6),
+    FLETCHER(7),
+    LEATHER_WORKER(8),
+    LIBRARIAN(9),
+    MASON(10),
+    NITWIT(11),
+    SHEPHERD(12),
+    TOOL_SMITH(13),
+    WEAPON_SMITH(14);
 
-    private final int legacyId;
+    private final int id;
 
-    VillagerProfession(int legacyId) {
-        this.legacyId = legacyId;
+    VillagerProfession(int id) {
+        this.id = id;
     }
 
-    public int getLegacyId() {
-        return legacyId;
+    public int getId() {
+        return id;
     }
 }

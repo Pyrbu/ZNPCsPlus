@@ -11,6 +11,9 @@ import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.entity.EntityPropertyRegistry;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.entity.properties.*;
+import lol.pyr.znpcsplus.entity.properties.villager.VillagerLevelProperty;
+import lol.pyr.znpcsplus.entity.properties.villager.VillagerProfessionProperty;
+import lol.pyr.znpcsplus.entity.properties.villager.VillagerTypeProperty;
 import lol.pyr.znpcsplus.entity.serializers.*;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
@@ -108,11 +111,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Wolf
         registerType("wolf_collar_color", DyeColor.RED); // TODO
         registerType("wolf_angry", false); // TODO
-
-        // Villager
-        registerType("villager_type", VillagerType.PLAINS);
-        registerType("villager_profession", VillagerProfession.NONE);
-        registerType("villager_level", VillagerLevel.STONE);
 
         // Show Golem
         registerType("pumpkin", true); // TODO
@@ -395,6 +393,19 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Pose
         register(new NpcPoseProperty());
 
+        // Villager
+        final int villagerIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) villagerIndex = 18;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) villagerIndex = 17;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) villagerIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) villagerIndex = 13;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) villagerIndex = 12;
+        else villagerIndex = 16;
+        register(new VillagerTypeProperty("villager_type", villagerIndex, VillagerType.PLAINS));
+        register(new VillagerProfessionProperty("villager_profession", villagerIndex, VillagerProfession.NONE));
+        register(new VillagerLevelProperty("villager_level", villagerIndex, VillagerLevel.STONE));
+        linkProperties("villager_type", "villager_profession", "villager_level");
+
         // Cat
         int catIndex;
         if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) catIndex = 19;
@@ -470,11 +481,10 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new BooleanProperty("piglin_dancing", piglinIndex, false, legacyBooleans));
 
         // Pillager
-        int pillagerIndex = zombificationIndex;
-        register(new BooleanProperty("pillager_charging", pillagerIndex, false, legacyBooleans));
+        register(new BooleanProperty("pillager_charging", zombificationIndex, false, legacyBooleans));
 
         // Vindicator
-        int vindicatorIndex = pillagerIndex-1;
+        int vindicatorIndex = zombificationIndex -1;
         register(new BooleanProperty("celebrating", vindicatorIndex, false, legacyBooleans));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_17)) return;
