@@ -67,6 +67,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(LlamaVariant.class);
         registerEnumSerializer(MooshroomVariant.class);
         registerEnumSerializer(OcelotType.class);
+        registerEnumSerializer(PandaGene.class);
 
         /*
         registerType("using_item", false); // TODO: fix it for 1.8 and add new property to use offhand item and riptide animation
@@ -95,12 +96,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Sniffer
         registerType("sniffer_state", null); // TODO: Nothing on wiki.vg, look in mc source
-
-        // Panda
-        registerType("panda_sneezing", false); // TODO
-        registerType("panda_rolling", false); // TODO
-        registerType("panda_sitting", false); // TODO
-        registerType("panda_on_back", false); // TODO
 
         // Pig
         registerType("pig_saddle", false); // TODO
@@ -398,6 +393,26 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) mooshroomIndex = 16;
         else mooshroomIndex = 15;
         register(new EncodedStringProperty<>("mooshroom_variant", MooshroomVariant.RED, mooshroomIndex, MooshroomVariant::getVariantName));
+
+        // Panda
+        int pandaIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) pandaIndex = 20;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) pandaIndex = 19;
+        else pandaIndex = 18;
+        register(new EncodedByteProperty<>("panda_main_gene", PandaGene.NORMAL, pandaIndex++, obj -> (byte) obj.ordinal()));
+        register(new EncodedByteProperty<>("panda_hidden_gene", PandaGene.NORMAL, pandaIndex++, obj -> (byte) obj.ordinal()));
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) {
+            register(new BitsetProperty("panda_sneezing", pandaIndex, 0x02));
+            register(new BitsetProperty("panda_rolling", pandaIndex, 0x04));
+            register(new BitsetProperty("panda_sitting", pandaIndex, 0x08));
+            register(new BitsetProperty("panda_on_back", pandaIndex, 0x10));
+            linkProperties("panda_sneezing", "panda_rolling", "panda_sitting", "panda_on_back");
+        } else {
+            register(new BitsetProperty("panda_sneezing", pandaIndex, 0x02));
+            register(new BitsetProperty("panda_eating", pandaIndex, 0x04));
+            linkProperties("panda_sneezing", "panda_eating");
+        }
+
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_15)) return;
 

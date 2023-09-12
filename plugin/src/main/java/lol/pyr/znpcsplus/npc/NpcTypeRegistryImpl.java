@@ -268,7 +268,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .addProperties("hand", "fox_variant", "fox_sitting", "fox_crouching", "fox_sleeping", "fox_faceplanted"));
 
         register(builder(p, "panda", EntityTypes.PANDA)
-                .setHologramOffset(-0.725));
+                .setHologramOffset(-0.725)
+                .addProperties("panda_main_gene", "panda_hidden_gene", "panda_sneezing"));
 
         register(builder(p, "pillager", EntityTypes.PILLAGER)
                 .setHologramOffset(-0.025)

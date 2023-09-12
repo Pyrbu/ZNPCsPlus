@@ -144,6 +144,13 @@ public class NpcTypeImpl implements NpcType {
                     addProperties("ocelot_type");
                 }
             }
+            if (EntityTypes.isTypeInstanceOf(type, EntityTypes.PANDA)) {
+                if (version.isNewerThanOrEquals(ServerVersion.V_1_15)) {
+                    addProperties("panda_rolling", "panda_sitting", "panda_on_back");
+                } else {
+                    addProperties("panda_eating");
+                }
+            }
             return new NpcTypeImpl(name, type, hologramOffset, new HashSet<>(allowedProperties), defaultProperties);
         }
     }
