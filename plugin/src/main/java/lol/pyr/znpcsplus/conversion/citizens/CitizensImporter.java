@@ -1,6 +1,5 @@
 package lol.pyr.znpcsplus.conversion.citizens;
 
-import lol.pyr.znpcsplus.api.NpcApiProvider;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.conversion.DataImporter;
 import lol.pyr.znpcsplus.conversion.citizens.model.CitizensTrait;
@@ -8,6 +7,7 @@ import lol.pyr.znpcsplus.conversion.citizens.model.CitizensTraitsRegistry;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcImpl;
+import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import lol.pyr.znpcsplus.npc.NpcTypeRegistryImpl;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
@@ -39,11 +39,12 @@ public class CitizensImporter implements DataImporter {
     private final MojangSkinCache skinCache;
     private final File dataFile;
     private final CitizensTraitsRegistry traitsRegistry;
+    private final NpcRegistryImpl npcRegistry;
 
     public CitizensImporter(ConfigManager configManager, BukkitAudiences adventure, BungeeConnector bungeeConnector,
                             TaskScheduler taskScheduler, PacketFactory packetFactory, LegacyComponentSerializer textSerializer,
                             NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry, MojangSkinCache skinCache,
-                            File dataFile) {
+                            File dataFile, NpcRegistryImpl npcRegistry) {
         this.configManager = configManager;
         this.adventure = adventure;
         this.bungeeConnector = bungeeConnector;
@@ -55,6 +56,7 @@ public class CitizensImporter implements DataImporter {
         this.skinCache = skinCache;
         this.dataFile = dataFile;
         this.traitsRegistry = new CitizensTraitsRegistry(typeRegistry, propertyRegistry, skinCache);
+        this.npcRegistry = npcRegistry;
     }
 
     @Override
@@ -96,8 +98,8 @@ public class CitizensImporter implements DataImporter {
                 }
             }
             String id = key.toLowerCase();
-            while (NpcApiProvider.get().getNpcRegistry().getById(id) != null) {
-                id += "_";
+            while (npcRegistry.getById(id) != null) {
+                id += "_"; // TODO: make a backup of the old npc instead
             }
             NpcEntryImpl entry = new NpcEntryImpl(id, npc);
             entry.enableEverything();

@@ -145,7 +145,7 @@ public class ZNpcsPlus extends JavaPlugin {
 
         DataImporterRegistry importerRegistry = new DataImporterRegistry(configManager, adventure, bungeeConnector,
                 scheduler, packetFactory, textSerializer, typeRegistry, getDataFolder().getParentFile(),
-                propertyRegistry, skinCache);
+                propertyRegistry, skinCache, npcRegistry);
 
         log(ChatColor.WHITE + " * Registerring components...");
 
