@@ -5,6 +5,7 @@ import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
+import lol.pyr.znpcsplus.util.PapiUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
@@ -29,6 +30,7 @@ public class NameProperty extends EntityPropertyImpl<Component> {
             String serialized = legacy ?
                     AdventureSerializer.getLegacyGsonSerializer().serialize(value) :
                     AdventureSerializer.getGsonSerializer().serialize(value);
+            serialized = PapiUtil.set(player, serialized);
             if (optional) properties.put(2, newEntityData(2, EntityDataTypes.OPTIONAL_COMPONENT, Optional.of(serialized)));
             else properties.put(2, newEntityData(2, EntityDataTypes.STRING, serialized));
         }

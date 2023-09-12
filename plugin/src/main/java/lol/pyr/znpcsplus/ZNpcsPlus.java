@@ -145,7 +145,7 @@ public class ZNpcsPlus extends JavaPlugin {
 
         DataImporterRegistry importerRegistry = new DataImporterRegistry(configManager, adventure, bungeeConnector,
                 scheduler, packetFactory, textSerializer, typeRegistry, getDataFolder().getParentFile(),
-                propertyRegistry, skinCache);
+                propertyRegistry, skinCache, npcRegistry);
 
         log(ChatColor.WHITE + " * Registerring components...");
 
@@ -270,6 +270,11 @@ public class ZNpcsPlus extends JavaPlugin {
         registerEnumParser(manager, HorseStyle.class, incorrectUsageMessage);
         registerEnumParser(manager, HorseColor.class, incorrectUsageMessage);
         registerEnumParser(manager, HorseArmor.class, incorrectUsageMessage);
+        registerEnumParser(manager, LlamaVariant.class, incorrectUsageMessage);
+        registerEnumParser(manager, MooshroomVariant.class, incorrectUsageMessage);
+        registerEnumParser(manager, OcelotType.class, incorrectUsageMessage);
+        registerEnumParser(manager, PandaGene.class, incorrectUsageMessage);
+        registerEnumParser(manager, PuffState.class, incorrectUsageMessage);
 
         manager.registerCommand("npc", new MultiCommand(loadHelpMessage("root"))
                 .addSubcommand("create", new CreateCommand(npcRegistry, typeRegistry))

@@ -110,6 +110,7 @@ public class NpcTypeImpl implements NpcType {
             ServerVersion version = PacketEvents.getAPI().getServerManager().getVersion();
             addProperties("fire", "invisible", "silent", "look",
                     "potion_color", "potion_ambient", "dinnerbone");
+            // TODO: make this look nicer after completing the rest of the properties
             if (version.isNewerThanOrEquals(ServerVersion.V_1_9)) addProperties("glow");
             if (version.isNewerThanOrEquals(ServerVersion.V_1_14)) {
                 addProperties("pose");
@@ -118,7 +119,7 @@ public class NpcTypeImpl implements NpcType {
                 }
             }
             if (version.isNewerThanOrEquals(ServerVersion.V_1_17)) addProperties("shaking");
-            if (EntityTypes.isTypeInstanceOf(type, EntityTypes.ABSTRACT_AGEABLE)) {
+            if (EntityTypes.isTypeInstanceOf(type, EntityTypes.ABSTRACT_AGEABLE) || EntityTypes.isTypeInstanceOf(type, EntityTypes.ZOMBIE) || EntityTypes.isTypeInstanceOf(type, EntityTypes.ZOGLIN)) {
                 addProperties("baby");
             }
             if (EntityTypes.isTypeInstanceOf(type, EntityTypes.ABSTRACT_HORSE)) {
@@ -128,6 +129,27 @@ public class NpcTypeImpl implements NpcType {
                 addProperties("has_chest");
             } else if (version.isOlderThan(ServerVersion.V_1_11) && type.equals(EntityTypes.HORSE)) {
                 addProperties("has_chest");
+            }
+            if (EntityTypes.isTypeInstanceOf(type, EntityTypes.ABSTRACT_EVO_ILLU_ILLAGER)) {
+                addProperties("spell");
+            }
+            if (EntityTypes.isTypeInstanceOf(type, EntityTypes.ABSTRACT_PIGLIN)) {
+                addProperties("piglin_immune_to_zombification");
+            }
+            if (EntityTypes.isTypeInstanceOf(type, EntityTypes.SLIME) || EntityTypes.isTypeInstanceOf(type, EntityTypes.PHANTOM)) {
+                addProperties("size");
+            }
+            if (version.isOlderThan(ServerVersion.V_1_14)) {
+                if (EntityTypes.isTypeInstanceOf(type, EntityTypes.OCELOT)) {
+                    addProperties("ocelot_type");
+                }
+            }
+            if (EntityTypes.isTypeInstanceOf(type, EntityTypes.PANDA)) {
+                if (version.isNewerThanOrEquals(ServerVersion.V_1_15)) {
+                    addProperties("panda_rolling", "panda_sitting", "panda_on_back");
+                } else {
+                    addProperties("panda_eating");
+                }
             }
             return new NpcTypeImpl(name, type, hologramOffset, new HashSet<>(allowedProperties), defaultProperties);
         }

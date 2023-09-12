@@ -104,13 +104,15 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
         register(builder(p, "magma_cube", EntityTypes.MAGMA_CUBE)); // TODO: Hologram offset scaling with size property
 
         register(builder(p, "mooshroom", EntityTypes.MOOSHROOM)
-                .setHologramOffset(-0.575));
+                .setHologramOffset(-0.575)
+                .addProperties("mooshroom_variant"));
 
         register(builder(p, "ocelot", EntityTypes.OCELOT)
                 .setHologramOffset(-1.275));
 
         register(builder(p, "pig", EntityTypes.PIG)
-                .setHologramOffset(-1.075));
+                .setHologramOffset(-1.075)
+                .addProperties("pig_saddled"));
 
         register(builder(p, "rabbit", EntityTypes.RABBIT)
                 .setHologramOffset(-1.475));
@@ -173,7 +175,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_10)) return;
 
         register(builder(p, "polar_bear", EntityTypes.POLAR_BEAR)
-                .setHologramOffset(-0.575));
+                .setHologramOffset(-0.575)
+                .addProperties("polar_bear_standing"));
 
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_11)) return;
 
@@ -202,14 +205,16 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .addProperties("evoker_spell"));
 
         register(builder(p, "llama", EntityTypes.LLAMA)
-                .setHologramOffset(-0.105));
+                .setHologramOffset(-0.105)
+                .addProperties("carpet_color", "llama_variant"));
 
         register(builder(p, "vex", EntityTypes.VEX)
                 .setHologramOffset(-1.175)
                 .addHandProperties());
 
         register(builder(p, "vindicator", EntityTypes.VINDICATOR)
-                .setHologramOffset(-0.025));
+                .setHologramOffset(-0.025)
+                .addProperties("celebrating"));
 
         register(builder(p, "wither_skeleton", EntityTypes.WITHER_SKELETON)
                 .setHologramOffset(0.425)
@@ -225,7 +230,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .setHologramOffset(-0.025));
 
         register(builder(p, "parrot", EntityTypes.PARROT)
-                .setHologramOffset(-1.075));
+                .setHologramOffset(-1.075)
+                .addProperties("parrot_variant"));
 
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_13)) return;
 
@@ -244,7 +250,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .setHologramOffset(-1.475));
 
         register(builder(p, "pufferfish", EntityTypes.PUFFERFISH)
-                .setHologramOffset(-1.625));
+                .setHologramOffset(-1.625)
+                .addProperties("puff_state"));
 
         register(builder(p, "salmon", EntityTypes.SALMON)
                 .setHologramOffset(-1.575));
@@ -266,17 +273,20 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .addProperties("hand", "fox_variant", "fox_sitting", "fox_crouching", "fox_sleeping", "fox_faceplanted"));
 
         register(builder(p, "panda", EntityTypes.PANDA)
-                .setHologramOffset(-0.725));
+                .setHologramOffset(-0.725)
+                .addProperties("panda_main_gene", "panda_hidden_gene", "panda_sneezing"));
 
         register(builder(p, "pillager", EntityTypes.PILLAGER)
                 .setHologramOffset(-0.025)
-                .addHandProperties());
+                .addHandProperties()
+                .addProperties("pillager_charging"));
 
         register(builder(p, "ravager", EntityTypes.RAVAGER)
                 .setHologramOffset(0.225));
 
         register(builder(p, "trader_llama", EntityTypes.TRADER_LLAMA)
-                .setHologramOffset(-0.105));
+                .setHologramOffset(-0.105)
+                .addProperties("llama_variant"));
 
         register(builder(p, "wandering_trader", EntityTypes.WANDERING_TRADER)
                 .setHologramOffset(-0.025)
@@ -292,11 +302,12 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
 
         register(builder(p, "hoglin", EntityTypes.HOGLIN)
                 .setHologramOffset(-0.575)
-                .addProperties("immune_to_zombification"));
+                .addProperties("hoglin_immune_to_zombification"));
 
         register(builder(p, "piglin", EntityTypes.PIGLIN)
                 .setHologramOffset(-1.0)
-                .addEquipmentProperties());
+                .addEquipmentProperties()
+                .addProperties("piglin_baby", "piglin_charging_crossbow", "piglin_dancing"));
 
         register(builder(p, "piglin_brute", EntityTypes.PIGLIN_BRUTE)
                 .setHologramOffset(-0.025)
@@ -329,7 +340,7 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
 
         register(builder(p, "frog", EntityTypes.FROG)
                 .setHologramOffset(-1.475)
-                .addProperties("frog_variant"));
+                .addProperties("frog_variant", "frog_target_npc"));
 
         register(builder(p, "tadpole", EntityTypes.TADPOLE)
                 .setHologramOffset(-1.675));
