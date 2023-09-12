@@ -227,7 +227,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .setHologramOffset(-0.025));
 
         register(builder(p, "parrot", EntityTypes.PARROT)
-                .setHologramOffset(-1.075));
+                .setHologramOffset(-1.075)
+                .addProperties("parrot_variant"));
 
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_13)) return;
 

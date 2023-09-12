@@ -363,6 +363,15 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new EncodedIntegerProperty<DyeColor>("carpet_color", DyeColor.class, llamaIndex++, obj -> obj == null ? -1 : obj.ordinal()));
         register(new EncodedIntegerProperty<>("llama_variant", LlamaVariant.CREAMY, llamaIndex, Enum::ordinal));
 
+        if (!ver.isNewerThanOrEquals(ServerVersion.V_1_12)) return;
+        // Parrot
+        int parrotIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) parrotIndex = 19;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) parrotIndex = 18;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) parrotIndex = 17;
+        else parrotIndex = 15;
+        register(new EncodedIntegerProperty<>("parrot_variant", ParrotVariant.RED_BLUE, parrotIndex, Enum::ordinal));
+
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_14)) return;
         // Pose
         register(new NpcPoseProperty());

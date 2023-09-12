@@ -5,6 +5,5 @@ public enum ParrotVariant {
     BLUE,
     GREEN,
     YELLOW_BLUE,
-    GRAY,
-    NONE // only used to set empty nbt compound
+    GRAY
 }
