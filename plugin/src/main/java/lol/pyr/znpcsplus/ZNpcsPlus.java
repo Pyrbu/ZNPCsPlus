@@ -146,6 +146,9 @@ public class ZNpcsPlus extends JavaPlugin {
 
         log(ChatColor.WHITE + " * Registerring components...");
 
+        BungeeUtil.registerChannel(this);
+        shutdownTasks.add(() -> BungeeUtil.unregisterChannel(this));
+
         typeRegistry.registerDefault(packetEvents, propertyRegistry);
         actionRegistry.registerTypes(scheduler, adventure, textSerializer);
         packetEvents.getEventManager().registerListener(new InteractionPacketListener(userManager, npcRegistry, scheduler), PacketListenerPriority.MONITOR);
