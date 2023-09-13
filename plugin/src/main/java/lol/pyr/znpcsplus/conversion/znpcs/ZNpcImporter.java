@@ -29,6 +29,7 @@ import lol.pyr.znpcsplus.skin.Skin;
 import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 import lol.pyr.znpcsplus.skin.descriptor.FetchingDescriptor;
 import lol.pyr.znpcsplus.skin.descriptor.PrefetchedDescriptor;
+import lol.pyr.znpcsplus.util.BungeeConnector;
 import lol.pyr.znpcsplus.util.ItemSerializationUtil;
 import lol.pyr.znpcsplus.util.NpcLocation;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
@@ -53,10 +54,11 @@ public class ZNpcImporter implements DataImporter {
     private final MojangSkinCache skinCache;
     private final File dataFile;
     private final Gson gson;
+    private final BungeeConnector bungeeConnector;
 
     public ZNpcImporter(ConfigManager configManager, BukkitAudiences adventure,
                         TaskScheduler taskScheduler, PacketFactory packetFactory, LegacyComponentSerializer textSerializer,
-                        NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry, MojangSkinCache skinCache, File dataFile) {
+                        NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry, MojangSkinCache skinCache, File dataFile, BungeeConnector bungeeConnector) {
 
         this.configManager = configManager;
         this.adventure = adventure;
@@ -67,6 +69,7 @@ public class ZNpcImporter implements DataImporter {
         this.propertyRegistry = propertyRegistry;
         this.skinCache = skinCache;
         this.dataFile = dataFile;
+        this.bungeeConnector = bungeeConnector;
         gson = new GsonBuilder()
                 .create();
     }
@@ -161,7 +164,7 @@ public class ZNpcImporter implements DataImporter {
             case "message":
                 return new MessageAction(adventure, parameter, clickType, textSerializer, cooldown * 1000L, 0);
             case "server":
-                return new SwitchServerAction(parameter, clickType, cooldown * 1000L, 0);
+                return new SwitchServerAction(parameter, clickType, cooldown * 1000L, 0, bungeeConnector);
         }
         throw new IllegalArgumentException("Couldn't adapt znpcs click action: " + type);
     }

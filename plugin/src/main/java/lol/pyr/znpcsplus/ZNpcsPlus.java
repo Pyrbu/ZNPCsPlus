@@ -140,17 +140,18 @@ public class ZNpcsPlus extends JavaPlugin {
         UserManager userManager = new UserManager();
         shutdownTasks.add(userManager::shutdown);
 
+        BungeeConnector bungeeConnector = new BungeeConnector(this);
         DataImporterRegistry importerRegistry = new DataImporterRegistry(configManager, adventure,
                 scheduler, packetFactory, textSerializer, typeRegistry, getDataFolder().getParentFile(),
-                propertyRegistry, skinCache, npcRegistry);
+                propertyRegistry, skinCache, npcRegistry, bungeeConnector);
 
         log(ChatColor.WHITE + " * Registerring components...");
 
-        BungeeUtil.registerChannel(this);
-        shutdownTasks.add(() -> BungeeUtil.unregisterChannel(this));
+        bungeeConnector.registerChannel();
+        shutdownTasks.add(bungeeConnector::unregisterChannel);
 
         typeRegistry.registerDefault(packetEvents, propertyRegistry);
-        actionRegistry.registerTypes(scheduler, adventure, textSerializer);
+        actionRegistry.registerTypes(scheduler, adventure, textSerializer, bungeeConnector);
         packetEvents.getEventManager().registerListener(new InteractionPacketListener(userManager, npcRegistry, scheduler), PacketListenerPriority.MONITOR);
         new Metrics(this, 18244);
         pluginManager.registerEvents(new UserListener(userManager), this);

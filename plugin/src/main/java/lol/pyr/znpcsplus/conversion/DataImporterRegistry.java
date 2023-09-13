@@ -9,6 +9,7 @@ import lol.pyr.znpcsplus.npc.NpcTypeRegistryImpl;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
+import lol.pyr.znpcsplus.util.BungeeConnector;
 import lol.pyr.znpcsplus.util.LazyLoader;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -25,12 +26,12 @@ public class DataImporterRegistry {
     public DataImporterRegistry(ConfigManager configManager, BukkitAudiences adventure,
                                 TaskScheduler taskScheduler, PacketFactory packetFactory, LegacyComponentSerializer textSerializer,
                                 NpcTypeRegistryImpl typeRegistry, File pluginsFolder, EntityPropertyRegistryImpl propertyRegistry,
-                                MojangSkinCache skinCache, NpcRegistryImpl npcRegistry) {
+                                MojangSkinCache skinCache, NpcRegistryImpl npcRegistry, BungeeConnector bungeeConnector) {
 
         register("znpcs", LazyLoader.of(() -> new ZNpcImporter(configManager, adventure, taskScheduler,
-                packetFactory, textSerializer, typeRegistry, propertyRegistry, skinCache, new File(pluginsFolder, "ServersNPC/data.json"))));
+                packetFactory, textSerializer, typeRegistry, propertyRegistry, skinCache, new File(pluginsFolder, "ServersNPC/data.json"), bungeeConnector)));
         register("znpcsplus_legacy", LazyLoader.of(() -> new ZNpcImporter(configManager, adventure, taskScheduler,
-                packetFactory, textSerializer, typeRegistry, propertyRegistry, skinCache, new File(pluginsFolder, "ZNPCsPlusLegacy/data.json"))));
+                packetFactory, textSerializer, typeRegistry, propertyRegistry, skinCache, new File(pluginsFolder, "ZNPCsPlusLegacy/data.json"), bungeeConnector)));
         register("citizens", LazyLoader.of(() -> new CitizensImporter(configManager, adventure, taskScheduler,
                 packetFactory, textSerializer, typeRegistry, propertyRegistry, skinCache, new File(pluginsFolder, "Citizens/saves.yml"), npcRegistry)));
     }
