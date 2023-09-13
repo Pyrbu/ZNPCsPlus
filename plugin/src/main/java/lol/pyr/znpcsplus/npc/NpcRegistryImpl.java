@@ -147,7 +147,7 @@ public class NpcRegistryImpl implements NpcRegistry {
 
     @Override
     public void delete(String id) {
-        NpcEntryImpl entry = npcIdLookupMap.remove(id.toLowerCase());
+        NpcEntryImpl entry = npcIdLookupMap.get(id.toLowerCase());
         if (entry == null) return;
         unregister(entry);
         storage.deleteNpc(entry);
