@@ -9,6 +9,7 @@ import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.util.NpcLocation;
 import lol.pyr.znpcsplus.util.Viewable;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 
@@ -44,7 +45,7 @@ public class HologramImpl extends Viewable implements Hologram {
     }
 
     public void addTextLine(String line) {
-        addTextLineComponent(textSerializer.deserialize(line));
+        addTextLineComponent(textSerializer.deserialize(textSerializer.serialize(MiniMessage.miniMessage().deserialize(line))));
     }
 
     public void addItemLineStack(org.bukkit.inventory.ItemStack item) {
