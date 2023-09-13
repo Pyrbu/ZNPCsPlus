@@ -7,10 +7,9 @@ import com.github.retrooper.packetevents.protocol.player.GameMode;
 import com.github.retrooper.packetevents.protocol.player.UserProfile;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPlayerInfoRemove;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPlayerInfoUpdate;
+import lol.pyr.znpcsplus.api.entity.PropertyHolder;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
-import lol.pyr.znpcsplus.api.entity.PropertyHolder;
-import lol.pyr.znpcsplus.metadata.MetadataFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -22,8 +21,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class V1_19PacketFactory extends V1_17PacketFactory {
     private final boolean oldTabPackets;
-    public V1_19PacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer) {
-        super(scheduler, metadataFactory, packetEvents, propertyRegistry, textSerializer);
+    public V1_19PacketFactory(TaskScheduler scheduler, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer) {
+        super(scheduler, packetEvents, propertyRegistry, textSerializer);
         oldTabPackets = packetEvents.getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_19_2);
     }
 

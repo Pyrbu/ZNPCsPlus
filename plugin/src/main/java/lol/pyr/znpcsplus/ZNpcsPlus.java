@@ -28,9 +28,11 @@ import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.interaction.ActionRegistry;
 import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
-import lol.pyr.znpcsplus.metadata.*;
 import lol.pyr.znpcsplus.npc.*;
-import lol.pyr.znpcsplus.packets.*;
+import lol.pyr.znpcsplus.packets.PacketFactory;
+import lol.pyr.znpcsplus.packets.V1_17PacketFactory;
+import lol.pyr.znpcsplus.packets.V1_19PacketFactory;
+import lol.pyr.znpcsplus.packets.V1_8PacketFactory;
 import lol.pyr.znpcsplus.parsers.*;
 import lol.pyr.znpcsplus.scheduling.FoliaScheduler;
 import lol.pyr.znpcsplus.scheduling.SpigotScheduler;
@@ -126,8 +128,8 @@ public class ZNpcsPlus extends JavaPlugin {
         ConfigManager configManager = new ConfigManager(getDataFolder());
         MojangSkinCache skinCache = new MojangSkinCache(configManager);
         EntityPropertyRegistryImpl propertyRegistry = new EntityPropertyRegistryImpl(skinCache);
-        MetadataFactory metadataFactory = setupMetadataFactory();
-        PacketFactory packetFactory = setupPacketFactory(scheduler, metadataFactory, propertyRegistry);
+        PacketFactory packetFactory = setupPacketFactory(scheduler, propertyRegistry);
+        propertyRegistry.registerTypes(packetFactory);
 
         ActionRegistry actionRegistry = new ActionRegistry();
         NpcTypeRegistryImpl typeRegistry = new NpcTypeRegistryImpl();
@@ -140,7 +142,7 @@ public class ZNpcsPlus extends JavaPlugin {
 
         DataImporterRegistry importerRegistry = new DataImporterRegistry(configManager, adventure,
                 scheduler, packetFactory, textSerializer, typeRegistry, getDataFolder().getParentFile(),
-                propertyRegistry, skinCache);
+                propertyRegistry, skinCache, npcRegistry);
 
         log(ChatColor.WHITE + " * Registerring components...");
 
@@ -197,10 +199,9 @@ public class ZNpcsPlus extends JavaPlugin {
                 NpcEntryImpl entry = npcRegistry.create("debug_npc_" + i, world, type, new NpcLocation(i * 3, 200, 0, 0, 0));
                 entry.setProcessed(true);
                 NpcImpl npc = entry.getNpc();
-                npc.getHologram().addLineComponent(Component.text("Hello, World!", TextColor.color(255, 0, 0)));
-                npc.getHologram().addLineComponent(Component.text("Hello, World!", TextColor.color(0, 255, 0)));
-                npc.getHologram().addLineComponent(Component.text("Hello, World!", TextColor.color(0, 0, 255)));
-                npc.setProperty(propertyRegistry.getByName("look", Boolean.class), true);
+                npc.getHologram().addTextLineComponent(Component.text("Hello, World!", TextColor.color(255, 0, 0)));
+                npc.getHologram().addTextLineComponent(Component.text("Hello, World!", TextColor.color(0, 255, 0)));
+                npc.getHologram().addTextLineComponent(Component.text("Hello, World!", TextColor.color(0, 0, 255)));
                 i++;
             }
         }
@@ -210,18 +211,15 @@ public class ZNpcsPlus extends JavaPlugin {
     public void onDisable() {
         NpcApiProvider.unregister();
         for (Runnable runnable : shutdownTasks) runnable.run();
+        shutdownTasks.clear();
         PacketEvents.getAPI().terminate();
     }
 
-    private PacketFactory setupPacketFactory(TaskScheduler scheduler, MetadataFactory metadataFactory, EntityPropertyRegistryImpl propertyRegistry) {
+    private PacketFactory setupPacketFactory(TaskScheduler scheduler, EntityPropertyRegistryImpl propertyRegistry) {
         HashMap<ServerVersion, LazyLoader<? extends PacketFactory>> versions = new HashMap<>();
-        versions.put(ServerVersion.V_1_8, LazyLoader.of(() -> new V1_8PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry, textSerializer)));
-        versions.put(ServerVersion.V_1_9, LazyLoader.of(() -> new V1_9PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry, textSerializer)));
-        versions.put(ServerVersion.V_1_10, LazyLoader.of(() -> new V1_10PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry, textSerializer)));
-        versions.put(ServerVersion.V_1_14, LazyLoader.of(() -> new V1_14PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry, textSerializer)));
-        versions.put(ServerVersion.V_1_16, LazyLoader.of(() -> new V1_16PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry, textSerializer)));
-        versions.put(ServerVersion.V_1_17, LazyLoader.of(() -> new V1_17PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry, textSerializer)));
-        versions.put(ServerVersion.V_1_19, LazyLoader.of(() -> new V1_19PacketFactory(scheduler, metadataFactory, packetEvents, propertyRegistry, textSerializer)));
+        versions.put(ServerVersion.V_1_8, LazyLoader.of(() -> new V1_8PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer)));
+        versions.put(ServerVersion.V_1_17, LazyLoader.of(() -> new V1_17PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer)));
+        versions.put(ServerVersion.V_1_19, LazyLoader.of(() -> new V1_19PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer)));
 
         ServerVersion version = packetEvents.getServerManager().getVersion();
         if (versions.containsKey(version)) return versions.get(version).get();
@@ -232,31 +230,6 @@ public class ZNpcsPlus extends JavaPlugin {
         }
         throw new RuntimeException("Unsupported version!");
     }
-
-    private MetadataFactory setupMetadataFactory() {
-        HashMap<ServerVersion, LazyLoader<? extends MetadataFactory>> versions = new HashMap<>();
-        versions.put(ServerVersion.V_1_8, LazyLoader.of(V1_8MetadataFactory::new));
-        versions.put(ServerVersion.V_1_9, LazyLoader.of(V1_9MetadataFactory::new));
-        versions.put(ServerVersion.V_1_10, LazyLoader.of(V1_10MetadataFactory::new));
-        versions.put(ServerVersion.V_1_11, LazyLoader.of(V1_11MetadataFactory::new));
-        versions.put(ServerVersion.V_1_12, LazyLoader.of(V1_12MetadataFactory::new));
-        versions.put(ServerVersion.V_1_13, LazyLoader.of(V1_13MetadataFactory::new));
-        versions.put(ServerVersion.V_1_14, LazyLoader.of(V1_14MetadataFactory::new));
-        versions.put(ServerVersion.V_1_15, LazyLoader.of(V1_15MetadataFactory::new));
-        versions.put(ServerVersion.V_1_16, LazyLoader.of(V1_16MetadataFactory::new));
-        versions.put(ServerVersion.V_1_17, LazyLoader.of(V1_17MetadataFactory::new));
-        versions.put(ServerVersion.V_1_19, LazyLoader.of(V1_19MetadataFactory::new));
-
-        ServerVersion version = packetEvents.getServerManager().getVersion();
-        if (versions.containsKey(version)) return versions.get(version).get();
-        for (ServerVersion v : ServerVersion.reversedValues()) {
-            if (v.isNewerThan(version)) continue;
-            if (!versions.containsKey(v)) continue;
-            return versions.get(v).get();
-        }
-        throw new RuntimeException("Unsupported version!");
-    }
-
 
     private void registerCommands(NpcRegistryImpl npcRegistry, MojangSkinCache skinCache, BukkitAudiences adventure,
                                   ActionRegistry actionRegistry, NpcTypeRegistryImpl typeRegistry,
@@ -277,6 +250,7 @@ public class ZNpcsPlus extends JavaPlugin {
         manager.registerParser(Color.class, new ColorParser(incorrectUsageMessage));
         manager.registerParser(Vector3f.class, new Vector3fParser(incorrectUsageMessage));
 
+        // TODO: Need to find a better way to do this
         registerEnumParser(manager, NpcPose.class, incorrectUsageMessage);
         registerEnumParser(manager, DyeColor.class, incorrectUsageMessage);
         registerEnumParser(manager, CatVariant.class, incorrectUsageMessage);
@@ -288,6 +262,16 @@ public class ZNpcsPlus extends JavaPlugin {
         registerEnumParser(manager, VillagerType.class, incorrectUsageMessage);
         registerEnumParser(manager, VillagerProfession.class, incorrectUsageMessage);
         registerEnumParser(manager, VillagerLevel.class, incorrectUsageMessage);
+        registerEnumParser(manager, AxolotlVariant.class, incorrectUsageMessage);
+        registerEnumParser(manager, HorseType.class, incorrectUsageMessage);
+        registerEnumParser(manager, HorseStyle.class, incorrectUsageMessage);
+        registerEnumParser(manager, HorseColor.class, incorrectUsageMessage);
+        registerEnumParser(manager, HorseArmor.class, incorrectUsageMessage);
+        registerEnumParser(manager, LlamaVariant.class, incorrectUsageMessage);
+        registerEnumParser(manager, MooshroomVariant.class, incorrectUsageMessage);
+        registerEnumParser(manager, OcelotType.class, incorrectUsageMessage);
+        registerEnumParser(manager, PandaGene.class, incorrectUsageMessage);
+        registerEnumParser(manager, PuffState.class, incorrectUsageMessage);
 
         manager.registerCommand("npc", new MultiCommand(loadHelpMessage("root"))
                 .addSubcommand("center", new CenterCommand(npcRegistry))
@@ -309,11 +293,14 @@ public class ZNpcsPlus extends JavaPlugin {
                         .addSubcommand("reload", new LoadAllCommand(npcRegistry))
                         .addSubcommand("import", new ImportCommand(npcRegistry, importerRegistry)))
                 .addSubcommand("holo", new MultiCommand(loadHelpMessage("holo"))
-                        .addSubcommand("add", new HoloAddCommand(npcRegistry, textSerializer))
+                        .addSubcommand("add", new HoloAddCommand(npcRegistry))
+                        .addSubcommand("additem", new HoloAddItemCommand(npcRegistry))
                         .addSubcommand("delete", new HoloDeleteCommand(npcRegistry))
                         .addSubcommand("info", new HoloInfoCommand(npcRegistry))
-                        .addSubcommand("insert", new HoloInsertCommand(npcRegistry, textSerializer))
-                        .addSubcommand("set", new HoloSetCommand(npcRegistry, textSerializer))
+                        .addSubcommand("insert", new HoloInsertCommand(npcRegistry))
+                        .addSubcommand("insertitem", new HoloInsertItemCommand(npcRegistry))
+                        .addSubcommand("set", new HoloSetCommand(npcRegistry))
+                        .addSubcommand("setitem", new HoloSetItemCommand(npcRegistry))
                         .addSubcommand("offset", new HoloOffsetCommand(npcRegistry))
                         .addSubcommand("refreshdelay", new HoloRefreshDelayCommand(npcRegistry)))
                 .addSubcommand("action", new MultiCommand(loadHelpMessage("action"))

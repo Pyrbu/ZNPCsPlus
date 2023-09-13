@@ -4,22 +4,20 @@ import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
 import lol.pyr.znpcsplus.hologram.HologramImpl;
+import lol.pyr.znpcsplus.hologram.HologramItem;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.Collections;
 import java.util.List;
 
 public class HoloAddCommand implements CommandHandler {
     private final NpcRegistryImpl registry;
-    private final LegacyComponentSerializer textSerializer;
 
-    public HoloAddCommand(NpcRegistryImpl registry, LegacyComponentSerializer textSerializer) {
+    public HoloAddCommand(NpcRegistryImpl registry) {
         this.registry = registry;
-        this.textSerializer = textSerializer;
     }
 
     @Override
@@ -27,7 +25,13 @@ public class HoloAddCommand implements CommandHandler {
         context.setUsage(context.getLabel() + " holo add <id> <text>");
         HologramImpl hologram = context.parse(NpcEntryImpl.class).getNpc().getHologram();
         context.ensureArgsNotEmpty();
-        hologram.addLineComponent(textSerializer.deserialize(context.dumpAllArgs()));
+        String in = context.dumpAllArgs();
+        if (in.toLowerCase().startsWith("item:")) {
+            if (!HologramItem.ensureValidItemInput(in.substring(5))) {
+                context.halt(Component.text("The item input is invalid!", NamedTextColor.RED));
+            }
+        }
+        hologram.addLine(in);
         context.send(Component.text("NPC line added!", NamedTextColor.GREEN));
     }
 

@@ -28,7 +28,8 @@ public class PropertyRemoveCommand implements CommandHandler {
         NpcImpl npc = entry.getNpc();
         EntityPropertyImpl<?> property = context.parse(EntityPropertyImpl.class);
         if (!npc.hasProperty(property)) context.halt(Component.text("This npc doesn't have the " + property.getName() + " property set", NamedTextColor.RED));
-        npc.removeProperty(property);
+        if (!property.isPlayerModifiable()) context.halt(Component.text("This property is not modifiable by players", NamedTextColor.RED));
+        npc.setProperty(property, null);
         context.send(Component.text("Removed property " + property.getName() + " from NPC " + entry.getId(), NamedTextColor.GREEN));
     }
 
@@ -36,7 +37,7 @@ public class PropertyRemoveCommand implements CommandHandler {
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
         if (context.argSize() == 1) return context.suggestCollection(npcRegistry.getModifiableIds());
         if (context.argSize() == 2) return context.suggestStream(context.suggestionParse(0, NpcEntryImpl.class)
-                .getNpc().getAppliedProperties().stream().map(EntityProperty::getName));
+                .getNpc().getAppliedProperties().stream().filter(EntityProperty::isPlayerModifiable).map(EntityProperty::getName));
         return Collections.emptyList();
     }
 }

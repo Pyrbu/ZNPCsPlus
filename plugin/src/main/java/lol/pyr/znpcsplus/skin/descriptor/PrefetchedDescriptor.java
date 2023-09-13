@@ -7,6 +7,7 @@ import lol.pyr.znpcsplus.skin.Skin;
 import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 import org.bukkit.entity.Player;
 
+import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 
 public class PrefetchedDescriptor implements BaseSkinDescriptor, SkinDescriptor {
@@ -18,6 +19,10 @@ public class PrefetchedDescriptor implements BaseSkinDescriptor, SkinDescriptor 
 
     public static CompletableFuture<PrefetchedDescriptor> forPlayer(MojangSkinCache cache, String name) {
         return CompletableFuture.supplyAsync(() -> new PrefetchedDescriptor(cache.fetchByName(name).join()));
+    }
+
+    public static CompletableFuture<PrefetchedDescriptor> fromUrl(MojangSkinCache cache, URL url, String variant) {
+        return CompletableFuture.supplyAsync(() -> new PrefetchedDescriptor(cache.fetchByUrl(url, variant).join()));
     }
 
     @Override

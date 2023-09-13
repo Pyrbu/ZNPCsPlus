@@ -1,8 +1,11 @@
 package lol.pyr.znpcsplus.commands.property;
 
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.world.states.WrappedBlockState;
 import com.github.retrooper.packetevents.protocol.world.states.type.StateType;
 import com.github.retrooper.packetevents.protocol.world.states.type.StateTypes;
+import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
@@ -15,9 +18,9 @@ import lol.pyr.znpcsplus.util.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
-import org.bukkit.DyeColor;
-import org.bukkit.inventory.ItemStack;
+import com.github.retrooper.packetevents.protocol.item.ItemStack;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,12 +45,12 @@ public class PropertySetCommand implements CommandHandler {
         Object value;
         String valueName;
         if (type == ItemStack.class) {
-            ItemStack bukkitStack = context.ensureSenderIsPlayer().getInventory().getItemInHand();
+            org.bukkit.inventory.ItemStack bukkitStack = context.ensureSenderIsPlayer().getInventory().getItemInHand();
             if (bukkitStack.getAmount() == 0) {
                 value = null;
                 valueName = "EMPTY";
             } else {
-                value = bukkitStack;
+                value = SpigotConversionUtil.fromBukkitItemStack(bukkitStack);
                 valueName = bukkitStack.toString();
             }
         }
@@ -60,7 +63,7 @@ public class PropertySetCommand implements CommandHandler {
             valueName = "NONE";
         }
         else if (type == ParrotVariant.class && context.argSize() < 1 && npc.getProperty(property) != null) {
-            value = ParrotVariant.NONE;
+            value = null;
             valueName = "NONE";
         }
         else if (type == BlockState.class) {
@@ -96,6 +99,24 @@ public class PropertySetCommand implements CommandHandler {
                     return;
             }
         }
+        else if (type == SpellType.class) {
+            if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_13)) {
+                value = context.parse(type);
+                valueName = String.valueOf(value);
+                if (((SpellType) value).ordinal() > 3) {
+                    context.send(Component.text("Spell type " + valueName + " is not supported on this version", NamedTextColor.RED));
+                    return;
+                }
+            }
+            else {
+                value = context.parse(type);
+                valueName = String.valueOf(value);
+            }
+        }
+        else if (type == NpcEntryImpl.class) {
+            value = context.parse(type);
+            valueName = value == null ? "NONE" : ((NpcEntryImpl) value).getId();
+        }
         else {
             value = context.parse(type);
             valueName = String.valueOf(value);
@@ -117,19 +138,16 @@ public class PropertySetCommand implements CommandHandler {
             if (context.argSize() == 3) {
                 if (type == Boolean.class) return context.suggestLiteral("true", "false");
                 if (type == NamedTextColor.class) return context.suggestCollection(NamedTextColor.NAMES.keys());
-                if (type == NpcPose.class) return context.suggestEnum(NpcPose.values());
                 if (type == Color.class) return context.suggestLiteral("0x0F00FF", "#FFFFFF");
-                if (type == DyeColor.class) return context.suggestEnum(DyeColor.values());
-                if (type == CatVariant.class) return context.suggestEnum(CatVariant.values());
-                if (type == CreeperState.class) return context.suggestEnum(CreeperState.values());
-                if (type == ParrotVariant.class) return context.suggestEnum(ParrotVariant.values());
                 if (type == BlockState.class) return context.suggestLiteral("hand", "looking_at", "block");
-                if (type == SpellType.class) return context.suggestEnum(SpellType.values());
-                if (type == FoxVariant.class) return context.suggestEnum(FoxVariant.values());
-                if (type == FrogVariant.class) return context.suggestEnum(FrogVariant.values());
-                if (type == VillagerType.class) return context.suggestEnum(VillagerType.values());
-                if (type == VillagerProfession.class) return context.suggestEnum(VillagerProfession.values());
-                if (type == VillagerLevel.class) return context.suggestEnum(VillagerLevel.values());
+                if (type == SpellType.class) return PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_13) ?
+                        context.suggestEnum(Arrays.stream(SpellType.values()).filter(spellType -> spellType.ordinal() <= 3).toArray(SpellType[]::new)) :
+                        context.suggestEnum(SpellType.values());
+
+                // Suggest enum values directly
+                if (type.isEnum()) {
+                    return context.suggestEnum((Enum<?>[]) type.getEnumConstants());
+                }
             }
             else if (context.argSize() == 4) {
                 if (type == BlockState.class) {

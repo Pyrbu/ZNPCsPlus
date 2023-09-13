@@ -8,9 +8,7 @@ import lol.pyr.znpcsplus.skin.Skin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -98,6 +96,43 @@ public class MojangSkinCache {
             } catch (IOException exception) {
                 if (!configManager.getConfig().disableSkinFetcherWarnings()) {
                     logger.warning("Failed to fetch skin from fallback server:");
+                    exception.printStackTrace();
+                }
+            } finally {
+                if (connection != null) connection.disconnect();
+            }
+            return null;
+        });
+    }
+
+    public CompletableFuture<Skin> fetchByUrl(URL url, String variant) {
+        return CompletableFuture.supplyAsync(() -> {
+            URL apiUrl = parseUrl("https://api.mineskin.org/generate/url");
+            HttpURLConnection connection = null;
+            try {
+                connection = (HttpURLConnection) apiUrl.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("accept", "application/json");
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setDoOutput(true);
+                OutputStream outStream = connection.getOutputStream();
+                DataOutputStream out = new DataOutputStream(outStream);
+                out.writeBytes("{\"variant\":\"" + variant + "\",\"url\":\"" + url.toString() + "\"}");
+                out.flush();
+                out.close();
+                outStream.close();
+
+                try (Reader reader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {
+                    JsonObject obj = JsonParser.parseReader(reader).getAsJsonObject();
+                    if (obj.has("error")) return null;
+                    if (!obj.has("data")) return null;
+                    JsonObject texture = obj.get("data").getAsJsonObject().get("texture").getAsJsonObject();
+                    return new Skin(texture.get("value").getAsString(), texture.get("signature").getAsString());
+                }
+
+            } catch (IOException exception) {
+                if (!configManager.getConfig().disableSkinFetcherWarnings()) {
+                    logger.warning("Failed to get skin from url:");
                     exception.printStackTrace();
                 }
             } finally {

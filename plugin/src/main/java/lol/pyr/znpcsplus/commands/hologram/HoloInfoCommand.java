@@ -4,7 +4,6 @@ import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
 import lol.pyr.znpcsplus.hologram.HologramImpl;
-import lol.pyr.znpcsplus.hologram.HologramLine;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import net.kyori.adventure.text.Component;
@@ -26,7 +25,11 @@ public class HoloInfoCommand implements CommandHandler {
         NpcEntryImpl entry = context.parse(NpcEntryImpl.class);
         HologramImpl hologram = entry.getNpc().getHologram();
         Component component = Component.text("NPC Hologram Info of ID " + entry.getId() + ":", NamedTextColor.GREEN).appendNewline();
-        for (HologramLine line : hologram.getLines()) component = component.append(line.getText()).appendNewline();
+        for (int i = 0; i < hologram.getLines().size(); i++) {
+            component = component.append(Component.text(i + ") ", NamedTextColor.GREEN))
+                    .append(Component.text(hologram.getLine(i), NamedTextColor.WHITE))
+                    .appendNewline();
+        }
         context.send(component);
     }
 

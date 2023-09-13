@@ -1,10 +1,11 @@
 package lol.pyr.znpcsplus.storage.yaml;
 
+import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
+import lol.pyr.znpcsplus.entity.PropertySerializer;
 import lol.pyr.znpcsplus.hologram.HologramImpl;
-import lol.pyr.znpcsplus.hologram.HologramLine;
 import lol.pyr.znpcsplus.interaction.ActionRegistry;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcImpl;
@@ -12,7 +13,6 @@ import lol.pyr.znpcsplus.npc.NpcTypeRegistryImpl;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.storage.NpcStorage;
 import lol.pyr.znpcsplus.util.NpcLocation;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -54,7 +54,7 @@ public class YamlStorage implements NpcStorage {
         for (File file : files) if (file.isFile() && file.getName().toLowerCase().endsWith(".yml")) {
             YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
             UUID uuid = config.contains("uuid") ? UUID.fromString(config.getString("uuid")) : UUID.randomUUID();
-            NpcImpl npc = new NpcImpl(uuid, configManager, packetFactory, textSerializer, config.getString("world"),
+            NpcImpl npc = new NpcImpl(uuid, propertyRegistry, configManager, packetFactory, textSerializer, config.getString("world"),
                     typeRegistry.getByName(config.getString("type")), deserializeLocation(config.getConfigurationSection("location")));
 
             if (config.isBoolean("enabled")) npc.setEnabled(config.getBoolean("enabled"));
@@ -67,13 +67,23 @@ public class YamlStorage implements NpcStorage {
                         Bukkit.getLogger().log(Level.WARNING, "Unknown property '" + key + "' for npc '" + config.getString("id") + "'. skipping ...");
                         continue;
                     }
-                    npc.UNSAFE_setProperty(property, property.deserialize(properties.getString(key)));
+                    PropertySerializer<?> serializer = propertyRegistry.getSerializer(property.getType());
+                    if (serializer == null) {
+                        Bukkit.getLogger().log(Level.WARNING, "Unknown serializer for property '" + key + "' for npc '" + config.getString("id") + "'. skipping ...");
+                        continue;
+                    }
+                    Object value = serializer.deserialize(properties.getString(key));
+                    if (value == null) {
+                        Bukkit.getLogger().log(Level.WARNING, "Failed to deserialize property '" + key + "' for npc '" + config.getString("id") + "'. Resetting to default ...");
+                        value = property.getDefaultValue();
+                    }
+                    npc.UNSAFE_setProperty(property, value);
                 }
             }
             HologramImpl hologram = npc.getHologram();
             hologram.setOffset(config.getDouble("hologram.offset", 0.0));
             hologram.setRefreshDelay(config.getLong("hologram.refresh-delay", -1));
-            for (String line : config.getStringList("hologram.lines")) hologram.addLineComponent(MiniMessage.miniMessage().deserialize(line));
+            for (String line : config.getStringList("hologram.lines")) hologram.addLine(line);
             for (String s : config.getStringList("actions")) npc.addAction(actionRegistry.deserialize(s));
 
             NpcEntryImpl entry = new NpcEntryImpl(config.getString("id"), npc);
@@ -101,8 +111,13 @@ public class YamlStorage implements NpcStorage {
             config.set("location", serializeLocation(npc.getLocation()));
             config.set("type", npc.getType().getName());
 
-            for (EntityPropertyImpl<?> property : npc.getAppliedProperties()) try {
-                config.set("properties." + property.getName(), property.serialize(npc));
+            for (EntityProperty<?> property : npc.getAppliedProperties()) try {
+                PropertySerializer<?> serializer = propertyRegistry.getSerializer(((EntityPropertyImpl<?>) property).getType());
+                if (serializer == null) {
+                    Bukkit.getLogger().log(Level.WARNING, "Unknown serializer for property '" + property.getName() + "' for npc '" + entry.getId() + "'. skipping ...");
+                    continue;
+                }
+                config.set("properties." + property.getName(), serializer.UNSAFE_serialize(npc.getProperty(property)));
             } catch (Exception exception) {
                 logger.severe("Failed to serialize property " + property.getName() + " for npc with id " + entry.getId());
                 exception.printStackTrace();
@@ -112,8 +127,8 @@ public class YamlStorage implements NpcStorage {
             if (hologram.getOffset() != 0.0) config.set("hologram.offset", hologram.getOffset());
             if (hologram.getRefreshDelay() != -1) config.set("hologram.refresh-delay", hologram.getRefreshDelay());
             List<String> lines = new ArrayList<>(npc.getHologram().getLines().size());
-            for (HologramLine line : hologram.getLines()) {
-                lines.add(MiniMessage.miniMessage().serialize(line.getText()));
+            for (int i = 0; i < hologram.getLines().size(); i++) {
+                lines.add(hologram.getLine(i));
             }
             config.set("hologram.lines", lines);
             config.set("actions", npc.getActions().stream()

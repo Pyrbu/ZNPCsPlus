@@ -1,8 +1,10 @@
 package lol.pyr.znpcsplus.conversion;
 
 import lol.pyr.znpcsplus.config.ConfigManager;
+import lol.pyr.znpcsplus.conversion.citizens.CitizensImporter;
 import lol.pyr.znpcsplus.conversion.znpcs.ZNpcImporter;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
+import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import lol.pyr.znpcsplus.npc.NpcTypeRegistryImpl;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
@@ -23,14 +25,14 @@ public class DataImporterRegistry {
     public DataImporterRegistry(ConfigManager configManager, BukkitAudiences adventure,
                                 TaskScheduler taskScheduler, PacketFactory packetFactory, LegacyComponentSerializer textSerializer,
                                 NpcTypeRegistryImpl typeRegistry, File pluginsFolder, EntityPropertyRegistryImpl propertyRegistry,
-                                MojangSkinCache skinCache) {
+                                MojangSkinCache skinCache, NpcRegistryImpl npcRegistry) {
 
         register("znpcs", LazyLoader.of(() -> new ZNpcImporter(configManager, adventure, taskScheduler,
                 packetFactory, textSerializer, typeRegistry, propertyRegistry, skinCache, new File(pluginsFolder, "ServersNPC/data.json"))));
         register("znpcsplus_legacy", LazyLoader.of(() -> new ZNpcImporter(configManager, adventure, taskScheduler,
                 packetFactory, textSerializer, typeRegistry, propertyRegistry, skinCache, new File(pluginsFolder, "ZNPCsPlusLegacy/data.json"))));
-        /* register("citizens", LazyLoader.of(() -> new CitizensImporter(configManager, adventure, bungeeConnector, taskScheduler,
-                packetFactory, textSerializer, typeRegistry, propertyRegistry, skinCache, new File(pluginsFolder, "Citizens/saves.yml")))); */
+        register("citizens", LazyLoader.of(() -> new CitizensImporter(configManager, adventure, taskScheduler,
+                packetFactory, textSerializer, typeRegistry, propertyRegistry, skinCache, new File(pluginsFolder, "Citizens/saves.yml"), npcRegistry)));
     }
 
     private void register(String id, LazyLoader<DataImporter> loader) {
