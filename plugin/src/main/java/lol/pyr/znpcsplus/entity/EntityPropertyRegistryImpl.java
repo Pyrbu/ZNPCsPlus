@@ -372,13 +372,14 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Player
         NBTProperty.NBTDecoder<ParrotVariant> parrotVariantDecoder = (variant) -> {
             NBTCompound compound = new NBTCompound();
+            if (variant == null) return compound;
             compound.setTag("id", new NBTString("minecraft:parrot"));
             compound.setTag("Variant", new NBTInt(variant.ordinal()));
             return compound;
         };
         int shoulderIndex = skinLayersIndex+2;
-        register(new NBTProperty<>("shoulder_entity_left", ParrotVariant.class, shoulderIndex++, parrotVariantDecoder));
-        register(new NBTProperty<>("shoulder_entity_right", ParrotVariant.class, shoulderIndex, parrotVariantDecoder));
+        register(new NBTProperty<>("shoulder_entity_left", ParrotVariant.class, shoulderIndex++, parrotVariantDecoder, true));
+        register(new NBTProperty<>("shoulder_entity_right", ParrotVariant.class, shoulderIndex, parrotVariantDecoder, true));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_13)) return;
         // Pufferfish
