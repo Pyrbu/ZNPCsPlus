@@ -87,6 +87,12 @@ public class NpcImpl extends Viewable implements Npc {
         entity.setHeadRotation(player, yaw, pitch);
     }
 
+    public void setHeadRotation(float yaw, float pitch) {
+        for (Player player : getViewers()) {
+            entity.setHeadRotation(player, yaw, pitch);
+        }
+    }
+
     public HologramImpl getHologram() {
         return hologram;
     }
