@@ -53,6 +53,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerSerializer(new Vector3fPropertySerializer());
         registerSerializer(new BlockStatePropertySerializer());
         registerSerializer(new IntegerPropertySerializer());
+        registerSerializer(new LookTypeSerializer());
 
         registerEnumSerializer(NpcPose.class);
         registerEnumSerializer(DyeColor.class);
@@ -142,7 +143,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new NameProperty(legacyNames, optionalComponents));
         register(new DinnerboneProperty(legacyNames, optionalComponents));
 
-        register(new DummyProperty<>("look", false));
+        register(new DummyProperty<>("look", LookType.FIXED));
         register(new GlowProperty(packetFactory));
         register(new BitsetProperty("fire", 0, 0x01));
         register(new BitsetProperty("invisible", 0, 0x20));

@@ -22,4 +22,5 @@ public interface PacketFactory {
     void sendAllMetadata(Player player, PacketEntity entity, PropertyHolder properties);
     void sendEquipment(Player player, PacketEntity entity, Equipment equipment);
     void sendMetadata(Player player, PacketEntity entity, List<EntityData> data);
+    void sendHeadRotation(Player player, PacketEntity entity, float yaw, float pitch);
 }
