@@ -28,13 +28,16 @@ import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.skin.Skin;
 import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 import lol.pyr.znpcsplus.skin.descriptor.FetchingDescriptor;
+import lol.pyr.znpcsplus.skin.descriptor.MirrorDescriptor;
 import lol.pyr.znpcsplus.skin.descriptor.PrefetchedDescriptor;
 import lol.pyr.znpcsplus.util.BungeeConnector;
 import lol.pyr.znpcsplus.util.ItemSerializationUtil;
+import lol.pyr.znpcsplus.util.LookType;
 import lol.pyr.znpcsplus.util.NpcLocation;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.DyeColor;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.BufferedReader;
@@ -127,6 +130,23 @@ public class ZNpcImporter implements DataImporter {
             }
             else if (model.getSkin() != null && model.getSignature() != null) {
                 npc.setProperty(propertyRegistry.getByName("skin", SkinDescriptor.class), new PrefetchedDescriptor(new Skin(model.getSkin(), model.getSignature())));
+            }
+
+            Map<String, Object> toggleValues = model.getNpcToggleValues();
+            if (toggleValues != null) {
+                if (toggleValues.containsKey("look")) {
+                    npc.setProperty(propertyRegistry.getByName("look", LookType.class), LookType.CLOSEST_PLAYER);
+                }
+                if (toggleValues.containsKey("mirror")) {
+                    npc.setProperty(propertyRegistry.getByName("skin", SkinDescriptor.class), new MirrorDescriptor(skinCache));
+                }
+                if (toggleValues.containsKey("glow")) {
+                    try {
+                        npc.setProperty(propertyRegistry.getByName("glow", DyeColor.class), DyeColor.valueOf((String) toggleValues.get("glow")));
+                    } catch (IllegalArgumentException e) {
+                        npc.setProperty(propertyRegistry.getByName("glow", DyeColor.class), DyeColor.WHITE);
+                    }
+                }
             }
 
             NpcEntryImpl entry = new NpcEntryImpl(String.valueOf(model.getId()), npc);
