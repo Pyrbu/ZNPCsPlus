@@ -10,6 +10,7 @@ import com.github.retrooper.packetevents.protocol.player.EquipmentSlot;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.entity.EntityPropertyRegistry;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
+import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.properties.*;
 import lol.pyr.znpcsplus.entity.properties.villager.VillagerLevelProperty;
 import lol.pyr.znpcsplus.entity.properties.villager.VillagerProfessionProperty;
@@ -42,8 +43,9 @@ import java.util.stream.Collectors;
 public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
     private final Map<Class<?>, PropertySerializer<?>> serializerMap = new HashMap<>();
     private final Map<String, EntityPropertyImpl<?>> byName = new HashMap<>();
+    private final ConfigManager configManager;
 
-    public EntityPropertyRegistryImpl(MojangSkinCache skinCache) {
+    public EntityPropertyRegistryImpl(MojangSkinCache skinCache, ConfigManager configManager) {
         registerSerializer(new ComponentPropertySerializer());
         registerSerializer(new NamedTextColorPropertySerializer());
         registerSerializer(new SkinDescriptorSerializer(skinCache));
@@ -76,6 +78,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(PuffState.class);
 
         registerPrimitiveSerializers(Integer.class, Boolean.class, Double.class, Float.class, Long.class, Short.class, Byte.class, String.class);
+
+        this.configManager = configManager;
 
         /*
         registerType("using_item", false); // TODO: fix it for 1.8 and add new property to use offhand item and riptide animation
@@ -144,6 +148,9 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new DinnerboneProperty(legacyNames, optionalComponents));
 
         register(new DummyProperty<>("look", LookType.FIXED));
+        register(new DummyProperty<>("look_distance", configManager.getConfig().lookPropertyDistance()));
+        register(new DummyProperty<>("view_distance", configManager.getConfig().viewDistance()));
+
         register(new GlowProperty(packetFactory));
         register(new BitsetProperty("fire", 0, 0x01));
         register(new BitsetProperty("invisible", 0, 0x20));

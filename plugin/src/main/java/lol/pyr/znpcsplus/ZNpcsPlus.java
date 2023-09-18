@@ -127,7 +127,7 @@ public class ZNpcsPlus extends JavaPlugin {
 
         ConfigManager configManager = new ConfigManager(getDataFolder());
         MojangSkinCache skinCache = new MojangSkinCache(configManager);
-        EntityPropertyRegistryImpl propertyRegistry = new EntityPropertyRegistryImpl(skinCache);
+        EntityPropertyRegistryImpl propertyRegistry = new EntityPropertyRegistryImpl(skinCache, configManager);
         PacketFactory packetFactory = setupPacketFactory(scheduler, propertyRegistry);
         propertyRegistry.registerTypes(packetFactory);
 

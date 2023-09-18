@@ -27,9 +27,10 @@ public class NpcProcessorTask extends BukkitRunnable {
     }
 
     public void run() {
-        double distSq = NumberConversions.square(configManager.getConfig().viewDistance());
-        double lookPropertyDistSq = NumberConversions.square(configManager.getConfig().lookPropertyDistance());
+        EntityPropertyImpl<Integer> viewDistanceProperty = propertyRegistry.getByName("view_distance", Integer.class); // Not sure why this is an Integer, but it is
         EntityPropertyImpl<LookType> lookProperty = propertyRegistry.getByName("look", LookType.class);
+        EntityPropertyImpl<Double> lookDistanceProperty = propertyRegistry.getByName("look_distance", Double.class);
+        double lookDistance;
         for (NpcEntryImpl entry : npcRegistry.getProcessable()) {
             NpcImpl npc = entry.getNpc();
             if (!npc.isEnabled()) continue;
@@ -37,6 +38,7 @@ public class NpcProcessorTask extends BukkitRunnable {
             double closestDist = Double.MAX_VALUE;
             Player closest = null;
             LookType lookType = npc.getProperty(lookProperty);
+            lookDistance =  NumberConversions.square(npc.getProperty(lookDistanceProperty));
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (!player.getWorld().equals(npc.getWorld())) {
                     if (npc.isVisibleTo(player)) npc.hide(player);
@@ -45,7 +47,7 @@ public class NpcProcessorTask extends BukkitRunnable {
                 double distance = player.getLocation().distanceSquared(npc.getBukkitLocation());
 
                 // visibility
-                boolean inRange = distance <= distSq;
+                boolean inRange = distance <= NumberConversions.square(npc.getProperty(viewDistanceProperty));
                 if (!inRange && npc.isVisibleTo(player)) {
                     NpcDespawnEvent event = new NpcDespawnEvent(player, entry);
                     Bukkit.getPluginManager().callEvent(event);
@@ -62,7 +64,7 @@ public class NpcProcessorTask extends BukkitRunnable {
                         closestDist = distance;
                         closest = player;
                     }
-                    if (lookType.equals(LookType.PER_PLAYER) && lookPropertyDistSq >= distance) {
+                    if (lookType.equals(LookType.PER_PLAYER) && lookDistance >= distance) {
                         NpcLocation expected = npc.getLocation().lookingAt(player.getLocation().add(0, -npc.getType().getHologramOffset(), 0));
                         if (!expected.equals(npc.getLocation())) npc.setHeadRotation(player, expected.getYaw(), expected.getPitch());
                     }
@@ -70,7 +72,7 @@ public class NpcProcessorTask extends BukkitRunnable {
             }
             // look property
             if (lookType.equals(LookType.CLOSEST_PLAYER)) {
-                if (closest != null && lookPropertyDistSq >= closestDist) {
+                if (closest != null && lookDistance >= closestDist) {
                     NpcLocation expected = npc.getLocation().lookingAt(closest.getLocation().add(0, -npc.getType().getHologramOffset(), 0));
                     if (!expected.equals(npc.getLocation())) npc.setHeadRotation(expected.getYaw(), expected.getPitch());
                 }
