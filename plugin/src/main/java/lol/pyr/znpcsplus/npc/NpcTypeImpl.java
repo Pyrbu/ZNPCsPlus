@@ -111,7 +111,8 @@ public class NpcTypeImpl implements NpcType {
         public NpcTypeImpl build() {
             ServerVersion version = PacketEvents.getAPI().getServerManager().getVersion();
             addProperties("fire", "invisible", "silent", "look", "look_distance", "view_distance",
-                    "potion_color", "potion_ambient", "dinnerbone");
+                    "potion_color", "potion_ambient");
+            if (!type.equals(EntityTypes.PLAYER)) addProperties("dinnerbone");
             // TODO: make this look nicer after completing the rest of the properties
             if (version.isNewerThanOrEquals(ServerVersion.V_1_9)) addProperties("glow");
             if (version.isNewerThanOrEquals(ServerVersion.V_1_14)) {
