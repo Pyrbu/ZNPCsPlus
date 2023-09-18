@@ -44,7 +44,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
     private final Map<String, EntityPropertyImpl<?>> byName = new HashMap<>();
 
     public EntityPropertyRegistryImpl(MojangSkinCache skinCache) {
-        registerSerializer(new BooleanPropertySerializer());
         registerSerializer(new ComponentPropertySerializer());
         registerSerializer(new NamedTextColorPropertySerializer());
         registerSerializer(new SkinDescriptorSerializer(skinCache));
@@ -52,7 +51,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerSerializer(new ColorPropertySerializer());
         registerSerializer(new Vector3fPropertySerializer());
         registerSerializer(new BlockStatePropertySerializer());
-        registerSerializer(new IntegerPropertySerializer());
         registerSerializer(new LookTypeSerializer());
 
         registerEnumSerializer(NpcPose.class);
@@ -76,6 +74,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(OcelotType.class);
         registerEnumSerializer(PandaGene.class);
         registerEnumSerializer(PuffState.class);
+
+        registerPrimitiveSerializers(Integer.class, Boolean.class, Double.class, Float.class, Long.class, Short.class, Byte.class, String.class);
 
         /*
         registerType("using_item", false); // TODO: fix it for 1.8 and add new property to use offhand item and riptide animation
@@ -515,6 +515,16 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
     private <T extends Enum<T>> void registerEnumSerializer(Class<T> clazz) {
         serializerMap.put(clazz, new EnumPropertySerializer<>(clazz));
+    }
+
+    private void registerPrimitiveSerializers(Class<?>... classes) {
+        for (Class<?> clazz : classes) {
+            registerPrimitiveSerializer(clazz);
+        }
+    }
+
+    private <T> void registerPrimitiveSerializer(Class<T> clazz) {
+        serializerMap.put(clazz, new PrimitivePropertySerializer<>(clazz));
     }
 
     private <T> void register(EntityPropertyImpl<?> property) {
