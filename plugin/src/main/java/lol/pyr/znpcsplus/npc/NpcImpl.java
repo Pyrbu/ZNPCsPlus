@@ -83,6 +83,16 @@ public class NpcImpl extends Viewable implements Npc {
         hologram.setLocation(location.withY(location.getY() + type.getHologramOffset()));
     }
 
+    public void setHeadRotation(Player player, float yaw, float pitch) {
+        entity.setHeadRotation(player, yaw, pitch);
+    }
+
+    public void setHeadRotation(float yaw, float pitch) {
+        for (Player player : getViewers()) {
+            entity.setHeadRotation(player, yaw, pitch);
+        }
+    }
+
     public HologramImpl getHologram() {
         return hologram;
     }

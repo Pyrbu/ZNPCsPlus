@@ -60,6 +60,10 @@ public class PacketEntity implements PropertyHolder {
         else packetFactory.spawnEntity(player, this, properties);
     }
 
+    public void setHeadRotation(Player player, float yaw, float pitch) {
+        packetFactory.sendHeadRotation(player, this, yaw, pitch);
+    }
+
     public void despawn(Player player) {
         packetFactory.destroyEntity(player, this, properties);
     }

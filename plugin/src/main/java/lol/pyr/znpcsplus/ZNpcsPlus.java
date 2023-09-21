@@ -127,7 +127,7 @@ public class ZNpcsPlus extends JavaPlugin {
 
         ConfigManager configManager = new ConfigManager(getDataFolder());
         MojangSkinCache skinCache = new MojangSkinCache(configManager);
-        EntityPropertyRegistryImpl propertyRegistry = new EntityPropertyRegistryImpl(skinCache);
+        EntityPropertyRegistryImpl propertyRegistry = new EntityPropertyRegistryImpl(skinCache, configManager);
         PacketFactory packetFactory = setupPacketFactory(scheduler, propertyRegistry);
         propertyRegistry.registerTypes(packetFactory);
 
@@ -276,6 +276,7 @@ public class ZNpcsPlus extends JavaPlugin {
         registerEnumParser(manager, OcelotType.class, incorrectUsageMessage);
         registerEnumParser(manager, PandaGene.class, incorrectUsageMessage);
         registerEnumParser(manager, PuffState.class, incorrectUsageMessage);
+        registerEnumParser(manager, LookType.class, incorrectUsageMessage);
 
         manager.registerCommand("npc", new MultiCommand(loadHelpMessage("root"))
                 .addSubcommand("center", new CenterCommand(npcRegistry))

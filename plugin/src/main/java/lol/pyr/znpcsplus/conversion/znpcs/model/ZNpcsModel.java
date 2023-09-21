@@ -19,6 +19,7 @@ public class ZNpcsModel {
     private List<String> hologramLines;
     private List<ZNpcsAction> clickActions;
     private Map<String, String> npcEquip;
+    private Map<String, Object> npcToggleValues;
     private Map<String, String[]> customizationMap;
 
     public int getId() {
@@ -55,6 +56,10 @@ public class ZNpcsModel {
 
     public Map<String, String> getNpcEquip() {
         return npcEquip;
+    }
+
+    public Map<String, Object> getNpcToggleValues() {
+        return npcToggleValues;
     }
 
     public Map<String, String[]> getCustomizationMap() {

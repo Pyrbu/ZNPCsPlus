@@ -138,6 +138,12 @@ public class V1_8PacketFactory implements PacketFactory {
     }
 
     @Override
+    public void sendHeadRotation(Player player, PacketEntity entity, float yaw, float pitch) {
+        sendPacket(player, new WrapperPlayServerEntityHeadLook(entity.getEntityId(),yaw));
+        sendPacket(player, new WrapperPlayServerEntityRotation(entity.getEntityId(), yaw, pitch, true));
+    }
+
+    @Override
     public void sendEquipment(Player player, PacketEntity entity, Equipment equipment) {
         sendPacket(player, new WrapperPlayServerEntityEquipment(entity.getEntityId(), Collections.singletonList(equipment)));
     }
