@@ -14,32 +14,43 @@ public class NBTProperty<T> extends EntityPropertyImpl<T> {
     private final EntityDataType<NBTCompound> type;
     private final NBTDecoder<T> decoder;
     private final int index;
+    private final boolean allowNull; // This means that the decoder can have null input, not that the property can be null
 
-    public NBTProperty(String name, T defaultValue, Class<T> clazz, int index, NBTDecoder<T> decoder, EntityDataType<NBTCompound> type) {
+    public NBTProperty(String name, T defaultValue, Class<T> clazz, int index, NBTDecoder<T> decoder, boolean allowNull, EntityDataType<NBTCompound> type) {
         super(name, defaultValue, clazz);
         this.decoder = decoder;
         this.index = index;
+        this.allowNull = allowNull;
         this.type = type;
     }
 
     @SuppressWarnings("unchecked")
-    public NBTProperty(String name, T defaultValue, int index, NBTDecoder<T> decoder) {
-        this(name, defaultValue, (Class<T>) defaultValue.getClass(), index, decoder, EntityDataTypes.NBT);
+    public NBTProperty(String name, T defaultValue, int index, NBTDecoder<T> decoder, boolean allowNull) {
+        this(name, defaultValue, (Class<T>) defaultValue.getClass(), index, decoder, allowNull, EntityDataTypes.NBT);
     }
 
     @SuppressWarnings("unchecked")
-    public NBTProperty(String name, T defaultValue, int index, NBTDecoder<T> decoder, EntityDataType<NBTCompound> type) {
-        this(name, defaultValue, (Class<T>) defaultValue.getClass(), index, decoder, type);
+    public NBTProperty(String name, T defaultValue, int index, NBTDecoder<T> decoder) {
+        this(name, defaultValue, (Class<T>) defaultValue.getClass(), index, decoder, false, EntityDataTypes.NBT);
+    }
+
+    @SuppressWarnings("unchecked")
+    public NBTProperty(String name, T defaultValue, int index, NBTDecoder<T> decoder, boolean allowNull, EntityDataType<NBTCompound> type) {
+        this(name, defaultValue, (Class<T>) defaultValue.getClass(), index, decoder, allowNull, type);
+    }
+
+    public NBTProperty(String name, Class<T> clazz, int index, NBTDecoder<T> decoder, boolean allowNull) {
+        this(name, null, clazz, index, decoder, allowNull, EntityDataTypes.NBT);
     }
 
     public NBTProperty(String name, Class<T> clazz, int index, NBTDecoder<T> decoder) {
-        this(name, null, clazz, index, decoder, EntityDataTypes.NBT);
+        this(name, null, clazz, index, decoder, false, EntityDataTypes.NBT);
     }
 
     @Override
     public void apply(Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData> properties) {
         T value = entity.getProperty(this);
-        if (value == null) return;
+        if (value == null && !allowNull) return;
         properties.put(index, newEntityData(index, type, decoder.decode(value)));
     }
 

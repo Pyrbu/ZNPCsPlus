@@ -10,6 +10,7 @@ import com.github.retrooper.packetevents.protocol.player.EquipmentSlot;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.entity.EntityPropertyRegistry;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
+import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.properties.*;
 import lol.pyr.znpcsplus.entity.properties.villager.VillagerLevelProperty;
 import lol.pyr.znpcsplus.entity.properties.villager.VillagerProfessionProperty;
@@ -42,9 +43,9 @@ import java.util.stream.Collectors;
 public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
     private final Map<Class<?>, PropertySerializer<?>> serializerMap = new HashMap<>();
     private final Map<String, EntityPropertyImpl<?>> byName = new HashMap<>();
+    private final ConfigManager configManager;
 
-    public EntityPropertyRegistryImpl(MojangSkinCache skinCache) {
-        registerSerializer(new BooleanPropertySerializer());
+    public EntityPropertyRegistryImpl(MojangSkinCache skinCache, ConfigManager configManager) {
         registerSerializer(new ComponentPropertySerializer());
         registerSerializer(new NamedTextColorPropertySerializer());
         registerSerializer(new SkinDescriptorSerializer(skinCache));
@@ -52,7 +53,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerSerializer(new ColorPropertySerializer());
         registerSerializer(new Vector3fPropertySerializer());
         registerSerializer(new BlockStatePropertySerializer());
-        registerSerializer(new IntegerPropertySerializer());
+        registerSerializer(new LookTypeSerializer());
 
         registerEnumSerializer(NpcPose.class);
         registerEnumSerializer(DyeColor.class);
@@ -75,6 +76,10 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(OcelotType.class);
         registerEnumSerializer(PandaGene.class);
         registerEnumSerializer(PuffState.class);
+
+        registerPrimitiveSerializers(Integer.class, Boolean.class, Double.class, Float.class, Long.class, Short.class, Byte.class, String.class);
+
+        this.configManager = configManager;
 
         /*
         registerType("using_item", false); // TODO: fix it for 1.8 and add new property to use offhand item and riptide animation
@@ -142,7 +147,10 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new NameProperty(legacyNames, optionalComponents));
         register(new DinnerboneProperty(legacyNames, optionalComponents));
 
-        register(new DummyProperty<>("look", false));
+        register(new DummyProperty<>("look", LookType.FIXED));
+        register(new DummyProperty<>("look_distance", configManager.getConfig().lookPropertyDistance()));
+        register(new DummyProperty<>("view_distance", configManager.getConfig().viewDistance()));
+
         register(new GlowProperty(packetFactory));
         register(new BitsetProperty("fire", 0, 0x01));
         register(new BitsetProperty("invisible", 0, 0x20));
@@ -372,13 +380,14 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Player
         NBTProperty.NBTDecoder<ParrotVariant> parrotVariantDecoder = (variant) -> {
             NBTCompound compound = new NBTCompound();
+            if (variant == null) return compound;
             compound.setTag("id", new NBTString("minecraft:parrot"));
             compound.setTag("Variant", new NBTInt(variant.ordinal()));
             return compound;
         };
         int shoulderIndex = skinLayersIndex+2;
-        register(new NBTProperty<>("shoulder_entity_left", ParrotVariant.class, shoulderIndex++, parrotVariantDecoder));
-        register(new NBTProperty<>("shoulder_entity_right", ParrotVariant.class, shoulderIndex, parrotVariantDecoder));
+        register(new NBTProperty<>("shoulder_entity_left", ParrotVariant.class, shoulderIndex++, parrotVariantDecoder, true));
+        register(new NBTProperty<>("shoulder_entity_right", ParrotVariant.class, shoulderIndex, parrotVariantDecoder, true));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_13)) return;
         // Pufferfish
@@ -513,6 +522,16 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
     private <T extends Enum<T>> void registerEnumSerializer(Class<T> clazz) {
         serializerMap.put(clazz, new EnumPropertySerializer<>(clazz));
+    }
+
+    private void registerPrimitiveSerializers(Class<?>... classes) {
+        for (Class<?> clazz : classes) {
+            registerPrimitiveSerializer(clazz);
+        }
+    }
+
+    private <T> void registerPrimitiveSerializer(Class<T> clazz) {
+        serializerMap.put(clazz, new PrimitivePropertySerializer<>(clazz));
     }
 
     private <T> void register(EntityPropertyImpl<?> property) {
