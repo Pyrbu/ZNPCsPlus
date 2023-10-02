@@ -78,6 +78,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(PuffState.class);
         registerEnumSerializer(TropicalFishVariant.TropicalFishPattern.class);
         registerEnumSerializer(SnifferState.class);
+        registerEnumSerializer(RabbitType.class);
 
         registerPrimitiveSerializers(Integer.class, Boolean.class, Double.class, Float.class, Long.class, Short.class, Byte.class, String.class);
 
@@ -338,6 +339,16 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) pigIndex = 12;
         else pigIndex = 16;
         register(new BooleanProperty("pig_saddled", pigIndex, false, legacyBooleans));
+
+        // Rabbit
+        int rabbitIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) rabbitIndex = 17;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) rabbitIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) rabbitIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) rabbitIndex = 13;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) rabbitIndex = 12;
+        else rabbitIndex = 18;
+        register(new RabbitTypeProperty(rabbitIndex, legacyBooleans, legacyNames, optionalComponents));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_10)) return;
         // Polar Bear
