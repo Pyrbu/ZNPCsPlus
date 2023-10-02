@@ -99,10 +99,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Guardian
         registerType("is_elder", false); // TODO: ensure it only works till 1.10. Note: index is wrong on wiki.vg
 
-        // Wolf
-        registerType("wolf_collar_color", DyeColor.RED); // TODO
-        registerType("wolf_angry", false); // TODO
-
         // Show Golem
         registerType("pumpkin", true); // TODO
 
@@ -144,14 +140,15 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         linkProperties("glow", "fire", "invisible");
         register(new BooleanProperty("silent", 4, false, legacyBooleans));
 
-        final int tamedIndex;
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) tamedIndex = 17;
-        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) tamedIndex = 16;
-        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) tamedIndex = 15;
-        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) tamedIndex = 13;
-        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) tamedIndex = 12;
-        else tamedIndex = 16;
-        register(new BitsetProperty("tamed", tamedIndex, 0x04));
+        final int tameableIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) tameableIndex = 17;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) tameableIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) tameableIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) tameableIndex = 13;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) tameableIndex = 12;
+        else tameableIndex = 16;
+        register(new BitsetProperty("sitting", tameableIndex, 0x01));
+        register(new BitsetProperty("tamed", tameableIndex, 0x04));
 
         int potionIndex;
         if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) potionIndex = 10;
@@ -347,6 +344,27 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // noinspection deprecation
         register(new EncodedByteProperty<>("sheep_color", DyeColor.WHITE, sheepIndex, DyeColor::getWoolData));
         register(new BitsetProperty("sheep_sheared", sheepIndex, 0x10, false, legacyBooleans)); // no need to link because sheep_sheared is only visible when sheep_color is WHITE
+
+        // Wolf
+        int wolfIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) wolfIndex = 19;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) wolfIndex = 18;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) wolfIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) wolfIndex = 15;
+        else wolfIndex = 19;
+        register(new BooleanProperty("wolf_begging", wolfIndex++, false, legacyBooleans));
+        if (legacyBooleans) {
+            // noinspection deprecation
+            register(new EncodedByteProperty<>("wolf_collar", DyeColor.BLUE, wolfIndex++, DyeColor::getDyeData));
+        } else register(new EncodedIntegerProperty<>("wolf_collar", DyeColor.RED, wolfIndex++, Enum::ordinal));
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_16)) {
+            register(new EncodedIntegerProperty<>("wolf_angry", false, wolfIndex, b -> b ? 1 : 0));
+            linkProperties("tamed", "sitting");
+        }
+        else {
+            register(new BitsetProperty("wolf_angry", tameableIndex, 0x02));
+            linkProperties("wolf_angry", "tamed", "sitting");
+        }
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_10)) return;
         // Polar Bear

@@ -158,6 +158,9 @@ public class NpcTypeImpl implements NpcType {
                     addProperties("panda_eating");
                 }
             }
+            if (EntityTypes.isTypeInstanceOf(type, EntityTypes.ABSTRACT_TAMEABLE_ANIMAL)) {
+                addProperties("tamed", "sitting");
+            }
             return new NpcTypeImpl(name, type, hologramOffset, new HashSet<>(allowedProperties), defaultProperties);
         }
     }
