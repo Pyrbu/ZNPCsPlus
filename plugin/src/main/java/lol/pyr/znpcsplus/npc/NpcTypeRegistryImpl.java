@@ -257,7 +257,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .setHologramOffset(-1.575));
 
         register(builder(p, "tropical_fish", EntityTypes.TROPICAL_FISH)
-                .setHologramOffset(-1.575));
+                .setHologramOffset(-1.575)
+                .addProperties("tropical_fish_pattern", "tropical_fish_body_color", "tropical_fish_pattern_color"));
 
         register(builder(p, "turtle", EntityTypes.TURTLE)
                 .setHologramOffset(-1.575));

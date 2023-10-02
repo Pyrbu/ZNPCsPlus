@@ -278,6 +278,7 @@ public class ZNpcsPlus extends JavaPlugin {
         registerEnumParser(manager, PandaGene.class, incorrectUsageMessage);
         registerEnumParser(manager, PuffState.class, incorrectUsageMessage);
         registerEnumParser(manager, LookType.class, incorrectUsageMessage);
+        registerEnumParser(manager, TropicalFishVariant.TropicalFishPattern.class, incorrectUsageMessage);
 
         manager.registerCommand("npc", new MultiCommand(loadHelpMessage("root"))
                 .addSubcommand("center", new CenterCommand(npcRegistry))

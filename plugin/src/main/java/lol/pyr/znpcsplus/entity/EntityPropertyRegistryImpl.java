@@ -76,6 +76,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(OcelotType.class);
         registerEnumSerializer(PandaGene.class);
         registerEnumSerializer(PuffState.class);
+        registerEnumSerializer(TropicalFishVariant.TropicalFishPattern.class);
 
         registerPrimitiveSerializers(Integer.class, Boolean.class, Double.class, Float.class, Long.class, Short.class, Byte.class, String.class);
 
@@ -95,9 +96,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Guardian
         registerType("is_elder", false); // TODO: ensure it only works till 1.10. Note: index is wrong on wiki.vg
-
-        // Tropical Fish
-        registerType("tropical_fish_variant", null); // TODO: Maybe make an enum class for this? its just an int on wiki.vg
 
         // Sniffer
         registerType("sniffer_state", null); // TODO: Nothing on wiki.vg, look in mc source
@@ -397,6 +395,17 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) pufferfishIndex = 15;
         else pufferfishIndex = 13;
         register(new EncodedIntegerProperty<>("puff_state", PuffState.DEFLATED, pufferfishIndex, Enum::ordinal));
+
+        // Tropical Fish
+        int tropicalFishIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) tropicalFishIndex = 17;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) tropicalFishIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) tropicalFishIndex = 15;
+        else tropicalFishIndex = 13;
+        register(new TropicalFishVariantProperty<>("tropical_fish_pattern", TropicalFishVariant.TropicalFishPattern.KOB, tropicalFishIndex, TropicalFishVariant.Builder::pattern));
+        register(new TropicalFishVariantProperty<>("tropical_fish_body_color", DyeColor.WHITE, tropicalFishIndex, TropicalFishVariant.Builder::bodyColor));
+        register(new TropicalFishVariantProperty<>("tropical_fish_pattern_color", DyeColor.WHITE, tropicalFishIndex, TropicalFishVariant.Builder::patternColor));
+        linkProperties("tropical_fish_pattern", "tropical_fish_body_color", "tropical_fish_pattern_color");
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_14)) return;
         // Pose
