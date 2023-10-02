@@ -77,6 +77,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(PandaGene.class);
         registerEnumSerializer(PuffState.class);
         registerEnumSerializer(TropicalFishVariant.TropicalFishPattern.class);
+        registerEnumSerializer(SnifferState.class);
 
         registerPrimitiveSerializers(Integer.class, Boolean.class, Double.class, Float.class, Long.class, Short.class, Byte.class, String.class);
 

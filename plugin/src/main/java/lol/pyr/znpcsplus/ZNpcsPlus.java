@@ -279,6 +279,7 @@ public class ZNpcsPlus extends JavaPlugin {
         registerEnumParser(manager, PuffState.class, incorrectUsageMessage);
         registerEnumParser(manager, LookType.class, incorrectUsageMessage);
         registerEnumParser(manager, TropicalFishVariant.TropicalFishPattern.class, incorrectUsageMessage);
+        registerEnumParser(manager, SnifferState.class, incorrectUsageMessage);
 
         manager.registerCommand("npc", new MultiCommand(loadHelpMessage("root"))
                 .addSubcommand("center", new CenterCommand(npcRegistry))

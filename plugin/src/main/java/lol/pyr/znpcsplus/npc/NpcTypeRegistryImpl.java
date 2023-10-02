@@ -352,7 +352,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_20)) return;
 
         register(builder(p, "sniffer", EntityTypes.SNIFFER)
-                .setHologramOffset(0.125));
+                .setHologramOffset(0.125)
+                .addProperties("sniffer_state"));
 
         register(builder(p, "camel", EntityTypes.CAMEL)
                 .setHologramOffset(0.25)
