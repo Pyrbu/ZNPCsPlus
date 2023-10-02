@@ -99,9 +99,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Guardian
         registerType("is_elder", false); // TODO: ensure it only works till 1.10. Note: index is wrong on wiki.vg
 
-        // Show Golem
-        registerType("pumpkin", true); // TODO
-
         // Shulker
         registerType("attach_direction", null); // TODO: make a direction enum
         registerType("shield_height", 0); // TODO: figure this out
@@ -365,6 +362,16 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
             register(new BitsetProperty("wolf_angry", tameableIndex, 0x02));
             linkProperties("wolf_angry", "tamed", "sitting");
         }
+
+        if (!ver.isNewerThanOrEquals(ServerVersion.V_1_9)) return;
+        // Snow Golem
+        int snowGolemIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) snowGolemIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) snowGolemIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) snowGolemIndex = 14;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) snowGolemIndex = 12;
+        else snowGolemIndex = 10;
+        register(new DerpySnowgolemProperty(snowGolemIndex));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_10)) return;
         // Polar Bear

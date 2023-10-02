@@ -135,7 +135,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
         register(builder(p, "slime", EntityTypes.SLIME)); // TODO: Hologram offset scaling with size property
 
         register(builder(p, "snow_golem", EntityTypes.SNOW_GOLEM)
-                .setHologramOffset(-0.075));
+                .setHologramOffset(-0.075)
+                .addProperties("derpy_snowgolem"));
 
         register(builder(p, "spider", EntityTypes.SPIDER)
                 .setHologramOffset(-1.075));
