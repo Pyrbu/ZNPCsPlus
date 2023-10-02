@@ -350,6 +350,18 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else rabbitIndex = 18;
         register(new RabbitTypeProperty(rabbitIndex, legacyBooleans, legacyNames, optionalComponents));
 
+        // Sheep
+        int sheepIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) sheepIndex = 17;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) sheepIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) sheepIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) sheepIndex = 13;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) sheepIndex = 12;
+        else sheepIndex = 16;
+        // noinspection deprecation
+        register(new EncodedByteProperty<>("sheep_color", DyeColor.WHITE, sheepIndex, DyeColor::getWoolData));
+        register(new BitsetProperty("sheep_sheared", sheepIndex, 0x10, false, legacyBooleans)); // no need to link because sheep_sheared is only visible when sheep_color is WHITE
+
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_10)) return;
         // Polar Bear
         int polarBearIndex;
