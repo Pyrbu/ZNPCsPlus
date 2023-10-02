@@ -317,7 +317,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .addEquipmentProperties());
 
         register(builder(p, "strider", EntityTypes.STRIDER)
-                .setHologramOffset(-0.275));
+                .setHologramOffset(-0.275)
+                .addProperties("strider_shaking", "strider_saddled"));
 
         register(builder(p, "zoglin", EntityTypes.ZOGLIN)
                 .setHologramOffset(-0.575));

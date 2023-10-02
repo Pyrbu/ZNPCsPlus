@@ -99,20 +99,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Guardian
         registerType("is_elder", false); // TODO: ensure it only works till 1.10. Note: index is wrong on wiki.vg
 
-        // Sniffer
-        registerType("sniffer_state", null); // TODO: Nothing on wiki.vg, look in mc source
-
-        // Rabbit
-        registerType("rabbit_type", 0); // TODO: Figure this out
-
-        // Sheep
-        registerType("sheep_color", DyeColor.WHITE); // TODO: Figure this out
-        registerType("sheep_sheared", false); // TODO
-
-        // Strider
-        registerType("strider_shaking", false); // TODO
-        registerType("strider_saddle", false); // TODO
-
         // Wolf
         registerType("wolf_collar_color", DyeColor.RED); // TODO
         registerType("wolf_angry", false); // TODO
@@ -511,7 +497,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Hoglin and Piglin Zombification
         final int zombificationIndex;
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) zombificationIndex = 17; // Change piglinIndex and pillagerIndex if you change this
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) zombificationIndex = 17; // Change piglinIndex, pillagerIndex, striderIndex and vindicatorIndex if you change this
         else zombificationIndex = 16;
         register(new BooleanProperty("hoglin_immune_to_zombification", zombificationIndex, false, legacyBooleans));
         register(new BooleanProperty("piglin_immune_to_zombification", zombificationIndex-1, false, legacyBooleans));
@@ -524,6 +510,11 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Pillager
         register(new BooleanProperty("pillager_charging", zombificationIndex, false, legacyBooleans));
+
+        // Strider
+        int striderIndex = zombificationIndex + 1;
+        register(new BooleanProperty("strider_shaking", striderIndex++, false, legacyBooleans)); // TODO: Fix this, it needs to be set constantly i guess
+        register(new BooleanProperty("strider_saddled", striderIndex, false, legacyBooleans));
 
         // Vindicator
         int vindicatorIndex = zombificationIndex -1;
@@ -547,6 +538,9 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Camel
         register(new BooleanProperty("bashing", 18, false, legacyBooleans));
+
+        // Sniffer
+        register(new SnifferStateProperty(17));
     }
 
     private void registerSerializer(PropertySerializer<?> serializer) {
