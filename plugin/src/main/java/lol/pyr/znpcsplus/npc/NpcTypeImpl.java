@@ -50,6 +50,10 @@ public class NpcTypeImpl implements NpcType {
         }
     }
 
+    public boolean isAllowedProperty(EntityPropertyImpl<?> entityProperty) {
+        return !entityProperty.isPlayerModifiable() || allowedProperties.contains(entityProperty);
+    }
+
     protected static final class Builder {
         private final static Logger logger = Logger.getLogger("NpcTypeBuilder");
 

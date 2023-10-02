@@ -111,7 +111,7 @@ public class YamlStorage implements NpcStorage {
             config.set("location", serializeLocation(npc.getLocation()));
             config.set("type", npc.getType().getName());
 
-            for (EntityProperty<?> property : npc.getAppliedProperties()) try {
+            for (EntityProperty<?> property : npc.getAllProperties()) try {
                 PropertySerializer<?> serializer = propertyRegistry.getSerializer(((EntityPropertyImpl<?>) property).getType());
                 if (serializer == null) {
                     Bukkit.getLogger().log(Level.WARNING, "Unknown serializer for property '" + property.getName() + "' for npc '" + entry.getId() + "'. skipping ...");
