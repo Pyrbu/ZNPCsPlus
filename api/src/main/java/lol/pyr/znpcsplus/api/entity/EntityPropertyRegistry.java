@@ -6,4 +6,5 @@ public interface EntityPropertyRegistry {
     Collection<EntityProperty<?>> getAll();
     EntityProperty<?> getByName(String name);
     <T> EntityProperty<T> getByName(String name, Class<T> type);
+    void registerDummy(String name, Class<?> type);
 }

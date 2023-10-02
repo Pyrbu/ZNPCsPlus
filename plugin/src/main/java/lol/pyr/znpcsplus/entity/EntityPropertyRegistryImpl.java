@@ -569,6 +569,11 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         return (EntityPropertyImpl<T>) getByName(name);
     }
 
+    @Override
+    public void registerDummy(String name, Class<?> type) {
+        register(new DummyProperty<>(name, type));
+    }
+
     public EntityPropertyImpl<?> getByName(String name) {
         return byName.get(name.toLowerCase());
     }

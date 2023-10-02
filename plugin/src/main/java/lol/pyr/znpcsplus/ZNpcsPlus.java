@@ -253,6 +253,7 @@ public class ZNpcsPlus extends JavaPlugin {
         manager.registerParser(InteractionType.class, new InteractionTypeParser(incorrectUsageMessage));
         manager.registerParser(Color.class, new ColorParser(incorrectUsageMessage));
         manager.registerParser(Vector3f.class, new Vector3fParser(incorrectUsageMessage));
+        manager.registerParser(String.class, new StringParser(incorrectUsageMessage));
 
         // TODO: Need to find a better way to do this
         registerEnumParser(manager, NpcPose.class, incorrectUsageMessage);
