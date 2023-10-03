@@ -65,10 +65,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class ZNpcsPlus extends JavaPlugin {
     private final LegacyComponentSerializer textSerializer = LegacyComponentSerializer.builder()
@@ -281,6 +278,7 @@ public class ZNpcsPlus extends JavaPlugin {
         registerEnumParser(manager, TropicalFishVariant.TropicalFishPattern.class, incorrectUsageMessage);
         registerEnumParser(manager, SnifferState.class, incorrectUsageMessage);
         registerEnumParser(manager, RabbitType.class, incorrectUsageMessage);
+        registerEnumParser(manager, AttachDirection.class, incorrectUsageMessage);
 
         manager.registerCommand("npc", new MultiCommand(loadHelpMessage("root"))
                 .addSubcommand("center", new CenterCommand(npcRegistry))

@@ -7,6 +7,7 @@ import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
 import com.github.retrooper.packetevents.protocol.nbt.NBTInt;
 import com.github.retrooper.packetevents.protocol.nbt.NBTString;
 import com.github.retrooper.packetevents.protocol.player.EquipmentSlot;
+import com.github.retrooper.packetevents.protocol.world.BlockFace;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.entity.EntityPropertyRegistry;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
@@ -79,6 +80,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(TropicalFishVariant.TropicalFishPattern.class);
         registerEnumSerializer(SnifferState.class);
         registerEnumSerializer(RabbitType.class);
+        registerEnumSerializer(AttachDirection.class);
 
         registerPrimitiveSerializers(Integer.class, Boolean.class, Double.class, Float.class, Long.class, Short.class, Byte.class, String.class);
 
@@ -364,6 +366,18 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         }
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_9)) return;
+        // Shulker
+        int shulkerIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) shulkerIndex = 16;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) shulkerIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) shulkerIndex = 14;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) shulkerIndex = 12;
+        else shulkerIndex = 11;
+        register(new CustomTypeProperty<>("attach_direction", shulkerIndex++, AttachDirection.DOWN, EntityDataTypes.BLOCK_FACE, attachDir -> BlockFace.valueOf(attachDir.name())));
+        register(new EncodedByteProperty<>("shield_height", 0, shulkerIndex++, value -> (byte) Math.max(0, Math.min(100, value))));
+        // noinspection deprecation
+        register(new EncodedByteProperty<>("shulker_color", DyeColor.class, shulkerIndex, DyeColor::getWoolData));
+
         // Snow Golem
         int snowGolemIndex;
         if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) snowGolemIndex = 16;

@@ -173,7 +173,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_9)) return;
 
         register(builder(p, "shulker", EntityTypes.SHULKER)
-                .setHologramOffset(-0.975));
+                .setHologramOffset(-0.975)
+                .addProperties("attach_direction", "shield_height", "shulker_color"));
 
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_10)) return;
 
