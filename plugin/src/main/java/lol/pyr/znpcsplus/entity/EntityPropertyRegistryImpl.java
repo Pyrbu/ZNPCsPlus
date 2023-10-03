@@ -102,14 +102,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Guardian
         registerType("is_elder", false); // TODO: ensure it only works till 1.10. Note: index is wrong on wiki.vg
 
-        // Shulker
-        registerType("attach_direction", null); // TODO: make a direction enum
-        registerType("shield_height", 0); // TODO: figure this out
-        registerType("shulker_color", DyeColor.RED); // TODO
-
-        // Wither
-        registerType("invulnerable_time", 0); // TODO
-
          */
     }
 
@@ -365,6 +357,17 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
             register(new BitsetProperty("wolf_angry", tameableIndex, 0x02));
             linkProperties("wolf_angry", "tamed", "sitting");
         }
+
+        // Wither
+        int witherIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) witherIndex = 16; // using the first index, so we can add the other properties later if needed
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) witherIndex = 15;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) witherIndex = 14;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) witherIndex = 12;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) witherIndex = 11;
+        else witherIndex = 17;
+        witherIndex += 3; // skip the first 3 indexes, will be used for the other properties later
+        register(new IntegerProperty("invulnerable_time", witherIndex++, 0, false));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_9)) return;
         // Shulker

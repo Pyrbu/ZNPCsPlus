@@ -153,7 +153,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .addProperties("hand"));
 
         register(builder(p, "wither", EntityTypes.WITHER)
-                .setHologramOffset(1.525));
+                .setHologramOffset(1.525)
+                .addProperties("invulnerable_time"));
 
         register(builder(p, "wolf", EntityTypes.WOLF)
                 .setHologramOffset(-1.125)
