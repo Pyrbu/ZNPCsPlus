@@ -3,6 +3,7 @@ package lol.pyr.znpcsplus.entity;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
+import com.github.retrooper.packetevents.protocol.entity.pose.EntityPose;
 import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
 import com.github.retrooper.packetevents.protocol.nbt.NBTInt;
 import com.github.retrooper.packetevents.protocol.nbt.NBTString;
@@ -385,7 +386,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) snowGolemIndex = 14;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) snowGolemIndex = 12;
         else snowGolemIndex = 10;
-        register(new DerpySnowgolemProperty(snowGolemIndex));
+        register(new CustomTypeProperty<>("derpy_snowgolem", snowGolemIndex, false, EntityDataTypes.BYTE, b -> (byte) (b ? 0x00 : 0x10)));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_10)) return;
         // Polar Bear
@@ -458,7 +459,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_14)) return;
         // Pose
-        register(new NpcPoseProperty());
+        register(new CustomTypeProperty<>("pose", 6, NpcPose.STANDING, EntityDataTypes.ENTITY_POSE, npcPose -> EntityPose.valueOf(npcPose.name())));
 
         // Villager
         final int villagerIndex;
@@ -579,7 +580,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new BooleanProperty("bashing", 18, false, legacyBooleans));
 
         // Sniffer
-        register(new SnifferStateProperty(17));
+        register(new CustomTypeProperty<>("sniffer_state", 17, SnifferState.IDLING, EntityDataTypes.SNIFFER_STATE, state -> com.github.retrooper.packetevents.protocol.entity.sniffer.SnifferState.valueOf(state.name())));
     }
 
     private void registerSerializer(PropertySerializer<?> serializer) {
