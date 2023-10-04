@@ -20,6 +20,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class NpcImpl extends Viewable implements Npc {
     private final PacketFactory packetFactory;
@@ -163,9 +164,13 @@ public class NpcImpl extends Viewable implements Npc {
         setProperty((EntityPropertyImpl<T>) property, (T) value);
     }
 
+    public Set<EntityProperty<?>> getAllProperties() {
+        return Collections.unmodifiableSet(propertyMap.keySet());
+    }
+
     @Override
     public Set<EntityProperty<?>> getAppliedProperties() {
-        return Collections.unmodifiableSet(propertyMap.keySet());
+        return Collections.unmodifiableSet(propertyMap.keySet()).stream().filter(type::isAllowedProperty).collect(Collectors.toSet());
     }
 
     public List<InteractionActionImpl> getActions() {

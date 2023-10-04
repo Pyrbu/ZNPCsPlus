@@ -115,10 +115,12 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .addProperties("pig_saddled"));
 
         register(builder(p, "rabbit", EntityTypes.RABBIT)
-                .setHologramOffset(-1.475));
+                .setHologramOffset(-1.475)
+                .addProperties("rabbit_type"));
 
         register(builder(p, "sheep", EntityTypes.SHEEP)
-                .setHologramOffset(-0.675));
+                .setHologramOffset(-0.675)
+                .addProperties("sheep_color", "sheep_sheared"));
 
         register(builder(p, "silverfish", EntityTypes.SILVERFISH)
                 .setHologramOffset(-1.675));
@@ -133,7 +135,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
         register(builder(p, "slime", EntityTypes.SLIME)); // TODO: Hologram offset scaling with size property
 
         register(builder(p, "snow_golem", EntityTypes.SNOW_GOLEM)
-                .setHologramOffset(-0.075));
+                .setHologramOffset(-0.075)
+                .addProperties("derpy_snowgolem"));
 
         register(builder(p, "spider", EntityTypes.SPIDER)
                 .setHologramOffset(-1.075));
@@ -150,11 +153,12 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .addProperties("hand"));
 
         register(builder(p, "wither", EntityTypes.WITHER)
-                .setHologramOffset(1.525));
+                .setHologramOffset(1.525)
+                .addProperties("invulnerable_time"));
 
         register(builder(p, "wolf", EntityTypes.WOLF)
                 .setHologramOffset(-1.125)
-                .addProperties("tamed"));
+                .addProperties("wolf_begging", "wolf_collar", "wolf_angry"));
 
         register(builder(p, "zombie", EntityTypes.ZOMBIE)
                 .setHologramOffset(-0.025)
@@ -170,7 +174,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_9)) return;
 
         register(builder(p, "shulker", EntityTypes.SHULKER)
-                .setHologramOffset(-0.975));
+                .setHologramOffset(-0.975)
+                .addProperties("attach_direction", "shield_height", "shulker_color"));
 
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_10)) return;
 
@@ -257,7 +262,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .setHologramOffset(-1.575));
 
         register(builder(p, "tropical_fish", EntityTypes.TROPICAL_FISH)
-                .setHologramOffset(-1.575));
+                .setHologramOffset(-1.575)
+                .addProperties("tropical_fish_pattern", "tropical_fish_body_color", "tropical_fish_pattern_color"));
 
         register(builder(p, "turtle", EntityTypes.TURTLE)
                 .setHologramOffset(-1.575));
@@ -266,7 +272,7 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
 
         register(builder(p, "cat", EntityTypes.CAT)
                 .setHologramOffset(-1.275)
-                .addProperties("cat_variant", "cat_laying", "cat_relaxed", "cat_collar", "tamed"));
+                .addProperties("cat_variant", "cat_laying", "cat_relaxed", "cat_collar"));
 
         register(builder(p, "fox", EntityTypes.FOX)
                 .setHologramOffset(-1.275)
@@ -314,7 +320,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .addEquipmentProperties());
 
         register(builder(p, "strider", EntityTypes.STRIDER)
-                .setHologramOffset(-0.275));
+                .setHologramOffset(-0.275)
+                .addProperties("strider_shaking", "strider_saddled"));
 
         register(builder(p, "zoglin", EntityTypes.ZOGLIN)
                 .setHologramOffset(-0.575));
@@ -351,7 +358,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_20)) return;
 
         register(builder(p, "sniffer", EntityTypes.SNIFFER)
-                .setHologramOffset(0.125));
+                .setHologramOffset(0.125)
+                .addProperties("sniffer_state"));
 
         register(builder(p, "camel", EntityTypes.CAMEL)
                 .setHologramOffset(0.25)

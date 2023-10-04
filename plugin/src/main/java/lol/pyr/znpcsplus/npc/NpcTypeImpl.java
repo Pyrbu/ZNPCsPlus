@@ -50,6 +50,10 @@ public class NpcTypeImpl implements NpcType {
         }
     }
 
+    public boolean isAllowedProperty(EntityPropertyImpl<?> entityProperty) {
+        return !entityProperty.isPlayerModifiable() || allowedProperties.contains(entityProperty);
+    }
+
     protected static final class Builder {
         private final static Logger logger = Logger.getLogger("NpcTypeBuilder");
 
@@ -153,6 +157,9 @@ public class NpcTypeImpl implements NpcType {
                 } else {
                     addProperties("panda_eating");
                 }
+            }
+            if (EntityTypes.isTypeInstanceOf(type, EntityTypes.ABSTRACT_TAMEABLE_ANIMAL)) {
+                addProperties("tamed", "sitting");
             }
             return new NpcTypeImpl(name, type, hologramOffset, new HashSet<>(allowedProperties), defaultProperties);
         }

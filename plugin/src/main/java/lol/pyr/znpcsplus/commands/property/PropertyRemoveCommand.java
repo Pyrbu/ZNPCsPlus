@@ -37,7 +37,7 @@ public class PropertyRemoveCommand implements CommandHandler {
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
         if (context.argSize() == 1) return context.suggestCollection(npcRegistry.getModifiableIds());
         if (context.argSize() == 2) return context.suggestStream(context.suggestionParse(0, NpcEntryImpl.class)
-                .getNpc().getAppliedProperties().stream().filter(EntityProperty::isPlayerModifiable).map(EntityProperty::getName));
+                .getNpc().getAllProperties().stream().filter(EntityProperty::isPlayerModifiable).map(EntityProperty::getName));
         return Collections.emptyList();
     }
 }

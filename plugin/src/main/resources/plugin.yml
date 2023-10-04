@@ -21,6 +21,9 @@ softdepend:
   - ViaRewind
   - Geyser-Spigot
 
+loadbefore:
+  - Quests
+
 commands:
   npc:
     aliases:
