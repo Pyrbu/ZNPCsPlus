@@ -56,6 +56,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerSerializer(new Vector3fPropertySerializer());
         registerSerializer(new BlockStatePropertySerializer());
         registerSerializer(new LookTypeSerializer());
+        registerSerializer(new GenericSerializer<>(Vector3i::toString, Vector3i::fromString, Vector3i.class));
 
         registerEnumSerializer(NpcPose.class);
         registerEnumSerializer(DyeColor.class);
@@ -251,6 +252,17 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new BitsetProperty("is_rearing", horseIndex, horseEating << 1, false, legacyBooleans));
         register(new BitsetProperty("has_mouth_open", horseIndex, horseEating << 2, false, legacyBooleans));
 
+        // End Crystal
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) {
+            int endCrystalIndex;
+            if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) endCrystalIndex = 8;
+            else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) endCrystalIndex = 7;
+            else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) endCrystalIndex = 6;
+            else endCrystalIndex = 5;
+            register(new OptionalBlockPosProperty("beam_target", null, endCrystalIndex++));
+            register(new BooleanProperty("show_base", endCrystalIndex, true, false));
+        }
+
         // Horse
         if (ver.isNewerThanOrEquals(ServerVersion.V_1_8) && ver.isOlderThan(ServerVersion.V_1_9)) {
             register(new EncodedByteProperty<>("horse_type", HorseType.HORSE, 19, obj -> (byte) obj.ordinal()));
@@ -367,7 +379,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) witherIndex = 11;
         else witherIndex = 17;
         witherIndex += 3; // skip the first 3 indexes, will be used for the other properties later
-        register(new IntegerProperty("invulnerable_time", witherIndex++, 0, false));
+        register(new IntegerProperty("invulnerable_time", witherIndex, 0, false));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_9)) return;
         // Shulker
