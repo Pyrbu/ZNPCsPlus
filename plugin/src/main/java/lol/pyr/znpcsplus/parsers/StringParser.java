@@ -14,6 +14,6 @@ public class StringParser extends ParserType<String> {
 
     @Override
     public String parse(Deque<String> deque) throws CommandExecutionException {
-        return deque.pollFirst();
+        return String.join(" ", deque);
     }
 }

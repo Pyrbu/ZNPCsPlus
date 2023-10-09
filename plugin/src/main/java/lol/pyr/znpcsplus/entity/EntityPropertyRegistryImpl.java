@@ -120,6 +120,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new EquipmentProperty(packetFactory, "offhand", EquipmentSlot.OFF_HAND));
 
         register(new NameProperty(legacyNames, optionalComponents));
+        register(new DummyProperty<>("display_name", String.class));
         register(new DinnerboneProperty(legacyNames, optionalComponents));
 
         register(new DummyProperty<>("look", LookType.FIXED));
