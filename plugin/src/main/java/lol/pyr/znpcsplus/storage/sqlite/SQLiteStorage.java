@@ -2,7 +2,6 @@ package lol.pyr.znpcsplus.storage.sqlite;
 
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.config.ConfigManager;
-import lol.pyr.znpcsplus.database.SQLite;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.entity.PropertySerializer;

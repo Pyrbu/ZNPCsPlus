@@ -1,4 +1,6 @@
-package lol.pyr.znpcsplus.database;
+package lol.pyr.znpcsplus.storage.sqlite;
+
+import lol.pyr.znpcsplus.storage.database.Database;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,9 +8,8 @@ import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 public class SQLite extends Database{
-    File dbFile;
+    private final File dbFile;
     public SQLite(File file, Logger logger){
         super(logger);
         dbFile = file;
