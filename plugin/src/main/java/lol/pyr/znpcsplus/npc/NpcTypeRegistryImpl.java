@@ -73,6 +73,10 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .setHologramOffset(-0.275)
                 .addProperties("creeper_state", "creeper_charged"));
 
+        register(builder(p, "end_crystal", EntityTypes.END_CRYSTAL)
+                .setHologramOffset(0.025)
+                .addProperties("beam_target", "show_base"));
+
         register(builder(p, "ender_dragon", EntityTypes.ENDER_DRAGON)
                 .setHologramOffset(6.0245));
 
@@ -206,8 +210,7 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .addEquipmentProperties());
 
         register(builder(p, "evoker", EntityTypes.EVOKER)
-                .setHologramOffset(-0.025)
-                .addProperties("evoker_spell"));
+                .setHologramOffset(-0.025));
 
         register(builder(p, "llama", EntityTypes.LLAMA)
                 .setHologramOffset(-0.105)

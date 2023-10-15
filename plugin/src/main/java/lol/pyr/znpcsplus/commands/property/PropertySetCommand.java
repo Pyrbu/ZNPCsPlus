@@ -19,6 +19,9 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
 import com.github.retrooper.packetevents.protocol.item.ItemStack;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -117,9 +120,20 @@ public class PropertySetCommand implements CommandHandler {
             value = context.parse(type);
             valueName = value == null ? "NONE" : ((NpcEntryImpl) value).getId();
         }
-        else {
+        else if (type == Vector3i.class) {
             value = context.parse(type);
-            valueName = String.valueOf(value);
+            valueName = value == null ? "NONE" : ((Vector3i) value).toPrettyString();
+        }
+        else {
+            try {
+                value = context.parse(type);
+                valueName = String.valueOf(value);
+            } catch (NullPointerException e) {
+                context.send(Component.text("An error occurred while trying to parse the value. Please report this to the plugin author.",
+                        NamedTextColor.RED));
+                e.printStackTrace();
+                return;
+            }
         }
 
         npc.UNSAFE_setProperty(property, value);
@@ -144,6 +158,17 @@ public class PropertySetCommand implements CommandHandler {
                         context.suggestEnum(Arrays.stream(SpellType.values()).filter(spellType -> spellType.ordinal() <= 3).toArray(SpellType[]::new)) :
                         context.suggestEnum(SpellType.values());
 
+                if (type == Vector3i.class) {
+                    if (context.getSender() instanceof Player) {
+                        Player player = (Player) context.getSender();
+                        Block targetBlock = player.getTargetBlock(Collections.singleton(Material.AIR), 5);
+                        if (targetBlock.getType().equals(Material.AIR)) return Collections.emptyList();
+                        return context.suggestLiteral(
+                                targetBlock.getX() + "",
+                                targetBlock.getX() + " " + targetBlock.getY(),
+                                targetBlock.getX() + " " + targetBlock.getY() + " " + targetBlock.getZ());
+                    }
+                }
                 // Suggest enum values directly
                 if (type.isEnum()) {
                     return context.suggestEnum((Enum<?>[]) type.getEnumConstants());
@@ -153,6 +178,25 @@ public class PropertySetCommand implements CommandHandler {
                 if (type == BlockState.class) {
                     // TODO: suggest block with nbt like minecraft setblock command
                     return context.suggestionParse(2, String.class).equals("block") ? context.suggestStream(StateTypes.values().stream().map(StateType::getName)) : Collections.emptyList();
+                }
+                if (type == Vector3i.class) {
+                    if (context.getSender() instanceof Player) {
+                        Player player = (Player) context.getSender();
+                        Block targetBlock = player.getTargetBlock(Collections.singleton(Material.AIR), 5);
+                        if (targetBlock.getType().equals(Material.AIR)) return Collections.emptyList();
+                        return context.suggestLiteral(
+                                targetBlock.getY() + "",
+                                targetBlock.getY() + " " + targetBlock.getZ());
+                    }
+                }
+            } else if (context.argSize() == 5) {
+                if (type == Vector3i.class) {
+                    if (context.getSender() instanceof Player) {
+                        Player player = (Player) context.getSender();
+                        Block targetBlock = player.getTargetBlock(Collections.singleton(Material.AIR), 5);
+                        if (targetBlock.getType().equals(Material.AIR)) return Collections.emptyList();
+                        return context.suggestLiteral(targetBlock.getZ() + "");
+                    }
                 }
             }
         }
