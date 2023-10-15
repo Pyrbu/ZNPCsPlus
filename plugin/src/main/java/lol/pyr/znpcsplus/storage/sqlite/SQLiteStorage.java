@@ -22,7 +22,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -63,19 +62,19 @@ public class SQLiteStorage implements NpcStorage {
 
     private void validateTables() {
         if (!database.tableExists(TABLE_NPCS)) {
-            logger.log(java.util.logging.Level.INFO, "Creating table " + TABLE_NPCS + "...");
+            logger.info("Creating table " + TABLE_NPCS + "...");
             createNpcsTable();
         }
         if (!database.tableExists(TABLE_NPCS_PROPERTIES)) {
-            logger.log(java.util.logging.Level.INFO, "Creating table " + TABLE_NPCS_PROPERTIES + "...");
+            logger.info("Creating table " + TABLE_NPCS_PROPERTIES + "...");
             createNpcsPropertiesTable();
         }
         if (!database.tableExists(TABLE_NPCS_HOLOGRAMS)) {
-            logger.log(java.util.logging.Level.INFO, "Creating table " + TABLE_NPCS_HOLOGRAMS + "...");
+            logger.info("Creating table " + TABLE_NPCS_HOLOGRAMS + "...");
             createNpcsHologramsTable();
         }
         if (!database.tableExists(TABLE_NPCS_ACTIONS)) {
-            logger.log(java.util.logging.Level.INFO, "Creating table " + TABLE_NPCS_ACTIONS + "...");
+            logger.info("Creating table " + TABLE_NPCS_ACTIONS + "...");
             createNpcsActionsTable();
         }
         updateTables();
@@ -85,36 +84,36 @@ public class SQLiteStorage implements NpcStorage {
         if (database.executeUpdate("CREATE TABLE " + TABLE_NPCS + " " +
                 "(id TEXT PRIMARY KEY, isProcessed BOOLEAN, allowCommands BOOLEAN, enabled BOOLEAN, " +
                 "uuid TEXT, world TEXT, x REAL, y REAL, z REAL, yaw REAL, pitch REAL, type TEXT, hologramOffset REAL, hologramRefreshDelay INTEGER)") != -1) {
-            logger.log(java.util.logging.Level.INFO, "Table " + TABLE_NPCS + " created.");
+            logger.info("Table " + TABLE_NPCS + " created.");
         } else {
-            logger.log(java.util.logging.Level.SEVERE, "Failed to create table " + TABLE_NPCS + ".");
+            logger.severe("Failed to create table " + TABLE_NPCS + ".");
         }
     }
 
     private void createNpcsPropertiesTable() {
         if (database.executeUpdate("CREATE TABLE " + TABLE_NPCS_PROPERTIES + " " +
                 "(npc_id TEXT, property TEXT, value TEXT, PRIMARY KEY (npc_id, property))") != -1) {
-            logger.log(java.util.logging.Level.INFO, "Table " + TABLE_NPCS_PROPERTIES + " created.");
+            logger.info("Table " + TABLE_NPCS_PROPERTIES + " created.");
         } else {
-            logger.log(java.util.logging.Level.SEVERE, "Failed to create table " + TABLE_NPCS_PROPERTIES + ".");
+            logger.severe("Failed to create table " + TABLE_NPCS_PROPERTIES + ".");
         }
     }
 
     private void createNpcsHologramsTable() {
         if (database.executeUpdate("CREATE TABLE " + TABLE_NPCS_HOLOGRAMS + " " +
                 "(npc_id TEXT, line INTEGER, text TEXT, PRIMARY KEY (npc_id, line))") != -1) {
-            logger.log(java.util.logging.Level.INFO, "Table " + TABLE_NPCS_HOLOGRAMS + " created.");
+            logger.info("Table " + TABLE_NPCS_HOLOGRAMS + " created.");
         } else {
-            logger.log(java.util.logging.Level.SEVERE, "Failed to create table " + TABLE_NPCS_HOLOGRAMS + ".");
+            logger.severe("Failed to create table " + TABLE_NPCS_HOLOGRAMS + ".");
         }
     }
 
     private void createNpcsActionsTable() {
         if (database.executeUpdate("CREATE TABLE " + TABLE_NPCS_ACTIONS + " " +
                 "(npc_id TEXT, action_id INTEGER, action_data TEXT, PRIMARY KEY (npc_id, action_id))") != -1) {
-            logger.log(java.util.logging.Level.INFO, "Table " + TABLE_NPCS_ACTIONS + " created.");
+            logger.info("Table " + TABLE_NPCS_ACTIONS + " created.");
         } else {
-            logger.log(java.util.logging.Level.SEVERE, "Failed to create table " + TABLE_NPCS_ACTIONS + ".");
+            logger.severe("Failed to create table " + TABLE_NPCS_ACTIONS + ".");
         }
     }
 
@@ -157,17 +156,17 @@ public class SQLiteStorage implements NpcStorage {
                 if (entry != null) {
                     EntityPropertyImpl<?> property = propertyRegistry.getByName(key);
                     if (property == null) {
-                        logger.log(Level.WARNING, "Unknown property '" + key + "' for npc '" + rs.getString("npc_id") + "'. skipping ...");
+                        logger.warning("Unknown property '" + key + "' for npc '" + rs.getString("npc_id") + "'. skipping ...");
                         continue;
                     }
                     PropertySerializer<?> serializer = propertyRegistry.getSerializer(property.getType());
                     if (serializer == null) {
-                        logger.log(Level.WARNING, "Unknown serializer for property '" + key + "' for npc '" + rs.getString("npc_id") + "'. skipping ...");
+                        logger.warning("Unknown serializer for property '" + key + "' for npc '" + rs.getString("npc_id") + "'. skipping ...");
                         continue;
                     }
                     Object value = serializer.deserialize(rs.getString("value"));
                     if (value == null) {
-                        logger.log(Level.WARNING, "Failed to deserialize property '" + key + "' for npc '" + rs.getString("npc_id") + "'. Resetting to default ...");
+                        logger.warning("Failed to deserialize property '" + key + "' for npc '" + rs.getString("npc_id") + "'. Resetting to default ...");
                         value = property.getDefaultValue();
                     }
                     entry.getNpc().UNSAFE_setProperty(property, value);
@@ -241,7 +240,7 @@ public class SQLiteStorage implements NpcStorage {
             for (EntityProperty<?> property : npc.getAllProperties()) try {
                 PropertySerializer<?> serializer = propertyRegistry.getSerializer(((EntityPropertyImpl<?>) property).getType());
                 if (serializer == null) {
-                    logger.log(Level.WARNING, "Unknown serializer for property '" + property.getName() + "' for npc '" + entry.getId() + "'. skipping ...");
+                    logger.warning("Unknown serializer for property '" + property.getName() + "' for npc '" + entry.getId() + "'. skipping ...");
                     continue;
                 }
                 ps = database.getSQLConnection().prepareStatement("REPLACE INTO " + TABLE_NPCS_PROPERTIES + " (npc_id, property, value) VALUES(?,?,?)");
