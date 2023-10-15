@@ -63,7 +63,9 @@ public class NpcRegistryImpl implements NpcRegistry {
     }
 
     private void unregisterAll() {
-        for (NpcEntryImpl entry : getAllModifiable()) entry.getNpc().delete();
+        for (NpcEntryImpl entry : getAll()) {
+            if (entry.isSave()) entry.getNpc().delete();
+        }
         npcList.clear();
         npcIdLookupMap.clear();
         npcUuidLookupMap.clear();
