@@ -28,7 +28,7 @@ public interface MainConfig {
     boolean debugEnabled();
 
     @ConfKey("storage-type")
-    @ConfComments("The storage type to use. Available storage types: YAML")
+    @ConfComments("The storage type to use. Available storage types: YAML, SQLITE")
     @DefaultString("YAML")
     NpcStorageType storageType();
 

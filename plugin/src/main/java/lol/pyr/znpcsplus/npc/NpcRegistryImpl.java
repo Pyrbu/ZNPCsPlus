@@ -10,15 +10,17 @@ import lol.pyr.znpcsplus.interaction.ActionRegistry;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.storage.NpcStorage;
+import lol.pyr.znpcsplus.storage.NpcStorageType;
 import lol.pyr.znpcsplus.util.NpcLocation;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class NpcRegistryImpl implements NpcRegistry {
-    private final NpcStorage storage;
+    private NpcStorage storage;
     private final PacketFactory packetFactory;
     private final ConfigManager configManager;
     private final LegacyComponentSerializer textSerializer;
@@ -32,6 +34,10 @@ public class NpcRegistryImpl implements NpcRegistry {
         this.textSerializer = textSerializer;
         this.propertyRegistry = propertyRegistry;
         storage = configManager.getConfig().storageType().create(configManager, plugin, packetFactory, actionRegistry, typeRegistry, propertyRegistry, textSerializer);
+        if (storage == null) {
+            Bukkit.getLogger().warning("Failed to initialize storage, falling back to YAML");
+            storage = NpcStorageType.YAML.create(configManager, plugin, packetFactory, actionRegistry, typeRegistry, propertyRegistry, textSerializer);
+        }
         this.packetFactory = packetFactory;
         this.configManager = configManager;
 
