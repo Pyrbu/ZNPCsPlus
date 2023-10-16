@@ -36,20 +36,20 @@ shadowJar {
     archivesBaseName = "ZNPCsPlus"
     archiveClassifier.set ""
 
-    relocate "org.objectweb.asm", "lol.pyr.znpcsplus.lib.asm"
-    relocate "me.lucko.jarrelocator", "lol.pyr.znpcsplus.lib.jarrelocator"
+    relocate "org.objectweb.asm", "lol.pyr.znpcsplus.libraries.asm"
+    relocate "me.lucko.jarrelocator", "lol.pyr.znpcsplus.libraries.jarrelocator"
 
     // When changing anything here remember to also update the bootstrap
-    relocate "org.bstats", "lol.pyr.znpcsplus.lib.bstats"
-    relocate "me.robertlit.spigotresources", "lol.pyr.znpcsplus.lib.spigotresources"
-    relocate "net.kyori", "lol.pyr.znpcsplus.lib.kyori"
-    relocate "org.checkerframework", "lol.pyr.znpcsplus.lib.checkerframework"
-    relocate "com.google", "lol.pyr.znpcsplus.lib.google"
-    relocate "com.github.retrooper.packetevents", "lol.pyr.znpcsplus.lib.packetevents.api"
-    relocate "io.github.retrooper.packetevents", "lol.pyr.znpcsplus.lib.packetevents.impl"
-    relocate "org.yaml.snakeyaml", "lol.pyr.znpcsplus.lib.snakeyaml"
-    relocate "space.arim.dazzleconf", "lol.pyr.znpcsplus.lib.dazzleconf"
-    relocate "lol.pyr.director", "lol.pyr.znpcsplus.lib.command"
+    relocate "org.bstats", "lol.pyr.znpcsplus.libraries.bstats"
+    relocate "me.robertlit.spigotresources", "lol.pyr.znpcsplus.libraries.spigotresources"
+    relocate "net.kyori", "lol.pyr.znpcsplus.libraries.kyori"
+    relocate "org.checkerframework", "lol.pyr.znpcsplus.libraries.checkerframework"
+    relocate "com.google", "lol.pyr.znpcsplus.libraries.google"
+    relocate "com.github.retrooper.packetevents", "lol.pyr.znpcsplus.libraries.packetevents.api"
+    relocate "io.github.retrooper.packetevents", "lol.pyr.znpcsplus.libraries.packetevents.impl"
+    relocate "org.yaml.snakeyaml", "lol.pyr.znpcsplus.libraries.snakeyaml"
+    relocate "space.arim.dazzleconf", "lol.pyr.znpcsplus.libraries.dazzleconf"
+    relocate "lol.pyr.director", "lol.pyr.znpcsplus.libraries.command"
 
     minimize()
 }

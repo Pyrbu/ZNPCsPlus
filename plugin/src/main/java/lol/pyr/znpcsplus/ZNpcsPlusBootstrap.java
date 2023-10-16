@@ -19,16 +19,16 @@ public class ZNpcsPlusBootstrap extends JavaPlugin {
         getLogger().info("Downloading and loading libraries, this might take a while if this is the first time you're launching the plugin");
         LibraryLoader loader = new LibraryLoader(this, new File(getDataFolder(), "libraries"));
 
-        loader.addRelocation(decrypt("org..bstats"), "lol.pyr.znpcsplus.lib.bstats");
-        loader.addRelocation(decrypt("me..robertlit..spigotresources"), "lol.pyr.znpcsplus.lib.spigotresources");
-        loader.addRelocation(decrypt("net..kyori"), "lol.pyr.znpcsplus.lib.kyori");
-        loader.addRelocation(decrypt("org..checkerframework"), "lol.pyr.znpcsplus.lib.checkerframework");
-        loader.addRelocation(decrypt("com..google"), "lol.pyr.znpcsplus.lib.google");
-        loader.addRelocation(decrypt("com..github..retrooper..packetevents"), "lol.pyr.znpcsplus.lib.packetevents.api");
-        loader.addRelocation(decrypt("io..github..retrooper..packetevents"), "lol.pyr.znpcsplus.lib.packetevents.impl");
-        loader.addRelocation(decrypt("org..yaml..snakeyaml"), "lol.pyr.znpcsplus.lib.snakeyaml");
-        loader.addRelocation(decrypt("space..arim..dazzleconf"), "lol.pyr.znpcsplus.lib.dazzleconf");
-        loader.addRelocation(decrypt("lol..pyr..director"), "lol.pyr.znpcsplus.lib.command");
+        loader.addRelocation(decrypt("org..bstats"), "lol.pyr.znpcsplus.libraries.bstats");
+        loader.addRelocation(decrypt("me..robertlit..spigotresources"), "lol.pyr.znpcsplus.libraries.spigotresources");
+        loader.addRelocation(decrypt("net..kyori"), "lol.pyr.znpcsplus.libraries.kyori");
+        loader.addRelocation(decrypt("org..checkerframework"), "lol.pyr.znpcsplus.libraries.checkerframework");
+        loader.addRelocation(decrypt("com..google"), "lol.pyr.znpcsplus.libraries.google");
+        loader.addRelocation(decrypt("com..github..retrooper..packetevents"), "lol.pyr.znpcsplus.libraries.packetevents.api");
+        loader.addRelocation(decrypt("io..github..retrooper..packetevents"), "lol.pyr.znpcsplus.libraries.packetevents.impl");
+        loader.addRelocation(decrypt("org..yaml..snakeyaml"), "lol.pyr.znpcsplus.libraries.snakeyaml");
+        loader.addRelocation(decrypt("space..arim..dazzleconf"), "lol.pyr.znpcsplus.libraries.dazzleconf");
+        loader.addRelocation(decrypt("lol..pyr..director"), "lol.pyr.znpcsplus.libraries.command");
         
         loader.loadLibrary(decrypt("com..google..guava"), "guava", "18.0");
         loader.loadLibrary(decrypt("com..google..code..gson"), "gson", "2.10.1");
