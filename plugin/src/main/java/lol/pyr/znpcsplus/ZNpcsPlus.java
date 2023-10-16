@@ -40,8 +40,8 @@ import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 import lol.pyr.znpcsplus.skin.cache.SkinCacheCleanTask;
 import lol.pyr.znpcsplus.tasks.HologramRefreshTask;
-import lol.pyr.znpcsplus.tasks.ViewableHideOnLeaveListener;
 import lol.pyr.znpcsplus.tasks.NpcProcessorTask;
+import lol.pyr.znpcsplus.tasks.ViewableHideOnLeaveListener;
 import lol.pyr.znpcsplus.updater.UpdateChecker;
 import lol.pyr.znpcsplus.updater.UpdateNotificationListener;
 import lol.pyr.znpcsplus.user.UserListener;
@@ -51,34 +51,36 @@ import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.*;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 
-public class ZNpcsPlus extends JavaPlugin {
+public class ZNpcsPlus {
     private final LegacyComponentSerializer textSerializer = LegacyComponentSerializer.builder()
             .character('&')
             .hexCharacter('#')
             .hexColors().build();
 
     private final List<Runnable> shutdownTasks = new ArrayList<>();
-    private PacketEventsAPI<Plugin> packetEvents;
+    private final PacketEventsAPI<Plugin> packetEvents;
+    private final ZNpcsPlusBootstrap bootstrap;
 
-    @Override
-    public void onLoad() {
-        packetEvents = SpigotPacketEventsBuilder.build(this);
+    public ZNpcsPlus(ZNpcsPlusBootstrap bootstrap) {
+        this.bootstrap = bootstrap;
+        packetEvents = SpigotPacketEventsBuilder.build(bootstrap);
         PacketEvents.setAPI(packetEvents);
         packetEvents.getSettings().checkForUpdates(false);
         packetEvents.load();
@@ -88,7 +90,6 @@ public class ZNpcsPlus extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage(str);
     }
 
-    @Override
     public void onEnable() {
         getDataFolder().mkdirs();
 
@@ -106,7 +107,7 @@ public class ZNpcsPlus extends JavaPlugin {
         } catch (IOException e) {
             log(ChatColor.RED + " * Moving legacy files to subfolder failed, plugin will shut down.");
             e.printStackTrace();
-            pluginManager.disablePlugin(this);
+            pluginManager.disablePlugin(bootstrap);
             return;
         }
 
@@ -114,12 +115,12 @@ public class ZNpcsPlus extends JavaPlugin {
 
         packetEvents.init();
 
-        BukkitAudiences adventure = BukkitAudiences.create(this);
+        BukkitAudiences adventure = BukkitAudiences.create(bootstrap);
         shutdownTasks.add(adventure::close);
 
         log(ChatColor.WHITE + " * Initializing components...");
 
-        TaskScheduler scheduler = FoliaUtil.isFolia() ? new FoliaScheduler(this) : new SpigotScheduler(this);
+        TaskScheduler scheduler = FoliaUtil.isFolia() ? new FoliaScheduler(bootstrap) : new SpigotScheduler(bootstrap);
         shutdownTasks.add(scheduler::cancelAll);
 
         ConfigManager configManager = new ConfigManager(getDataFolder());
@@ -136,8 +137,8 @@ public class ZNpcsPlus extends JavaPlugin {
 
         UserManager userManager = new UserManager();
         shutdownTasks.add(userManager::shutdown);
-
-        BungeeConnector bungeeConnector = new BungeeConnector(this);
+        
+        BungeeConnector bungeeConnector = new BungeeConnector(bootstrap);
         DataImporterRegistry importerRegistry = new DataImporterRegistry(configManager, adventure,
                 scheduler, packetFactory, textSerializer, typeRegistry, getDataFolder().getParentFile(),
                 propertyRegistry, skinCache, npcRegistry, bungeeConnector);
@@ -150,23 +151,23 @@ public class ZNpcsPlus extends JavaPlugin {
         typeRegistry.registerDefault(packetEvents, propertyRegistry);
         actionRegistry.registerTypes(scheduler, adventure, textSerializer, bungeeConnector);
         packetEvents.getEventManager().registerListener(new InteractionPacketListener(userManager, npcRegistry, scheduler), PacketListenerPriority.MONITOR);
-        new Metrics(this, 18244);
-        pluginManager.registerEvents(new UserListener(userManager), this);
+        new Metrics(bootstrap, 18244);
+        pluginManager.registerEvents(new UserListener(userManager), bootstrap);
 
         registerCommands(npcRegistry, skinCache, adventure, actionRegistry,
                 typeRegistry, propertyRegistry, importerRegistry, configManager);
 
         log(ChatColor.WHITE + " * Starting tasks...");
         if (configManager.getConfig().checkForUpdates()) {
-            UpdateChecker updateChecker = new UpdateChecker(this.getDescription());
+            UpdateChecker updateChecker = new UpdateChecker(getDescription());
             scheduler.runDelayedTimerAsync(updateChecker, 5L, 6000L);
-            pluginManager.registerEvents(new UpdateNotificationListener(this, adventure, updateChecker), this);
+            pluginManager.registerEvents(new UpdateNotificationListener(this, adventure, updateChecker, scheduler), bootstrap);
         }
 
         scheduler.runDelayedTimerAsync(new NpcProcessorTask(npcRegistry, configManager, propertyRegistry), 60L, 3L);
         scheduler.runDelayedTimerAsync(new HologramRefreshTask(npcRegistry), 60L, 20L);
         scheduler.runDelayedTimerAsync(new SkinCacheCleanTask(skinCache), 1200, 1200);
-        pluginManager.registerEvents(new ViewableHideOnLeaveListener(), this);
+        pluginManager.registerEvents(new ViewableHideOnLeaveListener(), bootstrap);
 
         log(ChatColor.WHITE + " * Loading data...");
         npcRegistry.reload();
@@ -188,7 +189,7 @@ public class ZNpcsPlus extends JavaPlugin {
             }
         }
 
-        NpcApiProvider.register(this, new ZNpcsPlusApi(npcRegistry, typeRegistry, propertyRegistry, skinCache));
+        NpcApiProvider.register(bootstrap, new ZNpcsPlusApi(npcRegistry, typeRegistry, propertyRegistry, skinCache));
         log(ChatColor.WHITE + " * Loading complete! (" + (System.currentTimeMillis() - before) + "ms)");
         log("");
 
@@ -208,7 +209,6 @@ public class ZNpcsPlus extends JavaPlugin {
         }
     }
 
-    @Override
     public void onDisable() {
         NpcApiProvider.unregister();
         for (Runnable runnable : shutdownTasks) runnable.run();
@@ -238,7 +238,7 @@ public class ZNpcsPlus extends JavaPlugin {
                                   ConfigManager configManager) {
 
         Message<CommandContext> incorrectUsageMessage = context -> context.send(Component.text("Incorrect usage: /" + context.getUsage(), NamedTextColor.RED));
-        CommandManager manager = new CommandManager(this, adventure, incorrectUsageMessage);
+        CommandManager manager = new CommandManager(bootstrap, adventure, incorrectUsageMessage);
 
         manager.registerParser(NpcTypeImpl.class, new NpcTypeParser(incorrectUsageMessage, typeRegistry));
         manager.registerParser(NpcEntryImpl.class, new NpcEntryParser(npcRegistry, incorrectUsageMessage));
@@ -280,7 +280,7 @@ public class ZNpcsPlus extends JavaPlugin {
         registerEnumParser(manager, RabbitType.class, incorrectUsageMessage);
         registerEnumParser(manager, AttachDirection.class, incorrectUsageMessage);
 
-        manager.registerCommand("npc", new MultiCommand(loadHelpMessage("root"))
+        manager.registerCommand("npc", new MultiCommand(bootstrap.loadHelpMessage("root"))
                 .addSubcommand("center", new CenterCommand(npcRegistry))
                 .addSubcommand("create", new CreateCommand(npcRegistry, typeRegistry))
                 .addSubcommand("reloadconfig", new ReloadConfigCommand(configManager))
@@ -292,14 +292,14 @@ public class ZNpcsPlus extends JavaPlugin {
                 .addSubcommand("list", new ListCommand(npcRegistry))
                 .addSubcommand("near", new NearCommand(npcRegistry))
                 .addSubcommand("type", new TypeCommand(npcRegistry, typeRegistry))
-                .addSubcommand("property", new MultiCommand(loadHelpMessage("property"))
+                .addSubcommand("property", new MultiCommand(bootstrap.loadHelpMessage("property"))
                         .addSubcommand("set", new PropertySetCommand(npcRegistry))
                         .addSubcommand("remove", new PropertyRemoveCommand(npcRegistry)))
-                .addSubcommand("storage", new MultiCommand(loadHelpMessage("storage"))
+                .addSubcommand("storage", new MultiCommand(bootstrap.loadHelpMessage("storage"))
                         .addSubcommand("save", new SaveAllCommand(npcRegistry))
                         .addSubcommand("reload", new LoadAllCommand(npcRegistry))
                         .addSubcommand("import", new ImportCommand(npcRegistry, importerRegistry)))
-                .addSubcommand("holo", new MultiCommand(loadHelpMessage("holo"))
+                .addSubcommand("holo", new MultiCommand(bootstrap.loadHelpMessage("holo"))
                         .addSubcommand("add", new HoloAddCommand(npcRegistry))
                         .addSubcommand("additem", new HoloAddItemCommand(npcRegistry))
                         .addSubcommand("delete", new HoloDeleteCommand(npcRegistry))
@@ -310,7 +310,7 @@ public class ZNpcsPlus extends JavaPlugin {
                         .addSubcommand("setitem", new HoloSetItemCommand(npcRegistry))
                         .addSubcommand("offset", new HoloOffsetCommand(npcRegistry))
                         .addSubcommand("refreshdelay", new HoloRefreshDelayCommand(npcRegistry)))
-                .addSubcommand("action", new MultiCommand(loadHelpMessage("action"))
+                .addSubcommand("action", new MultiCommand(bootstrap.loadHelpMessage("action"))
                         .addSubcommand("add", new ActionAddCommand(npcRegistry, actionRegistry))
                         .addSubcommand("clear", new ActionClearCommand(npcRegistry))
                         .addSubcommand("delete", new ActionDeleteCommand(npcRegistry))
@@ -323,10 +323,11 @@ public class ZNpcsPlus extends JavaPlugin {
         manager.registerParser(clazz, new EnumParser<>(clazz, message));
     }
 
-    private Message<CommandContext> loadHelpMessage(String name) {
-        Reader reader = getTextResource("help-messages/" + name + ".txt");
-        if (reader == null) throw new RuntimeException(name + ".txt is missing from the help-messages folder in the ZNPCsPlus jar!");
-        Component component = MiniMessage.miniMessage().deserialize(FileUtil.dumpReaderAsString(reader));
-        return context -> context.send(component);
+    public File getDataFolder() {
+        return bootstrap.getDataFolder();
+    }
+
+    public PluginDescriptionFile getDescription() {
+        return bootstrap.getDescription();
     }
 }

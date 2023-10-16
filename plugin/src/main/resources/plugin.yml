@@ -3,7 +3,7 @@ authors:
   - Pyr
   - D3v1s0m
 
-main: lol.pyr.znpcsplus.ZNpcsPlus
+main: lol.pyr.znpcsplus.ZNpcsPlusBootstrap
 load: POSTWORLD
 
 version: ${version}

@@ -17,17 +17,18 @@ processResources {
 
 dependencies {
     compileOnly "me.clip:placeholderapi:2.11.3" // Placeholder support
-    implementation "com.google.code.gson:gson:2.10.1" // JSON parsing
-    implementation "org.bstats:bstats-bukkit:3.0.2" // Plugin stats
-    implementation "com.github.robertlit:SpigotResourcesAPI:2.0" // Spigot API wrapper for update checker
-    implementation "com.github.retrooper.packetevents:spigot:2.1.0-SNAPSHOT" // Packets
-    implementation "space.arim.dazzleconf:dazzleconf-ext-snakeyaml:1.2.1" // Configs
-    implementation "lol.pyr:director-adventure:2.1.1" // Commands
+    compileOnly "com.google.code.gson:gson:2.10.1" // JSON parsing
+    compileOnly "org.bstats:bstats-bukkit:3.0.2" // Plugin stats
+    compileOnly "com.github.robertlit:SpigotResourcesAPI:2.0" // Spigot API wrapper for update checker
+    compileOnly "com.github.retrooper.packetevents:spigot:2.1.0-SNAPSHOT" // Packets
+    compileOnly "space.arim.dazzleconf:dazzleconf-ext-snakeyaml:1.2.1" // Configs
+    compileOnly "lol.pyr:director-adventure:2.1.1" // Commands
 
     // Fancy text library
-    implementation "net.kyori:adventure-platform-bukkit:4.3.0"
-    implementation "net.kyori:adventure-text-minimessage:4.14.0"
+    compileOnly "net.kyori:adventure-platform-bukkit:4.3.1"
+    compileOnly "net.kyori:adventure-text-minimessage:4.14.0"
 
+    implementation "me.lucko:jar-relocator:1.7"
     implementation project(":api")
 }
 
@@ -35,6 +36,10 @@ shadowJar {
     archivesBaseName = "ZNPCsPlus"
     archiveClassifier.set ""
 
+    relocate "org.objectweb.asm", "lol.pyr.znpcsplus.lib.asm"
+    relocate "me.lucko.jarrelocator", "lol.pyr.znpcsplus.lib.jarrelocator"
+
+    // When changing anything here remember to also update the bootstrap
     relocate "org.bstats", "lol.pyr.znpcsplus.lib.bstats"
     relocate "me.robertlit.spigotresources", "lol.pyr.znpcsplus.lib.spigotresources"
     relocate "net.kyori", "lol.pyr.znpcsplus.lib.kyori"
