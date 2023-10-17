@@ -3,6 +3,7 @@ package lol.pyr.znpcsplus.config;
 import lol.pyr.znpcsplus.storage.NpcStorageType;
 import space.arim.dazzleconf.annote.ConfComments;
 import space.arim.dazzleconf.annote.ConfKey;
+import space.arim.dazzleconf.annote.SubSection;
 
 import static space.arim.dazzleconf.annote.ConfDefault.*;
 
@@ -28,9 +29,14 @@ public interface MainConfig {
     boolean debugEnabled();
 
     @ConfKey("storage-type")
-    @ConfComments("The storage type to use. Available storage types: YAML, SQLITE")
+    @ConfComments("The storage type to use. Available storage types: YAML, SQLITE, MYSQL")
     @DefaultString("YAML")
     NpcStorageType storageType();
+
+    @ConfKey("database-config")
+    @ConfComments("The database config. Only used if storage-type is MYSQL")
+    @SubSection
+    DatabaseConfig databaseConfig();
 
     @ConfKey("disable-skin-fetcher-warnings")
     @ConfComments("Set this to true if you don't want to be warned in the console when a skin fails to resolve")

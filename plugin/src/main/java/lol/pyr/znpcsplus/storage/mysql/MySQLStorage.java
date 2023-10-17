@@ -1,4 +1,4 @@
-package lol.pyr.znpcsplus.storage.sqlite;
+package lol.pyr.znpcsplus.storage.mysql;
 
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.config.ConfigManager;
@@ -15,7 +15,6 @@ import lol.pyr.znpcsplus.storage.NpcStorage;
 import lol.pyr.znpcsplus.util.NpcLocation;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,8 +23,8 @@ import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-public class SQLiteStorage implements NpcStorage {
-    private final static Logger logger = Logger.getLogger("SQLiteStorage");
+public class MySQLStorage implements NpcStorage {
+    private final static Logger logger = Logger.getLogger("MySQLStorage");
 
     private final PacketFactory packetFactory;
     private final ConfigManager configManager;
@@ -33,24 +32,24 @@ public class SQLiteStorage implements NpcStorage {
     private final NpcTypeRegistryImpl typeRegistry;
     private final EntityPropertyRegistryImpl propertyRegistry;
     private final LegacyComponentSerializer textSerializer;
-    private final SQLite database;
+    private final MySQL database;
 
     private final String TABLE_NPCS;
     private final String TABLE_NPCS_PROPERTIES;
     private final String TABLE_NPCS_HOLOGRAMS;
     private final String TABLE_NPCS_ACTIONS;
 
-    public SQLiteStorage(PacketFactory packetFactory, ConfigManager configManager, ActionRegistry actionRegistry, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer, File file) {
+    public MySQLStorage(PacketFactory packetFactory, ConfigManager configManager, ActionRegistry actionRegistry, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer) {
         this.packetFactory = packetFactory;
         this.configManager = configManager;
         this.actionRegistry = actionRegistry;
         this.typeRegistry = typeRegistry;
         this.propertyRegistry = propertyRegistry;
         this.textSerializer = textSerializer;
-        this.database = new SQLite(file, logger);
+        this.database = new MySQL(configManager.getConfig().databaseConfig().createConnectionURL("mysql"), logger);
         database.load();
         if (database.getSQLConnection() == null) {
-            throw new RuntimeException("Failed to initialize SQLite Storage.");
+            throw new RuntimeException("Failed to initialize MySQL Storage");
         }
         TABLE_NPCS = "npcs";
         TABLE_NPCS_PROPERTIES = "npcs_properties";
@@ -80,9 +79,9 @@ public class SQLiteStorage implements NpcStorage {
     }
 
     private void createNpcsTable() {
-        if (database.executeUpdate("CREATE TABLE " + TABLE_NPCS + " " +
-                "(id TEXT PRIMARY KEY, isProcessed BOOLEAN, allowCommands BOOLEAN, enabled BOOLEAN, " +
-                "uuid TEXT, world TEXT, x REAL, y REAL, z REAL, yaw REAL, pitch REAL, type TEXT, hologramOffset REAL, hologramRefreshDelay INTEGER)") != -1) {
+        if (database.executeUpdate("CREATE TABLE " + TABLE_NPCS +
+                " (id VARCHAR(256) PRIMARY KEY, isProcessed BOOLEAN, allowCommands BOOLEAN, enabled BOOLEAN, " +
+                "uuid VARCHAR(36), world VARCHAR(128), x DOUBLE, y DOUBLE, z DOUBLE, yaw DOUBLE, pitch DOUBLE, type VARCHAR(128), hologramOffset DOUBLE, hologramRefreshDelay BIGINT)") != -1) {
             logger.info("Table " + TABLE_NPCS + " created.");
         } else {
             logger.severe("Failed to create table " + TABLE_NPCS + ".");
@@ -90,8 +89,8 @@ public class SQLiteStorage implements NpcStorage {
     }
 
     private void createNpcsPropertiesTable() {
-        if (database.executeUpdate("CREATE TABLE " + TABLE_NPCS_PROPERTIES + " " +
-                "(npc_id TEXT, property TEXT, value TEXT, PRIMARY KEY (npc_id, property))") != -1) {
+        if (database.executeUpdate("CREATE TABLE " + TABLE_NPCS_PROPERTIES +
+                " (npc_id VARCHAR(256), property VARCHAR(128), value TEXT, PRIMARY KEY (npc_id, property))") != -1) {
             logger.info("Table " + TABLE_NPCS_PROPERTIES + " created.");
         } else {
             logger.severe("Failed to create table " + TABLE_NPCS_PROPERTIES + ".");
@@ -99,8 +98,8 @@ public class SQLiteStorage implements NpcStorage {
     }
 
     private void createNpcsHologramsTable() {
-        if (database.executeUpdate("CREATE TABLE " + TABLE_NPCS_HOLOGRAMS + " " +
-                "(npc_id TEXT, line INTEGER, text TEXT, PRIMARY KEY (npc_id, line))") != -1) {
+        if (database.executeUpdate("CREATE TABLE " + TABLE_NPCS_HOLOGRAMS +
+                " (npc_id VARCHAR(256), line INT, text TEXT, PRIMARY KEY (npc_id, line))") != -1) {
             logger.info("Table " + TABLE_NPCS_HOLOGRAMS + " created.");
         } else {
             logger.severe("Failed to create table " + TABLE_NPCS_HOLOGRAMS + ".");
@@ -108,8 +107,8 @@ public class SQLiteStorage implements NpcStorage {
     }
 
     private void createNpcsActionsTable() {
-        if (database.executeUpdate("CREATE TABLE " + TABLE_NPCS_ACTIONS + " " +
-                "(npc_id TEXT, action_id INTEGER, action_data TEXT, PRIMARY KEY (npc_id, action_id))") != -1) {
+        if (database.executeUpdate("CREATE TABLE " + TABLE_NPCS_ACTIONS +
+                " (npc_id VARCHAR(256), action_id INT, action_data TEXT, PRIMARY KEY (npc_id, action_id))") != -1) {
             logger.info("Table " + TABLE_NPCS_ACTIONS + " created.");
         } else {
             logger.severe("Failed to create table " + TABLE_NPCS_ACTIONS + ".");
@@ -212,6 +211,7 @@ public class SQLiteStorage implements NpcStorage {
     public void saveNpcs(Collection<NpcEntryImpl> npcs) {
         long start = System.currentTimeMillis();
         for (NpcEntryImpl entry : npcs) try {
+
             PreparedStatement ps;
             ps = database.getSQLConnection().prepareStatement("REPLACE INTO " + TABLE_NPCS + " (id, isProcessed, allowCommands, enabled, uuid, world, x, y, z, yaw, pitch, type, hologramOffset, hologramRefreshDelay) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             ps.setString(1, entry.getId());
@@ -230,6 +230,7 @@ public class SQLiteStorage implements NpcStorage {
             HologramImpl hologram = npc.getHologram();
             ps.setDouble(13, hologram.getOffset());
             ps.setBigDecimal(14, new BigDecimal(hologram.getRefreshDelay()));
+
             ps.executeUpdate();
 
             ps = database.getSQLConnection().prepareStatement("DELETE FROM " + TABLE_NPCS_PROPERTIES + " WHERE npc_id = ?");
