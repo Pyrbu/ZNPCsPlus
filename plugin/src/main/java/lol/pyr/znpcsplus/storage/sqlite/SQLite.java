@@ -5,7 +5,6 @@ import lol.pyr.znpcsplus.storage.database.Database;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SQLite extends Database{
@@ -20,7 +19,7 @@ public class SQLite extends Database{
             try {
                 dbFile.createNewFile();
             } catch (IOException e) {
-                logger.log(Level.SEVERE, "File write error: "+dbFile.getName());
+                logger.severe("File write error: "+dbFile.getName());
             }
         }
         try {
@@ -31,9 +30,9 @@ public class SQLite extends Database{
             connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
             return connection;
         } catch (SQLException ex) {
-            logger.log(Level.SEVERE,"SQLite exception on initialize", ex);
+            logger.severe("SQLite exception on initialize" + ex);
         } catch (ClassNotFoundException ex) {
-            logger.log(Level.SEVERE, "SQLite JDBC library not found", ex);
+            logger.severe("SQLite JDBC library not found" + ex);
         }
         return null;
     }
