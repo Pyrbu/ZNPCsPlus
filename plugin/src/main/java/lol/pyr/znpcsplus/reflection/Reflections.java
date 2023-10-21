@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
@@ -73,11 +74,20 @@ public final class Reflections {
                     .withRawClassName("com.mojang.authlib.properties.Property")
                     .toClassReflection().get();
 
+    private static final boolean v1_20_2 = PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_20_2);
+
     public static final ReflectionLazyLoader<Method> PROPERTY_GET_NAME_METHOD =
             new ReflectionBuilder(PROPERTY_CLASS)
                     .withMethodName("getName")
                     .withExpectResult(String.class)
                     .toMethodReflection();
+
+    public static final ReflectionLazyLoader<Field> PROPERTY_NAME_FIELD =
+            new ReflectionBuilder(PROPERTY_CLASS)
+                    .withFieldName("name")
+                    .withExpectResult(String.class)
+                    .setStrict(v1_20_2)
+                    .toFieldReflection();
 
     public static final ReflectionLazyLoader<Method> PROPERTY_GET_VALUE_METHOD =
             new ReflectionBuilder(PROPERTY_CLASS)
@@ -85,11 +95,25 @@ public final class Reflections {
                     .withExpectResult(String.class)
                     .toMethodReflection();
 
+    public static final ReflectionLazyLoader<Field> PROPERTY_VALUE_FIELD =
+            new ReflectionBuilder(PROPERTY_CLASS)
+                    .withFieldName("value")
+                    .withExpectResult(String.class)
+                    .setStrict(v1_20_2)
+                    .toFieldReflection();
+
     public static final ReflectionLazyLoader<Method> PROPERTY_GET_SIGNATURE_METHOD =
             new ReflectionBuilder(PROPERTY_CLASS)
                     .withMethodName("getSignature")
                     .withExpectResult(String.class)
                     .toMethodReflection();
+
+    public static final ReflectionLazyLoader<Field> PROPERTY_SIGNATURE_FIELD =
+            new ReflectionBuilder(PROPERTY_CLASS)
+                    .withFieldName("signature")
+                    .withExpectResult(String.class)
+                    .setStrict(v1_20_2)
+                    .toFieldReflection();
 
     /*
      * These methods are used for reserving entity ids so regular Minecraft

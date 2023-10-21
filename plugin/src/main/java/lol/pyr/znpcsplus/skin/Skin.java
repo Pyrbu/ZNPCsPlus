@@ -1,5 +1,7 @@
 package lol.pyr.znpcsplus.skin;
 
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.player.TextureProperty;
 import com.github.retrooper.packetevents.protocol.player.UserProfile;
 import com.google.gson.JsonElement;
@@ -14,6 +16,7 @@ import java.util.List;
 public class Skin {
     private final long timestamp = System.currentTimeMillis();
     private final List<TextureProperty> properties;
+    private static final boolean V1_20_2 = PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_20_2);
 
     public Skin(String texture, String signature) {
         properties = new ArrayList<>(1);
@@ -29,9 +32,18 @@ public class Skin {
         try {
             Collection<?> properties = (Collection<?>) Reflections.PROPERTY_MAP_VALUES_METHOD.get().invoke(propertyMap);
             for (Object property : properties) {
-                String name = (String) Reflections.PROPERTY_GET_NAME_METHOD.get().invoke(property);
-                String value = (String) Reflections.PROPERTY_GET_VALUE_METHOD.get().invoke(property);
-                String signature = (String) Reflections.PROPERTY_GET_SIGNATURE_METHOD.get().invoke(property);
+                String name;
+                String value;
+                String signature;
+                if (V1_20_2) {
+                    name = (String) Reflections.PROPERTY_NAME_FIELD.get().get(property);
+                    value = (String) Reflections.PROPERTY_VALUE_FIELD.get().get(property);
+                    signature = (String) Reflections.PROPERTY_SIGNATURE_FIELD.get().get(property);
+                } else {
+                    name = (String) Reflections.PROPERTY_GET_NAME_METHOD.get().invoke(property);
+                    value = (String) Reflections.PROPERTY_GET_VALUE_METHOD.get().invoke(property);
+                    signature = (String) Reflections.PROPERTY_GET_SIGNATURE_METHOD.get().invoke(property);
+                }
                 this.properties.add(new TextureProperty(name, value, signature));
             }
         } catch (IllegalAccessException | InvocationTargetException e) {
