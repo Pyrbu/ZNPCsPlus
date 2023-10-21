@@ -1,42 +1,57 @@
-package lol.pyr.znpcsplus.storage.sqlite;
+package lol.pyr.znpcsplus.storage.mysql;
 
 import lol.pyr.znpcsplus.storage.database.Database;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Logger;
 
-public class SQLite extends Database{
-    private final File dbFile;
-    public SQLite(File file, Logger logger){
+public class MySQL extends Database {
+    private final String connectionURL;
+
+    public MySQL(String connectionURL, Logger logger) {
         super(logger);
-        dbFile = file;
+        this.connectionURL = connectionURL;
     }
 
+    @Override
     public Connection getSQLConnection() {
-        if (!dbFile.exists()){
-            try {
-                dbFile.createNewFile();
-            } catch (IOException e) {
-                logger.severe("File write error: "+dbFile.getName());
-            }
-        }
+        validateConnectionUrl();
+
         try {
-            if(connection!=null&&!connection.isClosed()){
+            if (connection != null && !connection.isClosed()) {
                 return connection;
             }
-            Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
+            Class.forName("com.mysql.jdbc.Driver");
+            connection = java.sql.DriverManager.getConnection(connectionURL);
             return connection;
-        } catch (SQLException ex) {
-            logger.severe("SQLite exception on initialize" + ex);
         } catch (ClassNotFoundException ex) {
-            logger.severe("SQLite JDBC library not found" + ex);
+            logger.severe("MySQL JDBC library not found" + ex);
+        } catch (SQLException ex) {
+            if (ex.getSQLState().equals("08006")) {
+                logger.severe("Could not connect to MySQL server. Check your connection settings and make sure the server is online.");
+            } else if (ex.getSQLState().equals("08002")) {
+                logger.severe("A connection already exists." + ex);
+            } else {
+                logger.severe("MySQL exception on initialize" + ex);
+            }
         }
         return null;
     }
 
+    private void validateConnectionUrl() {
+        if (connectionURL == null || connectionURL.isEmpty()) {
+            throw new IllegalArgumentException("Connection URL cannot be null or empty");
+        }
+        if (!connectionURL.startsWith("jdbc:mysql://")) {
+            throw new IllegalArgumentException("Connection URL must start with 'jdbc:mysql://'");
+        }
+        // TODO: Validate the rest of the URL
+    }
+
+    @Override
     public void load() {
         connection = getSQLConnection();
     }
@@ -86,10 +101,10 @@ public class SQLite extends Database{
         }
     }
 
-    public int executeUpdate(String query) {
+    public int executeUpdate(String sql) {
         try {
             Statement s = connection.createStatement();
-            int rowCount = s.executeUpdate(query);
+            int rowCount = s.executeUpdate(sql);
             s.close();
             return rowCount;
         } catch (SQLException e) {
