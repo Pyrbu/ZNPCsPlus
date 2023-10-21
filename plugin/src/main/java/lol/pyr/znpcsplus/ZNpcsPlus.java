@@ -10,6 +10,7 @@ import lol.pyr.director.adventure.command.CommandManager;
 import lol.pyr.director.adventure.command.MultiCommand;
 import lol.pyr.director.adventure.parse.primitive.BooleanParser;
 import lol.pyr.director.adventure.parse.primitive.DoubleParser;
+import lol.pyr.director.adventure.parse.primitive.FloatParser;
 import lol.pyr.director.adventure.parse.primitive.IntegerParser;
 import lol.pyr.director.common.message.Message;
 import lol.pyr.znpcsplus.api.NpcApiProvider;
@@ -243,6 +244,7 @@ public class ZNpcsPlus {
         manager.registerParser(EntityPropertyImpl.class, new EntityPropertyParser(incorrectUsageMessage, propertyRegistry));
         manager.registerParser(Integer.class, new IntegerParser(incorrectUsageMessage));
         manager.registerParser(Double.class, new DoubleParser(incorrectUsageMessage));
+        manager.registerParser(Float.class, new FloatParser(incorrectUsageMessage));
         manager.registerParser(Boolean.class, new BooleanParser(incorrectUsageMessage));
         manager.registerParser(NamedTextColor.class, new NamedTextColorParser(incorrectUsageMessage));
         manager.registerParser(InteractionType.class, new InteractionTypeParser(incorrectUsageMessage));
@@ -291,6 +293,9 @@ public class ZNpcsPlus {
                 .addSubcommand("list", new ListCommand(npcRegistry))
                 .addSubcommand("near", new NearCommand(npcRegistry))
                 .addSubcommand("type", new TypeCommand(npcRegistry, typeRegistry))
+                .addSubcommand("setlocation", new SetLocationCommand(npcRegistry))
+                .addSubcommand("lookatme", new LookAtMeCommand(npcRegistry))
+                .addSubcommand("setrotation", new SetRotationCommand(npcRegistry))
                 .addSubcommand("property", new MultiCommand(bootstrap.loadHelpMessage("property"))
                         .addSubcommand("set", new PropertySetCommand(npcRegistry))
                         .addSubcommand("remove", new PropertyRemoveCommand(npcRegistry)))

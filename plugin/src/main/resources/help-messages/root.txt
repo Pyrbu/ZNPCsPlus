@@ -10,6 +10,9 @@
 
  <gold>* <yellow>/npc near <distance>
  <gold>* <yellow>/npc center <id>
+ <gold>* <yellow>/npc lookatme <id>
+ <gold>* <yellow>/npc setlocation <id> <x> <y> <z>
+ <gold>* <yellow>/npc setrotation <id> <yaw> <pitch>
  <gold>* <yellow>/npc move <id>
  <gold>* <yellow>/npc teleport <id>
 
