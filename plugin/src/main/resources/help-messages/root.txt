@@ -4,6 +4,7 @@
 
  <gold>* <yellow>/npc create <id> <type>
  <gold>* <yellow>/npc delete <id>
+ <gold>* <yellow>/npc changeid <old> <new>
  <gold>* <yellow>/npc toggle <id>
  <gold>* <yellow>/npc list
  <gold>* <yellow>/npc type <id> <type>

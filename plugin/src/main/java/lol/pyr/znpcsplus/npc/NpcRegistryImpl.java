@@ -161,6 +161,16 @@ public class NpcRegistryImpl implements NpcRegistry {
         storage.deleteNpc(entry);
     }
 
+    public void switchIds(String oldId, String newId) {
+        NpcEntryImpl entry = getById(oldId);
+        delete(oldId);
+        NpcEntryImpl newEntry = new NpcEntryImpl(newId, entry.getNpc());
+        newEntry.setSave(entry.isSave());
+        newEntry.setProcessed(entry.isProcessed());
+        newEntry.setAllowCommandModification(entry.isAllowCommandModification());
+        register(newEntry);
+    }
+
     public void unload() {
         npcList.forEach(npcEntry -> npcEntry.getNpc().delete());
     }

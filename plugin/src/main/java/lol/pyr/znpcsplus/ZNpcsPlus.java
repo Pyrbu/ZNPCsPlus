@@ -296,6 +296,7 @@ public class ZNpcsPlus {
                 .addSubcommand("setlocation", new SetLocationCommand(npcRegistry))
                 .addSubcommand("lookatme", new LookAtMeCommand(npcRegistry))
                 .addSubcommand("setrotation", new SetRotationCommand(npcRegistry))
+                .addSubcommand("changeid", new ChangeIdCommand(npcRegistry))
                 .addSubcommand("property", new MultiCommand(bootstrap.loadHelpMessage("property"))
                         .addSubcommand("set", new PropertySetCommand(npcRegistry))
                         .addSubcommand("remove", new PropertyRemoveCommand(npcRegistry)))
