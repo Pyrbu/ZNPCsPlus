@@ -1,7 +1,6 @@
 package lol.pyr.znpcsplus.packets;
 
 import com.github.retrooper.packetevents.PacketEventsAPI;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import com.github.retrooper.packetevents.protocol.player.GameMode;
 import com.github.retrooper.packetevents.protocol.player.UserProfile;
@@ -19,16 +18,13 @@ import org.bukkit.plugin.Plugin;
 import java.util.EnumSet;
 import java.util.concurrent.CompletableFuture;
 
-public class V1_19PacketFactory extends V1_17PacketFactory {
-    private final boolean oldTabPackets;
-    public V1_19PacketFactory(TaskScheduler scheduler, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer) {
+public class V1_19_2PacketFactory extends V1_17PacketFactory {
+    public V1_19_2PacketFactory(TaskScheduler scheduler, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer) {
         super(scheduler, packetEvents, propertyRegistry, textSerializer);
-        oldTabPackets = packetEvents.getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_19_2);
     }
 
     @Override
     public CompletableFuture<Void> addTabPlayer(Player player, PacketEntity entity, PropertyHolder properties) {
-        if (oldTabPackets) return super.addTabPlayer(player, entity, properties);
         if (entity.getType() != EntityTypes.PLAYER) return CompletableFuture.completedFuture(null);
         CompletableFuture<Void> future = new CompletableFuture<>();
         skinned(player, properties, new UserProfile(entity.getUuid(), Integer.toString(entity.getEntityId()))).thenAccept(profile -> {
@@ -43,10 +39,6 @@ public class V1_19PacketFactory extends V1_17PacketFactory {
 
     @Override
     public void removeTabPlayer(Player player, PacketEntity entity) {
-        if (oldTabPackets) {
-            super.removeTabPlayer(player, entity);
-            return;
-        }
         if (entity.getType() != EntityTypes.PLAYER) return;
         sendPacket(player, new WrapperPlayServerPlayerInfoRemove(entity.getUuid()));
     }

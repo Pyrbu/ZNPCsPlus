@@ -29,10 +29,7 @@ import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.interaction.ActionRegistry;
 import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
 import lol.pyr.znpcsplus.npc.*;
-import lol.pyr.znpcsplus.packets.PacketFactory;
-import lol.pyr.znpcsplus.packets.V1_17PacketFactory;
-import lol.pyr.znpcsplus.packets.V1_19PacketFactory;
-import lol.pyr.znpcsplus.packets.V1_8PacketFactory;
+import lol.pyr.znpcsplus.packets.*;
 import lol.pyr.znpcsplus.parsers.*;
 import lol.pyr.znpcsplus.scheduling.FoliaScheduler;
 import lol.pyr.znpcsplus.scheduling.SpigotScheduler;
@@ -220,7 +217,8 @@ public class ZNpcsPlus {
         HashMap<ServerVersion, LazyLoader<? extends PacketFactory>> versions = new HashMap<>();
         versions.put(ServerVersion.V_1_8, LazyLoader.of(() -> new V1_8PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer)));
         versions.put(ServerVersion.V_1_17, LazyLoader.of(() -> new V1_17PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer)));
-        versions.put(ServerVersion.V_1_19, LazyLoader.of(() -> new V1_19PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer)));
+        versions.put(ServerVersion.V_1_19_2, LazyLoader.of(() -> new V1_19_2PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer)));
+        versions.put(ServerVersion.V_1_20_2, LazyLoader.of(() -> new V1_20_2PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer)));
 
         ServerVersion version = packetEvents.getServerManager().getVersion();
         if (versions.containsKey(version)) return versions.get(version).get();
