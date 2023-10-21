@@ -56,7 +56,9 @@ public class ZNpcsPlusBootstrap extends JavaPlugin {
         loader.loadLibrary(decrypt("net..kyori"), "adventure-text-minimessage", "4.14.0");
         loader.loadLibrary(decrypt("net..kyori"), "adventure-text-serializer-bungeecord", "4.3.1");
         loader.loadLibrary(decrypt("net..kyori"), "adventure-text-serializer-gson", "4.14.0");
+        loader.loadLibrary(decrypt("net..kyori"), "adventure-text-serializer-gson-legacy-impl", "4.14.0");
         loader.loadLibrary(decrypt("net..kyori"), "adventure-text-serializer-json", "4.14.0");
+        loader.loadLibrary(decrypt("net..kyori"), "adventure-text-serializer-json-legacy-impl", "4.14.0");
         loader.loadLibrary(decrypt("net..kyori"), "adventure-text-serializer-legacy", "4.14.0");
         loader.loadLibrary(decrypt("net..kyori"), "examination-api", "1.3.0");
         loader.loadLibrary(decrypt("net..kyori"), "examination-string", "1.3.0");
