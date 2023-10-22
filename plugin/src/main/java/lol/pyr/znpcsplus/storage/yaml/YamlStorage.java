@@ -51,7 +51,7 @@ public class YamlStorage implements NpcStorage {
         File[] files = folder.listFiles();
         if (files == null || files.length == 0) return Collections.emptyList();
         List<NpcEntryImpl> npcs = new ArrayList<>(files.length);
-        for (File file : files) if (file.isFile() && file.getName().toLowerCase().endsWith(".yml")) {
+        for (File file : files) if (file.isFile() && file.getName().toLowerCase().endsWith(".yml")) try {
             YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
             UUID uuid = config.contains("uuid") ? UUID.fromString(config.getString("uuid")) : UUID.randomUUID();
             NpcImpl npc = new NpcImpl(uuid, propertyRegistry, configManager, packetFactory, textSerializer, config.getString("world"),
@@ -92,6 +92,9 @@ public class YamlStorage implements NpcStorage {
             entry.setSave(true);
 
             npcs.add(entry);
+        } catch (Throwable t) {
+            logger.severe("Failed to load npc file: " + file.getName());
+            t.printStackTrace();
         }
         return npcs;
     }
