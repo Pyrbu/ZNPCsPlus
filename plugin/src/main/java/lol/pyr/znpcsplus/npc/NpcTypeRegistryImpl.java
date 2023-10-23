@@ -96,7 +96,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .addEquipmentProperties());
 
         register(builder(p, "guardian", EntityTypes.GUARDIAN)
-                .setHologramOffset(-1.125));
+                .setHologramOffset(-1.125)
+                .addProperties("is_elder", "is_retracting_spikes"));
 
         register(builder(p, "horse", EntityTypes.HORSE)
                 .setHologramOffset(-0.375)

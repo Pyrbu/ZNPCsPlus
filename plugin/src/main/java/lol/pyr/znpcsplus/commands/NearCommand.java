@@ -20,6 +20,7 @@ public class NearCommand implements CommandHandler {
 
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
+        context.setUsage(context.getLabel() + " near <radius>");
         Player player = context.ensureSenderIsPlayer();
         int raw = context.parse(Integer.class);
         double radius = Math.pow(raw, 2);
