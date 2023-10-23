@@ -264,6 +264,18 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
             register(new BooleanProperty("show_base", endCrystalIndex, true, false));
         }
 
+        // Guardian
+        if (ver.isOlderThan(ServerVersion.V_1_11)) {
+            int guardianIndex;
+            if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) guardianIndex = 12;
+            else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) guardianIndex = 11;
+            else guardianIndex = 16;
+            register(new BitsetProperty("is_elder", guardianIndex, 0x04, false, legacyBooleans));
+            register(new BitsetProperty("is_retracting_spikes", guardianIndex++, 0x02, false, legacyBooleans));
+            linkProperties("is_elder", "is_retracting_spikes");
+            // TODO: add guardian beam target
+        }
+
         // Horse
         if (ver.isNewerThanOrEquals(ServerVersion.V_1_8) && ver.isOlderThan(ServerVersion.V_1_9)) {
             register(new EncodedByteProperty<>("horse_type", HorseType.HORSE, 19, obj -> (byte) obj.ordinal()));
