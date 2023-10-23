@@ -6,4 +6,5 @@ public interface Hologram {
     void removeLine(int index);
     void clearLines();
     void insertLine(int index, String line);
+    int lineCount();
 }

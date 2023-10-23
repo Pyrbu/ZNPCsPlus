@@ -133,6 +133,11 @@ public class HologramImpl extends Viewable implements Hologram {
     }
 
     @Override
+    public int lineCount() {
+        return lines.size();
+    }
+
+    @Override
     protected void UNSAFE_show(Player player) {
         for (HologramLine<?> line : lines) line.show(player);
     }
