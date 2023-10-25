@@ -124,7 +124,7 @@ public class ZNpcsPlus {
         ConfigManager configManager = new ConfigManager(getDataFolder());
         MojangSkinCache skinCache = new MojangSkinCache(configManager);
         EntityPropertyRegistryImpl propertyRegistry = new EntityPropertyRegistryImpl(skinCache, configManager);
-        PacketFactory packetFactory = setupPacketFactory(scheduler, propertyRegistry);
+        PacketFactory packetFactory = setupPacketFactory(scheduler, propertyRegistry, configManager);
         propertyRegistry.registerTypes(packetFactory);
 
         ActionRegistry actionRegistry = new ActionRegistry();
@@ -214,12 +214,12 @@ public class ZNpcsPlus {
         PacketEvents.getAPI().terminate();
     }
 
-    private PacketFactory setupPacketFactory(TaskScheduler scheduler, EntityPropertyRegistryImpl propertyRegistry) {
+    private PacketFactory setupPacketFactory(TaskScheduler scheduler, EntityPropertyRegistryImpl propertyRegistry, ConfigManager configManager) {
         HashMap<ServerVersion, LazyLoader<? extends PacketFactory>> versions = new HashMap<>();
-        versions.put(ServerVersion.V_1_8, LazyLoader.of(() -> new V1_8PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer)));
-        versions.put(ServerVersion.V_1_17, LazyLoader.of(() -> new V1_17PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer)));
-        versions.put(ServerVersion.V_1_19_2, LazyLoader.of(() -> new V1_19_2PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer)));
-        versions.put(ServerVersion.V_1_20_2, LazyLoader.of(() -> new V1_20_2PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer)));
+        versions.put(ServerVersion.V_1_8, LazyLoader.of(() -> new V1_8PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer, configManager)));
+        versions.put(ServerVersion.V_1_17, LazyLoader.of(() -> new V1_17PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer, configManager)));
+        versions.put(ServerVersion.V_1_19_2, LazyLoader.of(() -> new V1_19_2PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer, configManager)));
+        versions.put(ServerVersion.V_1_20_2, LazyLoader.of(() -> new V1_20_2PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer, configManager)));
 
         ServerVersion version = packetEvents.getServerManager().getVersion();
         if (versions.containsKey(version)) return versions.get(version).get();

@@ -14,6 +14,7 @@ import com.github.retrooper.packetevents.wrapper.play.server.*;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
+import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
@@ -34,12 +35,14 @@ public class V1_8PacketFactory implements PacketFactory {
     protected final PacketEventsAPI<Plugin> packetEvents;
     protected final EntityPropertyRegistryImpl propertyRegistry;
     protected final LegacyComponentSerializer textSerializer;
+    protected ConfigManager configManager;
 
-    public V1_8PacketFactory(TaskScheduler scheduler, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer) {
+    public V1_8PacketFactory(TaskScheduler scheduler, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer, ConfigManager configManager) {
         this.scheduler = scheduler;
         this.packetEvents = packetEvents;
         this.propertyRegistry = propertyRegistry;
         this.textSerializer = textSerializer;
+        this.configManager = configManager;
     }
 
     @Override
@@ -51,7 +54,7 @@ public class V1_8PacketFactory implements PacketFactory {
                     entity.getUuid(), npcLocationToVector(location), location.getYaw(), location.getPitch(), Collections.emptyList()));
             sendPacket(player, new WrapperPlayServerEntityHeadLook(entity.getEntityId(), location.getYaw()));
             sendAllMetadata(player, entity, properties);
-            scheduler.runLaterAsync(() -> removeTabPlayer(player, entity), 60);
+            scheduler.runLaterAsync(() -> removeTabPlayer(player, entity), configManager.getConfig().tabHideDelay());
         });
     }
 

@@ -4,6 +4,7 @@ import com.github.retrooper.packetevents.PacketEventsAPI;
 import com.github.retrooper.packetevents.util.Vector3d;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSpawnEntity;
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
+import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
@@ -16,8 +17,8 @@ import org.bukkit.plugin.Plugin;
 import java.util.Optional;
 
 public class V1_17PacketFactory extends V1_8PacketFactory {
-    public V1_17PacketFactory(TaskScheduler scheduler, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer) {
-        super(scheduler, packetEvents, propertyRegistry, textSerializer);
+    public V1_17PacketFactory(TaskScheduler scheduler, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer, ConfigManager configManager) {
+        super(scheduler, packetEvents, propertyRegistry, textSerializer, configManager);
     }
 
     @Override

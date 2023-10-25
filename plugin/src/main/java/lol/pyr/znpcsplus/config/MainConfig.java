@@ -56,4 +56,9 @@ public interface MainConfig {
     @ConfComments("How far should the look property work from in blocks")
     @DefaultDouble(10)
     double lookPropertyDistance();
+    
+    @ConfKey("tab-hide-delay")
+    @ConfComments("The ticks delay for NPCs to be hidden from the TAB")
+    @DefaultInteger(60)
+    int tabHideDelay();
 }
