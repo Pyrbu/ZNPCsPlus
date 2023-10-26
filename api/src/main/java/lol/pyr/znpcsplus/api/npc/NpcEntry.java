@@ -12,4 +12,6 @@ public interface NpcEntry {
 
     boolean isAllowCommandModification();
     void setAllowCommandModification(boolean value);
+
+    void enableEverything();
 }
