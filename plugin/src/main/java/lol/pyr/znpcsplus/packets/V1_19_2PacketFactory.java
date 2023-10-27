@@ -7,6 +7,7 @@ import com.github.retrooper.packetevents.protocol.player.UserProfile;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPlayerInfoRemove;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPlayerInfoUpdate;
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
+import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
@@ -19,8 +20,8 @@ import java.util.EnumSet;
 import java.util.concurrent.CompletableFuture;
 
 public class V1_19_2PacketFactory extends V1_17PacketFactory {
-    public V1_19_2PacketFactory(TaskScheduler scheduler, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer) {
-        super(scheduler, packetEvents, propertyRegistry, textSerializer);
+    public V1_19_2PacketFactory(TaskScheduler scheduler, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer, ConfigManager configManager) {
+        super(scheduler, packetEvents, propertyRegistry, textSerializer, configManager);
     }
 
     @Override
