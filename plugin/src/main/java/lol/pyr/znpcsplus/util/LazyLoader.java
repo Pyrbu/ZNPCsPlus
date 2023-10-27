@@ -1,24 +1,21 @@
 package lol.pyr.znpcsplus.util;
 
+import java.util.function.Supplier;
+
 public class LazyLoader <T> {
-    private final ObjectProvider<T> provider;
+    private final Supplier<T> supplier;
     private T value;
 
-    private LazyLoader(ObjectProvider<T> provider) {
-        this.provider = provider;
+    private LazyLoader(Supplier<T> supplier) {
+        this.supplier = supplier;
     }
 
     public T get() {
-        if (value == null) value = provider.provide();
+        if (value == null) value = supplier.get();
         return value;
     }
 
-    public static <T> LazyLoader<T> of(ObjectProvider<T> provider) {
-        return new LazyLoader<>(provider);
-    }
-
-    @FunctionalInterface
-    public interface ObjectProvider<T> {
-        T provide();
+    public static <T> LazyLoader<T> of(Supplier<T> supplier) {
+        return new LazyLoader<>(supplier);
     }
 }
