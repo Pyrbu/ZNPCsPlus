@@ -10,7 +10,7 @@ public abstract class NpcEvent extends Event {
     private final Player player;
 
     public NpcEvent(Player player, NpcEntry entry) {
-        super(true); // All events are async since 95% of the plugin is async
+        super(true); // All events are async since 99% of the plugin is async
         this.entry = entry;
         this.player = player;
     }
