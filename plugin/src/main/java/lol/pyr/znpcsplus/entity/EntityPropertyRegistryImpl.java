@@ -127,6 +127,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new DummyProperty<>("look_distance", configManager.getConfig().lookPropertyDistance()));
         register(new DummyProperty<>("view_distance", configManager.getConfig().viewDistance()));
 
+        register(new DummyProperty<>("permission_required", false));
+
         register(new GlowProperty(packetFactory));
         register(new BitsetProperty("fire", 0, 0x01));
         register(new BitsetProperty("invisible", 0, 0x20));
