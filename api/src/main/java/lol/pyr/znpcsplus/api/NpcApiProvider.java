@@ -11,6 +11,11 @@ public class NpcApiProvider {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Static method that returns the api instance of the plugin
+     *
+     * @return The instance of the api for the ZNPCsPlus plugin
+     */
     public static NpcApi get() {
         if (api == null) throw new IllegalStateException(
                 "ZNPCsPlus plugin isn't enabled yet!\n" +
@@ -19,11 +24,19 @@ public class NpcApiProvider {
         return api;
     }
 
+    /**
+     * Internal method used to register the main instance of the plugin as the api provider
+     * You probably shouldn't call this method under any circumstances
+     */
     public static void register(Plugin plugin, NpcApi api) {
         NpcApiProvider.api = api;
         Bukkit.getServicesManager().register(NpcApi.class, api, plugin, ServicePriority.Normal);
     }
 
+    /**
+     * Internal method used to unregister the plugin from the provider when the plugin shuts down
+     * You probably shouldn't call this method under any circumstances
+     */
     public static void unregister() {
         Bukkit.getServicesManager().unregister(api);
         NpcApiProvider.api = null;

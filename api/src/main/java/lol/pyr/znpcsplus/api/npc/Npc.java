@@ -25,4 +25,7 @@ public interface Npc extends PropertyHolder {
     void hide(Player player);
     void show(Player player);
     void respawn(Player player);
+
+    void setHeadRotation(Player player, float yaw, float pitch);
+    void setHeadRotation(float yaw, float pitch);
 }
