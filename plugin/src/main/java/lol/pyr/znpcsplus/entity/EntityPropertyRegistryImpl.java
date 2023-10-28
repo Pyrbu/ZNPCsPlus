@@ -274,6 +274,13 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
             register(new BitsetProperty("is_retracting_spikes", guardianIndex++, 0x02, false, legacyBooleans));
             linkProperties("is_elder", "is_retracting_spikes");
             // TODO: add guardian beam target
+        } else {
+            int guardianIndex;
+            if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) guardianIndex = 16;
+            else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) guardianIndex = 15;
+            else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) guardianIndex = 14;
+            else guardianIndex = 12;
+            register(new BooleanProperty("is_retracting_spikes", guardianIndex, false, false));
         }
 
         // Horse

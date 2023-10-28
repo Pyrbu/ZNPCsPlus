@@ -161,6 +161,9 @@ public class NpcTypeImpl implements NpcType {
             if (EntityTypes.isTypeInstanceOf(type, EntityTypes.ABSTRACT_TAMEABLE_ANIMAL)) {
                 addProperties("tamed", "sitting");
             }
+            if (EntityTypes.isTypeInstanceOf(type, EntityTypes.GUARDIAN)) {
+                addProperties("is_retracting_spikes");
+            }
             return new NpcTypeImpl(name, type, hologramOffset, new HashSet<>(allowedProperties), defaultProperties);
         }
     }
