@@ -115,7 +115,7 @@ public class NpcTypeImpl implements NpcType {
         public NpcTypeImpl build() {
             ServerVersion version = PacketEvents.getAPI().getServerManager().getVersion();
             addProperties("fire", "invisible", "silent", "look", "look_distance", "view_distance",
-                    "potion_color", "potion_ambient", "display_name");
+                    "potion_color", "potion_ambient", "display_name", "permission_required");
             if (!type.equals(EntityTypes.PLAYER)) addProperties("dinnerbone");
             // TODO: make this look nicer after completing the rest of the properties
             if (version.isNewerThanOrEquals(ServerVersion.V_1_9)) addProperties("glow");
@@ -160,6 +160,9 @@ public class NpcTypeImpl implements NpcType {
             }
             if (EntityTypes.isTypeInstanceOf(type, EntityTypes.ABSTRACT_TAMEABLE_ANIMAL)) {
                 addProperties("tamed", "sitting");
+            }
+            if (EntityTypes.isTypeInstanceOf(type, EntityTypes.GUARDIAN)) {
+                addProperties("is_retracting_spikes");
             }
             return new NpcTypeImpl(name, type, hologramOffset, new HashSet<>(allowedProperties), defaultProperties);
         }

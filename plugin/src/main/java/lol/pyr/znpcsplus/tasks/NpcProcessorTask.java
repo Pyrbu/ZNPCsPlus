@@ -30,6 +30,7 @@ public class NpcProcessorTask extends BukkitRunnable {
         EntityPropertyImpl<Integer> viewDistanceProperty = propertyRegistry.getByName("view_distance", Integer.class); // Not sure why this is an Integer, but it is
         EntityPropertyImpl<LookType> lookProperty = propertyRegistry.getByName("look", LookType.class);
         EntityPropertyImpl<Double> lookDistanceProperty = propertyRegistry.getByName("look_distance", Double.class);
+        EntityPropertyImpl<Boolean> permissionRequiredProperty = propertyRegistry.getByName("permission_required", Boolean.class);
         double lookDistance;
         for (NpcEntryImpl entry : npcRegistry.getProcessable()) {
             NpcImpl npc = entry.getNpc();
@@ -39,8 +40,13 @@ public class NpcProcessorTask extends BukkitRunnable {
             Player closest = null;
             LookType lookType = npc.getProperty(lookProperty);
             lookDistance =  NumberConversions.square(npc.getProperty(lookDistanceProperty));
+            boolean permissionRequired = npc.getProperty(permissionRequiredProperty);
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (!player.getWorld().equals(npc.getWorld())) {
+                    if (npc.isVisibleTo(player)) npc.hide(player);
+                    continue;
+                }
+                if (permissionRequired && !player.hasPermission("znpcsplus.npc." + entry.getId())) {
                     if (npc.isVisibleTo(player)) npc.hide(player);
                     continue;
                 }

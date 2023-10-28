@@ -10,7 +10,7 @@ public interface PropertyHolder {
      * Method used to get the value of a property from a property holder
      *
      * @param key Unique key representing a property
-     * @return The value associated with the provided property key & this holder
+     * @return The value associated with the provided property key and this holder
      * @param <T> The type of the property value
      */
     <T> T getProperty(EntityProperty<T> key);
