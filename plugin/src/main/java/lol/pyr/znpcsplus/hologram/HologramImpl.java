@@ -10,7 +10,9 @@ import lol.pyr.znpcsplus.util.NpcLocation;
 import lol.pyr.znpcsplus.util.Viewable;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.internal.parser.ParsingExceptionImpl;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -44,12 +46,12 @@ public class HologramImpl extends Viewable implements Hologram {
         for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
     }
 
-    public void addLegacyTextLine(String line) {
-        addTextLineComponent(Component.text(line));
-    }
-
     public void addTextLine(String line) {
-        addTextLineComponent(textSerializer.deserialize(textSerializer.serialize(MiniMessage.miniMessage().deserialize(line))));
+        try {
+            addTextLineComponent(textSerializer.deserialize(textSerializer.serialize(MiniMessage.miniMessage().deserialize(line))));
+        } catch (ParsingExceptionImpl e) {
+            addTextLineComponent(Component.text(line));
+        }
     }
 
     public void addItemLineStack(org.bukkit.inventory.ItemStack item) {
