@@ -30,6 +30,9 @@ public class NpcApiProvider {
     /**
      * Internal method used to register the main instance of the plugin as the api provider
      * You probably shouldn't call this method under any circumstances
+     *
+     * @param plugin Instance of the ZNPCsPlus plugin
+     * @param api Instance of the ZNPCsPlus api
      */
     public static void register(Plugin plugin, NpcApi api) {
         NpcApiProvider.api = api;

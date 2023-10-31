@@ -41,7 +41,7 @@ public interface NpcRegistry {
      * @param world The {@link World} of the NPC entry
      * @param type The {@link NpcType} of the NPC entry
      * @param location The {@link NpcLocation} of the NPC entry
-     * @return
+     * @return The entry of the newly created npc
      */
     NpcEntry create(String id, World world, NpcType type, NpcLocation location);
 
