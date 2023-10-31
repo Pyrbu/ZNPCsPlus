@@ -4,8 +4,6 @@ import lol.pyr.znpcsplus.entity.PropertySerializer;
 import lol.pyr.znpcsplus.util.GlowColor;
 import net.kyori.adventure.text.format.NamedTextColor;
 
-import java.util.Objects;
-
 public class GlowColorPropertySerializer implements PropertySerializer<GlowColor> {
     @Override
     public String serialize(GlowColor property) {
