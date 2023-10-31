@@ -86,7 +86,6 @@ public class ZNpcsPlusBootstrap extends JavaPlugin {
         Reader reader = getTextResource("messages/" + file + ".txt");
         if (reader == null) throw new RuntimeException(file + ".txt is missing from ZNPCsPlus jar!");
         String text = FileUtil.dumpReaderAsString(reader);
-        System.out.println(text);
         Matcher matcher = EMBEDDED_FILE_PATTERN.matcher(text);
         StringBuilder builder = new StringBuilder();
         int lastMatchEnd = 0;
