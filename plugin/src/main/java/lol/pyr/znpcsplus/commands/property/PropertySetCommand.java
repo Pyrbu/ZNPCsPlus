@@ -61,6 +61,10 @@ public class PropertySetCommand implements CommandHandler {
             value = null;
             valueName = "NONE";
         }
+        else if (type == GlowColor.class && context.argSize() < 1 && npc.getProperty(property) != null) {
+            value = null;
+            valueName = "NONE";
+        }
         else if (type == Color.class && context.argSize() < 1 && npc.getProperty(property) != null) {
             value = Color.BLACK;
             valueName = "NONE";
@@ -152,6 +156,7 @@ public class PropertySetCommand implements CommandHandler {
             if (context.argSize() == 3) {
                 if (type == Boolean.class) return context.suggestLiteral("true", "false");
                 if (type == NamedTextColor.class) return context.suggestCollection(NamedTextColor.NAMES.keys());
+                if (type == GlowColor.class) return context.suggestCollection(GlowColor.NAMES.keys());
                 if (type == Color.class) return context.suggestLiteral("0x0F00FF", "#FFFFFF");
                 if (type == BlockState.class) return context.suggestLiteral("hand", "looking_at", "block");
                 if (type == SpellType.class) return PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_13) ?
