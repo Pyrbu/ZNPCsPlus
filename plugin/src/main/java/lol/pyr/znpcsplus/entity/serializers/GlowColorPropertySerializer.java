@@ -2,7 +2,6 @@ package lol.pyr.znpcsplus.entity.serializers;
 
 import lol.pyr.znpcsplus.entity.PropertySerializer;
 import lol.pyr.znpcsplus.util.GlowColor;
-import net.kyori.adventure.text.format.NamedTextColor;
 
 public class GlowColorPropertySerializer implements PropertySerializer<GlowColor> {
     @Override

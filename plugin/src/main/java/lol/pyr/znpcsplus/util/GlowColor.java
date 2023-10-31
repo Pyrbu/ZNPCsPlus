@@ -1,20 +1,33 @@
 package lol.pyr.znpcsplus.util;
 
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.util.HSVLike;
 import net.kyori.adventure.util.Index;
-import net.kyori.examination.ExaminableProperty;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
 
-public class GlowColor implements TextColor {
+public enum GlowColor {
+    BLACK("black", 0x000000),
+    DARK_BLUE("dark_blue", 0x0000aa),
+    DARK_GREEN("dark_green",0x00aa00),
+    DARK_AQUA("dark_aqua", 0x00aaaa),
+    DARK_RED("dark_red", 0xaa0000),
+    DARK_PURPLE("dark_purple", 0xaa00aa),
+    GOLD("gold", 0xffaa00),
+    GRAY("gray", 0xaaaaaa),
+    DARK_GRAY("dark_gray", 0x555555),
+    BLUE("blue", 0x5555ff),
+    GREEN("green", 0x55ff55),
+    AQUA("aqua", 0x55ffff),
+    RED("red", 0xff5555),
+    LIGHT_PURPLE("light_purple", 0xff55ff),
+    YELLOW("yellow", 0xffff55),
+    WHITE("white", 0xffffff);
+
     private static final int BLACK_VALUE = 0x000000;
     private static final int DARK_BLUE_VALUE = 0x0000aa;
     private static final int DARK_GREEN_VALUE = 0x00aa00;
@@ -31,103 +44,6 @@ public class GlowColor implements TextColor {
     private static final int LIGHT_PURPLE_VALUE = 0xff55ff;
     private static final int YELLOW_VALUE = 0xffff55;
     private static final int WHITE_VALUE = 0xffffff;
-
-    /**
-     * The standard {@code black} colour.
-     *
-     * @since 4.0.0
-     */
-    public static final GlowColor BLACK = new GlowColor("black", BLACK_VALUE);
-    /**
-     * The standard {@code dark_blue} colour.
-     *
-     * @since 4.0.0
-     */
-    public static final GlowColor DARK_BLUE = new GlowColor("dark_blue", DARK_BLUE_VALUE);
-    /**
-     * The standard {@code dark_green} colour.
-     *
-     * @since 4.0.0
-     */
-    public static final GlowColor DARK_GREEN = new GlowColor("dark_green", DARK_GREEN_VALUE);
-    /**
-     * The standard {@code dark_aqua} colour.
-     *
-     * @since 4.0.0
-     */
-    public static final GlowColor DARK_AQUA = new GlowColor("dark_aqua", DARK_AQUA_VALUE);
-    /**
-     * The standard {@code dark_red} colour.
-     *
-     * @since 4.0.0
-     */
-    public static final GlowColor DARK_RED = new GlowColor("dark_red", DARK_RED_VALUE);
-    /**
-     * The standard {@code dark_purple} colour.
-     *
-     * @since 4.0.0
-     */
-    public static final GlowColor DARK_PURPLE = new GlowColor("dark_purple", DARK_PURPLE_VALUE);
-    /**
-     * The standard {@code gold} colour.
-     *
-     * @since 4.0.0
-     */
-    public static final GlowColor GOLD = new GlowColor("gold", GOLD_VALUE);
-    /**
-     * The standard {@code gray} colour.
-     *
-     * @since 4.0.0
-     */
-    public static final GlowColor GRAY = new GlowColor("gray", GRAY_VALUE);
-    /**
-     * The standard {@code dark_gray} colour.
-     *
-     * @since 4.0.0
-     */
-    public static final GlowColor DARK_GRAY = new GlowColor("dark_gray", DARK_GRAY_VALUE);
-    /**
-     * The standard {@code blue} colour.
-     *
-     * @since 4.0.0
-     */
-    public static final GlowColor BLUE = new GlowColor("blue", BLUE_VALUE);
-    /**
-     * The standard {@code green} colour.
-     *
-     * @since 4.0.0
-     */
-    public static final GlowColor GREEN = new GlowColor("green", GREEN_VALUE);
-    /**
-     * The standard {@code aqua} colour.
-     *
-     * @since 4.0.0
-     */
-    public static final GlowColor AQUA = new GlowColor("aqua", AQUA_VALUE);
-    /**
-     * The standard {@code red} colour.
-     *
-     * @since 4.0.0
-     */
-    public static final GlowColor RED = new GlowColor("red", RED_VALUE);
-    /**
-     * The standard {@code light_purple} colour.
-     *
-     * @since 4.0.0
-     */
-    public static final GlowColor LIGHT_PURPLE = new GlowColor("light_purple", LIGHT_PURPLE_VALUE);
-    /**
-     * The standard {@code yellow} colour.
-     *
-     * @since 4.0.0
-     */
-    public static final GlowColor YELLOW = new GlowColor("yellow", YELLOW_VALUE);
-    /**
-     * The standard {@code white} colour.
-     *
-     * @since 4.0.0
-     */
-    public static final GlowColor WHITE = new GlowColor("white", WHITE_VALUE);
 
     private static final List<GlowColor> VALUES = Collections.unmodifiableList(Arrays.asList(BLACK, DARK_BLUE, DARK_GREEN, DARK_AQUA, DARK_RED, DARK_PURPLE, GOLD, GRAY, DARK_GRAY, BLUE, GREEN, AQUA, RED, LIGHT_PURPLE, YELLOW, WHITE));
     /**
@@ -198,55 +114,24 @@ public class GlowColor implements TextColor {
         }
     }
 
-    /**
-     * Find the named colour nearest to the provided colour.
-     *
-     * @param any colour to match
-     * @return nearest named colour. will always return a value
-     * @since 4.0.0
-     */
-    public static @NotNull GlowColor nearestTo(final @NotNull TextColor any) {
-        if (any instanceof NamedTextColor) {
-            return (GlowColor) any;
-        }
-
-        return TextColor.nearestColorTo(VALUES, any);
-    }
-
     private final String name;
     private final int value;
-    private final HSVLike hsv;
 
     private GlowColor(final String name, final int value) {
         this.name = name;
         this.value = value;
-        this.hsv = HSVLike.fromRGB(this.red(), this.green(), this.blue());
-    }
-
-    @Override
-    public int value() {
-        return this.value;
     }
 
     public NamedTextColor toNamedTextColor() {
         return NamedTextColor.namedColor(this.value);
     }
 
-    @Override
-    public @NotNull HSVLike asHSV() {
-        return this.hsv;
+    public int value() {
+        return this.value;
     }
 
     @Override
     public @NotNull String toString() {
         return this.name;
-    }
-
-    @Override
-    public @NotNull Stream<? extends ExaminableProperty> examinableProperties() {
-        return Stream.concat(
-                Stream.of(ExaminableProperty.of("name", this.name)),
-                TextColor.super.examinableProperties()
-        );
     }
 }
