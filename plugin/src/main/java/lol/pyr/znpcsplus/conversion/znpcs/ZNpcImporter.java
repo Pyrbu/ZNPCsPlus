@@ -30,10 +30,7 @@ import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 import lol.pyr.znpcsplus.skin.descriptor.FetchingDescriptor;
 import lol.pyr.znpcsplus.skin.descriptor.MirrorDescriptor;
 import lol.pyr.znpcsplus.skin.descriptor.PrefetchedDescriptor;
-import lol.pyr.znpcsplus.util.BungeeConnector;
-import lol.pyr.znpcsplus.util.ItemSerializationUtil;
-import lol.pyr.znpcsplus.util.LookType;
-import lol.pyr.znpcsplus.util.NpcLocation;
+import lol.pyr.znpcsplus.util.*;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -143,9 +140,9 @@ public class ZNpcImporter implements DataImporter {
                 }
                 if (toggleValues.containsKey("glow")) {
                     try {
-                        npc.setProperty(propertyRegistry.getByName("glow", DyeColor.class), DyeColor.valueOf((String) toggleValues.get("glow")));
+                        npc.setProperty(propertyRegistry.getByName("glow", NamedColor.class), NamedColor.valueOf((String) toggleValues.get("glow")));
                     } catch (IllegalArgumentException e) {
-                        npc.setProperty(propertyRegistry.getByName("glow", DyeColor.class), DyeColor.WHITE);
+                        npc.setProperty(propertyRegistry.getByName("glow", NamedColor.class), NamedColor.WHITE);
                     }
                 }
             }

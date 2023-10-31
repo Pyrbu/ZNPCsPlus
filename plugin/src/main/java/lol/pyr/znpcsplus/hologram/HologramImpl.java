@@ -44,6 +44,10 @@ public class HologramImpl extends Viewable implements Hologram {
         for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
     }
 
+    public void addLegacyTextLine(String line) {
+        addTextLineComponent(Component.text(line));
+    }
+
     public void addTextLine(String line) {
         addTextLineComponent(textSerializer.deserialize(textSerializer.serialize(MiniMessage.miniMessage().deserialize(line))));
     }
