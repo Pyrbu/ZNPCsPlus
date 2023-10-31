@@ -2,6 +2,9 @@ package lol.pyr.znpcsplus.entity.serializers;
 
 import lol.pyr.znpcsplus.entity.PropertySerializer;
 import lol.pyr.znpcsplus.util.GlowColor;
+import net.kyori.adventure.text.format.NamedTextColor;
+
+import java.util.Objects;
 
 public class GlowColorPropertySerializer implements PropertySerializer<GlowColor> {
     @Override
@@ -11,7 +14,9 @@ public class GlowColorPropertySerializer implements PropertySerializer<GlowColor
 
     @Override
     public GlowColor deserialize(String property) {
-        return GlowColor.namedColor(Integer.parseInt(property));
+        NamedTextColor namedTextColor = NamedTextColor.namedColor(Integer.parseInt(property));
+        if (namedTextColor == null) return null;
+        return GlowColor.valueOf(namedTextColor.toString().toUpperCase());
     }
 
     @Override
