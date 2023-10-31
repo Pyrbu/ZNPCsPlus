@@ -4,6 +4,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.ServicePriority;
 
+/**
+ * Provider for the registered api instance
+ */
 public class NpcApiProvider {
     private static NpcApi api = null;
 
