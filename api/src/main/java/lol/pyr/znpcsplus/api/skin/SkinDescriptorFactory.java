@@ -2,6 +2,9 @@ package lol.pyr.znpcsplus.api.skin;
 
 import java.net.URL;
 
+/**
+ * Factory for creating skin descriptors.
+ */
 public interface SkinDescriptorFactory {
     SkinDescriptor createMirrorDescriptor();
     SkinDescriptor createRefreshingDescriptor(String playerName);
