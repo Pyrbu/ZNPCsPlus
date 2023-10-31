@@ -6,7 +6,7 @@ package lol.pyr.znpcsplus.api.hologram;
 public interface Hologram {
     /**
      * Adds a line to the hologram
-     * Note: to add an item line, pass "item:[item]" as the line
+     * Note: to add an item line, pass "item:&#60;item&#62;" as the line
      * @param line The line to add
      */
     void addLine(String line);
