@@ -49,7 +49,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
     public EntityPropertyRegistryImpl(MojangSkinCache skinCache, ConfigManager configManager) {
         registerSerializer(new ComponentPropertySerializer());
-        registerSerializer(new GlowColorPropertySerializer());
+        registerSerializer(new NamedColorPropertySerializer());
         registerSerializer(new SkinDescriptorSerializer(skinCache));
         registerSerializer(new ItemStackPropertySerializer());
         registerSerializer(new ColorPropertySerializer());
@@ -273,7 +273,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
             else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) guardianIndex = 11;
             else guardianIndex = 16;
             register(new BitsetProperty("is_elder", guardianIndex, 0x04, false, legacyBooleans));
-            register(new BitsetProperty("is_retracting_spikes", guardianIndex++, 0x02, false, legacyBooleans));
+            register(new BitsetProperty("is_retracting_spikes", guardianIndex, 0x02, false, legacyBooleans));
             linkProperties("is_elder", "is_retracting_spikes");
             // TODO: add guardian beam target
         } else {

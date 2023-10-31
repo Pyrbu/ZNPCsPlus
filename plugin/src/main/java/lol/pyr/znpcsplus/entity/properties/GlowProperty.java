@@ -5,22 +5,22 @@ import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.packets.PacketFactory;
-import lol.pyr.znpcsplus.util.GlowColor;
+import lol.pyr.znpcsplus.util.NamedColor;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
 
-public class GlowProperty extends EntityPropertyImpl<GlowColor> {
+public class GlowProperty extends EntityPropertyImpl<NamedColor> {
     private final PacketFactory packetFactory;
 
     public GlowProperty(PacketFactory packetFactory) {
-        super("glow", null, GlowColor.class);
+        super("glow", null, NamedColor.class);
         this.packetFactory = packetFactory;
     }
 
     @Override
     public void apply(Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData> properties) {
-        GlowColor value = entity.getProperty(this);
+        NamedColor value = entity.getProperty(this);
         EntityData oldData = properties.get(0);
         byte oldValue = oldData == null ? 0 : (byte) oldData.getValue();
         properties.put(0, newEntityData(0, EntityDataTypes.BYTE, (byte) (oldValue | (value == null ? 0 : 0x40))));
