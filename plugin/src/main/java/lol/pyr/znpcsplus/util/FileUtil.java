@@ -9,12 +9,9 @@ public class FileUtil {
         BufferedReader bReader = new BufferedReader(reader);
         try {
             StringBuilder sb = new StringBuilder();
-            String line = bReader.readLine();
-            while (true) {
-                sb.append(line);
-                line = bReader.readLine();
-                if (line == null) break;
-                sb.append("\n");
+            String line;
+            while ((line = bReader.readLine()) != null) {
+                sb.append(line).append("\n");
             }
             return sb.toString();
         } catch (IOException e) {

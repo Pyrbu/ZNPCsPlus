@@ -1,0 +1,26 @@
+
+<gold>ZNPCsPlus <yellow>v${version}
+<gray>Hover over any command for more info
+
+ <hover:show_text:'{@root-hover/create}'><gold>* <yellow>/npc create <id> <type></hover>
+ <hover:show_text:'{@root-hover/delete}'><gold>* <yellow>/npc delete <id></hover>
+ <hover:show_text:'{@root-hover/changeid}'><gold>* <yellow>/npc changeid <old> <new></hover>
+ <hover:show_text:'{@root-hover/toggle}'><gold>* <yellow>/npc toggle <id></hover>
+ <hover:show_text:'{@root-hover/list}'><gold>* <yellow>/npc list</hover>
+ <hover:show_text:'{@root-hover/type}'><gold>* <yellow>/npc type <id> <type></hover>
+
+ <hover:show_text:'{@root-hover/near}'><gold>* <yellow>/npc near <distance></hover>
+ <hover:show_text:'{@root-hover/center}'><gold>* <yellow>/npc center <id></hover>
+ <hover:show_text:'{@root-hover/lookatme}'><gold>* <yellow>/npc lookatme <id></hover>
+ <hover:show_text:'{@root-hover/setlocation}'><gold>* <yellow>/npc setlocation <id> <x> <y> <z></hover>
+ <hover:show_text:'{@root-hover/setrotation}'><gold>* <yellow>/npc setrotation <id> <yaw> <pitch></hover>
+ <hover:show_text:'{@root-hover/move}'><gold>* <yellow>/npc move <id></hover>
+ <hover:show_text:'{@root-hover/teleport}'><gold>* <yellow>/npc teleport <id></hover>
+
+ <hover:show_text:'{@root-hover/skin}'><gold>* <yellow>/npc skin <id> <type> <args></hover>
+
+ <gold>* <yellow><click:run_command:/npc property><hover:show_text:'<gray>Npc property commands<br>Click to view full list'>/npc property help</hover></click>
+ <gold>* <yellow><click:run_command:/npc holo><hover:show_text:'<gray>Npc hologram commands<br>Click to view full list'>/npc holo help</hover></click>
+ <gold>* <yellow><click:run_command:/npc action><hover:show_text:'<gray>Player interaction commands<br>Click to view full list'>/npc action help</hover></click>
+ <gold>* <yellow><click:run_command:/npc storage><hover:show_text:'<gray>Npc data storage commands<br>Click to view full list'>/npc storage help</hover></click>
+

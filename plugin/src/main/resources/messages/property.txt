@@ -1,0 +1,7 @@
+
+<gold>ZNPCsPlus <yellow>v${version} <red><click:run_command:/npc><hover:show_text:'<red>Click to view the main help message'>[BACK]</hover></click></red>
+<gray>Hover over any command more info
+
+ <hover:show_text:'{@property-hover/set}'><gold>* <yellow>/npc property set <id> <property> <value></hover>
+ <hover:show_text:'{@property-hover/remove}'><gold>* <yellow>/npc property remove <id> <property></hover>
+

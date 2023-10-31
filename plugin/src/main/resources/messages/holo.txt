@@ -1,0 +1,11 @@
+
+<gold>ZNPCsPlus <yellow>v${version} <red><click:run_command:/npc><hover:show_text:'<red>Click to view the main help message'>[BACK]</hover></click></red>
+<gray>Hover over any command more info
+
+ <hover:show_text:'{@holo-hover/add}'><gold>* <yellow>/npc holo add <id> <text></hover>
+ <hover:show_text:'{@holo-hover/delete}'><gold>* <yellow>/npc holo delete <id> <line></hover>
+ <hover:show_text:'{@holo-hover/set}'><gold>* <yellow>/npc holo set <id> <line> <text></hover>
+ <hover:show_text:'{@holo-hover/insert}'><gold>* <yellow>/npc holo insert <id> <line> <text></hover>
+ <hover:show_text:'{@holo-hover/offset}'><gold>* <yellow>/npc holo offset <id> <amount></hover>
+ <hover:show_text:'{@holo-hover/info}'><gold>* <yellow>/npc holo info <id></hover>
+

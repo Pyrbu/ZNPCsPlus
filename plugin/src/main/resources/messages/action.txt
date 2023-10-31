@@ -1,0 +1,10 @@
+
+<gold>ZNPCsPlus <yellow>v${version} <red><click:run_command:/npc><hover:show_text:'<red>Click to view the main help message'>[BACK]</hover></click></red>
+<gray>Hover over any command for more info
+
+ <hover:show_text:'{@action-hover/add}'><gold>* <yellow>/npc action add <type> <id> <args></hover>
+ <hover:show_text:'{@action-hover/clear}'><gold>* <yellow>/npc action clear <id></hover>
+ <hover:show_text:'{@action-hover/delete}'><gold>* <yellow>/npc action delete <id> <index></hover>
+ <hover:show_text:'{@action-hover/edit}'><gold>* <yellow>/npc action edit <id> <index> <type> <args></hover>
+ <hover:show_text:'{@action-hover/list}'><gold>* <yellow>/npc action list <id></hover>
+

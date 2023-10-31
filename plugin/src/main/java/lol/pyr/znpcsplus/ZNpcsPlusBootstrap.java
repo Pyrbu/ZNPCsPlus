@@ -10,6 +10,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.Reader;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ZNpcsPlusBootstrap extends JavaPlugin {
     private ZNpcsPlus zNpcsPlus;
@@ -78,10 +80,27 @@ public class ZNpcsPlusBootstrap extends JavaPlugin {
         if (zNpcsPlus != null) zNpcsPlus.onDisable();
     }
 
+    private final static Pattern EMBEDDED_FILE_PATTERN = Pattern.compile("\\{@(.*?)}");
+
+    private String loadMessageFile(String file) {
+        Reader reader = getTextResource("messages/" + file + ".txt");
+        if (reader == null) throw new RuntimeException(file + ".txt is missing from ZNPCsPlus jar!");
+        String text = FileUtil.dumpReaderAsString(reader);
+        System.out.println(text);
+        Matcher matcher = EMBEDDED_FILE_PATTERN.matcher(text);
+        StringBuilder builder = new StringBuilder();
+        int lastMatchEnd = 0;
+        while (matcher.find()) {
+            builder.append(text, lastMatchEnd, matcher.start());
+            lastMatchEnd = matcher.end();
+            builder.append(loadMessageFile(matcher.group(1)));
+        }
+        builder.append(text, lastMatchEnd, text.length());
+        return builder.toString();
+    }
+
     protected Message<CommandContext> loadHelpMessage(String name) {
-        Reader reader = getTextResource("help-messages/" + name + ".txt");
-        if (reader == null) throw new RuntimeException(name + ".txt is missing from the help-messages folder in the ZNPCsPlus jar!");
-        Component component = MiniMessage.miniMessage().deserialize(FileUtil.dumpReaderAsString(reader));
+        Component component = MiniMessage.miniMessage().deserialize(loadMessageFile(name));
         return context -> context.send(component);
     }
 
