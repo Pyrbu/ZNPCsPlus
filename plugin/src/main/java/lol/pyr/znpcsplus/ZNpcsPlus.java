@@ -247,6 +247,7 @@ public class ZNpcsPlus {
         manager.registerParser(Float.class, new FloatParser(incorrectUsageMessage));
         manager.registerParser(Boolean.class, new BooleanParser(incorrectUsageMessage));
         manager.registerParser(NamedTextColor.class, new NamedTextColorParser(incorrectUsageMessage));
+        manager.registerParser(GlowColor.class, new GlowColorParser(incorrectUsageMessage));
         manager.registerParser(InteractionType.class, new InteractionTypeParser(incorrectUsageMessage));
         manager.registerParser(Color.class, new ColorParser(incorrectUsageMessage));
         manager.registerParser(Vector3f.class, new Vector3fParser(incorrectUsageMessage));

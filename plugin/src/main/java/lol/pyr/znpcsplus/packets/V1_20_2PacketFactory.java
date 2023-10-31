@@ -9,6 +9,7 @@ import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
+import lol.pyr.znpcsplus.util.GlowColor;
 import lol.pyr.znpcsplus.util.NpcLocation;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -28,7 +29,7 @@ public class V1_20_2PacketFactory extends V1_19_2PacketFactory {
     @Override
     public void spawnPlayer(Player player, PacketEntity entity, PropertyHolder properties) {
         addTabPlayer(player, entity, properties).thenAccept(ignored -> {
-            createTeam(player, entity, properties.getProperty(propertyRegistry.getByName("glow", NamedTextColor.class)));
+            createTeam(player, entity, properties.getProperty(propertyRegistry.getByName("glow", GlowColor.class)));
             NpcLocation location = entity.getLocation();
             sendPacket(player, new WrapperPlayServerSpawnEntity(entity.getEntityId(), Optional.of(entity.getUuid()), entity.getType(),
                     npcLocationToVector(location), location.getPitch(), location.getYaw(), location.getYaw(), 0, Optional.of(new Vector3d())));

@@ -49,7 +49,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
     public EntityPropertyRegistryImpl(MojangSkinCache skinCache, ConfigManager configManager) {
         registerSerializer(new ComponentPropertySerializer());
-        registerSerializer(new NamedTextColorPropertySerializer());
+        registerSerializer(new GlowColorPropertySerializer());
         registerSerializer(new SkinDescriptorSerializer(skinCache));
         registerSerializer(new ItemStackPropertySerializer());
         registerSerializer(new ColorPropertySerializer());

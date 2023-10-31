@@ -3,6 +3,7 @@ package lol.pyr.znpcsplus.entity.serializers;
 import lol.pyr.znpcsplus.entity.PropertySerializer;
 import net.kyori.adventure.text.format.NamedTextColor;
 
+@Deprecated
 public class NamedTextColorPropertySerializer implements PropertySerializer<NamedTextColor> {
     @Override
     public String serialize(NamedTextColor property) {
