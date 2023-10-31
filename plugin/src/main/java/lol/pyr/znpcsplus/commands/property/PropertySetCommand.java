@@ -57,7 +57,7 @@ public class PropertySetCommand implements CommandHandler {
                 valueName = bukkitStack.toString();
             }
         }
-        else if (type == NamedTextColor.class && context.argSize() < 1 && npc.getProperty(property) != null) {
+        else if (type == NamedColor.class && context.argSize() < 1 && npc.getProperty(property) != null) {
             value = null;
             valueName = "NONE";
         }
@@ -151,7 +151,7 @@ public class PropertySetCommand implements CommandHandler {
             if (type == Vector3f.class && context.argSize() <= 5) return context.suggestLiteral("0", "0.0");
             if (context.argSize() == 3) {
                 if (type == Boolean.class) return context.suggestLiteral("true", "false");
-                if (type == NamedTextColor.class) return context.suggestCollection(NamedTextColor.NAMES.keys());
+                if (type == NamedColor.class) return context.suggestEnum(NamedColor.values());
                 if (type == Color.class) return context.suggestLiteral("0x0F00FF", "#FFFFFF");
                 if (type == BlockState.class) return context.suggestLiteral("hand", "looking_at", "block");
                 if (type == SpellType.class) return PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_13) ?

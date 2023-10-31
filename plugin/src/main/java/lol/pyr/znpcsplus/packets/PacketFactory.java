@@ -4,7 +4,7 @@ import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.player.Equipment;
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
 import lol.pyr.znpcsplus.entity.PacketEntity;
-import net.kyori.adventure.text.format.NamedTextColor;
+import lol.pyr.znpcsplus.util.NamedColor;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public interface PacketFactory {
     void teleportEntity(Player player, PacketEntity entity);
     CompletableFuture<Void> addTabPlayer(Player player, PacketEntity entity, PropertyHolder properties);
     void removeTabPlayer(Player player, PacketEntity entity);
-    void createTeam(Player player, PacketEntity entity, NamedTextColor glowColor);
+    void createTeam(Player player, PacketEntity entity, NamedColor namedColor);
     void removeTeam(Player player, PacketEntity entity);
     void sendAllMetadata(Player player, PacketEntity entity, PropertyHolder properties);
     void sendEquipment(Player player, PacketEntity entity, Equipment equipment);
