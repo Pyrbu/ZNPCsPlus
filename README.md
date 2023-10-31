@@ -12,14 +12,14 @@ Looking for up-to-date builds of the plugin? Check out our [Jenkins](https://ci.
 ## Why is it so good?
 - 100% Packet Based - Nothing is ran on the main thread
 - Performance & stability oriented code
-- Support for all versions from 1.8 to 1.20.1
+- Support for all versions from 1.8 to 1.20.2
 - Support for multiple different storage options (WIP)
 - Intuitive command system
 
 ### Requirements, Extensions & Supported Software
 Requirements:
 - Java 8+
-- Minecraft 1.8 - 1.20.1
+- Minecraft 1.8 - 1.20.2
 
 Supported Softwares:
 - Spigot ([Website](https://www.spigotmc.org/))
