@@ -1,0 +1,13 @@
+<gray>Examples:
+ <gold>* <yellow>/npc skin <gold>cool_npc1 static Notch
+ <gold>* <yellow>/npc skin <gold>my_npc mirror
+ <gold>* <yellow>/npc skin <gold>12 dynamic %leaderboard_mining_top_1%
+ <gold>* <yellow>/npc skin <gold>npc1234 url classic https://s.namemc.com/i/5d5eb6d84b57ea29.png
+
+<gray>Skin Types:
+ <gold>* <yellow>Static <gray>- Only fetch the skin once and save the skin data
+ <gold>* <yellow>Mirror <gray>- Copy the skin of the player who is viewing the npc
+ <gold>* <yellow>Dynamic <gray>- Fetch the skin whenever the npc comes into viewing distance (supports placeholders)
+ <gold>* <yellow>Url <gray>- Fetch the skin from an url to a raw skin file, this works like static
+
+<gray>Command used to change the skin of an npc

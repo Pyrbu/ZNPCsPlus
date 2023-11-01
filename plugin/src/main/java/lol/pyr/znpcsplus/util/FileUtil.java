@@ -3,17 +3,19 @@ package lol.pyr.znpcsplus.util;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileUtil {
     public static String dumpReaderAsString(Reader reader) {
         BufferedReader bReader = new BufferedReader(reader);
         try {
-            StringBuilder sb = new StringBuilder();
+            List<String> lines = new ArrayList<>();
             String line;
             while ((line = bReader.readLine()) != null) {
-                sb.append(line).append("\n");
+                lines.add(line);
             }
-            return sb.toString();
+            return String.join("\n", lines);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

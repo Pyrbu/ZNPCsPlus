@@ -1,0 +1,6 @@
+<gray>Examples:
+ <gold>* <yellow>/npc teleport <gold>cool_npc1
+ <gold>* <yellow>/npc teleport <gold>my_npc
+ <gold>* <yellow>/npc teleport <gold>12
+
+<gray>Command used to teleport yourself to an npc

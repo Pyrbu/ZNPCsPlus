@@ -1,0 +1,4 @@
+<gray>Examples:
+ <gold>* <yellow>/npc storage save
+
+<gray>Command used to save the currently loaded npcs to storage

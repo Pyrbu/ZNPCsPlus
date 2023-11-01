@@ -1,0 +1,6 @@
+<gray>Examples:
+ <gold>* <yellow>/npc type <gold>cool_npc1 zombie
+ <gold>* <yellow>/npc type <gold>my_npc skeleton
+ <gold>* <yellow>/npc type <gold>12 creeper
+
+<gray>Command used to change the type of an npc
