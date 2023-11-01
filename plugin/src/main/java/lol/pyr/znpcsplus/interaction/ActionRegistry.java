@@ -61,6 +61,7 @@ public class ActionRegistry {
 
     @SuppressWarnings("unchecked")
     public <T extends InteractionAction> String serialize(T action) {
+        if (action.isApiOnly()) return null;
         InteractionActionType<T> serializer = (InteractionActionType<T>) serializerMap.get(action.getClass());
         if (serializer == null) return null;
         return action.getClass().getName() + ";" + serializer.serialize(action);

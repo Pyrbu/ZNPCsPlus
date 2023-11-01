@@ -27,6 +27,11 @@ public class ConsumerAction extends InteractionActionImpl {
     }
 
     @Override
+    public boolean isApiOnly() {
+        return true;
+    }
+
+    @Override
     public void run(Player player) {
         this.consumerType.getClickConsumer().accept(scheduler, () -> this.clickConsumer.accept(player));
     }

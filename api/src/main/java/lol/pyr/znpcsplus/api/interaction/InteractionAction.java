@@ -73,4 +73,8 @@ public abstract class InteractionAction {
      * @param player The player that triggered this interaction
      */
     public abstract void run(Player player);
+
+    public boolean isApiOnly() {
+        return false;
+    }
 }
