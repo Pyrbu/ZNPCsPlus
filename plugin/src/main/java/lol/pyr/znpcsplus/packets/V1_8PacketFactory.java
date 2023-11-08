@@ -66,7 +66,7 @@ public class V1_8PacketFactory implements PacketFactory {
         ClientVersion clientVersion = packetEvents.getServerManager().getVersion().toClientVersion();
         sendPacket(player, type.getLegacyId(clientVersion) == -1 ?
                 new WrapperPlayServerSpawnLivingEntity(entity.getEntityId(), entity.getUuid(), type, npcLocationToVector(location),
-                        location.getYaw(), location.getPitch(), location.getPitch(), new Vector3d(), Collections.emptyList()) :
+                        location.getYaw(), location.getPitch(), location.getYaw(), new Vector3d(), Collections.emptyList()) :
                 new WrapperPlayServerSpawnEntity(entity.getEntityId(), Optional.of(entity.getUuid()), entity.getType(), npcLocationToVector(location),
                         location.getPitch(), location.getYaw(), location.getYaw(), 0, Optional.empty()));
         sendAllMetadata(player, entity, properties);

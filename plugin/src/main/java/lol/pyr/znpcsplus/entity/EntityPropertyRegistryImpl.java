@@ -307,7 +307,12 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Use chesteplate property for 1.14 and above
         if (ver.isOlderThan(ServerVersion.V_1_14)) {
-            register(new EncodedIntegerProperty<>("horse_armor", HorseArmor.NONE, horseVariantIndex + 2, Enum::ordinal));
+            int horseArmorIndex;
+            if (ver.isNewerThanOrEquals(ServerVersion.V_1_11)) horseArmorIndex = 16;
+            else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) horseArmorIndex = 17;
+            else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) horseArmorIndex = 16;
+            else horseArmorIndex = 22;
+            register(new EncodedIntegerProperty<>("horse_armor", HorseArmor.NONE, horseArmorIndex, Enum::ordinal));
         }
 
         // Chested Horse

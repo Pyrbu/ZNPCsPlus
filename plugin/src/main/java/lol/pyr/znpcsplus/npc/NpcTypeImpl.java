@@ -132,6 +132,9 @@ public class NpcTypeImpl implements NpcType {
             if (EntityTypes.isTypeInstanceOf(type, EntityTypes.ABSTRACT_HORSE)) {
                 addProperties("is_saddled", "is_eating", "is_rearing", "has_mouth_open");
             }
+            if (type.equals(EntityTypes.HORSE) && version.isOlderThan(ServerVersion.V_1_14)) {
+                addProperties("horse_armor");
+            }
             if (EntityTypes.isTypeInstanceOf(type, EntityTypes.CHESTED_HORSE)) {
                 addProperties("has_chest");
             } else if (version.isOlderThan(ServerVersion.V_1_11) && type.equals(EntityTypes.HORSE)) {
