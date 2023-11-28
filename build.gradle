@@ -18,7 +18,7 @@ subprojects {
             url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
         }
         maven {
-            url "https://repo.codemc.io/repository/maven-snapshots/"
+            url "https://repo.codemc.io/repository/maven-releases/"
         }
         maven {
             url "https://libraries.minecraft.net"

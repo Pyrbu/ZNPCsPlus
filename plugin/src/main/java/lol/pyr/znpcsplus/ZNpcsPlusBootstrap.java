@@ -40,8 +40,8 @@ public class ZNpcsPlusBootstrap extends JavaPlugin {
 
         loader.loadLibrary("com.github.robertlit", "SpigotResourcesAPI", "2.0", "https://jitpack.io");
 
-        loader.loadSnapshotLibrary(decrypt("com..github..retrooper..packetevents"), "api", "2.1.0-SNAPSHOT", "2.1.0-20231116.190232-11", "https://repo.codemc.io/repository/maven-snapshots/");
-        loader.loadSnapshotLibrary(decrypt("com..github..retrooper..packetevents"), "spigot", "2.1.0-SNAPSHOT", "2.1.0-20231116.190232-11", "https://repo.codemc.io/repository/maven-snapshots/");
+        loader.loadLibrary(decrypt("com..github..retrooper..packetevents"), "api", "2.1.0", "https://repo.codemc.io/repository/maven-releases/");
+        loader.loadLibrary(decrypt("com..github..retrooper..packetevents"), "spigot", "2.1.0", "https://repo.codemc.io/repository/maven-releases/");
 
         loader.loadLibrary(decrypt("space..arim..dazzleconf"), "dazzleconf-core", "1.2.1");
         loader.loadLibrary(decrypt("space..arim..dazzleconf"), "dazzleconf-ext-snakeyaml", "1.2.1");
