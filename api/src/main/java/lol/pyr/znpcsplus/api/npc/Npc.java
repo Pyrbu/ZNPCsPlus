@@ -113,4 +113,9 @@ public interface Npc extends PropertyHolder {
      * @param pitch The pitch to set
      */
     void setHeadRotation(float yaw, float pitch);
+
+    /**
+     * @return The entity id of the packet entity that this npc object represents
+     */
+    int getPacketEntityId();
 }

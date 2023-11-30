@@ -49,7 +49,6 @@ public class NpcImpl extends Viewable implements Npc {
         hologram = new HologramImpl(propertyRegistry, configManager, packetFactory, textSerializer, location.withY(location.getY() + type.getHologramOffset()));
     }
 
-
     public void setType(NpcTypeImpl type) {
         UNSAFE_hideAll();
         this.type = type;
@@ -134,7 +133,7 @@ public class NpcImpl extends Viewable implements Npc {
     private <T> void UNSAFE_refreshProperty(EntityPropertyImpl<T> property) {
         for (Player viewer : getViewers()) {
             List<EntityData> data = property.applyStandalone(viewer, entity, true);
-            if (data.size() > 0) packetFactory.sendMetadata(viewer, entity, data);
+            if (!data.isEmpty()) packetFactory.sendMetadata(viewer, entity, data);
         }
     }
 
@@ -191,5 +190,10 @@ public class NpcImpl extends Viewable implements Npc {
 
     public void editAction(int index, InteractionActionImpl action) {
         actions.set(index, action);
+    }
+
+    @Override
+    public int getPacketEntityId() {
+        return entity.getEntityId();
     }
 }
