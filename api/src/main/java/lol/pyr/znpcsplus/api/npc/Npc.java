@@ -8,6 +8,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -118,4 +119,9 @@ public interface Npc extends PropertyHolder {
      * @return The entity id of the packet entity that this npc object represents
      */
     int getPacketEntityId();
+
+    /**
+     * @return The set of players that can currently see this npc
+     */
+    Set<Player> getViewers();
 }
