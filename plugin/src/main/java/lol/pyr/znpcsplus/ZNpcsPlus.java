@@ -125,7 +125,7 @@ public class ZNpcsPlus {
         MojangSkinCache skinCache = new MojangSkinCache(configManager);
         EntityPropertyRegistryImpl propertyRegistry = new EntityPropertyRegistryImpl(skinCache, configManager);
         PacketFactory packetFactory = setupPacketFactory(scheduler, propertyRegistry, configManager);
-        propertyRegistry.registerTypes(packetFactory);
+        propertyRegistry.registerTypes(packetFactory, textSerializer);
 
         ActionRegistry actionRegistry = new ActionRegistry();
         NpcTypeRegistryImpl typeRegistry = new NpcTypeRegistryImpl();

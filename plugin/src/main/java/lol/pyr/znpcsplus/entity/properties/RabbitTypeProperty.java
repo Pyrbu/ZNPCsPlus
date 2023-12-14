@@ -24,11 +24,9 @@ public class RabbitTypeProperty extends EntityPropertyImpl<RabbitType> {
         this.index = index;
         this.legacyBooleans = legacyBooleans;
         Component name = Component.text("Toast");
-        String serialized = legacyNames ?
-                AdventureSerializer.getLegacyGsonSerializer().serialize(name) :
-                AdventureSerializer.getGsonSerializer().serialize(name);
+        Object serialized = legacyNames ? AdventureSerializer.getLegacyGsonSerializer().serialize(name) : name;
         this.serialized = optional ? Optional.of(serialized) : serialized;
-        this.type = optional ? EntityDataTypes.OPTIONAL_COMPONENT : EntityDataTypes.STRING;
+        this.type = optional ? EntityDataTypes.OPTIONAL_ADV_COMPONENT : EntityDataTypes.STRING;
     }
 
     @Override

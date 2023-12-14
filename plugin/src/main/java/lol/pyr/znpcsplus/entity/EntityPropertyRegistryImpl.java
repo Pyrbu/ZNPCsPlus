@@ -21,6 +21,7 @@ import lol.pyr.znpcsplus.entity.serializers.*;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 import lol.pyr.znpcsplus.util.*;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 
@@ -106,7 +107,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
          */
     }
 
-    public void registerTypes(PacketFactory packetFactory) {
+    public void registerTypes(PacketFactory packetFactory, LegacyComponentSerializer textSerializer) {
         ServerVersion ver = PacketEvents.getAPI().getServerManager().getVersion();
         boolean legacyBooleans = ver.isOlderThan(ServerVersion.V_1_9);
         boolean legacyNames = ver.isOlderThan(ServerVersion.V_1_9);
@@ -119,7 +120,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new EquipmentProperty(packetFactory, "hand", EquipmentSlot.MAIN_HAND));
         register(new EquipmentProperty(packetFactory, "offhand", EquipmentSlot.OFF_HAND));
 
-        register(new NameProperty(legacyNames, optionalComponents));
+        register(new NameProperty(textSerializer, legacyNames, optionalComponents));
         register(new DummyProperty<>("display_name", String.class));
         register(new DinnerboneProperty(legacyNames, optionalComponents));
 

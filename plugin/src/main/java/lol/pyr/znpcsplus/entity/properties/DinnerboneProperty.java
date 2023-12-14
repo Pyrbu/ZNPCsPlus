@@ -19,11 +19,9 @@ public class DinnerboneProperty extends EntityPropertyImpl<Boolean> {
     public DinnerboneProperty(boolean legacy, boolean optional) {
         super("dinnerbone", false, Boolean.class);
         Component name = Component.text("Dinnerbone");
-        String serialized = legacy ?
-                AdventureSerializer.getLegacyGsonSerializer().serialize(name) :
-                AdventureSerializer.getGsonSerializer().serialize(name);
+        Object serialized = legacy ? AdventureSerializer.getLegacyGsonSerializer().serialize(name) : name;
         this.serialized = optional ? Optional.of(serialized) : serialized;
-        this.type = optional ? EntityDataTypes.OPTIONAL_COMPONENT : EntityDataTypes.STRING;
+        this.type = optional ? EntityDataTypes.OPTIONAL_ADV_COMPONENT : EntityDataTypes.STRING;
     }
 
     @Override
