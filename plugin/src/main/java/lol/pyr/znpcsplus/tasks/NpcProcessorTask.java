@@ -2,7 +2,6 @@ package lol.pyr.znpcsplus.tasks;
 
 import lol.pyr.znpcsplus.api.event.NpcDespawnEvent;
 import lol.pyr.znpcsplus.api.event.NpcSpawnEvent;
-import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
@@ -17,12 +16,10 @@ import org.bukkit.util.NumberConversions;
 
 public class NpcProcessorTask extends BukkitRunnable {
     private final NpcRegistryImpl npcRegistry;
-    private final ConfigManager configManager;
     private final EntityPropertyRegistryImpl propertyRegistry;
 
-    public NpcProcessorTask(NpcRegistryImpl npcRegistry, ConfigManager configManager, EntityPropertyRegistryImpl propertyRegistry) {
+    public NpcProcessorTask(NpcRegistryImpl npcRegistry, EntityPropertyRegistryImpl propertyRegistry) {
         this.npcRegistry = npcRegistry;
-        this.configManager = configManager;
         this.propertyRegistry = propertyRegistry;
     }
 

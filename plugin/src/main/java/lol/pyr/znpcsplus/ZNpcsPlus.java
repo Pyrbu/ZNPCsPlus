@@ -162,7 +162,7 @@ public class ZNpcsPlus {
             pluginManager.registerEvents(new UpdateNotificationListener(this, adventure, updateChecker, scheduler), bootstrap);
         }
 
-        scheduler.runDelayedTimerAsync(new NpcProcessorTask(npcRegistry, configManager, propertyRegistry), 60L, 3L);
+        scheduler.runDelayedTimerAsync(new NpcProcessorTask(npcRegistry, propertyRegistry), 60L, 3L);
         scheduler.runDelayedTimerAsync(new HologramRefreshTask(npcRegistry), 60L, 20L);
         scheduler.runDelayedTimerAsync(new SkinCacheCleanTask(skinCache), 1200, 1200);
         pluginManager.registerEvents(new ViewableHideOnLeaveListener(), bootstrap);
