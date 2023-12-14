@@ -8,6 +8,7 @@ import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.util.RabbitType;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -24,7 +25,8 @@ public class RabbitTypeProperty extends EntityPropertyImpl<RabbitType> {
         this.index = index;
         this.legacyBooleans = legacyBooleans;
         Component name = Component.text("Toast");
-        Object serialized = legacyNames ? AdventureSerializer.getLegacyGsonSerializer().serialize(name) : name;
+        Object serialized = legacyNames ? AdventureSerializer.getLegacyGsonSerializer().serialize(name) :
+                optional ? name : LegacyComponentSerializer.legacySection().serialize(name);
         this.serialized = optional ? Optional.of(serialized) : serialized;
         this.type = optional ? EntityDataTypes.OPTIONAL_ADV_COMPONENT : EntityDataTypes.STRING;
     }

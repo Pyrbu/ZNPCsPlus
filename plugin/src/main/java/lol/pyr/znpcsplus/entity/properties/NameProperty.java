@@ -15,14 +15,14 @@ import java.util.Optional;
 
 public class NameProperty extends EntityPropertyImpl<Component> {
     private final LegacyComponentSerializer legacySerializer;
-    private final boolean legacy;
+    private final boolean legacySerialization;
     private final boolean optional;
 
-    public NameProperty(LegacyComponentSerializer legacySerializer, boolean legacy, boolean optional) {
+    public NameProperty(LegacyComponentSerializer legacySerializer, boolean legacySerialization, boolean optional) {
         super("name", null, Component.class);
         this.legacySerializer = legacySerializer;
 
-        this.legacy = legacy;
+        this.legacySerialization = legacySerialization;
         this.optional = optional;
     }
 
@@ -31,12 +31,13 @@ public class NameProperty extends EntityPropertyImpl<Component> {
         Component value = entity.getProperty(this);
         if (value != null) {
             value = PapiUtil.set(legacySerializer, player, value);
-            Object serialized = legacy ? AdventureSerializer.getLegacyGsonSerializer().serialize(value) : value;
+            Object serialized = legacySerialization ? AdventureSerializer.getLegacyGsonSerializer().serialize(value) :
+                    optional ? value : LegacyComponentSerializer.legacySection().serialize(value);
             if (optional) properties.put(2, new EntityData(2, EntityDataTypes.OPTIONAL_ADV_COMPONENT, Optional.of(serialized)));
             else properties.put(2, new EntityData(2, EntityDataTypes.STRING, serialized));
         }
 
-        if (legacy) properties.put(3, newEntityData(3, EntityDataTypes.BYTE, (byte) (value != null ? 1 : 0)));
+        if (legacySerialization) properties.put(3, newEntityData(3, EntityDataTypes.BYTE, (byte) (value != null ? 1 : 0)));
         else properties.put(3, newEntityData(3, EntityDataTypes.BOOLEAN, value != null));
     }
 }

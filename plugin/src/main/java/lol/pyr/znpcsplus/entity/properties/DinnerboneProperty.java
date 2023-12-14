@@ -7,6 +7,7 @@ import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -19,7 +20,8 @@ public class DinnerboneProperty extends EntityPropertyImpl<Boolean> {
     public DinnerboneProperty(boolean legacy, boolean optional) {
         super("dinnerbone", false, Boolean.class);
         Component name = Component.text("Dinnerbone");
-        Object serialized = legacy ? AdventureSerializer.getLegacyGsonSerializer().serialize(name) : name;
+        Object serialized = legacy ? AdventureSerializer.getLegacyGsonSerializer().serialize(name) :
+                optional ? name : LegacyComponentSerializer.legacySection().serialize(name);
         this.serialized = optional ? Optional.of(serialized) : serialized;
         this.type = optional ? EntityDataTypes.OPTIONAL_ADV_COMPONENT : EntityDataTypes.STRING;
     }
