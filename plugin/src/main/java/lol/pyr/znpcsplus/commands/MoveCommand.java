@@ -27,6 +27,7 @@ public class MoveCommand implements CommandHandler {
         Player player = context.ensureSenderIsPlayer();
         NpcImpl npc = context.parse(NpcEntryImpl.class).getNpc();
         npc.setLocation(new NpcLocation(player.getLocation()));
+        if (!npc.getWorld().equals(player.getWorld())) npc.setWorld(player.getWorld());
         context.send(Component.text("NPC moved to your current location.", NamedTextColor.GREEN));
     }
 
