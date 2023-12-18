@@ -31,7 +31,7 @@ public class ListCommand implements CommandHandler {
                     .append(Component.text(" | ", NamedTextColor.GRAY))
                     .append(Component.text("Location: " + npc.getWorldName() + " X:" + location.getBlockX() + " Y:" + location.getBlockY() + " Z:" + location.getBlockZ(), NamedTextColor.GREEN))
                     .append(Component.text(" | ", NamedTextColor.GRAY))
-                    .append(Component.text("[TELEPORT]", NamedTextColor.DARK_GREEN).clickEvent(ClickEvent.runCommand("/npc teleport " + id)))
+                    .append(Component.text("[TELEPORT]", NamedTextColor.DARK_GREEN).clickEvent(ClickEvent.runCommand("/znpcsplus:npc teleport " + id)))
                     .append(Component.text("\n", NamedTextColor.GRAY));
         }
         context.send(component.build());
