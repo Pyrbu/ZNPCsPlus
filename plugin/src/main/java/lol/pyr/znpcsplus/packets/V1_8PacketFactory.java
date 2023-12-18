@@ -96,7 +96,7 @@ public class V1_8PacketFactory implements PacketFactory {
         CompletableFuture<Void> future = new CompletableFuture<>();
         skinned(player, properties, new UserProfile(entity.getUuid(), Integer.toString(entity.getEntityId()))).thenAccept(profile -> {
             sendPacket(player, new WrapperPlayServerPlayerInfo(
-                    WrapperPlayServerPlayerInfo.Action.ADD_PLAYER, new WrapperPlayServerPlayerInfo.PlayerData(Component.text(""),
+                    WrapperPlayServerPlayerInfo.Action.ADD_PLAYER, new WrapperPlayServerPlayerInfo.PlayerData(Component.text(" "),
                     profile, GameMode.CREATIVE, 1)));
             future.complete(null);
         });
