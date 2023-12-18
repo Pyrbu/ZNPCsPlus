@@ -38,9 +38,6 @@ Open an issue in the GitHub [issue tracker](https://github.com/Pyrbu/ZNPCsPlus/i
 
 #### Like what you see? Want the project to continue improving? Consider starring the repository & leaving a positive review on [Spigot](https://www.spigotmc.org/resources/znpcsplus.109380/)!
 
-## License
-Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
-
 ## Credits
 - [PacketEvents 2.0](https://github.com/retrooper/packetevents) - Packet library
 - [wiki.vg](https://wiki.vg/Main_Page) - Minecraft protocol documentation
