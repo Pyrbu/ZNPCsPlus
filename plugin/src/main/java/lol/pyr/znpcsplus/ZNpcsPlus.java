@@ -99,16 +99,6 @@ public class ZNpcsPlus {
         PluginManager pluginManager = Bukkit.getPluginManager();
         long before = System.currentTimeMillis();
 
-        boolean legacy = new File(getDataFolder(), "data.json").isFile() && !new File(getDataFolder(), "data").isDirectory();
-        if (legacy) try {
-            Files.move(getDataFolder().toPath(), new File(getDataFolder().getParentFile(), "ZNPCsPlusLegacy").toPath());
-        } catch (IOException e) {
-            log(ChatColor.RED + " * Moving legacy files to subfolder failed, plugin will shut down.");
-            e.printStackTrace();
-            pluginManager.disablePlugin(bootstrap);
-            return;
-        }
-
         log(ChatColor.WHITE + " * Initializing libraries...");
 
         packetEvents.init();
@@ -172,7 +162,7 @@ public class ZNpcsPlus {
         npcRegistry.reload();
         if (configManager.getConfig().autoSaveEnabled()) shutdownTasks.add(npcRegistry::save);
 
-        if (legacy) {
+        if (bootstrap.movedLegacy()) {
             log(ChatColor.WHITE + " * Converting legacy data...");
             try {
                 Collection<NpcEntryImpl> entries = importerRegistry.getImporter("znpcsplus_legacy").importData();

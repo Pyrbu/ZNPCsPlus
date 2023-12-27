@@ -6,18 +6,32 @@ import lol.pyr.znpcsplus.libraries.LibraryLoader;
 import lol.pyr.znpcsplus.util.FileUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Reader;
+import java.nio.file.Files;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ZNpcsPlusBootstrap extends JavaPlugin {
     private ZNpcsPlus zNpcsPlus;
+    private boolean legacy;
 
     @Override
     public void onLoad() {
+        legacy = new File(getDataFolder(), "data.json").isFile() && !new File(getDataFolder(), "data").isDirectory();
+        if (legacy) try {
+            Files.move(getDataFolder().toPath(), new File(getDataFolder().getParentFile(), "ZNPCsPlusLegacy").toPath());
+        } catch (IOException e) {
+            getLogger().severe(ChatColor.RED + "Failed to move legacy data folder! Plugin will disable.");
+            e.printStackTrace();
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
         getLogger().info("Downloading and loading libraries, this might take a while if this is the first time you're launching the plugin");
         LibraryLoader loader = new LibraryLoader(this, new File(getDataFolder(), "libraries"));
 
@@ -101,6 +115,10 @@ public class ZNpcsPlusBootstrap extends JavaPlugin {
     protected Message<CommandContext> loadHelpMessage(String name) {
         Component component = MiniMessage.miniMessage().deserialize(loadMessageFile(name));
         return context -> context.send(component);
+    }
+
+    public boolean movedLegacy() {
+        return legacy;
     }
 
     // Ugly hack because of https://github.com/johnrengelman/shadow/issues/232
