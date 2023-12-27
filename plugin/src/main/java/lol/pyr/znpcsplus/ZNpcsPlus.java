@@ -209,7 +209,7 @@ public class ZNpcsPlus {
         HashMap<ServerVersion, LazyLoader<? extends PacketFactory>> versions = new HashMap<>();
         versions.put(ServerVersion.V_1_8, LazyLoader.of(() -> new V1_8PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer, configManager)));
         versions.put(ServerVersion.V_1_17, LazyLoader.of(() -> new V1_17PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer, configManager)));
-        versions.put(ServerVersion.V_1_19_2, LazyLoader.of(() -> new V1_19_2PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer, configManager)));
+        versions.put(ServerVersion.V_1_19_3, LazyLoader.of(() -> new V1_19_3PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer, configManager)));
         versions.put(ServerVersion.V_1_20_2, LazyLoader.of(() -> new V1_20_2PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer, configManager)));
 
         ServerVersion version = packetEvents.getServerManager().getVersion();

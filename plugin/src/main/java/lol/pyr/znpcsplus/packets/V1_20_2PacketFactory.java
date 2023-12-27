@@ -17,7 +17,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.Optional;
 
-public class V1_20_2PacketFactory extends V1_19_2PacketFactory {
+public class V1_20_2PacketFactory extends V1_19_3PacketFactory {
 
     protected ConfigManager configManager;
 

@@ -19,8 +19,8 @@ import org.bukkit.plugin.Plugin;
 import java.util.EnumSet;
 import java.util.concurrent.CompletableFuture;
 
-public class V1_19_2PacketFactory extends V1_17PacketFactory {
-    public V1_19_2PacketFactory(TaskScheduler scheduler, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer, ConfigManager configManager) {
+public class V1_19_3PacketFactory extends V1_17PacketFactory {
+    public V1_19_3PacketFactory(TaskScheduler scheduler, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer, ConfigManager configManager) {
         super(scheduler, packetEvents, propertyRegistry, textSerializer, configManager);
     }
 

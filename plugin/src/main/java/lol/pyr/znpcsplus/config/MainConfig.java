@@ -71,6 +71,6 @@ public interface MainConfig {
 
     @ConfKey("tab-display-name")
     @ConfComments("The display name to use for npcs in the player list (aka tab)")
-    @DefaultString("ZNPC{id}")
+    @DefaultString("ZNPC[{id}]")
     String tabDisplayName();
 }
