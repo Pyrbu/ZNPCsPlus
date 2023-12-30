@@ -40,6 +40,10 @@ public class UpdateChecker extends BukkitRunnable {
         logger.warning("Download it at " + UpdateChecker.DOWNLOAD_LINK);
     }
 
+    public void shutdown() {
+        if (getTaskId() != -1) cancel();
+    }
+
     private int versionToNumber(String version) {
         int num = Integer.parseInt(version.replaceAll("[^0-9]", ""));
         if (version.toLowerCase().contains("snapshot")) num -= 1;

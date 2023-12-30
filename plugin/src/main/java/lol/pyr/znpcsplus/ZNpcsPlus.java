@@ -149,7 +149,7 @@ public class ZNpcsPlus {
         if (configManager.getConfig().checkForUpdates()) {
             UpdateChecker updateChecker = new UpdateChecker(getDescription());
             scheduler.runDelayedTimerAsync(updateChecker, 5L, 6000L);
-            shutdownTasks.add(updateChecker::cancel);
+            shutdownTasks.add(updateChecker::shutdown);
             pluginManager.registerEvents(new UpdateNotificationListener(this, adventure, updateChecker, scheduler), bootstrap);
         }
 
