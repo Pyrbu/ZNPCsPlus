@@ -41,7 +41,7 @@ public class UpdateChecker extends BukkitRunnable {
     }
 
     public void shutdown() {
-        if (getTaskId() != -1) cancel();
+        cancel();
     }
 
     private int versionToNumber(String version) {
