@@ -2,7 +2,7 @@ package lol.pyr.znpcsplus.skin.descriptor;
 
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.skin.BaseSkinDescriptor;
-import lol.pyr.znpcsplus.skin.Skin;
+import lol.pyr.znpcsplus.skin.SkinImpl;
 import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 import org.bukkit.entity.Player;
 
@@ -16,12 +16,12 @@ public class MirrorDescriptor implements BaseSkinDescriptor, SkinDescriptor {
     }
 
     @Override
-    public CompletableFuture<Skin> fetch(Player player) {
+    public CompletableFuture<SkinImpl> fetch(Player player) {
         return CompletableFuture.completedFuture(skinCache.getFromPlayer(player));
     }
 
     @Override
-    public Skin fetchInstant(Player player) {
+    public SkinImpl fetchInstant(Player player) {
         return skinCache.getFromPlayer(player);
     }
 

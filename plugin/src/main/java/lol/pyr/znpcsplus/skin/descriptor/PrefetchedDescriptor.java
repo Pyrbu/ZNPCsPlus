@@ -3,7 +3,7 @@ package lol.pyr.znpcsplus.skin.descriptor;
 import com.github.retrooper.packetevents.protocol.player.TextureProperty;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.skin.BaseSkinDescriptor;
-import lol.pyr.znpcsplus.skin.Skin;
+import lol.pyr.znpcsplus.skin.SkinImpl;
 import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 import org.bukkit.entity.Player;
 
@@ -11,9 +11,9 @@ import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 
 public class PrefetchedDescriptor implements BaseSkinDescriptor, SkinDescriptor {
-    private final Skin skin;
+    private final SkinImpl skin;
 
-    public PrefetchedDescriptor(Skin skin) {
+    public PrefetchedDescriptor(SkinImpl skin) {
         this.skin = skin;
     }
 
@@ -26,12 +26,12 @@ public class PrefetchedDescriptor implements BaseSkinDescriptor, SkinDescriptor 
     }
 
     @Override
-    public CompletableFuture<Skin> fetch(Player player) {
+    public CompletableFuture<SkinImpl> fetch(Player player) {
         return CompletableFuture.completedFuture(skin);
     }
 
     @Override
-    public Skin fetchInstant(Player player) {
+    public SkinImpl fetchInstant(Player player) {
         return skin;
     }
 
@@ -40,7 +40,7 @@ public class PrefetchedDescriptor implements BaseSkinDescriptor, SkinDescriptor 
         return true;
     }
 
-    public Skin getSkin() {
+    public SkinImpl getSkin() {
         return skin;
     }
 

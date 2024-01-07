@@ -2,7 +2,7 @@ package lol.pyr.znpcsplus.skin.descriptor;
 
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.skin.BaseSkinDescriptor;
-import lol.pyr.znpcsplus.skin.Skin;
+import lol.pyr.znpcsplus.skin.SkinImpl;
 import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 import lol.pyr.znpcsplus.util.PapiUtil;
 import org.bukkit.entity.Player;
@@ -19,12 +19,12 @@ public class FetchingDescriptor implements BaseSkinDescriptor, SkinDescriptor {
     }
 
     @Override
-    public CompletableFuture<Skin> fetch(Player player) {
+    public CompletableFuture<SkinImpl> fetch(Player player) {
         return skinCache.fetchByName(PapiUtil.set(player, name));
     }
 
     @Override
-    public Skin fetchInstant(Player player) {
+    public SkinImpl fetchInstant(Player player) {
         return skinCache.getFullyCachedByName(PapiUtil.set(player, name));
     }
 

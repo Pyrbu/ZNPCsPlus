@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public interface BaseSkinDescriptor extends SkinDescriptor {
-    CompletableFuture<Skin> fetch(Player player);
-    Skin fetchInstant(Player player);
+    CompletableFuture<SkinImpl> fetch(Player player);
+    SkinImpl fetchInstant(Player player);
     boolean supportsInstant(Player player);
     String serialize();
 
@@ -27,7 +27,7 @@ public interface BaseSkinDescriptor extends SkinDescriptor {
             for (int i = 0; i < (arr.length - 1) / 3; i++) {
                 properties.add(new TextureProperty(arr[i + 1], arr[i + 2], arr[i + 3]));
             }
-            return new PrefetchedDescriptor(new Skin(properties));
+            return new PrefetchedDescriptor(new SkinImpl(properties));
         }
         throw new IllegalArgumentException("Unknown SkinDescriptor type!");
     }

@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.reflection.Reflections;
-import lol.pyr.znpcsplus.skin.Skin;
+import lol.pyr.znpcsplus.skin.SkinImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -24,7 +24,7 @@ public class MojangSkinCache {
 
     private final ConfigManager configManager;
 
-    private final Map<String, Skin> cache = new ConcurrentHashMap<>();
+    private final Map<String, SkinImpl> cache = new ConcurrentHashMap<>();
     private final Map<String, CachedId> idCache = new ConcurrentHashMap<>();
 
     public MojangSkinCache(ConfigManager configManager) {
@@ -32,11 +32,11 @@ public class MojangSkinCache {
     }
 
     public void cleanCache() {
-        for (Map.Entry<String, Skin> entry : cache.entrySet()) if (entry.getValue().isExpired()) cache.remove(entry.getKey());
+        for (Map.Entry<String, SkinImpl> entry : cache.entrySet()) if (entry.getValue().isExpired()) cache.remove(entry.getKey());
         for (Map.Entry<String, CachedId> entry : idCache.entrySet()) if (entry.getValue().isExpired()) cache.remove(entry.getKey());
     }
 
-    public CompletableFuture<Skin> fetchByName(String name) {
+    public CompletableFuture<SkinImpl> fetchByName(String name) {
         Player player = Bukkit.getPlayerExact(name);
         if (player != null && player.isOnline()) return CompletableFuture.completedFuture(getFromPlayer(player));
 
@@ -53,7 +53,7 @@ public class MojangSkinCache {
                     if (obj.has("errorMessage")) return fetchByNameFallback(name).join();
                     String id = obj.get("id").getAsString();
                     idCache.put(name.toLowerCase(), new CachedId(id));
-                    Skin skin = fetchByUUID(id).join();
+                    SkinImpl skin = fetchByUUID(id).join();
                     if (skin == null) return fetchByNameFallback(name).join();
                     return skin;
                 }
@@ -69,7 +69,7 @@ public class MojangSkinCache {
         });
     }
 
-    public CompletableFuture<Skin> fetchByNameFallback(String name) {
+    public CompletableFuture<SkinImpl> fetchByNameFallback(String name) {
         Player player = Bukkit.getPlayerExact(name);
         if (player != null && player.isOnline()) return CompletableFuture.completedFuture(getFromPlayer(player));
 
@@ -89,7 +89,7 @@ public class MojangSkinCache {
                     JsonObject textures = obj.get("textures").getAsJsonObject();
                     String value = textures.get("raw").getAsJsonObject().get("value").getAsString();
                     String signature = textures.get("raw").getAsJsonObject().get("signature").getAsString();
-                    Skin skin = new Skin(value, signature);
+                    SkinImpl skin = new SkinImpl(value, signature);
                     cache.put(uuid, skin);
                     return skin;
                 }
@@ -105,7 +105,7 @@ public class MojangSkinCache {
         });
     }
 
-    public CompletableFuture<Skin> fetchByUrl(URL url, String variant) {
+    public CompletableFuture<SkinImpl> fetchByUrl(URL url, String variant) {
         return CompletableFuture.supplyAsync(() -> {
             URL apiUrl = parseUrl("https://api.mineskin.org/generate/url");
             HttpURLConnection connection = null;
@@ -127,7 +127,7 @@ public class MojangSkinCache {
                     if (obj.has("error")) return null;
                     if (!obj.has("data")) return null;
                     JsonObject texture = obj.get("data").getAsJsonObject().get("texture").getAsJsonObject();
-                    return new Skin(texture.get("value").getAsString(), texture.get("signature").getAsString());
+                    return new SkinImpl(texture.get("value").getAsString(), texture.get("signature").getAsString());
                 }
 
             } catch (IOException exception) {
@@ -147,26 +147,26 @@ public class MojangSkinCache {
         if (!idCache.containsKey(name)) return false;
         CachedId id = idCache.get(name);
         if (id.isExpired() || !cache.containsKey(id.getId())) return false;
-        Skin skin = cache.get(id.getId());
+        SkinImpl skin = cache.get(id.getId());
         return !skin.isExpired();
     }
 
-    public Skin getFullyCachedByName(String s) {
+    public SkinImpl getFullyCachedByName(String s) {
         String name = s.toLowerCase();
         if (!idCache.containsKey(name)) return null;
         CachedId id = idCache.get(name);
         if (id.isExpired() || !cache.containsKey(id.getId())) return null;
-        Skin skin = cache.get(id.getId());
+        SkinImpl skin = cache.get(id.getId());
         if (skin.isExpired()) return null;
         return skin;
     }
 
-    public CompletableFuture<Skin> fetchByUUID(String uuid) {
+    public CompletableFuture<SkinImpl> fetchByUUID(String uuid) {
         Player player = Bukkit.getPlayer(uuid);
         if (player != null && player.isOnline()) return CompletableFuture.completedFuture(getFromPlayer(player));
 
         if (cache.containsKey(uuid)) {
-            Skin skin = cache.get(uuid);
+            SkinImpl skin = cache.get(uuid);
             if (!skin.isExpired()) return CompletableFuture.completedFuture(skin);
         }
 
@@ -179,7 +179,7 @@ public class MojangSkinCache {
                 try (Reader reader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {
                     JsonObject obj = JsonParser.parseReader(reader).getAsJsonObject();
                     if (obj.has("errorMessage")) return null;
-                    Skin skin = new Skin(obj);
+                    SkinImpl skin = new SkinImpl(obj);
                     cache.put(uuid, skin);
                     return skin;
                 }
@@ -195,12 +195,12 @@ public class MojangSkinCache {
         });
     }
 
-    public Skin getFromPlayer(Player player) {
+    public SkinImpl getFromPlayer(Player player) {
         try {
             Object playerHandle = Reflections.GET_PLAYER_HANDLE_METHOD.get().invoke(player);
             Object gameProfile = Reflections.GET_PROFILE_METHOD.get().invoke(playerHandle);
             Object propertyMap = Reflections.GET_PROPERTY_MAP_METHOD.get().invoke(gameProfile);
-            return new Skin(propertyMap);
+            return new SkinImpl(propertyMap);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }

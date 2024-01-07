@@ -36,7 +36,7 @@ public class SkinDescriptorFactoryImpl implements SkinDescriptorFactory {
 
     @Override
     public SkinDescriptor createStaticDescriptor(String texture, String signature) {
-        return new PrefetchedDescriptor(new Skin(texture, signature));
+        return new PrefetchedDescriptor(new SkinImpl(texture, signature));
     }
 
     @Override
