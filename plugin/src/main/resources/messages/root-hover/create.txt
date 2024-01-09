@@ -1,0 +1,3 @@
+<gray>Usage <gold>» <yellow>/npc create <gold><id> <type>
+
+<gray>Command used to create an npc of a given type

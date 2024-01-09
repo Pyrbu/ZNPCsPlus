@@ -1,0 +1,3 @@
+<gray>Usage <gold>» <yellow>/npc setrotation <gold><id> <yaw> <pitch>
+
+<gray>Command used to manually adjust an npc's rotation

@@ -1,0 +1,3 @@
+<gray>Usage <gold>» <yellow>/npc lookatme <gold><id>
+
+<gray>Command used to set the rotation of an npc to be looking at your current location

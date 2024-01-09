@@ -1,0 +1,3 @@
+<gray>Usage <gold>» <yellow>/npc property set <gold><id> <property> <value>
+
+<gray>Command used to customize npcs with custom properties

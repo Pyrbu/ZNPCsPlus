@@ -1,0 +1,3 @@
+<gray>Usage <gold>» <yellow>/npc delete <gold><id>
+
+<gray>Command used to delete an npc

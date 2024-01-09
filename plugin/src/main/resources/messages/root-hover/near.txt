@@ -1,0 +1,3 @@
+<gray>Usage <gold>» <yellow>/npc near <gold><distance>
+
+<gray>Command used to check which npcs are within a given radius around you

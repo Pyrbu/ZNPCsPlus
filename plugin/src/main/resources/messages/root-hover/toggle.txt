@@ -1,6 +1,3 @@
-<gray>Examples:
- <gold>* <yellow>/npc toggle <gold>cool_npc1
- <gold>* <yellow>/npc toggle <gold>my_npc
- <gold>* <yellow>/npc toggle <gold>12
+<gray>Usage <gold>» <yellow>/npc toggle <gold><id>
 
 <gray>Command used to enable or disable an npc

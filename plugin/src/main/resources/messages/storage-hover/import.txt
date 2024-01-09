@@ -1,6 +1,8 @@
-<gray>Examples:
- <gold>* <yellow>/npc storage import <gold>znpcs
- <gold>* <yellow>/npc storage import <gold>znpcsplus_legacy
- <gold>* <yellow>/npc storage import <gold>citizens
+<gray>Usage <gold>» <yellow>/npc storage import <gold><importer>
 
-<gray>Command used to import npcs from a different npc plugin
+<gray>Importers:
+ <gold>* <yellow>znpcs <gray>- Imports npcs from the ZNPCs plugin
+ <gold>* <yellow>znpcsplus_legacy <gray>- Imports npcs from legacy versions of ZNPCsPlus
+ <gold>* <yellow>citizens <gray>- Imports npcs from the Citizens plugin
+
+<gray>Command used to import npcs from a different source

@@ -1,0 +1,3 @@
+<gray>Usage <gold>» <yellow>/npc list
+
+<gray>Command used to list all npcs

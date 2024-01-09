@@ -1,0 +1,3 @@
+<gray>Usage <gold>» <yellow>/npc center <gold><id>
+
+<gray>Command used to move an npc to the center of the block it's currently occupying

@@ -1,0 +1,3 @@
+<gray>Usage <gold>» <yellow>/npc changeid <gold><id> <new id>
+
+<gray>Command used to change the id of an npc
