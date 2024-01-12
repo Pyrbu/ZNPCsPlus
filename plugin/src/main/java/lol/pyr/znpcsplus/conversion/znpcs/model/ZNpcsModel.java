@@ -20,6 +20,7 @@ public class ZNpcsModel {
     private List<ZNpcsAction> clickActions;
     private Map<String, String> npcEquip;
     private Map<String, Object> npcToggleValues;
+    private Map<String, Object> npcFunctions;
     private Map<String, String[]> customizationMap;
 
     public int getId() {
@@ -60,6 +61,10 @@ public class ZNpcsModel {
 
     public Map<String, Object> getNpcToggleValues() {
         return npcToggleValues;
+    }
+
+    public Map<String, Object> getNpcFunctions() {
+        return npcFunctions;
     }
 
     public Map<String, String[]> getCustomizationMap() {

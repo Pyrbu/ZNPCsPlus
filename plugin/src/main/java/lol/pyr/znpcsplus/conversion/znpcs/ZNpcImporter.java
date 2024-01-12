@@ -132,7 +132,7 @@ public class ZNpcImporter implements DataImporter {
                 npc.setProperty(propertyRegistry.getByName("skin", SkinDescriptor.class), new PrefetchedDescriptor(new SkinImpl(model.getSkin(), model.getSignature())));
             }
 
-            Map<String, Object> toggleValues = model.getNpcToggleValues();
+            Map<String, Object> toggleValues = model.getNpcToggleValues() == null ? model.getNpcFunctions() : model.getNpcToggleValues();
             if (toggleValues != null) {
                 if (toggleValues.containsKey("look")) {
                     npc.setProperty(propertyRegistry.getByName("look", LookType.class), LookType.CLOSEST_PLAYER);
