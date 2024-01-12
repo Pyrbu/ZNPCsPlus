@@ -14,6 +14,8 @@ public class ZNpcsModel {
     private String signature;
 
     private String glowName;
+
+    private ZNpcsConversation conversation;
     private ZNpcsLocation location;
     private String npcType;
     private List<String> hologramLines;
@@ -37,6 +39,10 @@ public class ZNpcsModel {
 
     public String getSkinName() {
         return skinName;
+    }
+
+    public ZNpcsConversation getConversation() {
+        return conversation;
     }
 
     public ZNpcsLocation getLocation() {

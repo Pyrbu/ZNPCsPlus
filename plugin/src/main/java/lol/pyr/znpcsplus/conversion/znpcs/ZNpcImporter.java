@@ -8,9 +8,7 @@ import lol.pyr.znpcsplus.api.interaction.InteractionType;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.conversion.DataImporter;
-import lol.pyr.znpcsplus.conversion.znpcs.model.ZNpcsAction;
-import lol.pyr.znpcsplus.conversion.znpcs.model.ZNpcsLocation;
-import lol.pyr.znpcsplus.conversion.znpcs.model.ZNpcsModel;
+import lol.pyr.znpcsplus.conversion.znpcs.model.*;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.hologram.HologramImpl;
@@ -56,6 +54,7 @@ public class ZNpcImporter implements DataImporter {
     private final EntityPropertyRegistryImpl propertyRegistry;
     private final MojangSkinCache skinCache;
     private final File dataFile;
+    private final File conversationFile;
     private final Gson gson;
     private final BungeeConnector bungeeConnector;
 
@@ -72,6 +71,7 @@ public class ZNpcImporter implements DataImporter {
         this.propertyRegistry = propertyRegistry;
         this.skinCache = skinCache;
         this.dataFile = dataFile;
+        this.conversationFile = new File(dataFile.getParentFile(), "conversations.json");
         this.bungeeConnector = bungeeConnector;
         gson = new GsonBuilder()
                 .create();
@@ -88,6 +88,19 @@ public class ZNpcImporter implements DataImporter {
             return Collections.emptyList();
         }
         if (models == null) return Collections.emptyList();
+
+
+        ZnpcsConversations[] conversations;
+        try (BufferedReader fileReader = Files.newBufferedReader(conversationFile.toPath())) {
+            JsonElement element = JsonParser.parseReader(fileReader);
+            conversations = gson.fromJson(element, ZnpcsConversations[].class);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+        if (conversations == null) return Collections.emptyList();
+
+
         ArrayList<NpcEntryImpl> entries = new ArrayList<>(models.length);
         for (ZNpcsModel model : models) {
             String type = model.getNpcType();
@@ -106,6 +119,41 @@ public class ZNpcImporter implements DataImporter {
             UUID uuid = model.getUuid() == null ? UUID.randomUUID() : model.getUuid();
             NpcImpl npc = new NpcImpl(uuid, propertyRegistry, configManager, packetFactory, textSerializer, oldLoc.getWorld(), typeRegistry.getByName(type), location);
             npc.getType().applyDefaultProperties(npc);
+
+
+            // Convert the conversations from each NPC
+            ZNpcsConversation conversation = model.getConversation();
+            if (conversation != null) {
+
+                // Loop through all conversations in the conversations.json file
+                for (ZnpcsConversations conv : conversations) {
+
+                    // If the conversation name matches the conversation name in the data.json file, proceed
+                    if (conv.getName().equalsIgnoreCase(conversation.getConversationName())) {
+
+                        int totalDelay = 0;
+
+                        // Loop through all texts in the conversation
+                        for(ZNpcsConversationText text : conv.getTexts()) {
+
+                            // Add the delay in ticks to the total delay
+                            totalDelay += text.getDelay() * 20;
+
+                            // Get the lines of text from the conversation
+                            String[] lines = text.getLines();
+
+                            // Loop through all lines of text
+                            for (String line : lines) {
+
+                                // Create a new message action for each line of text
+                                InteractionActionImpl action = new MessageAction(adventure, line, InteractionType.ANY_CLICK, textSerializer, 0, totalDelay);
+                                npc.addAction(action);
+                            }
+                        }
+                    }
+                }
+            }
+
 
             HologramImpl hologram = npc.getHologram();
             hologram.setOffset(model.getHologramHeight());
