@@ -156,7 +156,7 @@ public class NpcTypeImpl implements NpcType {
             }
             if (EntityTypes.isTypeInstanceOf(type, EntityTypes.PANDA)) {
                 if (version.isNewerThanOrEquals(ServerVersion.V_1_15)) {
-                    addProperties("panda_rolling", "panda_sitting", "panda_on_back");
+                    addProperties("panda_rolling", "panda_sitting", "panda_on_back", "hand");
                 } else {
                     addProperties("panda_eating");
                 }
