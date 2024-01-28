@@ -114,7 +114,7 @@ public class V1_8PacketFactory implements PacketFactory {
     @Override
     public void createTeam(Player player, PacketEntity entity, NamedColor namedColor) {
         sendPacket(player, new WrapperPlayServerTeams("npc_team_" + entity.getEntityId(), WrapperPlayServerTeams.TeamMode.CREATE, new WrapperPlayServerTeams.ScoreBoardTeamInfo(
-                Component.empty(), Component.empty(), Component.empty(),
+                Component.text(" "), null, null,
                 WrapperPlayServerTeams.NameTagVisibility.NEVER,
                 WrapperPlayServerTeams.CollisionRule.NEVER,
                 namedColor == null ? NamedTextColor.WHITE : NamedTextColor.NAMES.value(namedColor.name().toLowerCase()),
