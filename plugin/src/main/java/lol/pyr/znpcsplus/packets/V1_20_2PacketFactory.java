@@ -23,6 +23,7 @@ public class V1_20_2PacketFactory extends V1_19_3PacketFactory {
 
     public V1_20_2PacketFactory(TaskScheduler scheduler, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer, ConfigManager configManager) {
         super(scheduler, packetEvents, propertyRegistry, textSerializer, configManager);
+        this.configManager = configManager;
     }
 
     @Override
