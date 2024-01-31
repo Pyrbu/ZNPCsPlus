@@ -106,7 +106,7 @@ public class HologramImpl extends Viewable implements Hologram {
     }
 
     public void insertTextLine(int index, String line) {
-        insertTextLineComponent(index, textSerializer.deserialize(line));
+        insertTextLineComponent(index, textSerializer.deserialize(textSerializer.serialize(MiniMessage.miniMessage().deserialize(line))));
     }
 
     public void insertItemLineStack(int index, org.bukkit.inventory.ItemStack item) {
