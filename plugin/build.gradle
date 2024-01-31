@@ -19,7 +19,7 @@ dependencies {
     compileOnly "me.clip:placeholderapi:2.11.3" // Placeholder support
     compileOnly "com.google.code.gson:gson:2.10.1" // JSON parsing
     compileOnly "org.bstats:bstats-bukkit:3.0.2" // Plugin stats
-    compileOnly "com.github.robertlit:SpigotResourcesAPI:2.0" // Spigot API wrapper for update checker
+    compileOnly "me.robertlit:SpigotResourcesAPI:2.0" // Spigot API wrapper for update checker
     compileOnly "com.github.retrooper.packetevents:spigot:2.1.0" // Packets
     compileOnly "space.arim.dazzleconf:dazzleconf-ext-snakeyaml:1.2.1" // Configs
     compileOnly "lol.pyr:director-adventure:2.1.1" // Commands

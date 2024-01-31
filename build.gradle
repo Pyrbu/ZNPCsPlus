@@ -32,8 +32,5 @@ subprojects {
         maven {
             url "https://repo.pyr.lol/releases"
         }
-        maven {
-            url "https://jitpack.io/"
-        }
     }
 }

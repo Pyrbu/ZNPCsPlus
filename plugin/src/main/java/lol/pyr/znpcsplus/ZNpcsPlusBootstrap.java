@@ -52,7 +52,7 @@ public class ZNpcsPlusBootstrap extends JavaPlugin {
         loader.loadLibrary(decrypt("org..bstats"), "bstats-base", "3.0.2");
         loader.loadLibrary(decrypt("org..bstats"), "bstats-bukkit", "3.0.2");
 
-        loader.loadLibrary("com.github.robertlit", "SpigotResourcesAPI", "2.0", "https://jitpack.io");
+        loader.loadLibrary("me.robertlit", "SpigotResourcesAPI", "2.0", "https://repo.pyr.lol/releases");
 
         loader.loadLibrary(decrypt("com..github..retrooper..packetevents"), "api", "2.1.0", "https://repo.codemc.io/repository/maven-releases/");
         loader.loadLibrary(decrypt("com..github..retrooper..packetevents"), "spigot", "2.1.0", "https://repo.codemc.io/repository/maven-releases/");
