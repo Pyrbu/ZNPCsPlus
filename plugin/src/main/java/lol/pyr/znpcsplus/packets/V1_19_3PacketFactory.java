@@ -30,7 +30,8 @@ public class V1_19_3PacketFactory extends V1_17PacketFactory {
         CompletableFuture<Void> future = new CompletableFuture<>();
         skinned(player, properties, new UserProfile(entity.getUuid(), Integer.toString(entity.getEntityId()))).thenAccept(profile -> {
             WrapperPlayServerPlayerInfoUpdate.PlayerInfo info = new WrapperPlayServerPlayerInfoUpdate.PlayerInfo(
-                    profile, false, 1, GameMode.CREATIVE, Component.text(" "), null);
+                    profile, false, 1, GameMode.CREATIVE,
+                    Component.text(configManager.getConfig().tabDisplayName().replace("{id}", Integer.toString(entity.getEntityId()))), null);
             sendPacket(player, new WrapperPlayServerPlayerInfoUpdate(EnumSet.of(WrapperPlayServerPlayerInfoUpdate.Action.ADD_PLAYER,
                     WrapperPlayServerPlayerInfoUpdate.Action.UPDATE_LISTED), info, info));
             future.complete(null);
