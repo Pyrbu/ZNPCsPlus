@@ -202,13 +202,15 @@ public class ZNpcsPlus {
 
     public void onDisable() {
         NpcApiProvider.unregister();
-        for (Runnable runnable : shutdownTasks) try {
-            runnable.run();
-        } catch (Throwable throwable) {
-            bootstrap.getLogger().severe("One of the registered shutdown tasks threw an exception:");
-            throwable.printStackTrace();
+        if (shutdownTasks.isEmpty()) {
+            for (Runnable runnable : shutdownTasks) try {
+                runnable.run();
+            } catch (Throwable throwable) {
+                bootstrap.getLogger().severe("One of the registered shutdown tasks threw an exception:");
+                throwable.printStackTrace();
+            }
+            shutdownTasks.clear();
         }
-        shutdownTasks.clear();
         PacketEvents.getAPI().terminate();
     }
 
