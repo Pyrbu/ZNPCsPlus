@@ -16,17 +16,17 @@ processResources {
 }
 
 dependencies {
-    compileOnly "me.clip:placeholderapi:2.11.3" // Placeholder support
+    compileOnly "me.clip:placeholderapi:2.11.5" // Placeholder support
     compileOnly "com.google.code.gson:gson:2.10.1" // JSON parsing
     compileOnly "org.bstats:bstats-bukkit:3.0.2" // Plugin stats
     compileOnly "me.robertlit:SpigotResourcesAPI:2.0" // Spigot API wrapper for update checker
-    compileOnly "com.github.retrooper.packetevents:spigot:2.1.0" // Packets
+    compileOnly "com.github.retrooper.packetevents:spigot:2.2.1" // Packets
     compileOnly "space.arim.dazzleconf:dazzleconf-ext-snakeyaml:1.2.1" // Configs
     compileOnly "lol.pyr:director-adventure:2.1.1" // Commands
 
     // Fancy text library
-    compileOnly "net.kyori:adventure-platform-bukkit:4.3.1"
-    compileOnly "net.kyori:adventure-text-minimessage:4.14.0"
+    compileOnly "net.kyori:adventure-platform-bukkit:4.3.2"
+    compileOnly "net.kyori:adventure-text-minimessage:4.15.0"
 
     implementation "me.lucko:jar-relocator:1.7"
     implementation project(":api")
