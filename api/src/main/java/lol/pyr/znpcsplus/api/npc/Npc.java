@@ -101,6 +101,28 @@ public interface Npc extends PropertyHolder {
     void respawn(Player player);
 
     /**
+     * Blacklists a player from sending packets for this NPC
+     * This means that the run task won't send packets to the player
+     *
+     * @param player The player to be blacklisted
+     */
+    void blacklist(Player player);
+
+    /**
+     * Removes a player from the blacklist, allowing packets to be sent to them for this NPC.
+     *
+     * @param player The player to be removed from the blacklist
+     */
+    void unblacklist(Player player);
+
+    /**
+     * Gets if a player is blacklisted from sending packets for this NPC
+     * @param player The player to check
+     * @return If the player is blacklisted
+     */
+    boolean isBlacklisted(Player player);
+
+    /**
      * Sets the head rotation of this NPC for a player
      * @param player The {@link Player} to set the head rotation for
      * @param yaw The yaw to set
