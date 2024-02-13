@@ -1,6 +1,7 @@
 package lol.pyr.znpcsplus.npc;
 
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
+import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.npc.Npc;
 import lol.pyr.znpcsplus.api.npc.NpcType;
@@ -18,6 +19,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -148,13 +150,19 @@ public class NpcImpl extends Viewable implements Npc {
 
     @Override
     public <T> void setProperty(EntityProperty<T> key, T value) {
-        setProperty((EntityPropertyImpl<T>) key, value );
+        setProperty((EntityPropertyImpl<T>) key, value);
     }
 
     public <T> void setProperty(EntityPropertyImpl<T> key, T value) {
         if (key == null) return;
         if (value == null || value.equals(key.getDefaultValue())) propertyMap.remove(key);
-        else propertyMap.put(key, value);
+        if (value instanceof ItemStack) {
+            ItemStack item = (ItemStack) value;
+            com.github.retrooper.packetevents.protocol.item.ItemStack packetItem = SpigotConversionUtil.fromBukkitItemStack(item);
+            propertyMap.put(key, packetItem);
+        } else {
+            propertyMap.put(key, value);
+        }
         UNSAFE_refreshProperty(key);
     }
 
