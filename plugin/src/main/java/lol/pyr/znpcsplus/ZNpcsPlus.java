@@ -148,10 +148,7 @@ public class ZNpcsPlus {
         log(ChatColor.WHITE + " * Starting tasks...");
         if (configManager.getConfig().checkForUpdates()) {
             UpdateChecker updateChecker = new UpdateChecker(getDescription());
-            scheduler.runLaterAsync(() -> {
-                scheduler.runDelayedTimerAsync(updateChecker, 0L, 6000L);
-                shutdownTasks.add(updateChecker::shutdown);
-            }, 5L);
+            scheduler.runDelayedTimerAsync(updateChecker, 5L, 6000L);
             pluginManager.registerEvents(new UpdateNotificationListener(this, adventure, updateChecker, scheduler), bootstrap);
         }
 
