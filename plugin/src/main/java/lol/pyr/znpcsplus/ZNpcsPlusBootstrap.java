@@ -54,8 +54,8 @@ public class ZNpcsPlusBootstrap extends JavaPlugin {
 
         loader.loadLibrary("me.robertlit", "SpigotResourcesAPI", "2.0", "https://repo.pyr.lol/releases");
 
-        loader.loadLibrary(decrypt("com..github..retrooper..packetevents"), "api", "2.1.0", "https://repo.codemc.io/repository/maven-releases/");
-        loader.loadLibrary(decrypt("com..github..retrooper..packetevents"), "spigot", "2.1.0", "https://repo.codemc.io/repository/maven-releases/");
+        loader.loadLibrary(decrypt("com..github..retrooper..packetevents"), "api", "2.2.1", "https://repo.codemc.io/repository/maven-releases/");
+        loader.loadLibrary(decrypt("com..github..retrooper..packetevents"), "spigot", "2.2.1", "https://repo.codemc.io/repository/maven-releases/");
 
         loader.loadLibrary(decrypt("space..arim..dazzleconf"), "dazzleconf-core", "1.2.1");
         loader.loadLibrary(decrypt("space..arim..dazzleconf"), "dazzleconf-ext-snakeyaml", "1.2.1");
@@ -63,19 +63,19 @@ public class ZNpcsPlusBootstrap extends JavaPlugin {
 
         loader.loadLibrary("lol.pyr", "director-adventure", "2.1.1", "https://repo.pyr.lol/releases");
 
-        loader.loadLibrary(decrypt("net..kyori"), "adventure-api", "4.14.0");
-        loader.loadLibrary(decrypt("net..kyori"), "adventure-key", "4.14.0");
-        loader.loadLibrary(decrypt("net..kyori"), "adventure-nbt", "4.14.0");
-        loader.loadLibrary(decrypt("net..kyori"), "adventure-platform-facet", "4.3.1");
-        loader.loadLibrary(decrypt("net..kyori"), "adventure-platform-api", "4.3.1");
-        loader.loadLibrary(decrypt("net..kyori"), "adventure-platform-bukkit", "4.3.1");
-        loader.loadLibrary(decrypt("net..kyori"), "adventure-text-minimessage", "4.14.0");
-        loader.loadLibrary(decrypt("net..kyori"), "adventure-text-serializer-bungeecord", "4.3.1");
-        loader.loadLibrary(decrypt("net..kyori"), "adventure-text-serializer-gson", "4.14.0");
-        loader.loadLibrary(decrypt("net..kyori"), "adventure-text-serializer-gson-legacy-impl", "4.14.0");
-        loader.loadLibrary(decrypt("net..kyori"), "adventure-text-serializer-json", "4.14.0");
-        loader.loadLibrary(decrypt("net..kyori"), "adventure-text-serializer-json-legacy-impl", "4.14.0");
-        loader.loadLibrary(decrypt("net..kyori"), "adventure-text-serializer-legacy", "4.14.0");
+        loader.loadLibrary(decrypt("net..kyori"), "adventure-api", "4.15.0");
+        loader.loadLibrary(decrypt("net..kyori"), "adventure-key", "4.15.0");
+        loader.loadLibrary(decrypt("net..kyori"), "adventure-nbt", "4.15.0");
+        loader.loadLibrary(decrypt("net..kyori"), "adventure-platform-facet", "4.3.2");
+        loader.loadLibrary(decrypt("net..kyori"), "adventure-platform-api", "4.3.2");
+        loader.loadLibrary(decrypt("net..kyori"), "adventure-platform-bukkit", "4.3.2");
+        loader.loadLibrary(decrypt("net..kyori"), "adventure-text-minimessage", "4.15.0");
+        loader.loadLibrary(decrypt("net..kyori"), "adventure-text-serializer-bungeecord", "4.3.2");
+        loader.loadLibrary(decrypt("net..kyori"), "adventure-text-serializer-gson", "4.15.0");
+        loader.loadLibrary(decrypt("net..kyori"), "adventure-text-serializer-gson-legacy-impl", "4.15.0");
+        loader.loadLibrary(decrypt("net..kyori"), "adventure-text-serializer-json", "4.15.0");
+        loader.loadLibrary(decrypt("net..kyori"), "adventure-text-serializer-json-legacy-impl", "4.15.0");
+        loader.loadLibrary(decrypt("net..kyori"), "adventure-text-serializer-legacy", "4.15.0");
         loader.loadLibrary(decrypt("net..kyori"), "examination-api", "1.3.0");
         loader.loadLibrary(decrypt("net..kyori"), "examination-string", "1.3.0");
         loader.deleteUnloadedLibraries();
