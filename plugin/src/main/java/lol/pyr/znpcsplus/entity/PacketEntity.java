@@ -73,6 +73,10 @@ public class PacketEntity implements PropertyHolder {
         packetFactory.sendAllMetadata(player, this, properties);
     }
 
+    public void swingHand(Player player, boolean offhand) {
+        packetFactory.sendHandSwing(player, this, offhand);
+    }
+
     private static int reserveEntityID() {
         if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_14)) {
             return Reflections.ATOMIC_ENTITY_ID_FIELD.get().incrementAndGet();

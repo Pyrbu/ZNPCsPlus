@@ -124,4 +124,10 @@ public interface Npc extends PropertyHolder {
      * @return The set of players that can currently see this npc
      */
     Set<Player> getViewers();
+
+    /**
+     * Swings the entity's hand
+     * @param offHand Should the hand be the offhand
+     */
+    void swingHand(boolean offHand);
 }

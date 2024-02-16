@@ -175,4 +175,11 @@ public class V1_8PacketFactory implements PacketFactory {
     protected void add(Map<Integer, EntityData> map, EntityData data) {
         map.put(data.getIndex(), data);
     }
+
+    @Override
+    public void sendHandSwing(Player player, PacketEntity entity, boolean offHand) {
+        sendPacket(player, new WrapperPlayServerEntityAnimation(entity.getEntityId(), offHand ?
+                WrapperPlayServerEntityAnimation.EntityAnimationType.SWING_OFF_HAND :
+                WrapperPlayServerEntityAnimation.EntityAnimationType.SWING_MAIN_ARM));
+    }
 }
