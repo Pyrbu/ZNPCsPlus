@@ -22,7 +22,6 @@ public abstract class Viewable {
     }
 
     private final Set<Player> viewers = ConcurrentHashMap.newKeySet();
-    private final Set<Player> blacklisted = ConcurrentHashMap.newKeySet();
 
     public Viewable() {
         all.add(new WeakReference<>(this));
@@ -31,7 +30,6 @@ public abstract class Viewable {
     public void delete() {
         UNSAFE_hideAll();
         viewers.clear();
-        blacklisted.clear();
     }
 
     public void respawn() {
@@ -57,22 +55,8 @@ public abstract class Viewable {
         UNSAFE_hide(player);
     }
 
-    public void blacklist(Player player) {
-        blacklisted.add(player);
-        hide(player);
-    }
-
-    public void unblacklist(Player player) {
-        blacklisted.remove(player);
-    }
-
-    public boolean isBlacklisted(Player player) {
-        return blacklisted.contains(player);
-    }
-
     public void UNSAFE_removeViewer(Player player) {
         viewers.remove(player);
-        blacklisted.remove(player);
     }
 
     protected void UNSAFE_hideAll() {

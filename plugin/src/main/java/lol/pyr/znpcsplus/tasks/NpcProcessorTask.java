@@ -47,11 +47,6 @@ public class NpcProcessorTask extends BukkitRunnable {
                     if (npc.isVisibleTo(player)) npc.hide(player);
                     continue;
                 }
-
-                if (npc.isBlacklisted(player)) {
-                    continue;
-                }
-
                 double distance = player.getLocation().distanceSquared(npc.getBukkitLocation());
 
                 // visibility
