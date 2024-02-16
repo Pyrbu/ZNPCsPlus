@@ -1,5 +1,7 @@
 package lol.pyr.znpcsplus.api.entity;
 
+import org.bukkit.inventory.ItemStack;
+
 import java.util.Set;
 
 /**
@@ -33,9 +35,18 @@ public interface PropertyHolder {
     <T> void setProperty(EntityProperty<T> key, T value);
 
     /**
+     * Weird fix which is sadly required in order to not decrease performance
+     * when using item properties, read https://github.com/Pyrbu/ZNPCsPlus/pull/129#issuecomment-1948777764
+     *
+     * @param key Unique key representing a property
+     * @param value The value to assign to the property key on this holder
+     */
+    void setItemProperty(EntityProperty<?> key, ItemStack value);
+
+    /**
      * Method used to get a set of all of the property keys that this holder has a value for
      *
-     * @return List of property keys
+     * @return Set of property keys
      */
     Set<EntityProperty<?>> getAppliedProperties();
 }

@@ -10,6 +10,7 @@ import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.reflection.Reflections;
 import lol.pyr.znpcsplus.util.NpcLocation;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
 import java.util.Set;
@@ -95,6 +96,11 @@ public class PacketEntity implements PropertyHolder {
     @Override
     public <T> void setProperty(EntityProperty<T> key, T value) {
         properties.setProperty(key, value);
+    }
+
+    @Override
+    public void setItemProperty(EntityProperty<?> key, ItemStack value) {
+        properties.setItemProperty(key, value);
     }
 
     @Override

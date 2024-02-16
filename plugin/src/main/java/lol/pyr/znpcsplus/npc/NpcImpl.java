@@ -1,6 +1,7 @@
 package lol.pyr.znpcsplus.npc;
 
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
+import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.npc.Npc;
 import lol.pyr.znpcsplus.api.npc.NpcType;
@@ -18,6 +19,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -146,9 +148,20 @@ public class NpcImpl extends Viewable implements Npc {
         return propertyMap.containsKey((EntityPropertyImpl<?>) key);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> void setProperty(EntityProperty<T> key, T value) {
-        setProperty((EntityPropertyImpl<T>) key, value );
+        // See https://github.com/Pyrbu/ZNPCsPlus/pull/129#issuecomment-1948777764
+        Object val = value;
+        if (val instanceof ItemStack) val = SpigotConversionUtil.fromBukkitItemStack((ItemStack) val);
+
+        setProperty((EntityPropertyImpl<T>) key, (T) val);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void setItemProperty(EntityProperty<?> key, ItemStack value) {
+        setProperty((EntityPropertyImpl<com.github.retrooper.packetevents.protocol.item.ItemStack>) key, SpigotConversionUtil.fromBukkitItemStack(value));
     }
 
     public <T> void setProperty(EntityPropertyImpl<T> key, T value) {

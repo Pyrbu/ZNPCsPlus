@@ -7,6 +7,7 @@ import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.util.NpcLocation;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -67,6 +68,11 @@ public class HologramLine<M> implements PropertyHolder {
 
     @Override
     public <T> void setProperty(EntityProperty<T> key, T value) {
+        throw new UnsupportedOperationException("Can't set properties on a hologram line");
+    }
+
+    @Override
+    public void setItemProperty(EntityProperty<?> key, ItemStack value) {
         throw new UnsupportedOperationException("Can't set properties on a hologram line");
     }
 
