@@ -148,21 +148,26 @@ public class NpcImpl extends Viewable implements Npc {
         return propertyMap.containsKey((EntityPropertyImpl<?>) key);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> void setProperty(EntityProperty<T> key, T value) {
-        setProperty((EntityPropertyImpl<T>) key, value);
+        // See https://github.com/Pyrbu/ZNPCsPlus/pull/129#issuecomment-1948777764
+        Object val = value;
+        if (val instanceof ItemStack) val = SpigotConversionUtil.fromBukkitItemStack((ItemStack) val);
+
+        setProperty((EntityPropertyImpl<T>) key, (T) val);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void setItemProperty(EntityProperty<?> key, ItemStack value) {
+        setProperty((EntityPropertyImpl<com.github.retrooper.packetevents.protocol.item.ItemStack>) key, SpigotConversionUtil.fromBukkitItemStack(value));
     }
 
     public <T> void setProperty(EntityPropertyImpl<T> key, T value) {
         if (key == null) return;
         if (value == null || value.equals(key.getDefaultValue())) propertyMap.remove(key);
-        if (value instanceof ItemStack) {
-            ItemStack item = (ItemStack) value;
-            com.github.retrooper.packetevents.protocol.item.ItemStack packetItem = SpigotConversionUtil.fromBukkitItemStack(item);
-            propertyMap.put(key, packetItem);
-        } else {
-            propertyMap.put(key, value);
-        }
+        else propertyMap.put(key, value);
         UNSAFE_refreshProperty(key);
     }
 
