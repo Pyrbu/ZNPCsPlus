@@ -92,18 +92,10 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         /*
         registerType("using_item", false); // TODO: fix it for 1.8 and add new property to use offhand item and riptide animation
 
-        // End Crystal
-        registerType("beam_target", null); // TODO: Make a block pos class for this
-        registerType("show_base", true); // TODO
-
         // Enderman
         registerType("enderman_held_block", new BlockState(0)); // TODO: figure out the type on this
         registerType("enderman_screaming", false); // TODO
         registerType("enderman_staring", false); // TODO
-
-        // Guardian
-        registerType("is_elder", false); // TODO: ensure it only works till 1.10. Note: index is wrong on wiki.vg
-
          */
     }
 
