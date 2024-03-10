@@ -28,10 +28,7 @@ public class UpdateChecker extends BukkitRunnable {
         if (resource == null) return;
         newestVersion = resource.getVersion();
 
-        int current = versionToNumber(info.getVersion());
-        int newest = versionToNumber(newestVersion);
-
-        status = current >= newest ? Status.LATEST_VERSION : Status.UPDATE_NEEDED;
+        status = compareVersions(info.getVersion(), newestVersion);
         if (status == Status.UPDATE_NEEDED) notifyConsole();
     }
 
@@ -40,10 +37,43 @@ public class UpdateChecker extends BukkitRunnable {
         logger.warning("Download it at " + UpdateChecker.DOWNLOAD_LINK);
     }
 
-    private int versionToNumber(String version) {
-        int num = Integer.parseInt(version.replaceAll("[^0-9]", ""));
-        if (version.toLowerCase().contains("snapshot")) num -= 1;
-        return num;
+    private Status compareVersions(String currentVersion, String newVersion) {
+        if (currentVersion.equalsIgnoreCase(newVersion)) return Status.LATEST_VERSION;
+        ReleaseType currentType = parseReleaseType(currentVersion);
+        ReleaseType newType = parseReleaseType(newVersion);
+        if (currentType == ReleaseType.UNKNOWN || newType == ReleaseType.UNKNOWN) return Status.UNKNOWN;
+        String currentVersionWithoutType = getVersionWithoutReleaseType(currentVersion);
+        String newVersionWithoutType = getVersionWithoutReleaseType(newVersion);
+        String[] currentParts = currentVersionWithoutType.split("\\.");
+        String[] newParts = newVersionWithoutType.split("\\.");
+        for (int i = 0; i < Math.min(currentParts.length, newParts.length); i++) {
+            int currentPart = Integer.parseInt(currentParts[i]);
+            int newPart = Integer.parseInt(newParts[i]);
+            if (newPart > currentPart) return Status.UPDATE_NEEDED;
+        }
+        if (newType.ordinal() > currentType.ordinal()) return Status.UPDATE_NEEDED;
+        if (newType == currentType) {
+            int currentReleaseTypeNumber = getReleaseTypeNumber(currentVersion);
+            int newReleaseTypeNumber = getReleaseTypeNumber(newVersion);
+            if (newReleaseTypeNumber > currentReleaseTypeNumber) return Status.UPDATE_NEEDED;
+        }
+        return Status.LATEST_VERSION;
+    }
+
+    private ReleaseType parseReleaseType(String version) {
+        if (version.toLowerCase().contains("snapshot")) return ReleaseType.SNAPSHOT;
+        if (version.toLowerCase().contains("alpha")) return ReleaseType.ALPHA;
+        if (version.toLowerCase().contains("beta")) return ReleaseType.BETA;
+        return version.matches("\\d+\\.\\d+\\.\\d+") ? ReleaseType.RELEASE : ReleaseType.UNKNOWN;
+    }
+
+    private String getVersionWithoutReleaseType(String version) {
+        return version.contains("-") ? version.split("-")[0] : version;
+    }
+
+    private int getReleaseTypeNumber(String version) {
+        if (!version.contains("-")) return 0;
+        return Integer.parseInt(version.split("-")[1].split("\\.")[1]);
     }
 
     public Status getStatus() {
@@ -56,5 +86,9 @@ public class UpdateChecker extends BukkitRunnable {
 
     public enum Status {
         UNKNOWN, LATEST_VERSION, UPDATE_NEEDED
+    }
+
+    public enum ReleaseType {
+        UNKNOWN, SNAPSHOT, ALPHA, BETA, RELEASE
     }
 }
