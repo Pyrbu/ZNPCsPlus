@@ -100,13 +100,12 @@ public class NpcImpl extends Viewable implements Npc {
         if (getHeadYaw(player) == yaw && getHeadPitch(player) == pitch) return;
         playerLookMap.put(player.getUniqueId(), new float[]{yaw, pitch});
         entity.setHeadRotation(player, yaw, pitch);
+        this.location = location.with(yaw, pitch);
     }
 
     public void setHeadRotation(float yaw, float pitch) {
         for (Player player : getViewers()) {
-            if (getHeadYaw(player) == yaw && getHeadPitch(player) == pitch) continue;
-            playerLookMap.put(player.getUniqueId(), new float[]{yaw, pitch});
-            entity.setHeadRotation(player, yaw, pitch);
+            setHeadRotation(player, yaw, pitch);
         }
     }
 

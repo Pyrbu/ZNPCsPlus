@@ -53,6 +53,10 @@ public class NpcLocation {
         return this.yaw;
     }
 
+    public NpcLocation with(float yaw, float pitch) {
+        return new NpcLocation(x, y, z, yaw, pitch);
+    }
+
     public float getPitch() {
         return this.pitch;
     }
