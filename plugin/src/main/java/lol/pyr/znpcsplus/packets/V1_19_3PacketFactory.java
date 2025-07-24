@@ -27,11 +27,15 @@ public class V1_19_3PacketFactory extends V1_17PacketFactory {
     @Override
     public CompletableFuture<Void> addTabPlayer(Player player, PacketEntity entity, PropertyHolder properties) {
         if (entity.getType() != EntityTypes.PLAYER) return CompletableFuture.completedFuture(null);
+
         CompletableFuture<Void> future = new CompletableFuture<>();
-        skinned(player, properties, new UserProfile(entity.getUuid(), Integer.toString(entity.getEntityId()))).thenAccept(profile -> {
+
+        String displayName = entity.getProperty(propertyRegistry.getByName("display_name", String.class)) == null ? entity.getEntityId()+"" : entity.getProperty(propertyRegistry.getByName("display_name", String.class));
+
+        skinned(player, properties, new UserProfile(entity.getUuid(), displayName)).thenAccept(profile -> {
             WrapperPlayServerPlayerInfoUpdate.PlayerInfo info = new WrapperPlayServerPlayerInfoUpdate.PlayerInfo(
                     profile, false, 1, GameMode.CREATIVE,
-                    Component.text(configManager.getConfig().tabDisplayName().replace("{id}", Integer.toString(entity.getEntityId()))), null);
+                    Component.text(configManager.getConfig().tabDisplayName().replace("{id}", displayName)), null);
             sendPacket(player, new WrapperPlayServerPlayerInfoUpdate(EnumSet.of(WrapperPlayServerPlayerInfoUpdate.Action.ADD_PLAYER,
                     WrapperPlayServerPlayerInfoUpdate.Action.UPDATE_LISTED), info, info));
             future.complete(null);
