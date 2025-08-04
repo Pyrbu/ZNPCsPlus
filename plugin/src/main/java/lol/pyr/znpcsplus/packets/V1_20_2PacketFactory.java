@@ -18,7 +18,6 @@ import org.bukkit.plugin.Plugin;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-
 public class V1_20_2PacketFactory extends V1_19_3PacketFactory {
 
     protected ConfigManager configManager;
