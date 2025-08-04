@@ -34,6 +34,8 @@ public class V1_17PacketFactory extends V1_8PacketFactory {
         sendPacket(player, new WrapperPlayServerSpawnEntity(entity.getEntityId(), Optional.of(entity.getUuid()), entity.getType(),
                 npcLocationToVector(location), location.getPitch(), location.getYaw(), location.getYaw(), 0, Optional.of(new Vector3d())));
 
+        // 设置除玩家以外的实体昵称 若display_name属性为空，则用默认实体名称
+        // Sets the nickname of an entity other than the player. If the display_name attribute is empty, the default entity name is used.
         String displayName = entity.getProperty(propertyRegistry.getByName("display_name", String.class));
         if (displayName != null) {
             EntityData<Optional<Component>> nameData = new EntityData<>(
@@ -46,17 +48,7 @@ public class V1_17PacketFactory extends V1_8PacketFactory {
                     Collections.singletonList(nameData)
             ));
         }
-
         sendAllMetadata(player, entity, properties);
-        EntityData<Boolean> hideNameDisplay = new EntityData<>(
-                3,
-                EntityDataTypes.BOOLEAN,
-                false
-        );
-        sendPacket(player, new WrapperPlayServerEntityMetadata(
-                entity.getEntityId(),
-                Collections.singletonList(hideNameDisplay)
-        ));
         if (EntityTypes.isTypeInstanceOf(entity.getType(), EntityTypes.LIVINGENTITY)) sendAllAttributes(player, entity, properties);
         createTeam(player, entity, properties.getProperty(propertyRegistry.getByName("glow", NamedColor.class)));
     }

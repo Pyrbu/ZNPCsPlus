@@ -30,8 +30,9 @@ public class V1_19_3PacketFactory extends V1_17PacketFactory {
 
         CompletableFuture<Void> future = new CompletableFuture<>();
 
+        // 设置玩家类型NPC的昵称 若display_name属性为空，则用默认虚拟实体ID作为名称
+        // Set the nickname of the player type NPC. If the display_name attribute is empty, the default virtual entity ID is used as the name.
         String displayName = entity.getProperty(propertyRegistry.getByName("display_name", String.class)) == null ? entity.getEntityId()+"" : entity.getProperty(propertyRegistry.getByName("display_name", String.class));
-
         skinned(player, properties, new UserProfile(entity.getUuid(), displayName)).thenAccept(profile -> {
             WrapperPlayServerPlayerInfoUpdate.PlayerInfo info = new WrapperPlayServerPlayerInfoUpdate.PlayerInfo(
                     profile, false, 1, GameMode.CREATIVE,

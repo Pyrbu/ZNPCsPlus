@@ -124,8 +124,14 @@ public class V1_8PacketFactory implements PacketFactory {
                 namedColor == null ? NamedTextColor.WHITE : NamedTextColor.NAMES.value(namedColor.name().toLowerCase()),
                 WrapperPlayServerTeams.OptionData.NONE
         )));
+
+        String displayName = entity.getProperty(propertyRegistry.getByName("display_name", String.class)) == null ? entity.getEntityId()+"" : entity.getProperty(propertyRegistry.getByName("display_name", String.class));
+        // 这个displayName替换掉原来的变量，是为了
+        // '当NPC实体为玩家类型时，隐藏掉NPC头顶上的名称显示 不然会和hologram一起显示 导致有些混淆与冲突'
+        // This displayName replaces the original variable in order to
+        // 'hide the name display above the NPC's head when the NPC entity is a player type, otherwise it will be displayed together with the hologram, causing some confusion and conflict'
         sendPacket(player, new WrapperPlayServerTeams("npc_team_" + entity.getEntityId(), WrapperPlayServerTeams.TeamMode.ADD_ENTITIES, (WrapperPlayServerTeams.ScoreBoardTeamInfo) null,
-                entity.getType() == EntityTypes.PLAYER ? Integer.toString(entity.getEntityId()) : entity.getUuid().toString()));
+                entity.getType() == EntityTypes.PLAYER ? displayName : entity.getUuid().toString()));
     }
 
     @Override
