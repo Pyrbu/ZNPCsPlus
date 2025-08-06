@@ -16,6 +16,8 @@ import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.properties.*;
 import lol.pyr.znpcsplus.entity.properties.attributes.AttributeProperty;
+import lol.pyr.znpcsplus.entity.properties.player.AlwaysVisibleInTabProperty;
+import lol.pyr.znpcsplus.entity.properties.player.TabListDisplayNameProperty;
 import lol.pyr.znpcsplus.entity.properties.villager.VillagerLevelProperty;
 import lol.pyr.znpcsplus.entity.properties.villager.VillagerProfessionProperty;
 import lol.pyr.znpcsplus.entity.properties.villager.VillagerTypeProperty;
@@ -123,6 +125,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         register(new NameProperty(textSerializer, legacyNames, optionalComponents));
         register(new DummyProperty<>("display_name", String.class));
+        register(new TabListDisplayNameProperty(packetFactory, textSerializer));
+        register(new AlwaysVisibleInTabProperty(packetFactory));
         register(new DinnerboneProperty(legacyNames, optionalComponents));
 
         register(new DummyProperty<>("look", LookType.FIXED));
@@ -787,6 +791,12 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
     public <T> EntityPropertyImpl<T> getByName(String name, Class<T> type) {
         return (EntityPropertyImpl<T>) getByName(name);
+    }
+
+    @Override
+    public <T> void registerDummy(String name, T defaultValue, boolean playerModifiable) {
+        register(new DummyProperty<>(name, defaultValue, playerModifiable));
+
     }
 
     @Override

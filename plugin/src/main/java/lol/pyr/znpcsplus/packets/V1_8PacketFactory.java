@@ -21,8 +21,10 @@ import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.entity.properties.attributes.AttributeProperty;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.skin.BaseSkinDescriptor;
+import lol.pyr.znpcsplus.util.LazyLoader;
 import lol.pyr.znpcsplus.util.NamedColor;
 import lol.pyr.znpcsplus.util.NpcLocation;
+import lol.pyr.znpcsplus.util.PapiUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -39,12 +41,20 @@ public class V1_8PacketFactory implements PacketFactory {
     protected final LegacyComponentSerializer textSerializer;
     protected ConfigManager configManager;
 
+    protected final LazyLoader<EntityPropertyImpl<String>> displayNameProperty;
+    protected final LazyLoader<EntityPropertyImpl<Component>> tabListDisplayNameProperty;
+    protected final LazyLoader<EntityPropertyImpl<Boolean>> alwaysVisibleInTabProperty;
+
     public V1_8PacketFactory(TaskScheduler scheduler, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer, ConfigManager configManager) {
         this.scheduler = scheduler;
         this.packetEvents = packetEvents;
         this.propertyRegistry = propertyRegistry;
         this.textSerializer = textSerializer;
         this.configManager = configManager;
+
+        this.displayNameProperty = LazyLoader.of(() -> propertyRegistry.getByName("display_name", String.class));
+        this.tabListDisplayNameProperty = LazyLoader.of(() -> propertyRegistry.getByName("tab_list_display_name", Component.class));
+        this.alwaysVisibleInTabProperty = LazyLoader.of(() -> propertyRegistry.getByName("always_visible_in_tab", Boolean.class));
     }
 
     @Override
@@ -54,10 +64,12 @@ public class V1_8PacketFactory implements PacketFactory {
             NpcLocation location = entity.getLocation();
             sendPacket(player, new WrapperPlayServerSpawnPlayer(entity.getEntityId(),
                     entity.getUuid(), npcLocationToVector(location), location.getYaw(), location.getPitch(), Collections.emptyList()));
+            //noinspection DuplicatedCode
             sendPacket(player, new WrapperPlayServerEntityHeadLook(entity.getEntityId(), location.getYaw()));
             sendAllMetadata(player, entity, properties);
             sendAllAttributes(player, entity, properties);
-            scheduler.runLaterAsync(() -> removeTabPlayer(player, entity), configManager.getConfig().tabHideDelay());
+            if (alwaysVisibleInTabProperty == null || !properties.getProperty(alwaysVisibleInTabProperty.get()))
+                scheduler.runLaterAsync(() -> removeTabPlayer(player, entity), configManager.getConfig().tabHideDelay());
         });
     }
 
@@ -83,6 +95,7 @@ public class V1_8PacketFactory implements PacketFactory {
     @Override
     public void destroyEntity(Player player, PacketEntity entity, PropertyHolder properties) {
         sendPacket(player, new WrapperPlayServerDestroyEntities(entity.getEntityId()));
+        removeTabPlayer(player, entity);
         removeTeam(player, entity);
     }
 
@@ -97,11 +110,23 @@ public class V1_8PacketFactory implements PacketFactory {
     public CompletableFuture<Void> addTabPlayer(Player player, PacketEntity entity, PropertyHolder properties) {
         if (entity.getType() != EntityTypes.PLAYER) return CompletableFuture.completedFuture(null);
         CompletableFuture<Void> future = new CompletableFuture<>();
-        skinned(player, properties, new UserProfile(entity.getUuid(), Integer.toString(entity.getEntityId()))).thenAccept(profile -> {
+        Component tabListDisplayName = tabListDisplayNameProperty != null && properties.getProperty(tabListDisplayNameProperty.get()) != null ?
+                PapiUtil.set(textSerializer, player, properties.getProperty(tabListDisplayNameProperty.get())) :
+                Component.text(PapiUtil.set(player, configManager.getConfig().tabDisplayName()
+                        .replace("{id}", Integer.toString(entity.getEntityId()))
+                        .replace("{name}", displayNameProperty != null && properties.hasProperty(displayNameProperty.get()) ?
+                                properties.getProperty(displayNameProperty.get()) :
+                                "")
+                ));
+
+        // This is to set the entity name for NPCs.
+        String displayName = displayNameProperty != null && properties.hasProperty(displayNameProperty.get()) ?
+                properties.getProperty(displayNameProperty.get()) : Integer.toString(entity.getEntityId());
+        skinned(player, properties, new UserProfile(entity.getUuid(), displayName)).thenAccept(profile -> {
             sendPacket(player, new WrapperPlayServerPlayerInfo(
                     WrapperPlayServerPlayerInfo.Action.ADD_PLAYER, new WrapperPlayServerPlayerInfo.PlayerData(
-                            Component.text(configManager.getConfig().tabDisplayName().replace("{id}", Integer.toString(entity.getEntityId()))),
-                    profile, GameMode.CREATIVE, 1)));
+                    tabListDisplayName, profile, GameMode.CREATIVE, 1)));
+            entity.setListedInTabList(true);
             future.complete(null);
         });
         return future;
@@ -110,9 +135,11 @@ public class V1_8PacketFactory implements PacketFactory {
     @Override
     public void removeTabPlayer(Player player, PacketEntity entity) {
         if (entity.getType() != EntityTypes.PLAYER) return;
+        if (!entity.isListedInTabList()) return; // Already removed
         sendPacket(player, new WrapperPlayServerPlayerInfo(
                 WrapperPlayServerPlayerInfo.Action.REMOVE_PLAYER, new WrapperPlayServerPlayerInfo.PlayerData(null,
                 new UserProfile(entity.getUuid(), null), null, -1)));
+        entity.setListedInTabList(false);
     }
 
     @Override
@@ -125,10 +152,12 @@ public class V1_8PacketFactory implements PacketFactory {
                 WrapperPlayServerTeams.OptionData.NONE
         )));
 
-        String displayName = entity.getProperty(propertyRegistry.getByName("display_name", String.class)) == null ? entity.getEntityId()+"" : entity.getProperty(propertyRegistry.getByName("display_name", String.class));
-        // 这个displayName替换掉原来的变量，是为了
+        PropertyHolder properties = entity.getProperties();
+        String displayName = displayNameProperty != null && properties.hasProperty(displayNameProperty.get()) ?
+                properties.getProperty(displayNameProperty.get()) : Integer.toString(entity.getEntityId());
+        // 这个displayName替换掉原来的实体ID，是为了
         // '当NPC实体为玩家类型时，隐藏掉NPC头顶上的名称显示 不然会和hologram一起显示 导致有些混淆与冲突'
-        // This displayName replaces the original variable in order to
+        // This displayName replaces the original entityID in order to
         // 'hide the name display above the NPC's head when the NPC entity is a player type, otherwise it will be displayed together with the hologram, causing some confusion and conflict'
         sendPacket(player, new WrapperPlayServerTeams("npc_team_" + entity.getEntityId(), WrapperPlayServerTeams.TeamMode.ADD_ENTITIES, (WrapperPlayServerTeams.ScoreBoardTeamInfo) null,
                 entity.getType() == EntityTypes.PLAYER ? displayName : entity.getUuid().toString()));
@@ -210,5 +239,26 @@ public class V1_8PacketFactory implements PacketFactory {
     @Override
     public void sendAttribute(Player player, PacketEntity entity, WrapperPlayServerUpdateAttributes.Property property) {
         sendPacket(player, new WrapperPlayServerUpdateAttributes(entity.getEntityId(), Collections.singletonList(property)));
+    }
+
+    @Override
+    public void updateListed(Player player, PacketEntity entity, boolean listed) {
+        if (entity.getType() != EntityTypes.PLAYER) return;
+        if (listed && !entity.isListedInTabList()) {
+            addTabPlayer(player, entity, entity.getProperties());
+        } else if (!listed && entity.isListedInTabList()) {
+            removeTabPlayer(player, entity);
+        }
+    }
+
+    @Override
+    public void updateDisplayName(Player player, PacketEntity entity, Component displayName) {
+        if (entity.getType() != EntityTypes.PLAYER) return;
+        sendPacket(player, new WrapperPlayServerPlayerInfo(
+                WrapperPlayServerPlayerInfo.Action.UPDATE_DISPLAY_NAME, new WrapperPlayServerPlayerInfo.PlayerData(
+                    displayName,
+                    new UserProfile(entity.getUuid(), null), null, -1
+                )
+        ));
     }
 }

@@ -36,7 +36,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
         register(builder(p, "player", EntityTypes.PLAYER)
                 .setHologramOffset(-0.15D)
                 .addEquipmentProperties()
-                .addProperties("skin_cape", "skin_jacket", "skin_left_sleeve", "skin_right_sleeve", "skin_left_leg", "skin_right_leg", "skin_hat", "shoulder_entity_left", "shoulder_entity_right", "force_body_rotation", "entity_sitting")
+                .addProperties("skin_cape", "skin_jacket", "skin_left_sleeve", "skin_right_sleeve", "skin_left_leg", "skin_right_leg", "skin_hat", "shoulder_entity_left", "shoulder_entity_right", "force_body_rotation", "entity_sitting",
+                        "tab_list_display_name", "always_visible_in_tab")
                 .addDefaultProperty("skin_cape", true)
                 .addDefaultProperty("skin_jacket", true)
                 .addDefaultProperty("skin_left_sleeve", true)
@@ -401,6 +402,11 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
         register(builder(p, "creaking", EntityTypes.CREAKING)
                 .setHologramOffset(0.725)
                 .addProperties("creaking_active"));
+
+        if (!version.isNewerThanOrEquals(ServerVersion.V_1_21_6)) return;
+
+        register(builder(p, "happy_ghast", EntityTypes.HAPPY_GHAST)
+                .setHologramOffset(2));
     }
 
     public Collection<NpcType> getAll() {

@@ -69,6 +69,10 @@ public class NpcLocation {
         return new NpcLocation(x, y, z, yaw, pitch);
     }
 
+    public NpcLocation withRotation(float yaw, float pitch) {
+        return new NpcLocation(x, y, z, yaw, pitch);
+    }
+
     private static final double _2PI = 2 * Math.PI;
 
     public NpcLocation lookingAt(Location loc) {

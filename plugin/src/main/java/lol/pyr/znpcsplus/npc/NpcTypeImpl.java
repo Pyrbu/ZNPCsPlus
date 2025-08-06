@@ -211,6 +211,9 @@ public class NpcTypeImpl implements NpcType {
                     addProperties("zombie_becoming_drowned");
                 }
             }
+            if (EntityTypes.isTypeInstanceOf(type, EntityTypes.HAPPY_GHAST)) {
+                addProperties("body");
+            }
             return new NpcTypeImpl(name, type, hologramOffset, new HashSet<>(allowedProperties), defaultProperties);
         }
     }

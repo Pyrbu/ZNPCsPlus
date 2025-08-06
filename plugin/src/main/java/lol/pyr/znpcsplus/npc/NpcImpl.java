@@ -82,6 +82,14 @@ public class NpcImpl extends Viewable implements Npc {
         return location;
     }
 
+    public NpcLocation getLocation(Player player) {
+        if (playerLookMap.containsKey(player.getUniqueId())) {
+            float[] rotation = playerLookMap.get(player.getUniqueId());
+            return location.withRotation(rotation[0], rotation[1]);
+        }
+        return location;
+    }
+
     public @Nullable Location getBukkitLocation() {
         World world = getWorld();
         if (world == null) return null;

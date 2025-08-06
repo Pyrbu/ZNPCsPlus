@@ -34,14 +34,14 @@ public class V1_17PacketFactory extends V1_8PacketFactory {
         sendPacket(player, new WrapperPlayServerSpawnEntity(entity.getEntityId(), Optional.of(entity.getUuid()), entity.getType(),
                 npcLocationToVector(location), location.getPitch(), location.getYaw(), location.getYaw(), 0, Optional.of(new Vector3d())));
 
-        // 设置除玩家以外的实体昵称 若display_name属性为空，则用默认实体名称
         // Sets the nickname of an entity other than the player. If the display_name attribute is empty, the default entity name is used.
-        String displayName = entity.getProperty(propertyRegistry.getByName("display_name", String.class));
-        if (displayName != null) {
+        // V1_8PacketFactory spawnEntity method
+        // I am currently playing version 1.21.1, and I am busy, so it is not very convenient for me to test it.
+        if (displayNameProperty != null && properties.hasProperty(displayNameProperty.get())) {
             EntityData<Optional<Component>> nameData = new EntityData<>(
                     2,
                     EntityDataTypes.OPTIONAL_ADV_COMPONENT,
-                    Optional.of(Component.text(displayName))
+                    Optional.of(Component.text(properties.getProperty(displayNameProperty.get())))
             );
             sendPacket(player, new WrapperPlayServerEntityMetadata(
                     entity.getEntityId(),

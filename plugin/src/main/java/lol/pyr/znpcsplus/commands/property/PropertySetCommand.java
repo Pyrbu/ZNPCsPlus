@@ -148,7 +148,12 @@ public class PropertySetCommand implements CommandHandler {
         }
 
         npc.UNSAFE_setProperty(property, value);
-        context.send(Component.text("Set property " + property.getName() + " for NPC " + entry.getId() + " to " + valueName, NamedTextColor.GREEN));
+        if (type == Component.class && value != null) {
+            context.send(Component.text("Set property " + property.getName() + " for NPC " + entry.getId() + " to ", NamedTextColor.GREEN)
+                    .append((Component) value));
+        } else {
+            context.send(Component.text("Set property " + property.getName() + " for NPC " + entry.getId() + " to " + valueName, NamedTextColor.GREEN));
+        }
     }
 
     @Override

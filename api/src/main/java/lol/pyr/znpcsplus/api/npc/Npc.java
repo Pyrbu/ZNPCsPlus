@@ -35,6 +35,15 @@ public interface Npc extends PropertyHolder {
     NpcLocation getLocation();
 
     /**
+     * Gets the location of this NPC for the given player
+     * @param player The {@link Player} to get the location for
+     * @return The {@link NpcLocation} of this NPC for the player
+     * Note: this could be different for each player only if `look_type` property is set to `PER_PLAYER`
+     *       or the API is used to spawn the NPC with a different location/rotation for each player.
+     */
+    NpcLocation getLocation(Player player);
+
+    /**
      * Sets the location of this NPC
      * @param location The {@link NpcLocation} to set
      */

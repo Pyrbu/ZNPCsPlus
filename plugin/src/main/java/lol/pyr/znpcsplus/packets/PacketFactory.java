@@ -6,6 +6,7 @@ import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerUp
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.util.NamedColor;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -28,4 +29,6 @@ public interface PacketFactory {
     void setPassengers(Player player, int vehicle, int... passengers);
     void sendAllAttributes(Player player, PacketEntity entity, PropertyHolder properties);
     void sendAttribute(Player player, PacketEntity entity, WrapperPlayServerUpdateAttributes.Property property);
+    void updateListed(Player player, PacketEntity entity, boolean listed);
+    void updateDisplayName(Player player, PacketEntity entity, Component displayName);
 }

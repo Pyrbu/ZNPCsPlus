@@ -52,4 +52,26 @@ public interface EntityPropertyRegistry {
      * @param playerModifiable Whether this property can be modified by players using commands
      */
     void registerDummy(String name, Class<?> type, boolean playerModifiable);
+
+    /**
+     * Register a dummy property with a default value (player-modifiable by default)
+     *
+     * @param name The name of the new property
+     * @param defaultValue The default value for this property
+     * @param <T> The type of the property value
+     * @deprecated Use {@link #registerDummy(String, Object, boolean)} instead
+     */
+    default <T> void registerDummy(String name, T defaultValue) {
+        registerDummy(name, defaultValue, true);
+    }
+
+    /**
+     * Register a dummy property with a default value
+     *
+     * @param name The name of the new property
+     * @param defaultValue The default value for this property
+     * @param playerModifiable Whether this property can be modified by players using commands
+     * @param <T> The type of the property value
+     */
+    <T> void registerDummy(String name, T defaultValue, boolean playerModifiable);
 }

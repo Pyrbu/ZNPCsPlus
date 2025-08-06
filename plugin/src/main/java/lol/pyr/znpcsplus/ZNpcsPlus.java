@@ -266,6 +266,7 @@ public class ZNpcsPlus {
         manager.registerParser(Vector3f.class, new Vector3fParser(incorrectUsageMessage));
         manager.registerParser(String.class, new StringParser(incorrectUsageMessage));
         manager.registerParser(Vector3i.class, new Vector3iParser(incorrectUsageMessage));
+        manager.registerParser(Component.class, new ComponentParser(incorrectUsageMessage, textSerializer));
 
         // TODO: Need to find a better way to do this
         registerEnumParser(manager, NpcPose.class, incorrectUsageMessage);
