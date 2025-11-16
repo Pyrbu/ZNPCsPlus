@@ -2,7 +2,6 @@ package lol.pyr.znpcsplus.entity.properties;
 
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
-import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.util.PapiUtil;
@@ -31,9 +30,7 @@ public class NameProperty extends EntityPropertyImpl<Component> {
         Component value = entity.getProperty(this);
         if (value != null) {
             value = PapiUtil.set(legacySerializer, player, value);
-            if (legacySerialization) {
-                properties.put(2, newEntityData(2, EntityDataTypes.STRING, AdventureSerializer.serializer().asJson(value)));
-            } else if (optional) {
+            if (optional) {
                 properties.put(2, newEntityData(2, EntityDataTypes.OPTIONAL_ADV_COMPONENT, Optional.of(value)));
             } else {
                 properties.put(2, newEntityData(2, EntityDataTypes.STRING, LegacyComponentSerializer.legacySection().serialize(value)));
