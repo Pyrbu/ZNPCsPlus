@@ -720,6 +720,10 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new CustomTypeProperty<>("sniffer_state", 17, SnifferState.IDLING, EntityDataTypes.SNIFFER_STATE, state -> com.github.retrooper.packetevents.protocol.entity.sniffer.SnifferState.valueOf(state.name())));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_20_5)) return;
+
+        // Attribute Scale
+        register(new AttributeProperty(packetFactory, "scale", Attributes.SCALE));
+
         // Armadillo
         register(new CustomTypeProperty<>("armadillo_state", 17, ArmadilloState.IDLE, EntityDataTypes.ARMADILLO_STATE, state ->
                 com.github.retrooper.packetevents.protocol.entity.armadillo.ArmadilloState.valueOf(state.name())));

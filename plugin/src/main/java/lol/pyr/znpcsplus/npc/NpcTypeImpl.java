@@ -122,6 +122,9 @@ public class NpcTypeImpl implements NpcType {
             if (!type.equals(EntityTypes.PLAYER)) addProperties("dinnerbone");
             if (EntityTypes.isTypeInstanceOf(type, EntityTypes.LIVINGENTITY)) {
                 addProperties("health", "attribute_max_health");
+                if (version.isNewerThanOrEquals(ServerVersion.V_1_20_5)) {
+                    addProperties("scale");
+                }
             }
             // TODO: make this look nicer after completing the rest of the properties
             if (version.isNewerThanOrEquals(ServerVersion.V_1_9)) addProperties("glow");
