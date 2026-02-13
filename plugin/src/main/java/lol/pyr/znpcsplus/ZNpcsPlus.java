@@ -232,6 +232,7 @@ public class ZNpcsPlus {
         versions.put(ServerVersion.V_1_19_3, LazyLoader.of(() -> new V1_19_3PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer, configManager)));
         versions.put(ServerVersion.V_1_20_2, LazyLoader.of(() -> new V1_20_2PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer, configManager)));
         versions.put(ServerVersion.V_1_21_3, LazyLoader.of(() -> new V1_21_3PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer, configManager)));
+        versions.put(ServerVersion.V_1_21_11, LazyLoader.of(() -> new V1_21_11PacketFactory(scheduler, packetEvents, propertyRegistry, textSerializer, configManager)));
 
         ServerVersion version = packetEvents.getServerManager().getVersion();
         if (versions.containsKey(version)) return versions.get(version).get();
