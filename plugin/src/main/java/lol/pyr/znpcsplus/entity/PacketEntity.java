@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PacketEntity implements PropertyHolder {
     private final PacketFactory packetFactory;
@@ -31,7 +32,9 @@ public class PacketEntity implements PropertyHolder {
     private PacketEntity vehicle;
     private Integer vehicleId;
     private List<Integer> passengers;
-    private boolean listedInTabList = true;
+    // private boolean listedInTabList = true;
+
+    private final Set<Player> listedInTabList = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     public PacketEntity(PacketFactory packetFactory, PropertyHolder properties, Viewable viewable, EntityType type, NpcLocation location) {
         this.packetFactory = packetFactory;
@@ -227,11 +230,15 @@ public class PacketEntity implements PropertyHolder {
         return properties.getAppliedProperties();
     }
 
-    public boolean isListedInTabList() {
-        return listedInTabList;
+    public boolean isListedInTabList(Player player) {
+        return this.listedInTabList.contains(player);
     }
 
-    public void setListedInTabList(boolean listedInTabList) {
-        this.listedInTabList = listedInTabList;
+    public void setListedInTab(Player player) {
+        listedInTabList.add(player);
+    }
+
+    public void setUnlistedInTab(Player player) {
+        listedInTabList.remove(player);
     }
 }

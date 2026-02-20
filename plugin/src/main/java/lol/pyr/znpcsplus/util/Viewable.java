@@ -9,11 +9,18 @@ import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 public abstract class Viewable {
-    private final static List<WeakReference<Viewable>> all = Collections.synchronizedList(new ArrayList<>());
+    private static final List<WeakReference<Viewable>> all = Collections.synchronizedList(new ArrayList<>());
+    private static final ExecutorService visibilityExecutor = Executors.newSingleThreadExecutor();
+
+    private final Set<Player> viewers = ConcurrentHashMap.newKeySet();
+
+    public Viewable() {
+        all.add(new WeakReference<>(this));
+    }
 
     public static List<Viewable> all() {
         synchronized (all) {
-            all.removeIf(reference -> reference.get() == null);
+            all.removeIf(ref -> ref.get() == null);
             return all.stream()
                     .map(Reference::get)
                     .collect(Collectors.toList());
@@ -24,19 +31,12 @@ public abstract class Viewable {
         visibilityExecutor.shutdown();
     }
 
-    private final static ExecutorService visibilityExecutor = Executors.newSingleThreadExecutor();
-    private final Set<Player> viewers = ConcurrentHashMap.newKeySet();
-
-    public Viewable() {
-        all.add(new WeakReference<>(this));
-    }
-
     public void delete() {
         visibilityExecutor.submit(() -> {
             UNSAFE_hideAll();
             viewers.clear();
             synchronized (all) {
-                all.removeIf(reference -> reference.get() == null || reference.get() == this);
+                all.removeIf(ref -> ref.get() == null || ref.get() == this);
             }
         });
     }
@@ -45,14 +45,37 @@ public abstract class Viewable {
         CompletableFuture<Void> future = new CompletableFuture<>();
         visibilityExecutor.submit(() -> {
             UNSAFE_hideAll();
-            UNSAFE_showAll().thenRun(() -> future.complete(null));
+            UNSAFE_showAll()
+                    .whenComplete((v, ex) -> {
+                        if (ex != null) future.completeExceptionally(ex);
+                        else future.complete(null);
+                    });
         });
         return future;
     }
 
     public CompletableFuture<Void> respawn(Player player) {
-        hide(player);
-        return show(player);
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        visibilityExecutor.submit(() -> {
+            if (!viewers.contains(player)) {
+                // Not visible — just show
+                viewers.add(player);
+                UNSAFE_show(player)
+                        .whenComplete((v, ex) -> {
+                            if (ex != null) future.completeExceptionally(ex);
+                            else future.complete(null);
+                        });
+                return;
+            }
+            viewers.remove(player);
+            // Wait for hide to fully complete, THEN show
+            UNSAFE_hideAndShow(player)
+                    .whenComplete((v, ex) -> {
+                        if (ex != null) future.completeExceptionally(ex);
+                        else future.complete(null);
+                    });
+        });
+        return future;
     }
 
     public CompletableFuture<Void> show(Player player) {
@@ -63,15 +86,18 @@ public abstract class Viewable {
                 return;
             }
             viewers.add(player);
-            UNSAFE_show(player).thenRun(() -> future.complete(null));
+            UNSAFE_show(player)
+                    .whenComplete((v, ex) -> {
+                        if (ex != null) future.completeExceptionally(ex);
+                        else future.complete(null);
+                    });
         });
         return future;
     }
 
     public void hide(Player player) {
         visibilityExecutor.submit(() -> {
-            if (!viewers.contains(player)) return;
-            viewers.remove(player);
+            if (!viewers.remove(player)) return;
             UNSAFE_hide(player);
         });
     }
@@ -80,22 +106,29 @@ public abstract class Viewable {
         viewers.remove(player);
     }
 
-    protected void UNSAFE_hideAll() {
-        for (Player viewer : viewers) UNSAFE_hide(viewer);
-    }
-
-    protected CompletableFuture<Void> UNSAFE_showAll() {
-        return FutureUtil.allOf(viewers.stream()
-                .map(this::UNSAFE_show)
-                .collect(Collectors.toList()));
-    }
-
     public Set<Player> getViewers() {
         return Collections.unmodifiableSet(viewers);
     }
 
     public boolean isVisibleTo(Player player) {
         return viewers.contains(player);
+    }
+
+    protected void UNSAFE_hideAll() {
+        viewers.forEach(this::UNSAFE_hide);
+    }
+
+    protected CompletableFuture<Void> UNSAFE_showAll() {
+        List<CompletableFuture<?>> futures = viewers.stream()
+                .map(this::UNSAFE_show)
+                .collect(Collectors.toList());
+        return FutureUtil.allOf(futures);
+    }
+
+    protected CompletableFuture<Void> UNSAFE_hideAndShow(Player player) {
+        UNSAFE_hide(player);
+        viewers.add(player);
+        return UNSAFE_show(player);
     }
 
     protected abstract CompletableFuture<Void> UNSAFE_show(Player player);

@@ -45,7 +45,11 @@ public class V1_19_3PacketFactory extends V1_17PacketFactory {
             sendPacket(player, new WrapperPlayServerPlayerInfoUpdate(EnumSet.of(WrapperPlayServerPlayerInfoUpdate.Action.ADD_PLAYER,
                     WrapperPlayServerPlayerInfoUpdate.Action.UPDATE_LISTED, WrapperPlayServerPlayerInfoUpdate.Action.UPDATE_DISPLAY_NAME),
                     info, info, info));
-            entity.setListedInTabList(true);
+
+            if (listed) {
+                entity.setListedInTab(player);
+            }
+
             future.complete(null);
         });
         return future;
@@ -54,9 +58,9 @@ public class V1_19_3PacketFactory extends V1_17PacketFactory {
     @Override
     public void removeTabPlayer(Player player, PacketEntity entity) {
         if (entity.getType() != EntityTypes.PLAYER) return;
-        if (!entity.isListedInTabList()) return;
+        if (!entity.isListedInTabList(player)) return;
         sendPacket(player, new WrapperPlayServerPlayerInfoRemove(entity.getUuid()));
-        entity.setListedInTabList(false);
+        entity.setUnlistedInTab(player);
     }
 
     @Override
@@ -66,7 +70,12 @@ public class V1_19_3PacketFactory extends V1_17PacketFactory {
                 new WrapperPlayServerPlayerInfoUpdate.PlayerInfo(new UserProfile(entity.getUuid(), null),
                         listed, 1, GameMode.CREATIVE, null, null))
         );
-        entity.setListedInTabList(listed);
+
+        if (listed) {
+            entity.setListedInTab(player);
+        } else {
+            entity.setUnlistedInTab(player);
+        }
     }
 
     @Override
@@ -74,7 +83,7 @@ public class V1_19_3PacketFactory extends V1_17PacketFactory {
         if (entity.getType() != EntityTypes.PLAYER) return;
         sendPacket(player, new WrapperPlayServerPlayerInfoUpdate(WrapperPlayServerPlayerInfoUpdate.Action.UPDATE_DISPLAY_NAME,
                 new WrapperPlayServerPlayerInfoUpdate.PlayerInfo(new UserProfile(entity.getUuid(), null),
-                        entity.isListedInTabList(), 1, GameMode.CREATIVE, displayName, null))
+                        entity.isListedInTabList(player), 1, GameMode.CREATIVE, displayName, null))
         );
     }
 }
