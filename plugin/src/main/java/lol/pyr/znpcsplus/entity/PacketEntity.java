@@ -32,9 +32,8 @@ public class PacketEntity implements PropertyHolder {
     private PacketEntity vehicle;
     private Integer vehicleId;
     private List<Integer> passengers;
-    // private boolean listedInTabList = true;
 
-    private final Set<Player> listedInTabList = Collections.newSetFromMap(new ConcurrentHashMap<>());
+    private final Set<Player> listedInTabList = ConcurrentHashMap.newKeySet();
 
     public PacketEntity(PacketFactory packetFactory, PropertyHolder properties, Viewable viewable, EntityType type, NpcLocation location) {
         this.packetFactory = packetFactory;
