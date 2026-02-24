@@ -37,6 +37,7 @@ import lol.pyr.znpcsplus.npc.*;
 import lol.pyr.znpcsplus.packets.*;
 import lol.pyr.znpcsplus.parsers.*;
 import lol.pyr.znpcsplus.scheduling.FoliaScheduler;
+import lol.pyr.znpcsplus.scheduling.RepeatingTaskGuard;
 import lol.pyr.znpcsplus.scheduling.SpigotScheduler;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.serialization.NpcSerializerRegistryImpl;
@@ -165,13 +166,13 @@ public class ZNpcsPlus {
         log(ChatColor.WHITE + " * Starting tasks...");
         if (configManager.getConfig().checkForUpdates()) {
             UpdateChecker updateChecker = new UpdateChecker(getDescription());
-            scheduler.runDelayedTimerAsync(updateChecker, 5L, 6000L);
+            scheduler.runDelayedTimerAsync(RepeatingTaskGuard.wrap(bootstrap.getLogger(), "update-checker", updateChecker), 5L, 6000L);
             pluginManager.registerEvents(new UpdateNotificationListener(this, adventure, updateChecker, scheduler), bootstrap);
         }
 
-        scheduler.runDelayedTimerAsync(new NpcProcessorTask(npcRegistry, propertyRegistry, userManager), 60L, 3L);
-        scheduler.runDelayedTimerSync(new HologramRefreshTask(npcRegistry), 60L, 20L);
-        scheduler.runDelayedTimerAsync(new SkinCacheCleanTask(skinCache), 1200, 1200);
+        scheduler.runDelayedTimerAsync(RepeatingTaskGuard.wrap(bootstrap.getLogger(), "npc-processor", new NpcProcessorTask(npcRegistry, propertyRegistry, userManager, scheduler)), 60L, 3L);
+        scheduler.runDelayedTimerSync(RepeatingTaskGuard.wrap(bootstrap.getLogger(), "hologram-refresh", new HologramRefreshTask(npcRegistry)), 60L, 20L);
+        scheduler.runDelayedTimerAsync(RepeatingTaskGuard.wrap(bootstrap.getLogger(), "skin-cache-clean", new SkinCacheCleanTask(skinCache)), 1200, 1200);
         pluginManager.registerEvents(new ViewableCleanupListener(), bootstrap);
 
         log(ChatColor.WHITE + " * Loading data...");

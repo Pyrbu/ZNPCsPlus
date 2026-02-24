@@ -13,6 +13,7 @@ import lol.pyr.znpcsplus.hologram.HologramLine;
 import lol.pyr.znpcsplus.hologram.HologramText;
 import lol.pyr.znpcsplus.interaction.ActionRegistryImpl;
 import lol.pyr.znpcsplus.packets.PacketFactory;
+import lol.pyr.znpcsplus.scheduling.RepeatingTaskGuard;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.serialization.NpcSerializerRegistryImpl;
 import lol.pyr.znpcsplus.storage.NpcStorage;
@@ -50,7 +51,7 @@ public class NpcRegistryImpl implements NpcRegistry {
 
         if (configManager.getConfig().autoSaveEnabled()) {
             long delay = configManager.getConfig().autoSaveInterval() * 20L;
-            scheduler.runDelayedTimerAsync(this::save, delay, delay);
+            scheduler.runDelayedTimerAsync(RepeatingTaskGuard.wrap(Bukkit.getLogger(), "npc-autosave", this::save), delay, delay);
         }
     }
 
