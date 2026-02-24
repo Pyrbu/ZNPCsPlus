@@ -28,15 +28,16 @@ public class MySQL extends Database {
             if (connection != null && !connection.isClosed()) {
                 return connection;
             }
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             connection = java.sql.DriverManager.getConnection(connectionURL, username, password);
             return connection;
         } catch (ClassNotFoundException ex) {
             logger.severe("MySQL JDBC library not found" + ex);
         } catch (SQLException ex) {
-            if (ex.getSQLState().equals("08006")) {
+            String state = ex.getSQLState();
+            if ("08006".equals(state)) {
                 logger.severe("Could not connect to MySQL server. Check your connection settings and make sure the server is online.");
-            } else if (ex.getSQLState().equals("08002")) {
+            } else if ("08002".equals(state)) {
                 logger.severe("A connection already exists." + ex);
             } else {
                 logger.severe("MySQL exception on initialize" + ex);
@@ -73,10 +74,8 @@ public class MySQL extends Database {
     }
 
     public boolean tableExists(String tableName) {
-        try {
-            Statement s = connection.createStatement();
-            s.executeQuery("SELECT * FROM " + tableName + ";");
-            s.close();
+        try (Statement statement = connection.createStatement();
+             ResultSet ignored = statement.executeQuery("SELECT * FROM " + tableName + ";")) {
             return true;
         } catch (SQLException e) {
             return false;
@@ -84,10 +83,8 @@ public class MySQL extends Database {
     }
 
     public boolean columnExists(String tableName, String columnName) {
-        try {
-            Statement s = connection.createStatement();
-            s.executeQuery("SELECT " + columnName + " FROM " + tableName + ";");
-            s.close();
+        try (Statement statement = connection.createStatement();
+             ResultSet ignored = statement.executeQuery("SELECT " + columnName + " FROM " + tableName + ";")) {
             return true;
         } catch (SQLException e) {
             return false;
@@ -96,10 +93,8 @@ public class MySQL extends Database {
 
     public boolean addColumn(String tableName, String columnName, String type) {
         if (columnExists(tableName, columnName)) return false;
-        try {
-            Statement s = connection.createStatement();
-            s.executeQuery("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + type + ";");
-            s.close();
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + type + ";");
         } catch (SQLException e) {
             return false;
         }
@@ -108,21 +103,16 @@ public class MySQL extends Database {
 
     public ResultSet executeQuery(String query) {
         try {
-            Statement s = connection.createStatement();
-            ResultSet rs = s.executeQuery(query);
-            s.close();
-            return rs;
+            Statement statement = connection.createStatement();
+            return statement.executeQuery(query);
         } catch (SQLException e) {
             return null;
         }
     }
 
     public int executeUpdate(String sql) {
-        try {
-            Statement s = connection.createStatement();
-            int rowCount = s.executeUpdate(sql);
-            s.close();
-            return rowCount;
+        try (Statement statement = connection.createStatement()) {
+            return statement.executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();
             return -1;

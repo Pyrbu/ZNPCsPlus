@@ -14,7 +14,9 @@ public abstract class TaskScheduler {
     public abstract void schedulePlayerCommand(Player player, String command);
     public abstract void runSyncGlobal(Runnable runnable);
     public abstract void runAsyncGlobal(Runnable runnable);
+    public abstract void runLaterSync(Runnable runnable, long delay);
     public abstract void runLaterAsync(Runnable runnable, long delay);
+    public abstract void runDelayedTimerSync(Runnable runnable, long delay, long interval);
     public abstract  void runDelayedTimerAsync(Runnable runnable, long delay, long interval);
     public abstract void cancelAll();
 }

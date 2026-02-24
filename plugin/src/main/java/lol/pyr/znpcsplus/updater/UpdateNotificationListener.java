@@ -27,7 +27,7 @@ public class UpdateNotificationListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         if (!event.getPlayer().hasPermission("znpcsplus.updates")) return;
         if (updateChecker.getStatus() != UpdateChecker.Status.UPDATE_NEEDED) return;
-        scheduler.runLaterAsync(() -> {
+        scheduler.runLaterSync(() -> {
             if (!event.getPlayer().isOnline()) return;
             adventure.player(event.getPlayer())
                     .sendMessage(Component.text(plugin.getDescription().getName() + " v" + updateChecker.getLatestVersion() + " is available now!", NamedTextColor.GOLD).appendNewline()

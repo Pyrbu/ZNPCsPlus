@@ -29,6 +29,7 @@ import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.conversion.DataImporterRegistry;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
+import lol.pyr.znpcsplus.entity.serializers.TargetNpcPropertySerializer;
 import lol.pyr.znpcsplus.interaction.ActionFactoryImpl;
 import lol.pyr.znpcsplus.interaction.ActionRegistryImpl;
 import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
@@ -137,6 +138,7 @@ public class ZNpcsPlus {
         NpcRegistryImpl npcRegistry = new NpcRegistryImpl(configManager, this, packetFactory, actionRegistry,
                 scheduler, typeRegistry, propertyRegistry, serializerRegistry, textSerializer);
         shutdownTasks.add(npcRegistry::unload);
+        TargetNpcPropertySerializer.setIdResolver(npcRegistry::getById);
 
         UserManager userManager = new UserManager();
         shutdownTasks.add(userManager::shutdown);
@@ -168,7 +170,7 @@ public class ZNpcsPlus {
         }
 
         scheduler.runDelayedTimerAsync(new NpcProcessorTask(npcRegistry, propertyRegistry, userManager), 60L, 3L);
-        scheduler.runDelayedTimerAsync(new HologramRefreshTask(npcRegistry), 60L, 20L);
+        scheduler.runDelayedTimerSync(new HologramRefreshTask(npcRegistry), 60L, 20L);
         scheduler.runDelayedTimerAsync(new SkinCacheCleanTask(skinCache), 1200, 1200);
         pluginManager.registerEvents(new ViewableCleanupListener(), bootstrap);
 
@@ -214,6 +216,7 @@ public class ZNpcsPlus {
 
     public void onDisable() {
         NpcApiProvider.unregister();
+        TargetNpcPropertySerializer.setIdResolver(id -> null);
         Collections.reverse(shutdownTasks);
         for (Runnable runnable : shutdownTasks) try {
             runnable.run();

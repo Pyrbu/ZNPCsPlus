@@ -41,118 +41,115 @@ public class PropertySetCommand implements CommandHandler {
         NpcEntryImpl entry = context.parse(NpcEntryImpl.class);
         NpcImpl npc = entry.getNpc();
         EntityPropertyImpl<?> property = context.parse(EntityPropertyImpl.class);
+        ensurePropertyCanBeSet(npc, property, context);
 
-        // TODO: find a way to do this better & rewrite this mess
+        ParsedValue parsedValue = parseValue(context, npc, property);
+        if (parsedValue == null) return;
 
-        if (!npc.getType().getAllowedProperties().contains(property)) context.halt(Component.text("Property " + property.getName() + " not allowed for npc type " + npc.getType().getName(), NamedTextColor.RED));
-        if (!property.isPlayerModifiable()) context.halt(Component.text("This property is not modifiable by players", NamedTextColor.RED));
         Class<?> type = property.getType();
-        Object value;
-        String valueName;
-        if (type == ItemStack.class) {
-            org.bukkit.inventory.ItemStack bukkitStack = context.ensureSenderIsPlayer().getInventory().getItemInHand();
-            if (bukkitStack.getAmount() == 0) {
-                value = null;
-                valueName = "EMPTY";
-            } else {
-                value = SpigotConversionUtil.fromBukkitItemStack(bukkitStack);
-                valueName = bukkitStack.toString();
-            }
-        }
-        else if (type == NamedColor.class && context.argSize() < 1 && npc.getProperty(property) != null) {
-            value = null;
-            valueName = "NONE";
-        }
-        else if (type == Color.class && context.argSize() < 1 && npc.getProperty(property) != null) {
-            value = Color.BLACK;
-            valueName = "NONE";
-        }
-        else if (type == ParrotVariant.class && context.argSize() < 1 && npc.getProperty(property) != null) {
-            value = null;
-            valueName = "NONE";
-        }
-        else if (type == BlockState.class) {
-            String inputType = context.popString().toLowerCase();
-            switch (inputType) {
-                case "hand":
-                    org.bukkit.inventory.ItemStack bukkitStack = context.ensureSenderIsPlayer().getInventory().getItemInHand();
-                    if (bukkitStack.getAmount() == 0) {
-                        value = new BlockState(0);
-                        valueName = "EMPTY";
-                    } else {
-                        WrappedBlockState blockState = StateTypes.getByName(bukkitStack.getType().name().toLowerCase()).createBlockState();
-//                      WrappedBlockState blockState = WrappedBlockState.getByString(bukkitStack.getType().name().toLowerCase());
-                        value = new BlockState(blockState.getGlobalId());
-                        valueName = bukkitStack.toString();
-                    }
-                    break;
-                case "looking_at":
-
-                    // TODO
-
-                    value = new BlockState(0);
-                    valueName = "EMPTY";
-                    break;
-                case "block":
-                    context.ensureArgsNotEmpty();
-                    WrappedBlockState blockState = WrappedBlockState.getByString(context.popString());
-                    value = new BlockState(blockState.getGlobalId());
-                    valueName = blockState.toString();
-                    break;
-                default:
-                    context.send(Component.text("Invalid input type " + inputType + ", must be hand, looking_at, or block", NamedTextColor.RED));
-                    return;
-            }
-        }
-        else if (type == SpellType.class) {
-            if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_13)) {
-                value = context.parse(type);
-                valueName = String.valueOf(value);
-                if (((SpellType) value).ordinal() > 3) {
-                    context.send(Component.text("Spell type " + valueName + " is not supported on this version", NamedTextColor.RED));
-                    return;
-                }
-            }
-            else {
-                value = context.parse(type);
-                valueName = String.valueOf(value);
-            }
-        }
-        else if (type == NpcEntryImpl.class) {
-            value = context.parse(type);
-            valueName = value == null ? "NONE" : ((NpcEntryImpl) value).getId();
-        }
-        else if (type == Vector3i.class) {
-            value = context.parse(type);
-            valueName = value == null ? "NONE" : ((Vector3i) value).toPrettyString();
-        }
-        else if (property instanceof AttributeProperty) {
-            value = context.parse(type);
-            if ((double) value < ((AttributeProperty) property).getMinValue() || (double) value > ((AttributeProperty) property).getMaxValue()) {
-                double sanitizedValue = ((AttributeProperty) property).sanitizeValue((double) value);
-                context.send(Component.text("WARNING: Value " + value + " is out of range for property " + property.getName() + ", setting to " + sanitizedValue, NamedTextColor.YELLOW));
-                value = sanitizedValue;
-            }
-            valueName = String.valueOf(value);
-        }
-        else {
-            try {
-                value = context.parse(type);
-                valueName = String.valueOf(value);
-            } catch (NullPointerException e) {
-                context.send(Component.text("An error occurred while trying to parse the value. Please report this to the plugin author.",
-                        NamedTextColor.RED));
-                e.printStackTrace();
-                return;
-            }
-        }
-
-        npc.UNSAFE_setProperty(property, value);
-        if (type == Component.class && value != null) {
+        npc.UNSAFE_setProperty(property, parsedValue.value);
+        if (type == Component.class && parsedValue.value != null) {
             context.send(Component.text("Set property " + property.getName() + " for NPC " + entry.getId() + " to ", NamedTextColor.GREEN)
-                    .append((Component) value));
+                    .append((Component) parsedValue.value));
         } else {
-            context.send(Component.text("Set property " + property.getName() + " for NPC " + entry.getId() + " to " + valueName, NamedTextColor.GREEN));
+            context.send(Component.text("Set property " + property.getName() + " for NPC " + entry.getId() + " to " + parsedValue.valueName, NamedTextColor.GREEN));
+        }
+    }
+
+    private void ensurePropertyCanBeSet(NpcImpl npc, EntityPropertyImpl<?> property, CommandContext context) throws CommandExecutionException {
+        if (!npc.getType().getAllowedProperties().contains(property)) {
+            context.halt(Component.text("Property " + property.getName() + " not allowed for npc type " + npc.getType().getName(), NamedTextColor.RED));
+        }
+        if (!property.isPlayerModifiable()) {
+            context.halt(Component.text("This property is not modifiable by players", NamedTextColor.RED));
+        }
+    }
+
+    private ParsedValue parseValue(CommandContext context, NpcImpl npc, EntityPropertyImpl<?> property) throws CommandExecutionException {
+        Class<?> type = property.getType();
+        if (type == ItemStack.class) return parseItemInHand(context);
+        if (type == NamedColor.class && context.argSize() < 1 && npc.getProperty(property) != null) return new ParsedValue(null, "NONE");
+        if (type == Color.class && context.argSize() < 1 && npc.getProperty(property) != null) return new ParsedValue(Color.BLACK, "NONE");
+        if (type == ParrotVariant.class && context.argSize() < 1 && npc.getProperty(property) != null) return new ParsedValue(null, "NONE");
+        if (type == BlockState.class) return parseBlockStateValue(context);
+        if (type == SpellType.class) return parseSpellType(context);
+        if (type == NpcEntryImpl.class) {
+            NpcEntryImpl value = context.parse(NpcEntryImpl.class);
+            return new ParsedValue(value, value == null ? "NONE" : value.getId());
+        }
+        if (type == Vector3i.class) {
+            Vector3i value = context.parse(Vector3i.class);
+            return new ParsedValue(value, value == null ? "NONE" : value.toPrettyString());
+        }
+        if (property instanceof AttributeProperty) return parseAttributeValue(context, (AttributeProperty) property);
+        return parseDefaultValue(context, type);
+    }
+
+    private ParsedValue parseItemInHand(CommandContext context) throws CommandExecutionException {
+        org.bukkit.inventory.ItemStack bukkitStack = context.ensureSenderIsPlayer().getInventory().getItemInHand();
+        if (bukkitStack.getAmount() == 0) return new ParsedValue(null, "EMPTY");
+        return new ParsedValue(SpigotConversionUtil.fromBukkitItemStack(bukkitStack), bukkitStack.toString());
+    }
+
+    private ParsedValue parseBlockStateValue(CommandContext context) throws CommandExecutionException {
+        String inputType = context.popString().toLowerCase();
+        switch (inputType) {
+            case "hand":
+                org.bukkit.inventory.ItemStack bukkitStack = context.ensureSenderIsPlayer().getInventory().getItemInHand();
+                if (bukkitStack.getAmount() == 0) return new ParsedValue(new BlockState(0), "EMPTY");
+                WrappedBlockState handBlockState = StateTypes.getByName(bukkitStack.getType().name().toLowerCase()).createBlockState();
+                return new ParsedValue(new BlockState(handBlockState.getGlobalId()), bukkitStack.toString());
+            case "looking_at":
+                return new ParsedValue(new BlockState(0), "EMPTY");
+            case "block":
+                context.ensureArgsNotEmpty();
+                WrappedBlockState blockState = WrappedBlockState.getByString(context.popString());
+                return new ParsedValue(new BlockState(blockState.getGlobalId()), blockState.toString());
+            default:
+                context.send(Component.text("Invalid input type " + inputType + ", must be hand, looking_at, or block", NamedTextColor.RED));
+                return null;
+        }
+    }
+
+    private ParsedValue parseSpellType(CommandContext context) throws CommandExecutionException {
+        SpellType value = context.parse(SpellType.class);
+        String valueName = String.valueOf(value);
+        if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_13) && value.ordinal() > 3) {
+            context.send(Component.text("Spell type " + valueName + " is not supported on this version", NamedTextColor.RED));
+            return null;
+        }
+        return new ParsedValue(value, valueName);
+    }
+
+    private ParsedValue parseAttributeValue(CommandContext context, AttributeProperty property) throws CommandExecutionException {
+        Double value = context.parse(Double.class);
+        if (value < property.getMinValue() || value > property.getMaxValue()) {
+            double sanitizedValue = property.sanitizeValue(value);
+            context.send(Component.text("WARNING: Value " + value + " is out of range for property " + property.getName() + ", setting to " + sanitizedValue, NamedTextColor.YELLOW));
+            value = sanitizedValue;
+        }
+        return new ParsedValue(value, String.valueOf(value));
+    }
+
+    private ParsedValue parseDefaultValue(CommandContext context, Class<?> type) throws CommandExecutionException {
+        try {
+            Object value = context.parse(type);
+            return new ParsedValue(value, String.valueOf(value));
+        } catch (NullPointerException e) {
+            context.send(Component.text("An error occurred while trying to parse the value. Please report this to the plugin author.",
+                    NamedTextColor.RED));
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static final class ParsedValue {
+        private final Object value;
+        private final String valueName;
+
+        private ParsedValue(Object value, String valueName) {
+            this.value = value;
+            this.valueName = valueName;
         }
     }
 
@@ -175,15 +172,7 @@ public class PropertySetCommand implements CommandHandler {
                         context.suggestEnum(SpellType.values());
 
                 if (type == Vector3i.class) {
-                    if (context.getSender() instanceof Player) {
-                        Player player = (Player) context.getSender();
-                        Block targetBlock = player.getTargetBlock(Collections.singleton(Material.AIR), 5);
-                        if (targetBlock.getType().equals(Material.AIR)) return Collections.emptyList();
-                        return context.suggestLiteral(
-                                targetBlock.getX() + "",
-                                targetBlock.getX() + " " + targetBlock.getY(),
-                                targetBlock.getX() + " " + targetBlock.getY() + " " + targetBlock.getZ());
-                    }
+                    return suggestVector3i(context, 3);
                 }
                 // Suggest enum values directly
                 if (type.isEnum()) {
@@ -196,25 +185,35 @@ public class PropertySetCommand implements CommandHandler {
                     return context.suggestionParse(2, String.class).equals("block") ? context.suggestStream(StateTypes.values().stream().map(StateType::getName)) : Collections.emptyList();
                 }
                 if (type == Vector3i.class) {
-                    if (context.getSender() instanceof Player) {
-                        Player player = (Player) context.getSender();
-                        Block targetBlock = player.getTargetBlock(Collections.singleton(Material.AIR), 5);
-                        if (targetBlock.getType().equals(Material.AIR)) return Collections.emptyList();
-                        return context.suggestLiteral(
-                                targetBlock.getY() + "",
-                                targetBlock.getY() + " " + targetBlock.getZ());
-                    }
+                    return suggestVector3i(context, 4);
                 }
             } else if (context.argSize() == 5) {
                 if (type == Vector3i.class) {
-                    if (context.getSender() instanceof Player) {
-                        Player player = (Player) context.getSender();
-                        Block targetBlock = player.getTargetBlock(Collections.singleton(Material.AIR), 5);
-                        if (targetBlock.getType().equals(Material.AIR)) return Collections.emptyList();
-                        return context.suggestLiteral(targetBlock.getZ() + "");
-                    }
+                    return suggestVector3i(context, 5);
                 }
             }
+        }
+        return Collections.emptyList();
+    }
+
+    private List<String> suggestVector3i(CommandContext context, int argSize) throws CommandExecutionException {
+        if (!(context.getSender() instanceof Player)) return Collections.emptyList();
+        Player player = (Player) context.getSender();
+        Block targetBlock = player.getTargetBlock(Collections.singleton(Material.AIR), 5);
+        if (targetBlock.getType().equals(Material.AIR)) return Collections.emptyList();
+        if (argSize == 3) {
+            return context.suggestLiteral(
+                    targetBlock.getX() + "",
+                    targetBlock.getX() + " " + targetBlock.getY(),
+                    targetBlock.getX() + " " + targetBlock.getY() + " " + targetBlock.getZ());
+        }
+        if (argSize == 4) {
+            return context.suggestLiteral(
+                    targetBlock.getY() + "",
+                    targetBlock.getY() + " " + targetBlock.getZ());
+        }
+        if (argSize == 5) {
+            return context.suggestLiteral(targetBlock.getZ() + "");
         }
         return Collections.emptyList();
     }

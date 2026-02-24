@@ -66,6 +66,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerSerializer(new BlockStatePropertySerializer());
         registerSerializer(new LookTypeSerializer());
         registerSerializer(new GenericSerializer<>(Vector3i::toString, Vector3i::fromString, Vector3i.class));
+        registerSerializer(new TargetNpcPropertySerializer());
 
         registerEnumSerializer(NpcPose.class);
         registerEnumSerializer(DyeColor.class);
@@ -705,6 +706,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_19)) return;
         // Frog
         register(new EncodedIntegerProperty<>("frog_variant", FrogVariant.TEMPERATE, 17, Enum::ordinal, EntityDataTypes.FROG_VARIANT));
+        register(new TargetNpcProperty("frog_target_npc", 18, null));
 
         // Warden
         register(new EncodedIntegerProperty<>("warden_anger", 0, 16, b -> Math.min(150, Math.max(0, b))));

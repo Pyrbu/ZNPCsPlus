@@ -9,8 +9,44 @@ This plugin is a remake of a plugin called ZNPCs, we originally started because 
 
 Looking for up-to-date builds of the plugin? Check out our [Jenkins](https://ci.pyr.lol/job/ZNPCsPlus/)
 
+## Fork Notes (innerpine(me))
+This repository contains custom fixes and build changes made for a self-hosted fork.
+
+### What changed in this fork
+- Build system migrated from Gradle to Maven (`pom.xml`, `api/pom.xml`, `plugin/pom.xml`)
+- GitHub Actions CI switched to Maven (`mvn -B verify`)
+- Fixed startup crash:
+  `NoClassDefFoundError: ... snakeyaml/comments/CommentLine`
+- Fixed NPC processing spam on Paper:
+  `IllegalStateException: NpcSpawnEvent may only be triggered asynchronously`
+- Added version guard for `fake-enforce-secure-chat` to avoid PacketEvents/NBT decode issues on old versions (like 1.16.x)
+- Confirmed and kept `strider` NPC type registration in `NpcTypeRegistryImpl`
+- Added and wired `frog_target_npc` serializer support
+- Improved registry/storage stability (safer register/unregister and SQL save/load paths)
+- Refactored `PropertySetCommand` parsing logic for maintainability
+- Added tests for `NpcLocation` and `TargetNpcPropertySerializer`
+
+### Build (Maven)
+Requirements:
+- Java 8+ (CI uses Java 21)
+- Maven 3.9+
+
+Commands:
+```bash
+mvn -B test
+mvn -B -am -pl plugin package -DskipTests
+```
+
+Built plugin jar:
+- `plugin/target/ZNPCsPlus.jar`
+
+### Notes for publishing this fork
+- Mainline build tool for this fork is Maven.
+- If you publish this fork, keep this section updated as your fork diverges.
+- If you run Paper 1.16.x, keep `fake-enforce-secure-chat` disabled in config (the code now also hard-guards old versions).
+
 ## Why is it so good?
-- 100% Packet Based - Nothing is ran on the main thread
+- Packet-based NPC system with performance-focused scheduling
 - Performance & stability oriented code
 - Support for all versions from 1.8 to 1.21.8
 - Support for multiple different storage options

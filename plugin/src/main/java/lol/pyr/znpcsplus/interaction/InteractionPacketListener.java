@@ -70,7 +70,7 @@ public class InteractionPacketListener implements PacketListener {
         for (InteractionAction action : npc.getActions()) {
             if (action.getInteractionType() != InteractionType.ANY_CLICK && action.getInteractionType() != type) continue;
             if (action.getCooldown() > 0 && !user.actionCooldownCheck(action)) continue;
-            scheduler.runLaterAsync(() -> action.run(player), action.getDelay());
+            scheduler.runLaterSync(() -> action.run(player), action.getDelay());
         }
     }
 

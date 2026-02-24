@@ -54,10 +54,8 @@ public class SQLite extends Database{
     }
 
     public boolean tableExists(String tableName) {
-        try {
-            Statement s = connection.createStatement();
-            s.executeQuery("SELECT * FROM " + tableName + ";");
-            s.close();
+        try (Statement statement = connection.createStatement();
+             ResultSet ignored = statement.executeQuery("SELECT * FROM " + tableName + ";")) {
             return true;
         } catch (SQLException e) {
             return false;
@@ -65,10 +63,8 @@ public class SQLite extends Database{
     }
 
     public boolean columnExists(String tableName, String columnName) {
-        try {
-            Statement s = connection.createStatement();
-            s.executeQuery("SELECT " + columnName + " FROM " + tableName + ";");
-            s.close();
+        try (Statement statement = connection.createStatement();
+             ResultSet ignored = statement.executeQuery("SELECT " + columnName + " FROM " + tableName + ";")) {
             return true;
         } catch (SQLException e) {
             return false;
@@ -77,10 +73,8 @@ public class SQLite extends Database{
 
     public boolean addColumn(String tableName, String columnName, String type) {
         if (columnExists(tableName, columnName)) return false;
-        try {
-            Statement s = connection.createStatement();
-            s.executeQuery("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + type + ";");
-            s.close();
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + type + ";");
         } catch (SQLException e) {
             return false;
         }
@@ -89,21 +83,16 @@ public class SQLite extends Database{
 
     public ResultSet executeQuery(String query) {
         try {
-            Statement s = connection.createStatement();
-            ResultSet rs = s.executeQuery(query);
-            s.close();
-            return rs;
+            Statement statement = connection.createStatement();
+            return statement.executeQuery(query);
         } catch (SQLException e) {
             return null;
         }
     }
 
     public int executeUpdate(String query) {
-        try {
-            Statement s = connection.createStatement();
-            int rowCount = s.executeUpdate(query);
-            s.close();
-            return rowCount;
+        try (Statement statement = connection.createStatement()) {
+            return statement.executeUpdate(query);
         } catch (SQLException e) {
             e.printStackTrace();
             return -1;
