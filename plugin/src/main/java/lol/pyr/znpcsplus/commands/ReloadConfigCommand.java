@@ -8,15 +8,16 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 public class ReloadConfigCommand implements CommandHandler {
-    private final ConfigManager configManager;
+  private final ConfigManager configManager;
 
-    public ReloadConfigCommand(ConfigManager configManager) {
-        this.configManager = configManager;
-    }
+  public ReloadConfigCommand(ConfigManager configManager) {
+    this.configManager = configManager;
+  }
 
-    @Override
-    public void run(CommandContext context) throws CommandExecutionException {
-        configManager.reload();
-        context.send(Component.text("Plugin configuration reloaded successfully", NamedTextColor.GREEN));
-    }
+  @Override
+  public void run(CommandContext context) throws CommandExecutionException {
+    configManager.reload();
+    context.send(
+        Component.text("Plugin configuration reloaded successfully", NamedTextColor.GREEN));
+  }
 }

@@ -1,5 +1,8 @@
 package lol.pyr.znpcsplus.commands;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
@@ -11,30 +14,26 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-
 public class MoveCommand implements CommandHandler {
-    private final NpcRegistryImpl npcRegistry;
+  private final NpcRegistryImpl npcRegistry;
 
-    public MoveCommand(NpcRegistryImpl npcRegistry) {
-        this.npcRegistry = npcRegistry;
-    }
+  public MoveCommand(NpcRegistryImpl npcRegistry) {
+    this.npcRegistry = npcRegistry;
+  }
 
-    @Override
-    public void run(CommandContext context) throws CommandExecutionException {
-        context.setUsage(context.getLabel() + " move <id>");
-        Player player = context.ensureSenderIsPlayer();
-        NpcImpl npc = context.parse(NpcEntryImpl.class).getNpc();
-        npc.setLocation(new NpcLocation(player.getLocation()));
-        if (!Objects.equals(npc.getWorld(), player.getWorld())) npc.setWorld(player.getWorld());
-        context.send(Component.text("NPC moved to your current location.", NamedTextColor.GREEN));
-    }
+  @Override
+  public void run(CommandContext context) throws CommandExecutionException {
+    context.setUsage(context.getLabel() + " move <id>");
+    Player player = context.ensureSenderIsPlayer();
+    NpcImpl npc = context.parse(NpcEntryImpl.class).getNpc();
+    npc.setLocation(new NpcLocation(player.getLocation()));
+    if (!Objects.equals(npc.getWorld(), player.getWorld())) npc.setWorld(player.getWorld());
+    context.send(Component.text("NPC moved to your current location.", NamedTextColor.GREEN));
+  }
 
-    @Override
-    public List<String> suggest(CommandContext context) throws CommandExecutionException {
-        if (context.argSize() == 1) return context.suggestCollection(npcRegistry.getModifiableIds());
-        return Collections.emptyList();
-    }
+  @Override
+  public List<String> suggest(CommandContext context) throws CommandExecutionException {
+    if (context.argSize() == 1) return context.suggestCollection(npcRegistry.getModifiableIds());
+    return Collections.emptyList();
+  }
 }

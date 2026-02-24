@@ -10,18 +10,21 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
 public class SkinTrait extends SectionCitizensTrait {
-    private final EntityPropertyRegistry registry;
+  private final EntityPropertyRegistry registry;
 
-    public SkinTrait(EntityPropertyRegistry registry) {
-        super("skintrait");
-        this.registry = registry;
-    }
+  public SkinTrait(EntityPropertyRegistry registry) {
+    super("skintrait");
+    this.registry = registry;
+  }
 
-    @Override
-    public @NotNull NpcImpl apply(NpcImpl npc, ConfigurationSection section) {
-        String texture = section.getString("textureRaw");
-        String signature = section.getString("signature");
-        if (texture != null && signature != null) npc.setProperty(registry.getByName("skin", SkinDescriptor.class), new PrefetchedDescriptor(new SkinImpl(texture, signature)));
-        return npc;
-    }
+  @Override
+  public @NotNull NpcImpl apply(NpcImpl npc, ConfigurationSection section) {
+    String texture = section.getString("textureRaw");
+    String signature = section.getString("signature");
+    if (texture != null && signature != null)
+      npc.setProperty(
+          registry.getByName("skin", SkinDescriptor.class),
+          new PrefetchedDescriptor(new SkinImpl(texture, signature)));
+    return npc;
+  }
 }

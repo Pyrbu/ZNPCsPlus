@@ -1,5 +1,8 @@
 package lol.pyr.znpcsplus.commands;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
@@ -13,48 +16,68 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 public class NearCommand implements CommandHandler {
-    private final NpcRegistryImpl npcRegistry;
+  private final NpcRegistryImpl npcRegistry;
 
-    public NearCommand(NpcRegistryImpl npcRegistry) {
-        this.npcRegistry = npcRegistry;
-    }
+  public NearCommand(NpcRegistryImpl npcRegistry) {
+    this.npcRegistry = npcRegistry;
+  }
 
-    @Override
-    public void run(CommandContext context) throws CommandExecutionException {
-        context.setUsage(context.getLabel() + " near <radius>");
-        Player player = context.ensureSenderIsPlayer();
-        int raw = context.parse(Integer.class);
-        double radius = Math.pow(raw, 2);
+  @Override
+  public void run(CommandContext context) throws CommandExecutionException {
+    context.setUsage(context.getLabel() + " near <radius>");
+    Player player = context.ensureSenderIsPlayer();
+    int raw = context.parse(Integer.class);
+    double radius = Math.pow(raw, 2);
 
-        List<NpcEntryImpl> entries = npcRegistry.getAllModifiable().stream()
-                .filter(entry -> Objects.equals(entry.getNpc().getWorld(), player.getWorld()))
-                .filter(entry -> {
-                    Location loc = entry.getNpc().getBukkitLocation();
-                    return loc != null && loc.distanceSquared(player.getLocation()) < radius;
+    List<NpcEntryImpl> entries =
+        npcRegistry.getAllModifiable().stream()
+            .filter(entry -> Objects.equals(entry.getNpc().getWorld(), player.getWorld()))
+            .filter(
+                entry -> {
+                  Location loc = entry.getNpc().getBukkitLocation();
+                  return loc != null && loc.distanceSquared(player.getLocation()) < radius;
                 })
-                .collect(Collectors.toList());
+            .collect(Collectors.toList());
 
-        if (entries.isEmpty()) context.halt(Component.text("There are no npcs within " + raw + " blocks around you.", NamedTextColor.RED));
+    if (entries.isEmpty())
+      context.halt(
+          Component.text(
+              "There are no npcs within " + raw + " blocks around you.", NamedTextColor.RED));
 
-        Component component = Component.text("All NPCs that are within " + raw + " blocks from you:", NamedTextColor.GOLD).appendNewline();
-        for (NpcEntryImpl entry : entries) {
-            NpcImpl npc = entry.getNpc();
-            NpcLocation location = npc.getLocation();
-            component = component.append(Component.text("ID: " + entry.getId(), npc.isEnabled() ? NamedTextColor.GREEN : NamedTextColor.RED))
-                    .append(Component.text(" | ", NamedTextColor.GRAY))
-                    .append(Component.text("Type: ", NamedTextColor.GREEN))
-                    .append(Component.text(npc.getType().getName(), NamedTextColor.GREEN))
-                    .append(Component.text(" | ", NamedTextColor.GRAY))
-                    .append(Component.text("Location: " + npc.getWorldName() + " X:" + location.getBlockX() + " Y:" + location.getBlockY() + " Z:" + location.getBlockZ(), NamedTextColor.GREEN))
-                    .append(Component.text(" | ", NamedTextColor.GRAY))
-                    .append(Component.text("[TELEPORT]", NamedTextColor.DARK_GREEN).clickEvent(ClickEvent.runCommand("/znpcs teleport " + entry.getId())))
-                    .appendNewline();
-        }
-        context.send(component);
+    Component component =
+        Component.text("All NPCs that are within " + raw + " blocks from you:", NamedTextColor.GOLD)
+            .appendNewline();
+    for (NpcEntryImpl entry : entries) {
+      NpcImpl npc = entry.getNpc();
+      NpcLocation location = npc.getLocation();
+      component =
+          component
+              .append(
+                  Component.text(
+                      "ID: " + entry.getId(),
+                      npc.isEnabled() ? NamedTextColor.GREEN : NamedTextColor.RED))
+              .append(Component.text(" | ", NamedTextColor.GRAY))
+              .append(Component.text("Type: ", NamedTextColor.GREEN))
+              .append(Component.text(npc.getType().getName(), NamedTextColor.GREEN))
+              .append(Component.text(" | ", NamedTextColor.GRAY))
+              .append(
+                  Component.text(
+                      "Location: "
+                          + npc.getWorldName()
+                          + " X:"
+                          + location.getBlockX()
+                          + " Y:"
+                          + location.getBlockY()
+                          + " Z:"
+                          + location.getBlockZ(),
+                      NamedTextColor.GREEN))
+              .append(Component.text(" | ", NamedTextColor.GRAY))
+              .append(
+                  Component.text("[TELEPORT]", NamedTextColor.DARK_GREEN)
+                      .clickEvent(ClickEvent.runCommand("/znpcs teleport " + entry.getId())))
+              .appendNewline();
     }
+    context.send(component);
+  }
 }

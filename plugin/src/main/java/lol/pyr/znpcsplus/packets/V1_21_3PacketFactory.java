@@ -16,14 +16,30 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 public class V1_21_3PacketFactory extends V1_20_2PacketFactory {
-    public V1_21_3PacketFactory(TaskScheduler scheduler, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer, ConfigManager configManager) {
-        super(scheduler, packetEvents, propertyRegistry, textSerializer, configManager);
-    }
+  public V1_21_3PacketFactory(
+      TaskScheduler scheduler,
+      PacketEventsAPI<Plugin> packetEvents,
+      EntityPropertyRegistryImpl propertyRegistry,
+      LegacyComponentSerializer textSerializer,
+      ConfigManager configManager) {
+    super(scheduler, packetEvents, propertyRegistry, textSerializer, configManager);
+  }
 
-    @Override
-    public void teleportEntity(Player player, PacketEntity entity) {
-        NpcLocation location = entity.getLocation();
-        sendPacket(player, new WrapperPlayServerEntityTeleport(entity.getEntityId(), new EntityPositionData(npcLocationToVector(location), new Vector3d(0, 0, 0), location.getYaw(), location.getPitch()), RelativeFlag.NONE, false));
-        sendPacket(player, new WrapperPlayServerEntityHeadLook(entity.getEntityId(), location.getYaw()));
-    }
+  @Override
+  public void teleportEntity(Player player, PacketEntity entity) {
+    NpcLocation location = entity.getLocation();
+    sendPacket(
+        player,
+        new WrapperPlayServerEntityTeleport(
+            entity.getEntityId(),
+            new EntityPositionData(
+                npcLocationToVector(location),
+                new Vector3d(0, 0, 0),
+                location.getYaw(),
+                location.getPitch()),
+            RelativeFlag.NONE,
+            false));
+    sendPacket(
+        player, new WrapperPlayServerEntityHeadLook(entity.getEntityId(), location.getYaw()));
+  }
 }

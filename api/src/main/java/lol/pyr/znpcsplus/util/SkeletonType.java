@@ -1,11 +1,11 @@
 package lol.pyr.znpcsplus.util;
 
 public enum SkeletonType {
-    NORMAL,
-    WITHER,
-    STRAY;
+  NORMAL,
+  WITHER,
+  STRAY;
 
-    public byte getLegacyId() {
-        return (byte) ordinal();
-    }
+  public byte getLegacyId() {
+    return (byte) ordinal();
+  }
 }

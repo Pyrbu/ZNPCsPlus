@@ -1,5 +1,7 @@
 package lol.pyr.znpcsplus.commands;
 
+import java.util.Collections;
+import java.util.List;
 import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
@@ -12,43 +14,45 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
-import java.util.List;
-
 public class CreateCommand implements CommandHandler {
-    private final NpcRegistryImpl npcRegistry;
-    private final NpcTypeRegistryImpl typeRegistry;
+  private final NpcRegistryImpl npcRegistry;
+  private final NpcTypeRegistryImpl typeRegistry;
 
-    public CreateCommand(NpcRegistryImpl npcRegistry, NpcTypeRegistryImpl typeRegistry) {
-        this.npcRegistry = npcRegistry;
-        this.typeRegistry = typeRegistry;
+  public CreateCommand(NpcRegistryImpl npcRegistry, NpcTypeRegistryImpl typeRegistry) {
+    this.npcRegistry = npcRegistry;
+    this.typeRegistry = typeRegistry;
+  }
+
+  @Override
+  public void run(CommandContext context) throws CommandExecutionException {
+    context.setUsage(context.getLabel() + " create <id> [<type>]");
+    Player player = context.ensureSenderIsPlayer();
+
+    String id = context.popString();
+    if (npcRegistry.getById(id) != null)
+      context.halt(Component.text("NPC with that ID already exists.", NamedTextColor.RED));
+
+    NpcTypeImpl type;
+    if (context.argSize() == 1) {
+      type = context.parse(NpcTypeImpl.class);
+    } else {
+      type = typeRegistry.getByName("player");
     }
 
-    @Override
-    public void run(CommandContext context) throws CommandExecutionException {
-        context.setUsage(context.getLabel() + " create <id> [<type>]");
-        Player player = context.ensureSenderIsPlayer();
-        
-        String id = context.popString();
-        if (npcRegistry.getById(id) != null) context.halt(Component.text("NPC with that ID already exists.", NamedTextColor.RED));
+    NpcEntryImpl entry =
+        npcRegistry.create(id, player.getWorld(), type, new NpcLocation(player.getLocation()));
+    entry.enableEverything();
 
-        NpcTypeImpl type;
-        if (context.argSize() == 1) {
-            type = context.parse(NpcTypeImpl.class);
-        } else {
-            type = typeRegistry.getByName("player");
-        }
+    context.send(
+        Component.text(
+            "Created a " + type.getName() + " NPC with ID " + id + ".", NamedTextColor.GREEN));
+  }
 
-        NpcEntryImpl entry = npcRegistry.create(id, player.getWorld(), type, new NpcLocation(player.getLocation()));
-        entry.enableEverything();
-
-        context.send(Component.text("Created a " + type.getName() + " NPC with ID " + id + ".", NamedTextColor.GREEN));
-    }
-
-    @Override
-    public List<String> suggest(CommandContext context) throws CommandExecutionException {
-        if (context.argSize() == 1) return context.suggestCollection(npcRegistry.getModifiableIds());
-        if (context.argSize() == 2) return context.suggestStream(typeRegistry.getAllImpl().stream().map(NpcTypeImpl::getName));
-        return Collections.emptyList();
-    }
+  @Override
+  public List<String> suggest(CommandContext context) throws CommandExecutionException {
+    if (context.argSize() == 1) return context.suggestCollection(npcRegistry.getModifiableIds());
+    if (context.argSize() == 2)
+      return context.suggestStream(typeRegistry.getAllImpl().stream().map(NpcTypeImpl::getName));
+    return Collections.emptyList();
+  }
 }

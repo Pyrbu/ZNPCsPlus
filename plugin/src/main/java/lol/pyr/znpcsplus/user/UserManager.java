@@ -1,36 +1,35 @@
 package lol.pyr.znpcsplus.user;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 public class UserManager {
-    private final Map<UUID, User> userMap = new ConcurrentHashMap<>();
+  private final Map<UUID, User> userMap = new ConcurrentHashMap<>();
 
-    public UserManager() {
-        Bukkit.getOnlinePlayers().forEach(this::get);
-    }
+  public UserManager() {
+    Bukkit.getOnlinePlayers().forEach(this::get);
+  }
 
-    public User get(Player player) {
-        return get(player.getUniqueId());
-    }
+  public User get(Player player) {
+    return get(player.getUniqueId());
+  }
 
-    public User get(UUID uuid) {
-        return userMap.computeIfAbsent(uuid, User::new);
-    }
+  public User get(UUID uuid) {
+    return userMap.computeIfAbsent(uuid, User::new);
+  }
 
-    public void remove(Player player) {
-        remove(player.getUniqueId());
-    }
+  public void remove(Player player) {
+    remove(player.getUniqueId());
+  }
 
-    public void remove(UUID uuid) {
-        userMap.remove(uuid);
-    }
+  public void remove(UUID uuid) {
+    userMap.remove(uuid);
+  }
 
-    public void shutdown() {
-        Bukkit.getOnlinePlayers().forEach(this::remove);
-    }
+  public void shutdown() {
+    Bukkit.getOnlinePlayers().forEach(this::remove);
+  }
 }

@@ -18,92 +18,100 @@ import lol.pyr.znpcsplus.util.NpcLocation;
 import lol.pyr.znpcsplus.util.Viewable;
 
 public class HologramItem extends HologramLine<ItemStack> {
-    public HologramItem(Viewable viewable,  EntityPropertyRegistryImpl propertyRegistry, PacketFactory packetFactory, NpcLocation location, ItemStack item) {
-        super(viewable, item, packetFactory, EntityTypes.ITEM, location);
-        addProperty(propertyRegistry.getByName("holo_item"));
+  public HologramItem(
+      Viewable viewable,
+      EntityPropertyRegistryImpl propertyRegistry,
+      PacketFactory packetFactory,
+      NpcLocation location,
+      ItemStack item) {
+    super(viewable, item, packetFactory, EntityTypes.ITEM, location);
+    addProperty(propertyRegistry.getByName("holo_item"));
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public <T> T getProperty(EntityProperty<T> key) {
+    if (key.getName().equalsIgnoreCase("holo_item")) return (T) getValue();
+    return super.getProperty(key);
+  }
+
+  @Override
+  public void setLocation(NpcLocation location) {
+    super.setLocation(location.withY(location.getY() + 2.05));
+  }
+
+  public static boolean ensureValidItemInput(String in) {
+    if (in == null || in.isEmpty()) {
+      return false;
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T> T getProperty(EntityProperty<T> key) {
-        if (key.getName().equalsIgnoreCase("holo_item")) return (T) getValue();
-        return super.getProperty(key);
+    int indexOfNbt = in.indexOf("{");
+    if (indexOfNbt != -1) {
+      String typeName = in.substring(0, indexOfNbt);
+      ItemType type = ItemTypes.getByName("minecraft:" + typeName.toLowerCase());
+      if (type == null) {
+        return false;
+      }
+      String nbtString = in.substring(indexOfNbt);
+      return ensureValidNbt(nbtString);
+    } else {
+      ItemType type = ItemTypes.getByName("minecraft:" + in.toLowerCase());
+      return type != null;
     }
+  }
 
-    @Override
-    public void setLocation(NpcLocation location) {
-        super.setLocation(location.withY(location.getY() + 2.05));
+  private static boolean ensureValidNbt(String nbtString) {
+    JsonElement nbtJson;
+    try {
+      nbtJson = JsonParser.parseString(nbtString);
+    } catch (JsonSyntaxException e) {
+      return false;
     }
+    try {
+      NBTCodec.jsonToNBT(nbtJson);
+    } catch (Exception ignored) {
+      return false;
+    }
+    return true;
+  }
 
-    public static boolean ensureValidItemInput(String in) {
-        if (in == null || in.isEmpty()) {
-            return false;
+  public static ItemStack deserialize(String serializedItem) {
+    int indexOfNbt = serializedItem.indexOf("{");
+    String typeName = serializedItem;
+    int amount = 1;
+    NBTCompound nbt = new NBTCompound();
+    if (indexOfNbt != -1) {
+      typeName = serializedItem.substring(0, indexOfNbt);
+      String nbtString = serializedItem.substring(indexOfNbt);
+      JsonElement nbtJson = null;
+      try {
+        nbtJson = JsonParser.parseString(nbtString);
+      } catch (Exception ignored) {
+      }
+      if (nbtJson != null) {
+        nbt = (NBTCompound) NBTCodec.jsonToNBT(nbtJson);
+        NBTNumber nbtAmount = nbt.getNumberTagOrNull("Count");
+        if (nbtAmount != null) {
+          nbt.removeTag("Count");
+          amount = nbtAmount.getAsInt();
+          if (amount <= 0) amount = 1;
+          if (amount > 127) amount = 127;
         }
-
-        int indexOfNbt = in.indexOf("{");
-        if (indexOfNbt != -1) {
-            String typeName = in.substring(0, indexOfNbt);
-            ItemType type = ItemTypes.getByName("minecraft:" + typeName.toLowerCase());
-            if (type == null) {
-                return false;
-            }
-            String nbtString = in.substring(indexOfNbt);
-            return ensureValidNbt(nbtString);
-        } else {
-            ItemType type = ItemTypes.getByName("minecraft:" + in.toLowerCase());
-            return type != null;
-        }
+      }
     }
+    ItemType type = ItemTypes.getByName("minecraft:" + typeName.toLowerCase());
+    if (type == null) type = ItemTypes.STONE;
+    return ItemStack.builder().type(type).amount(amount).nbt(nbt).build();
+  }
 
-    private static boolean ensureValidNbt(String nbtString) {
-        JsonElement nbtJson;
-        try {
-            nbtJson = JsonParser.parseString(nbtString);
-        } catch (JsonSyntaxException e) {
-            return false;
-        }
-        try {
-            NBTCodec.jsonToNBT(nbtJson);
-        } catch (Exception ignored) {
-            return false;
-        }
-        return true;
-    }
-
-    public static ItemStack deserialize(String serializedItem) {
-        int indexOfNbt = serializedItem.indexOf("{");
-        String typeName = serializedItem;
-        int amount = 1;
-        NBTCompound nbt = new NBTCompound();
-        if (indexOfNbt != -1) {
-            typeName = serializedItem.substring(0, indexOfNbt);
-            String nbtString = serializedItem.substring(indexOfNbt);
-            JsonElement nbtJson = null;
-            try {
-                nbtJson = JsonParser.parseString(nbtString);
-            } catch (Exception ignored) {
-            }
-            if (nbtJson != null) {
-                nbt = (NBTCompound) NBTCodec.jsonToNBT(nbtJson);
-                NBTNumber nbtAmount = nbt.getNumberTagOrNull("Count");
-                if (nbtAmount != null) {
-                    nbt.removeTag("Count");
-                    amount = nbtAmount.getAsInt();
-                    if (amount <= 0) amount = 1;
-                    if (amount > 127) amount = 127;
-                }
-            }
-        }
-        ItemType type = ItemTypes.getByName("minecraft:" + typeName.toLowerCase());
-        if (type == null) type = ItemTypes.STONE;
-        return ItemStack.builder().type(type).amount(amount).nbt(nbt).build();
-    }
-
-    public String serialize() {
-        NBTCompound nbt = getValue().getNBT();
-        if (nbt == null) nbt = new NBTCompound();
-        if (getValue().getAmount() > 1) nbt.setTag("Count", new NBTInt(getValue().getAmount()));
-        if (nbt.isEmpty()) return "item:" + getValue().getType().getName().toString().replace("minecraft:", "");
-        return "item:" + getValue().getType().getName().toString().replace("minecraft:", "") + NBTCodec.nbtToJson(nbt, true);
-    }
+  public String serialize() {
+    NBTCompound nbt = getValue().getNBT();
+    if (nbt == null) nbt = new NBTCompound();
+    if (getValue().getAmount() > 1) nbt.setTag("Count", new NBTInt(getValue().getAmount()));
+    if (nbt.isEmpty())
+      return "item:" + getValue().getType().getName().toString().replace("minecraft:", "");
+    return "item:"
+        + getValue().getType().getName().toString().replace("minecraft:", "")
+        + NBTCodec.nbtToJson(nbt, true);
+  }
 }

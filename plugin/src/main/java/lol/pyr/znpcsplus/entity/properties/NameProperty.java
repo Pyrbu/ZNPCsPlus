@@ -3,6 +3,8 @@ package lol.pyr.znpcsplus.entity.properties;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
+import java.util.Map;
+import java.util.Optional;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.util.PapiUtil;
@@ -10,37 +12,49 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 
-import java.util.Map;
-import java.util.Optional;
-
 public class NameProperty extends EntityPropertyImpl<Component> {
-    private final LegacyComponentSerializer legacySerializer;
-    private final boolean legacySerialization;
-    private final boolean optional;
+  private final LegacyComponentSerializer legacySerializer;
+  private final boolean legacySerialization;
+  private final boolean optional;
 
-    public NameProperty(LegacyComponentSerializer legacySerializer, boolean legacySerialization, boolean optional) {
-        super("name", null, Component.class);
-        this.legacySerializer = legacySerializer;
+  public NameProperty(
+      LegacyComponentSerializer legacySerializer, boolean legacySerialization, boolean optional) {
+    super("name", null, Component.class);
+    this.legacySerializer = legacySerializer;
 
-        this.legacySerialization = legacySerialization;
-        this.optional = optional;
+    this.legacySerialization = legacySerialization;
+    this.optional = optional;
+  }
+
+  @Override
+  public void apply(
+      Player player,
+      PacketEntity entity,
+      boolean isSpawned,
+      Map<Integer, EntityData<?>> properties) {
+    Component value = entity.getProperty(this);
+    if (value != null) {
+      value = PapiUtil.set(legacySerializer, player, value);
+      if (legacySerialization) {
+        properties.put(
+            2,
+            newEntityData(
+                2, EntityDataTypes.STRING, AdventureSerializer.serializer().asJson(value)));
+      } else if (optional) {
+        properties.put(
+            2, newEntityData(2, EntityDataTypes.OPTIONAL_ADV_COMPONENT, Optional.of(value)));
+      } else {
+        properties.put(
+            2,
+            newEntityData(
+                2,
+                EntityDataTypes.STRING,
+                LegacyComponentSerializer.legacySection().serialize(value)));
+      }
     }
 
-    @Override
-    public void apply(Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData<?>> properties) {
-        Component value = entity.getProperty(this);
-        if (value != null) {
-            value = PapiUtil.set(legacySerializer, player, value);
-            if (legacySerialization) {
-                properties.put(2, newEntityData(2, EntityDataTypes.STRING, AdventureSerializer.serializer().asJson(value)));
-            } else if (optional) {
-                properties.put(2, newEntityData(2, EntityDataTypes.OPTIONAL_ADV_COMPONENT, Optional.of(value)));
-            } else {
-                properties.put(2, newEntityData(2, EntityDataTypes.STRING, LegacyComponentSerializer.legacySection().serialize(value)));
-            }
-        }
-
-        if (legacySerialization) properties.put(3, newEntityData(3, EntityDataTypes.BYTE, (byte) (value != null ? 1 : 0)));
-        else properties.put(3, newEntityData(3, EntityDataTypes.BOOLEAN, value != null));
-    }
+    if (legacySerialization)
+      properties.put(3, newEntityData(3, EntityDataTypes.BYTE, (byte) (value != null ? 1 : 0)));
+    else properties.put(3, newEntityData(3, EntityDataTypes.BOOLEAN, value != null));
+  }
 }

@@ -2,6 +2,11 @@ package lol.pyr.znpcsplus.hologram;
 
 import com.github.retrooper.packetevents.protocol.item.ItemStack;
 import io.github.retrooper.packetevents.util.SpigotConversionUtil;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 import lol.pyr.znpcsplus.api.hologram.Hologram;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
@@ -14,184 +19,186 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
-
 public class HologramImpl extends Viewable implements Hologram {
-    private final ConfigManager configManager;
-    private final PacketFactory packetFactory;
-    private final LegacyComponentSerializer textSerializer;
-    private final EntityPropertyRegistryImpl propertyRegistry;
+  private final ConfigManager configManager;
+  private final PacketFactory packetFactory;
+  private final LegacyComponentSerializer textSerializer;
+  private final EntityPropertyRegistryImpl propertyRegistry;
 
-    private double offset = 0.0;
-    private long refreshDelay = -1;
-    private long lastRefresh = System.currentTimeMillis();
-    private NpcLocation location;
-    private final List<HologramLine<?>> lines = new ArrayList<>();
+  private double offset = 0.0;
+  private long refreshDelay = -1;
+  private long lastRefresh = System.currentTimeMillis();
+  private NpcLocation location;
+  private final List<HologramLine<?>> lines = new ArrayList<>();
 
-    public HologramImpl(EntityPropertyRegistryImpl propertyRegistry, ConfigManager configManager, PacketFactory packetFactory, LegacyComponentSerializer textSerializer, NpcLocation location) {
-        this.propertyRegistry = propertyRegistry;
-        this.configManager = configManager;
-        this.packetFactory = packetFactory;
-        this.textSerializer = textSerializer;
-        this.location = location;
+  public HologramImpl(
+      EntityPropertyRegistryImpl propertyRegistry,
+      ConfigManager configManager,
+      PacketFactory packetFactory,
+      LegacyComponentSerializer textSerializer,
+      NpcLocation location) {
+    this.propertyRegistry = propertyRegistry;
+    this.configManager = configManager;
+    this.packetFactory = packetFactory;
+    this.textSerializer = textSerializer;
+    this.location = location;
+  }
+
+  public void addTextLineComponent(Component line) {
+    HologramText newLine = new HologramText(this, propertyRegistry, packetFactory, null, line);
+    lines.add(newLine);
+    relocateLines();
+    for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
+  }
+
+  public void addTextLine(String line) {
+    Component component =
+        line.contains("§") ? Component.text(line) : MiniMessage.miniMessage().deserialize(line);
+    addTextLineComponent(textSerializer.deserialize(textSerializer.serialize(component)));
+  }
+
+  public void addItemLineStack(org.bukkit.inventory.ItemStack item) {
+    addItemLinePEStack(SpigotConversionUtil.fromBukkitItemStack(item));
+  }
+
+  public void addItemLine(String serializedItem) {
+    addItemLinePEStack(HologramItem.deserialize(serializedItem));
+  }
+
+  public void addItemLinePEStack(ItemStack item) {
+    HologramItem newLine = new HologramItem(this, propertyRegistry, packetFactory, null, item);
+    lines.add(newLine);
+    relocateLines();
+    for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
+  }
+
+  public void addLine(String line) {
+    if (line.toLowerCase().startsWith("item:")) {
+      addItemLine(line.substring(5));
+    } else {
+      addTextLine(line);
     }
+  }
 
-    public void addTextLineComponent(Component line) {
-        HologramText newLine = new HologramText(this, propertyRegistry, packetFactory, null, line);
-        lines.add(newLine);
-        relocateLines();
-        for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
-    }
+  public Component getLineTextComponent(int index) {
+    return ((HologramText) lines.get(index)).getValue();
+  }
 
-    public void addTextLine(String line) {
-        Component component = line.contains("§") ? Component.text(line) : MiniMessage.miniMessage().deserialize(line);
-        addTextLineComponent(textSerializer.deserialize(textSerializer.serialize(component)));
+  public String getLine(int index) {
+    if (lines.get(index) instanceof HologramItem) {
+      return ((HologramItem) lines.get(index)).serialize();
+    } else {
+      return textSerializer.serialize(getLineTextComponent(index));
     }
+  }
 
-    public void addItemLineStack(org.bukkit.inventory.ItemStack item) {
-        addItemLinePEStack(SpigotConversionUtil.fromBukkitItemStack(item));
-    }
+  public void removeLine(int index) {
+    HologramLine<?> line = lines.remove(index);
+    for (Player viewer : getViewers()) line.hide(viewer);
+    relocateLines();
+  }
 
-    public void addItemLine(String serializedItem) {
-        addItemLinePEStack(HologramItem.deserialize(serializedItem));
-    }
+  public List<HologramLine<?>> getLines() {
+    return Collections.unmodifiableList(lines);
+  }
 
-    public void addItemLinePEStack(ItemStack item) {
-        HologramItem newLine = new HologramItem(this, propertyRegistry, packetFactory, null, item);
-        lines.add(newLine);
-        relocateLines();
-        for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
-    }
+  public void clearLines() {
+    UNSAFE_hideAll();
+    lines.clear();
+  }
 
-    public void addLine(String line) {
-        if (line.toLowerCase().startsWith("item:")) {
-            addItemLine(line.substring(5));
-        } else {
-            addTextLine(line);
-        }
-    }
+  public void insertTextLineComponent(int index, Component line) {
+    HologramText newLine = new HologramText(this, propertyRegistry, packetFactory, null, line);
+    lines.add(index, newLine);
+    relocateLines();
+    for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
+  }
 
-    public Component getLineTextComponent(int index) {
-        return ((HologramText) lines.get(index)).getValue();
-    }
+  public void insertTextLine(int index, String line) {
+    insertTextLineComponent(
+        index,
+        textSerializer.deserialize(
+            textSerializer.serialize(MiniMessage.miniMessage().deserialize(line))));
+  }
 
-    public String getLine(int index) {
-        if (lines.get(index) instanceof HologramItem) {
-            return ((HologramItem) lines.get(index)).serialize();
-        } else {
-            return textSerializer.serialize(getLineTextComponent(index));
-        }
-    }
+  public void insertItemLineStack(int index, org.bukkit.inventory.ItemStack item) {
+    insertItemLinePEStack(index, SpigotConversionUtil.fromBukkitItemStack(item));
+  }
 
-    public void removeLine(int index) {
-        HologramLine<?> line = lines.remove(index);
-        for (Player viewer : getViewers()) line.hide(viewer);
-        relocateLines();
-    }
+  public void insertItemLinePEStack(int index, ItemStack item) {
+    HologramItem newLine = new HologramItem(this, propertyRegistry, packetFactory, null, item);
+    lines.add(index, newLine);
+    relocateLines();
+    for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
+  }
 
-    public List<HologramLine<?>> getLines() {
-        return Collections.unmodifiableList(lines);
-    }
+  public void insertItemLine(int index, String item) {
+    insertItemLinePEStack(index, HologramItem.deserialize(item));
+  }
 
-    public void clearLines() {
-        UNSAFE_hideAll();
-        lines.clear();
+  public void insertLine(int index, String line) {
+    if (line.toLowerCase().startsWith("item:")) {
+      insertItemLine(index, line.substring(5));
+    } else {
+      insertTextLine(index, line);
     }
+  }
 
-    public void insertTextLineComponent(int index, Component line) {
-        HologramText newLine = new HologramText(this, propertyRegistry, packetFactory, null, line);
-        lines.add(index, newLine);
-        relocateLines();
-        for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
-    }
+  @Override
+  public int lineCount() {
+    return lines.size();
+  }
 
-    public void insertTextLine(int index, String line) {
-        insertTextLineComponent(index, textSerializer.deserialize(textSerializer.serialize(MiniMessage.miniMessage().deserialize(line))));
-    }
+  @Override
+  protected CompletableFuture<Void> UNSAFE_show(Player player) {
+    return FutureUtil.allOf(
+        lines.stream().map(line -> line.show(player)).collect(Collectors.toList()));
+  }
 
-    public void insertItemLineStack(int index, org.bukkit.inventory.ItemStack item) {
-        insertItemLinePEStack(index, SpigotConversionUtil.fromBukkitItemStack(item));
-    }
+  @Override
+  protected void UNSAFE_hide(Player player) {
+    for (HologramLine<?> line : lines) line.hide(player);
+  }
 
-    public void insertItemLinePEStack(int index, ItemStack item) {
-        HologramItem newLine = new HologramItem(this, propertyRegistry, packetFactory, null, item);
-        lines.add(index, newLine);
-        relocateLines();
-        for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
-    }
+  @Override
+  public long getRefreshDelay() {
+    return refreshDelay;
+  }
 
-    public void insertItemLine(int index, String item) {
-        insertItemLinePEStack(index, HologramItem.deserialize(item));
-    }
+  @Override
+  public void setRefreshDelay(long refreshDelay) {
+    this.refreshDelay = refreshDelay;
+  }
 
-    public void insertLine(int index, String line) {
-        if (line.toLowerCase().startsWith("item:")) {
-            insertItemLine(index, line.substring(5));
-        } else {
-            insertTextLine(index, line);
-        }
-    }
+  public boolean shouldRefresh() {
+    return refreshDelay != -1 && (System.currentTimeMillis() - lastRefresh) > refreshDelay;
+  }
 
-    @Override
-    public int lineCount() {
-        return lines.size();
-    }
+  public void refresh() {
+    lastRefresh = System.currentTimeMillis();
+    for (HologramLine<?> line : lines) for (Player viewer : getViewers()) line.refreshMeta(viewer);
+  }
 
-    @Override
-    protected CompletableFuture<Void> UNSAFE_show(Player player) {
-        return FutureUtil.allOf(lines.stream()
-                .map(line -> line.show(player))
-                .collect(Collectors.toList()));
-    }
+  public void setLocation(NpcLocation location) {
+    this.location = location;
+    relocateLines();
+  }
 
-    @Override
-    protected void UNSAFE_hide(Player player) {
-        for (HologramLine<?> line : lines) line.hide(player);
+  private void relocateLines() {
+    final double lineSpacing = configManager.getConfig().lineSpacing();
+    double height = location.getY() + (lines.size() - 1) * lineSpacing + getOffset();
+    for (HologramLine<?> line : lines) {
+      line.setLocation(location.withY(height));
+      height -= lineSpacing;
     }
+  }
 
-    @Override
-    public long getRefreshDelay() {
-        return refreshDelay;
-    }
+  public void setOffset(double offset) {
+    this.offset = offset;
+    relocateLines();
+  }
 
-    @Override
-    public void setRefreshDelay(long refreshDelay) {
-        this.refreshDelay = refreshDelay;
-    }
-
-    public boolean shouldRefresh() {
-        return refreshDelay != -1 && (System.currentTimeMillis() - lastRefresh) > refreshDelay;
-    }
-
-    public void refresh() {
-        lastRefresh = System.currentTimeMillis();
-        for (HologramLine<?> line : lines) for (Player viewer : getViewers()) line.refreshMeta(viewer);
-    }
-
-    public void setLocation(NpcLocation location) {
-        this.location = location;
-        relocateLines();
-    }
-
-    private void relocateLines() {
-        final double lineSpacing = configManager.getConfig().lineSpacing();
-        double height = location.getY() + (lines.size() - 1) * lineSpacing + getOffset();
-        for (HologramLine<?> line : lines) {
-            line.setLocation(location.withY(height));
-            height -= lineSpacing;
-        }
-    }
-
-    public void setOffset(double offset) {
-        this.offset = offset;
-        relocateLines();
-    }
-
-    public double getOffset() {
-        return offset;
-    }
+  public double getOffset() {
+    return offset;
+  }
 }

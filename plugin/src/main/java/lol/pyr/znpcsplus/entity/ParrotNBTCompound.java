@@ -7,15 +7,15 @@ import lol.pyr.znpcsplus.util.ParrotVariant;
 
 // Not sure where to put this or even if it's needed
 public class ParrotNBTCompound {
-    private final NBTCompound tag = new NBTCompound();
+  private final NBTCompound tag = new NBTCompound();
 
-    public ParrotNBTCompound(ParrotVariant variant) {
-        tag.setTag("id", new NBTString("minecraft:parrot"));
-        tag.setTag("Variant", new NBTInt(variant.ordinal()));
-        // other tags if needed, idk
-    }
+  public ParrotNBTCompound(ParrotVariant variant) {
+    tag.setTag("id", new NBTString("minecraft:parrot"));
+    tag.setTag("Variant", new NBTInt(variant.ordinal()));
+    // other tags if needed, idk
+  }
 
-    public NBTCompound getTag() {
-        return tag;
-    }
+  public NBTCompound getTag() {
+    return tag;
+  }
 }

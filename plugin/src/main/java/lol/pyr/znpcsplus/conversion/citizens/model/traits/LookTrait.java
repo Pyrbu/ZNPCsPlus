@@ -8,16 +8,17 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
 public class LookTrait extends SectionCitizensTrait {
-    private final EntityPropertyRegistry registry;
+  private final EntityPropertyRegistry registry;
 
-    public LookTrait(EntityPropertyRegistry registry) {
-        super("lookclose");
-        this.registry = registry;
-    }
+  public LookTrait(EntityPropertyRegistry registry) {
+    super("lookclose");
+    this.registry = registry;
+  }
 
-    @Override
-    public @NotNull NpcImpl apply(NpcImpl npc, ConfigurationSection section) {
-        if (section.getBoolean("enabled")) npc.setProperty(registry.getByName("look", LookType.class), LookType.CLOSEST_PLAYER);
-        return npc;
-    }
+  @Override
+  public @NotNull NpcImpl apply(NpcImpl npc, ConfigurationSection section) {
+    if (section.getBoolean("enabled"))
+      npc.setProperty(registry.getByName("look", LookType.class), LookType.CLOSEST_PLAYER);
+    return npc;
+  }
 }

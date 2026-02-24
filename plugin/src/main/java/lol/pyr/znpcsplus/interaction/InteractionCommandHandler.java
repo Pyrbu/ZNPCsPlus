@@ -10,16 +10,17 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 public interface InteractionCommandHandler extends CommandHandler {
-    String getSubcommandName();
+  String getSubcommandName();
 
-    InteractionAction parse(CommandContext context) throws CommandExecutionException;
-    void appendUsage(CommandContext context);
+  InteractionAction parse(CommandContext context) throws CommandExecutionException;
 
-    @Override
-    default void run(CommandContext context) throws CommandExecutionException {
-        appendUsage(context);
-        NpcImpl npc = context.parse(NpcEntryImpl.class).getNpc();
-        npc.addAction(parse(context));
-        context.send(Component.text("Added action to npc", NamedTextColor.GREEN));
-    }
+  void appendUsage(CommandContext context);
+
+  @Override
+  default void run(CommandContext context) throws CommandExecutionException {
+    appendUsage(context);
+    NpcImpl npc = context.parse(NpcEntryImpl.class).getNpc();
+    npc.addAction(parse(context));
+    context.send(Component.text("Added action to npc", NamedTextColor.GREEN));
+  }
 }

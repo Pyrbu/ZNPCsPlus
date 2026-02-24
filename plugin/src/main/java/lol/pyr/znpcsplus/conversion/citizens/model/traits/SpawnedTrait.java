@@ -6,15 +6,15 @@ import org.jetbrains.annotations.NotNull;
 
 public class SpawnedTrait extends CitizensTrait {
 
-    public SpawnedTrait() {
-        super("spawned");
-    }
+  public SpawnedTrait() {
+    super("spawned");
+  }
 
-    @Override
-    public @NotNull NpcImpl apply(NpcImpl npc, Object value) {
-        if (value != null) {
-            npc.setEnabled((boolean) value);
-        }
-        return npc;
+  @Override
+  public @NotNull NpcImpl apply(NpcImpl npc, Object value) {
+    if (value != null) {
+      npc.setEnabled((boolean) value);
     }
+    return npc;
+  }
 }

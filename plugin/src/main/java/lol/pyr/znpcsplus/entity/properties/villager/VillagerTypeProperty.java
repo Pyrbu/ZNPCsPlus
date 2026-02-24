@@ -5,13 +5,13 @@ import com.github.retrooper.packetevents.protocol.entity.villager.type.VillagerT
 import lol.pyr.znpcsplus.util.VillagerType;
 
 public class VillagerTypeProperty extends VillagerDataProperty<VillagerType> {
-    public VillagerTypeProperty(String name, int index, VillagerType def) {
-        super(name, index, def);
-    }
+  public VillagerTypeProperty(String name, int index, VillagerType def) {
+    super(name, index, def);
+  }
 
-    @Override
-    protected VillagerData apply(VillagerData data, VillagerType value) {
-        data.setType(VillagerTypes.getById(value.getId()));
-        return data;
-    }
+  @Override
+  protected VillagerData apply(VillagerData data, VillagerType value) {
+    data.setType(VillagerTypes.getById(value.getId()));
+    return data;
+  }
 }

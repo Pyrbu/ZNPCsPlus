@@ -1,16 +1,16 @@
 package lol.pyr.znpcsplus.util;
 
 public enum CreeperState {
-    IDLE(-1),
-    FUSE(1);
+  IDLE(-1),
+  FUSE(1);
 
-    private final int state;
+  private final int state;
 
-    CreeperState(int state) {
-        this.state = state;
-    }
+  CreeperState(int state) {
+    this.state = state;
+  }
 
-    public int getState() {
-        return state;
-    }
+  public int getState() {
+    return state;
+  }
 }

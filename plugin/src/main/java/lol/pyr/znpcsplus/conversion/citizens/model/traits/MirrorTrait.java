@@ -10,18 +10,20 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
 public class MirrorTrait extends SectionCitizensTrait {
-    private final EntityPropertyRegistry registry;
-    private final MojangSkinCache skinCache;
+  private final EntityPropertyRegistry registry;
+  private final MojangSkinCache skinCache;
 
-    public MirrorTrait(EntityPropertyRegistry registry, MojangSkinCache skinCache) {
-        super("mirrortrait");
-        this.registry = registry;
-        this.skinCache = skinCache;
-    }
+  public MirrorTrait(EntityPropertyRegistry registry, MojangSkinCache skinCache) {
+    super("mirrortrait");
+    this.registry = registry;
+    this.skinCache = skinCache;
+  }
 
-    @Override
-    public @NotNull NpcImpl apply(NpcImpl npc, ConfigurationSection section) {
-        if (section.getBoolean("enabled")) npc.setProperty(registry.getByName("skin", SkinDescriptor.class), new MirrorDescriptor(skinCache));
-        return npc;
-    }
+  @Override
+  public @NotNull NpcImpl apply(NpcImpl npc, ConfigurationSection section) {
+    if (section.getBoolean("enabled"))
+      npc.setProperty(
+          registry.getByName("skin", SkinDescriptor.class), new MirrorDescriptor(skinCache));
+    return npc;
+  }
 }
