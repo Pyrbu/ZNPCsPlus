@@ -29,7 +29,7 @@ public class V1_19_3PacketFactory extends V1_17PacketFactory {
     public CompletableFuture<Void> addTabPlayer(Player player, PacketEntity entity, PropertyHolder properties) {
         if (entity.getType() != EntityTypes.PLAYER) return CompletableFuture.completedFuture(null);
         CompletableFuture<Void> future = new CompletableFuture<>();
-        Component displayName = tabListDisplayNameProperty != null && properties.hasProperty(tabListDisplayNameProperty.get()) ?
+        Component tabListDisplayName = tabListDisplayNameProperty != null && properties.hasProperty(tabListDisplayNameProperty.get()) ?
                 PapiUtil.set(textSerializer, player, properties.getProperty(tabListDisplayNameProperty.get())) :
                 Component.text(PapiUtil.set(player, configManager.getConfig().tabDisplayName()
                         .replace("{id}", Integer.toString(entity.getEntityId()))
@@ -38,10 +38,14 @@ public class V1_19_3PacketFactory extends V1_17PacketFactory {
                                 "")
                 ));
         boolean listed = alwaysVisibleInTabProperty == null || properties.getProperty(alwaysVisibleInTabProperty.get());
-        skinned(player, properties, new UserProfile(entity.getUuid(), Integer.toString(entity.getEntityId()))).thenAccept(profile -> {
+
+        // This is to set the entity name for NPCs
+        String displayName = displayNameProperty != null && properties.hasProperty(displayNameProperty.get()) ?
+                properties.getProperty(displayNameProperty.get()) : Integer.toString(entity.getEntityId());
+        skinned(player, properties, new UserProfile(entity.getUuid(), displayName)).thenAccept(profile -> {
             WrapperPlayServerPlayerInfoUpdate.PlayerInfo info = new WrapperPlayServerPlayerInfoUpdate.PlayerInfo(
                     profile, listed, 1, GameMode.CREATIVE,
-                    displayName, null);
+                    tabListDisplayName, null);
             sendPacket(player, new WrapperPlayServerPlayerInfoUpdate(EnumSet.of(WrapperPlayServerPlayerInfoUpdate.Action.ADD_PLAYER,
                     WrapperPlayServerPlayerInfoUpdate.Action.UPDATE_LISTED, WrapperPlayServerPlayerInfoUpdate.Action.UPDATE_DISPLAY_NAME),
                     info, info, info));

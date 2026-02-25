@@ -110,7 +110,7 @@ public class V1_8PacketFactory implements PacketFactory {
     public CompletableFuture<Void> addTabPlayer(Player player, PacketEntity entity, PropertyHolder properties) {
         if (entity.getType() != EntityTypes.PLAYER) return CompletableFuture.completedFuture(null);
         CompletableFuture<Void> future = new CompletableFuture<>();
-        Component displayName = tabListDisplayNameProperty != null && properties.getProperty(tabListDisplayNameProperty.get()) != null ?
+        Component tabListDisplayName = tabListDisplayNameProperty != null && properties.getProperty(tabListDisplayNameProperty.get()) != null ?
                 PapiUtil.set(textSerializer, player, properties.getProperty(tabListDisplayNameProperty.get())) :
                 Component.text(PapiUtil.set(player, configManager.getConfig().tabDisplayName()
                         .replace("{id}", Integer.toString(entity.getEntityId()))
@@ -118,10 +118,14 @@ public class V1_8PacketFactory implements PacketFactory {
                                 properties.getProperty(displayNameProperty.get()) :
                                 "")
                 ));
-        skinned(player, properties, new UserProfile(entity.getUuid(), Integer.toString(entity.getEntityId()))).thenAccept(profile -> {
+
+        // This is to set the entity name for NPCs.
+        String displayName = displayNameProperty != null && properties.hasProperty(displayNameProperty.get()) ?
+                properties.getProperty(displayNameProperty.get()) : Integer.toString(entity.getEntityId());
+        skinned(player, properties, new UserProfile(entity.getUuid(), displayName)).thenAccept(profile -> {
             sendPacket(player, new WrapperPlayServerPlayerInfo(
                     WrapperPlayServerPlayerInfo.Action.ADD_PLAYER, new WrapperPlayServerPlayerInfo.PlayerData(
-                            displayName, profile, GameMode.CREATIVE, 1)));
+                    tabListDisplayName, profile, GameMode.CREATIVE, 1)));
             entity.setListedInTabList(true);
             future.complete(null);
         });
@@ -147,8 +151,16 @@ public class V1_8PacketFactory implements PacketFactory {
                 namedColor == null ? NamedTextColor.WHITE : NamedTextColor.NAMES.value(namedColor.name().toLowerCase()),
                 WrapperPlayServerTeams.OptionData.NONE
         )));
+
+        PropertyHolder properties = entity.getProperties();
+        String displayName = displayNameProperty != null && properties.hasProperty(displayNameProperty.get()) ?
+                properties.getProperty(displayNameProperty.get()) : Integer.toString(entity.getEntityId());
+        // 这个displayName替换掉原来的实体ID，是为了
+        // '当NPC实体为玩家类型时，隐藏掉NPC头顶上的名称显示 不然会和hologram一起显示 导致有些混淆与冲突'
+        // This displayName replaces the original entityID in order to
+        // 'hide the name display above the NPC's head when the NPC entity is a player type, otherwise it will be displayed together with the hologram, causing some confusion and conflict'
         sendPacket(player, new WrapperPlayServerTeams("npc_team_" + entity.getEntityId(), WrapperPlayServerTeams.TeamMode.ADD_ENTITIES, (WrapperPlayServerTeams.ScoreBoardTeamInfo) null,
-                entity.getType() == EntityTypes.PLAYER ? Integer.toString(entity.getEntityId()) : entity.getUuid().toString()));
+                entity.getType() == EntityTypes.PLAYER ? displayName : entity.getUuid().toString()));
     }
 
     @Override
