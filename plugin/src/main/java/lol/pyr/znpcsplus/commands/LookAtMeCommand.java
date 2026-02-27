@@ -25,7 +25,7 @@ public class LookAtMeCommand implements CommandHandler {
         context.setUsage(context.getLabel() + " lookatme <id>");
         Player player = context.ensureSenderIsPlayer();
         NpcImpl npc = context.parse(NpcEntryImpl.class).getNpc();
-        npc.setLocation(npc.getLocation().lookingAt(player.getLocation()));
+        npc.setLocation(npc.lookingAt(player));
         context.send(Component.text("NPC is now looking at you.", NamedTextColor.GREEN));
     }
 

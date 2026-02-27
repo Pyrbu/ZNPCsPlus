@@ -1,6 +1,7 @@
 package lol.pyr.znpcsplus.npc;
 
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
+import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.interaction.InteractionAction;
@@ -43,6 +44,8 @@ public class NpcImpl extends Viewable implements Npc {
 
     private final Map<UUID, float[]> playerLookMap = new ConcurrentHashMap<>();
 
+    private final EntityPropertyImpl<Double> attributeScaleProperty;
+
     protected NpcImpl(UUID uuid, EntityPropertyRegistryImpl propertyRegistry, ConfigManager configManager, LegacyComponentSerializer textSerializer, World world, NpcTypeImpl type, NpcLocation location, PacketFactory packetFactory) {
         this(uuid, propertyRegistry, configManager, packetFactory, textSerializer, world.getName(), type, location);
     }
@@ -55,6 +58,7 @@ public class NpcImpl extends Viewable implements Npc {
         this.uuid = uuid;
         entity = new PacketEntity(packetFactory, this, this, type.getType(), location);
         hologram = new HologramImpl(propertyRegistry, configManager, packetFactory, textSerializer, location.withY(location.getY() + type.getHologramOffset()));
+        this.attributeScaleProperty = propertyRegistry.getByName("attribute_scale", Double.class);
     }
 
     public void setType(NpcTypeImpl type) {
@@ -100,13 +104,21 @@ public class NpcImpl extends Viewable implements Npc {
         this.location = location;
         playerLookMap.clear();
         playerLookMap.putAll(getViewers().stream().collect(Collectors.toMap(Player::getUniqueId, player -> new float[]{location.getYaw(), location.getPitch()})));
-        entity.setLocation(location);
-        hologram.setLocation(location.withY(location.getY() + type.getHologramOffset()));
+        NpcLocation finalLocation = location;
+        if (type.getType().isInstanceOf(EntityTypes.ENDER_DRAGON)) {
+            finalLocation = finalLocation.withRotation(location.getYaw() + 180, location.getPitch());
+        }
+        entity.setLocation(finalLocation);
+        hologram.setLocation(finalLocation.withY(finalLocation.getY() + type.getHologramOffset()));
     }
 
     public void setHeadRotation(Player player, float yaw, float pitch) {
         if (getHeadYaw(player) == yaw && getHeadPitch(player) == pitch) return;
         playerLookMap.put(player.getUniqueId(), new float[]{yaw, pitch});
+        if (type.getType().isInstanceOf(EntityTypes.ENDER_DRAGON)) {
+            yaw += 180;
+            if (yaw > 360) yaw -= 360;
+        }
         entity.setHeadRotation(player, yaw, pitch);
     }
 
@@ -114,8 +126,23 @@ public class NpcImpl extends Viewable implements Npc {
         for (Player player : getViewers()) {
             if (getHeadYaw(player) == yaw && getHeadPitch(player) == pitch) continue;
             playerLookMap.put(player.getUniqueId(), new float[]{yaw, pitch});
+            if (type.getType().isInstanceOf(EntityTypes.ENDER_DRAGON)) {
+                yaw += 180;
+                if (yaw > 360) yaw -= 360;
+            }
             entity.setHeadRotation(player, yaw, pitch);
         }
+    }
+
+    public NpcLocation lookingAt(Location target, float yawOffset, float pitchOffset) {
+        double scale = attributeScaleProperty != null && hasProperty(attributeScaleProperty) ? getProperty(attributeScaleProperty) : 1.0f;
+        float eyeHeight = type.getEyeHeight();
+
+        return location.lookingAt(target, scale, eyeHeight, yawOffset, pitchOffset);
+    }
+
+    public NpcLocation lookingAt(Player target, float yawOffset, float pitchOffset) {
+        return lookingAt(target.getEyeLocation(), yawOffset, pitchOffset);
     }
 
     public float getHeadYaw(Player player) {

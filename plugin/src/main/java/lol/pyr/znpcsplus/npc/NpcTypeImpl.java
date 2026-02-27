@@ -19,11 +19,13 @@ public class NpcTypeImpl implements NpcType {
     private final Map<EntityPropertyImpl<?>, Object> defaultProperties;
     private final String name;
     private final double hologramOffset;
+    private final float eyeHeight;
 
-    private NpcTypeImpl(String name, EntityType type, double hologramOffset, Set<EntityPropertyImpl<?>> allowedProperties, Map<EntityPropertyImpl<?>, Object> defaultProperties) {
+    private NpcTypeImpl(String name, EntityType type, double hologramOffset, float eyeHeight, Set<EntityPropertyImpl<?>> allowedProperties, Map<EntityPropertyImpl<?>, Object> defaultProperties) {
         this.name = name.toLowerCase();
         this.type = type;
         this.hologramOffset = hologramOffset;
+        this.eyeHeight = eyeHeight;
         this.allowedProperties = allowedProperties;
         this.defaultProperties = defaultProperties;
     }
@@ -38,6 +40,10 @@ public class NpcTypeImpl implements NpcType {
 
     public double getHologramOffset() {
         return hologramOffset;
+    }
+
+    public float getEyeHeight() {
+        return eyeHeight;
     }
 
     public Set<EntityProperty<?>> getAllowedProperties() {
@@ -63,6 +69,7 @@ public class NpcTypeImpl implements NpcType {
         private final List<EntityPropertyImpl<?>> allowedProperties = new ArrayList<>();
         private final Map<EntityPropertyImpl<?>, Object> defaultProperties = new HashMap<>();
         private double hologramOffset = 0;
+        private float eyeHeight = 0;
 
         Builder(EntityPropertyRegistryImpl propertyRegistry, String name, EntityType type) {
             this.propertyRegistry = propertyRegistry;
@@ -109,6 +116,11 @@ public class NpcTypeImpl implements NpcType {
 
         public Builder setHologramOffset(double hologramOffset) {
             this.hologramOffset = hologramOffset;
+            return this;
+        }
+
+        public Builder setEyeHeight(float eyeHeight) {
+            this.eyeHeight = eyeHeight;
             return this;
         }
 
@@ -186,6 +198,9 @@ public class NpcTypeImpl implements NpcType {
                         addProperties("chestplate");
                     }
                 }
+                if (EntityTypes.isTypeInstanceOf(type, EntityTypes.LIVINGENTITY)) {
+                    addProperties("attribute_scale");
+                }
             }
             if (version.isNewerThanOrEquals(ServerVersion.V_1_21_4)) {
                 if (EntityTypes.isTypeInstanceOf(type, EntityTypes.CREAKING)) {
@@ -214,7 +229,7 @@ public class NpcTypeImpl implements NpcType {
             if (EntityTypes.isTypeInstanceOf(type, EntityTypes.HAPPY_GHAST)) {
                 addProperties("body");
             }
-            return new NpcTypeImpl(name, type, hologramOffset, new HashSet<>(allowedProperties), defaultProperties);
+            return new NpcTypeImpl(name, type, hologramOffset, eyeHeight, new HashSet<>(allowedProperties), defaultProperties);
         }
     }
 }

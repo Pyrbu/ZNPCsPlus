@@ -76,13 +76,29 @@ public class NpcLocation {
     private static final double _2PI = 2 * Math.PI;
 
     public NpcLocation lookingAt(Location loc) {
-        return lookingAt(new NpcLocation(loc));
+        return lookingAt(new NpcLocation(loc), 1.0, 0.0);
+    }
+
+    public NpcLocation lookingAt(Location loc, double scale, double eyeHeight) {
+        return lookingAt(new NpcLocation(loc), scale, eyeHeight);
+    }
+
+    public NpcLocation lookingAt(Location loc, double scale, double eyeHeight, float yawOffset, float pitchOffset) {
+        return lookingAt(new NpcLocation(loc), scale, eyeHeight, yawOffset, pitchOffset);
     }
 
     public NpcLocation lookingAt(NpcLocation loc) {
+        return lookingAt(loc, 1.0, 0.0);
+    }
+
+    public NpcLocation lookingAt(NpcLocation loc, double scale, double eyeHeight) {
+        return lookingAt(loc, scale, eyeHeight, 0.0f, 0.0f);
+    }
+
+    public NpcLocation lookingAt(NpcLocation loc, double scale, double eyeHeight, float yawOffset, float pitchOffset) {
         final double x = loc.getX() - this.x;
         final double z = loc.getZ() - this.z;
-        final double y = loc.getY() - this.y;
+        final double y = loc.getY() - (this.y + (eyeHeight * scale));
 
         if (x == 0 && z == 0) return new NpcLocation(this.x, this.y, this.z, this.yaw, y > 0 ? -90 : 90);
 
@@ -94,6 +110,10 @@ public class NpcLocation {
         float yaw = (float) Math.toDegrees((theta + _2PI) % _2PI);
         float pitch = (float) Math.toDegrees(Math.atan(-y / xz));
 
+        yaw = ((yaw + yawOffset) % 360 + 360) % 360;
+        if (yaw > 180) yaw -= 360;
+        float factor = 1 - (Math.abs(yawOffset) / 90);
+        pitch = Math.min(Math.max(-90, (pitch * factor) + pitchOffset), 90);
         return new NpcLocation(this.x, this.y, this.z, yaw, pitch);
     }
 

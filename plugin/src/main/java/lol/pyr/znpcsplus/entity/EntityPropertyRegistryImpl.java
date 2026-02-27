@@ -724,6 +724,9 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new CustomTypeProperty<>("armadillo_state", 17, ArmadilloState.IDLE, EntityDataTypes.ARMADILLO_STATE, state ->
                 com.github.retrooper.packetevents.protocol.entity.armadillo.ArmadilloState.valueOf(state.name())));
 
+        // Attribute Scale
+        register(new AttributeProperty(packetFactory, "attribute_scale", Attributes.SCALE));
+
         // Wolf
         register(new EncodedIntegerProperty<>("wolf_variant", WoldVariant.PALE, wolfIndex, WoldVariant::getId, EntityDataTypes.WOLF_VARIANT));
 
