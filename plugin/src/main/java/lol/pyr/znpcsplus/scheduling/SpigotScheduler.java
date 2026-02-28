@@ -16,7 +16,7 @@ public class SpigotScheduler extends TaskScheduler {
 
     @Override
     public void schedulePlayerCommand(Player player, String command) {
-        runSyncGlobal(() -> Bukkit.dispatchCommand(player, command));
+        if (!command.isEmpty()) runSyncGlobal(() -> Bukkit.dispatchCommand(player, command));
     }
 
     @Override

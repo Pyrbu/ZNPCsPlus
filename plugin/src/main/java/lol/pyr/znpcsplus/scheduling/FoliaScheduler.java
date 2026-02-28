@@ -28,7 +28,7 @@ public class FoliaScheduler extends TaskScheduler {
     public void schedulePlayerCommand(Player player, String command) {
         try {
             Object scheduler = Reflections.FOLIA_GET_REGION_SCHEDULER.get().invoke(null);
-            Reflections.FOLIA_EXECUTE_REGION.get().invoke(scheduler, plugin, player.getLocation(), (Runnable) () -> Bukkit.dispatchCommand(player, command));
+            if (!command.isEmpty()) Reflections.FOLIA_EXECUTE_REGION.get().invoke(scheduler, plugin, player.getLocation(), (Runnable) () -> Bukkit.dispatchCommand(player, command));
         } catch (InvocationTargetException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }

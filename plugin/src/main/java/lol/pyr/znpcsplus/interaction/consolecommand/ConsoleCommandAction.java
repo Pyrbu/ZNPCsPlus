@@ -25,7 +25,7 @@ public class ConsoleCommandAction extends InteractionActionImpl {
     @Override
     public void run(Player player) {
         String cmd = command.replace("{player}", player.getName()).replace("{uuid}", player.getUniqueId().toString());
-        scheduler.runSyncGlobal(() -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), PapiUtil.set(player, cmd)));
+        if (!cmd.isEmpty()) scheduler.runSyncGlobal(() -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), PapiUtil.set(player, cmd)));
     }
 
     @Override
