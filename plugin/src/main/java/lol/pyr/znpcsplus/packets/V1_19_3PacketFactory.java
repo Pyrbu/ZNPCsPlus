@@ -16,12 +16,13 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
 import java.util.concurrent.CompletableFuture;
 
 public class V1_19_3PacketFactory extends V1_17PacketFactory {
-    public V1_19_3PacketFactory(TaskScheduler scheduler, PacketEventsAPI<Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer, ConfigManager configManager) {
+    public V1_19_3PacketFactory(TaskScheduler scheduler, PacketEventsAPI<@NotNull Plugin> packetEvents, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer, ConfigManager configManager) {
         super(scheduler, packetEvents, propertyRegistry, textSerializer, configManager);
     }
 
@@ -37,15 +38,13 @@ public class V1_19_3PacketFactory extends V1_17PacketFactory {
                                 properties.getProperty(displayNameProperty.get()) :
                                 "")
                 ));
-        boolean listed = alwaysVisibleInTabProperty == null || properties.getProperty(alwaysVisibleInTabProperty.get());
         skinned(player, properties, new UserProfile(entity.getUuid(), Integer.toString(entity.getEntityId()))).thenAccept(profile -> {
             WrapperPlayServerPlayerInfoUpdate.PlayerInfo info = new WrapperPlayServerPlayerInfoUpdate.PlayerInfo(
-                    profile, listed, 1, GameMode.CREATIVE,
+                    profile, false, 1, GameMode.CREATIVE,
                     displayName, null);
             sendPacket(player, new WrapperPlayServerPlayerInfoUpdate(EnumSet.of(WrapperPlayServerPlayerInfoUpdate.Action.ADD_PLAYER,
                     WrapperPlayServerPlayerInfoUpdate.Action.UPDATE_LISTED, WrapperPlayServerPlayerInfoUpdate.Action.UPDATE_DISPLAY_NAME),
-                    info, info, info));
-            entity.setListedInTabList(true);
+                    info));
             future.complete(null);
         });
         return future;
@@ -54,19 +53,7 @@ public class V1_19_3PacketFactory extends V1_17PacketFactory {
     @Override
     public void removeTabPlayer(Player player, PacketEntity entity) {
         if (entity.getType() != EntityTypes.PLAYER) return;
-        if (!entity.isListedInTabList()) return;
         sendPacket(player, new WrapperPlayServerPlayerInfoRemove(entity.getUuid()));
-        entity.setListedInTabList(false);
-    }
-
-    @Override
-    public void updateListed(Player player, PacketEntity entity, boolean listed) {
-        if (entity.getType() != EntityTypes.PLAYER) return;
-        sendPacket(player, new WrapperPlayServerPlayerInfoUpdate(WrapperPlayServerPlayerInfoUpdate.Action.UPDATE_LISTED,
-                new WrapperPlayServerPlayerInfoUpdate.PlayerInfo(new UserProfile(entity.getUuid(), null),
-                        listed, 1, GameMode.CREATIVE, null, null))
-        );
-        entity.setListedInTabList(listed);
     }
 
     @Override
@@ -74,7 +61,7 @@ public class V1_19_3PacketFactory extends V1_17PacketFactory {
         if (entity.getType() != EntityTypes.PLAYER) return;
         sendPacket(player, new WrapperPlayServerPlayerInfoUpdate(WrapperPlayServerPlayerInfoUpdate.Action.UPDATE_DISPLAY_NAME,
                 new WrapperPlayServerPlayerInfoUpdate.PlayerInfo(new UserProfile(entity.getUuid(), null),
-                        entity.isListedInTabList(), 1, GameMode.CREATIVE, displayName, null))
+                        false, 1, null, displayName, null))
         );
     }
 }

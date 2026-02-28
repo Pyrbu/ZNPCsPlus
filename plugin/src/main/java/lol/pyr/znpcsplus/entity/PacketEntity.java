@@ -31,7 +31,6 @@ public class PacketEntity implements PropertyHolder {
     private PacketEntity vehicle;
     private Integer vehicleId;
     private List<Integer> passengers;
-    private boolean listedInTabList = true;
 
     public PacketEntity(PacketFactory packetFactory, PropertyHolder properties, Viewable viewable, EntityType type, NpcLocation location) {
         this.packetFactory = packetFactory;
@@ -225,13 +224,5 @@ public class PacketEntity implements PropertyHolder {
     @Override
     public Set<EntityProperty<?>> getAppliedProperties() {
         return properties.getAppliedProperties();
-    }
-
-    public boolean isListedInTabList() {
-        return listedInTabList;
-    }
-
-    public void setListedInTabList(boolean listedInTabList) {
-        this.listedInTabList = listedInTabList;
     }
 }

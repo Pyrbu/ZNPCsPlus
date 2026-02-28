@@ -29,6 +29,5 @@ public interface PacketFactory {
     void setPassengers(Player player, int vehicle, int... passengers);
     void sendAllAttributes(Player player, PacketEntity entity, PropertyHolder properties);
     void sendAttribute(Player player, PacketEntity entity, WrapperPlayServerUpdateAttributes.Property property);
-    void updateListed(Player player, PacketEntity entity, boolean listed);
     void updateDisplayName(Player player, PacketEntity entity, Component displayName);
 }

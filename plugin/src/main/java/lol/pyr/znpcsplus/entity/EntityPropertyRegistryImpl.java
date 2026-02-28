@@ -17,7 +17,6 @@ import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.properties.*;
 import lol.pyr.znpcsplus.entity.properties.attributes.AttributeProperty;
-import lol.pyr.znpcsplus.entity.properties.player.AlwaysVisibleInTabProperty;
 import lol.pyr.znpcsplus.entity.properties.player.TabListDisplayNameProperty;
 import lol.pyr.znpcsplus.entity.properties.villager.VillagerLevelProperty;
 import lol.pyr.znpcsplus.entity.properties.villager.VillagerProfessionProperty;
@@ -128,7 +127,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new NameProperty(textSerializer, legacyNames, optionalComponents));
         register(new DummyProperty<>("display_name", String.class));
         register(new TabListDisplayNameProperty(packetFactory, textSerializer));
-        register(new AlwaysVisibleInTabProperty(packetFactory));
         register(new DinnerboneProperty(legacyNames, optionalComponents));
 
         register(new DummyProperty<>("look", LookType.FIXED));
