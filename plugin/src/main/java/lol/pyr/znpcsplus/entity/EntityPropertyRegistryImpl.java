@@ -559,17 +559,24 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new EncodedIntegerProperty<>("parrot_variant", ParrotVariant.RED_BLUE, parrotIndex, Enum::ordinal));
 
         // Player
-        NBTProperty.NBTDecoder<ParrotVariant> parrotVariantDecoder = (variant) -> {
-            NBTCompound compound = new NBTCompound();
-            if (variant == null) return compound;
-            compound.setTag("id", new NBTString("minecraft:parrot"));
-            compound.setTag("Variant", new NBTInt(variant.ordinal()));
-            return compound;
-        };
-        int shoulderIndex = skinLayersIndex+2;
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_21_9)) shoulderIndex += 1;
-        register(new NBTProperty<>("shoulder_entity_left", ParrotVariant.class, shoulderIndex++, parrotVariantDecoder, true));
-        register(new NBTProperty<>("shoulder_entity_right", ParrotVariant.class, shoulderIndex, parrotVariantDecoder, true));
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_21_9)) {
+            int shoulderIndex = 19;
+            EncodedOptionalIntegerProperty.OptionalIntegerDecoder<ParrotVariant> decoder = variant -> variant == null ? Optional.empty() : Optional.of(variant.ordinal());
+            register(new EncodedOptionalIntegerProperty<>("shoulder_entity_left", null, ParrotVariant.class, shoulderIndex++, decoder, EntityDataTypes.OPTIONAL_INT));
+            register(new EncodedOptionalIntegerProperty<>("shoulder_entity_right", null, ParrotVariant.class, shoulderIndex, decoder, EntityDataTypes.OPTIONAL_INT));
+        } else {
+            NBTProperty.NBTDecoder<ParrotVariant> parrotVariantDecoder = (variant) -> {
+                NBTCompound compound = new NBTCompound();
+                if (variant == null) return compound;
+                compound.setTag("id", new NBTString("minecraft:parrot"));
+                compound.setTag("Variant", new NBTInt(variant.ordinal()));
+                return compound;
+            };
+            int shoulderIndex = skinLayersIndex + 2;
+            register(new NBTProperty<>("shoulder_entity_left", ParrotVariant.class, shoulderIndex++, parrotVariantDecoder, true));
+            register(new NBTProperty<>("shoulder_entity_right", ParrotVariant.class, shoulderIndex, parrotVariantDecoder, true));
+        }
+
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_13)) return;
         // Pufferfish
