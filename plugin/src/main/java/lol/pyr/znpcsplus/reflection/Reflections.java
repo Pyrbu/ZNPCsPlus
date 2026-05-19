@@ -34,7 +34,7 @@ public final class Reflections {
     public static final Class<?> ENTITY_HUMAN_CLASS =
             new ReflectionBuilder(ReflectionPackage.ENTITY)
                     .withSubClass("player")
-                    .withClassName("EntityHuman")
+                    .withClassName(PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_26_1) ? "EntityHuman" : "Player")
                     .toClassReflection().get();
 
     public static final ReflectionLazyLoader<Method> GET_PLAYER_HANDLE_METHOD =
