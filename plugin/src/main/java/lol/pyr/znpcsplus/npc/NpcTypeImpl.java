@@ -4,6 +4,8 @@ import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
+import com.github.retrooper.packetevents.protocol.packettype.PacketType;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerTags;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.npc.NpcType;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
@@ -139,16 +141,13 @@ public class NpcTypeImpl implements NpcType {
             if (version.isNewerThanOrEquals(ServerVersion.V_1_9)) addProperties("glow");
             if (version.isNewerThanOrEquals(ServerVersion.V_1_14)) {
                 addProperties("pose");
-                if (EntityTypes.isTypeInstanceOf(type, EntityTypes.HORSE)) {
-                    addProperties("chestplate");
-                }
             }
             if (version.isNewerThanOrEquals(ServerVersion.V_1_17)) addProperties("shaking");
             if (EntityTypes.isTypeInstanceOf(type, EntityTypes.ABSTRACT_AGEABLE) || EntityTypes.isTypeInstanceOf(type, EntityTypes.ZOMBIE) || EntityTypes.isTypeInstanceOf(type, EntityTypes.ZOGLIN)) {
                 addProperties("baby");
             }
             if (EntityTypes.isTypeInstanceOf(type, EntityTypes.ABSTRACT_HORSE)) {
-                addProperties("is_saddled", "is_eating", "is_rearing", "has_mouth_open");
+                addProperties("is_tame", "is_eating", "is_rearing", "has_mouth_open");
             }
             if (type.equals(EntityTypes.HORSE) && version.isOlderThan(ServerVersion.V_1_14)) {
                 addProperties("horse_armor");
@@ -228,6 +227,37 @@ public class NpcTypeImpl implements NpcType {
             }
             if (EntityTypes.isTypeInstanceOf(type, EntityTypes.HAPPY_GHAST)) {
                 addProperties("body");
+            }
+            if (EntityTypes.isTypeInstanceOf(type, EntityTypes.HORSE)) {
+                if (version.isNewerThanOrEquals(ServerVersion.V_1_21)) {
+                    addProperties("body");
+                } else {
+                    addProperties("chestplate");
+                }
+            }
+            if (version.isNewerThanOrEquals(ServerVersion.V_1_21_5)) {
+                    if (EntityTypes.isTypeInstanceOf(type, EntityTypes.HORSE)
+                            || EntityTypes.isTypeInstanceOf(type, EntityTypes.SKELETON_HORSE)
+                            || EntityTypes.isTypeInstanceOf(type, EntityTypes.ZOMBIE_HORSE)
+                            || EntityTypes.isTypeInstanceOf(type, EntityTypes.DONKEY)
+                            || EntityTypes.isTypeInstanceOf(type, EntityTypes.MULE)
+                            || EntityTypes.isTypeInstanceOf(type, EntityTypes.PIG)
+                            || EntityTypes.isTypeInstanceOf(type, EntityTypes.STRIDER)
+                            || EntityTypes.isTypeInstanceOf(type, EntityTypes.CAMEL)
+                            || EntityTypes.isTypeInstanceOf(type, EntityTypes.CAMEL_HUSK)
+                            || EntityTypes.isTypeInstanceOf(type, EntityTypes.NAUTILUS)
+                            || EntityTypes.isTypeInstanceOf(type, EntityTypes.ZOMBIE_NAUTILUS)) {
+                        addProperties("saddle");
+                    }
+            } else {
+                // not newer than 1.21.5 but still has saddles
+                if (EntityTypes.isTypeInstanceOf(type, EntityTypes.ABSTRACT_HORSE)) {
+                    addProperties("is_saddled");
+                } else if (EntityTypes.isTypeInstanceOf(type, EntityTypes.PIG)) {
+                    addProperties("pig_saddled");
+                } else if (EntityTypes.isTypeInstanceOf(type, EntityTypes.STRIDER)) {
+                    addProperties("strider_saddled");
+                }
             }
             return new NpcTypeImpl(name, type, hologramOffset, eyeHeight, new HashSet<>(allowedProperties), defaultProperties);
         }

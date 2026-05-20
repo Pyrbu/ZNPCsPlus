@@ -142,8 +142,7 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
 
         register(builder(p, "pig", EntityTypes.PIG)
                 .setHologramOffset(-1.075)
-                .setEyeHeight(0.9F * DEFAULT_EYE_HEIGHT)
-                .addProperties("pig_saddled"));
+                .setEyeHeight(0.9F * DEFAULT_EYE_HEIGHT));
 
         register(builder(p, "rabbit", EntityTypes.RABBIT)
                 .setHologramOffset(-1.475)
@@ -411,7 +410,7 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
         register(builder(p, "strider", EntityTypes.STRIDER)
                 .setHologramOffset(-0.275)
                 .setEyeHeight(1.7F * DEFAULT_EYE_HEIGHT)
-                .addProperties("strider_shaking", "strider_saddled"));
+                .addProperties("strider_shaking"));
 
         register(builder(p, "zoglin", EntityTypes.ZOGLIN)
                 .setHologramOffset(-0.575)

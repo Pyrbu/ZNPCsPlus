@@ -171,7 +171,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new HealthProperty(healthIndex));
 
         final int tameableIndex;
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) tameableIndex = 17;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_26_1)) tameableIndex = 18;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) tameableIndex = 17;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) tameableIndex = 16;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) tameableIndex = 15;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) tameableIndex = 13;
@@ -283,7 +284,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Abstract Horse
         int horseIndex;
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) horseIndex = 17;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_26_1)) horseIndex = 18;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) horseIndex = 17;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) horseIndex = 16;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) horseIndex = 15;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) horseIndex = 13;
@@ -337,7 +339,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
             register(new EncodedIntegerProperty<>("horse_type", HorseType.HORSE, horseTypeIndex, Enum::ordinal));
         }
         int horseVariantIndex;
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_18)) horseVariantIndex = 18;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_26_1)) horseVariantIndex = 19;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_18)) horseVariantIndex = 18;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) horseVariantIndex = 19;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) horseVariantIndex = 18;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) horseVariantIndex = 17;
@@ -364,7 +367,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
             linkProperties("is_tame", "is_saddled", "has_chest", "is_eating", "is_rearing", "has_mouth_open");
         } else {
             register(new BooleanProperty("has_chest", horseVariantIndex, false, legacyBooleans));
-            if (ver.isOlderThan(ServerVersion.V_1_21)){
+            if (ver.isOlderThan(ServerVersion.V_1_21_5)){
                 linkProperties("is_tame", "is_saddled", "is_eating", "is_rearing", "has_mouth_open");
             } else {
                 linkProperties("is_tame", "is_eating", "is_rearing", "has_mouth_open");
@@ -392,18 +395,21 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         }
 
         // Pig
-        int pigIndex;
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) pigIndex = 17;
-        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) pigIndex = 16;
-        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) pigIndex = 15;
-        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) pigIndex = 13;
-        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) pigIndex = 12;
-        else pigIndex = 16;
-        register(new BooleanProperty("pig_saddled", pigIndex, false, legacyBooleans));
+        if (ver.isOlderThan(ServerVersion.V_1_21_5)) {
+            int pigIndex;
+            if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) pigIndex = 17;
+            else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) pigIndex = 16;
+            else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) pigIndex = 15;
+            else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) pigIndex = 13;
+            else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) pigIndex = 12;
+            else pigIndex = 16;
+            register(new BooleanProperty("pig_saddled", pigIndex, false, legacyBooleans));
+        }
 
         // Rabbit
         int rabbitIndex;
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) rabbitIndex = 17;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_26_1)) rabbitIndex = 18;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) rabbitIndex = 17;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) rabbitIndex = 16;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) rabbitIndex = 15;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) rabbitIndex = 13;
@@ -413,7 +419,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Sheep
         int sheepIndex;
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) sheepIndex = 17;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_26_1)) sheepIndex = 18;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) sheepIndex = 17;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) sheepIndex = 16;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) sheepIndex = 15;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) sheepIndex = 13;
@@ -434,7 +441,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Wolf
         int wolfIndex;
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) wolfIndex = 19;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_26_1)) wolfIndex = 20;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) wolfIndex = 19;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) wolfIndex = 18;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) wolfIndex = 16;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_9)) wolfIndex = 15;
@@ -445,7 +453,11 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
             register(new EncodedByteProperty<>("wolf_collar", DyeColor.BLUE, wolfIndex++, DyeColor::getDyeData));
         } else register(new EncodedIntegerProperty<>("wolf_collar", DyeColor.RED, wolfIndex++, Enum::ordinal));
         if (ver.isNewerThanOrEquals(ServerVersion.V_1_16)) {
-            register(new EncodedIntegerProperty<>("wolf_angry", false, wolfIndex++, b -> b ? 1 : 0));
+            if (ver.isNewerThanOrEquals(ServerVersion.V_1_21_11)) {
+                register(new EncodedLongProperty<>("wolf_angry", false, wolfIndex++, b -> b ? 1L : -1L)); // TODO: Fix this because now it means end time in game ticks instead.
+            } else {
+                register(new EncodedIntegerProperty<>("wolf_angry", false, wolfIndex++, b -> b ? 1 : 0));
+            }
             linkProperties("tamed", "sitting");
         }
         else {
@@ -522,7 +534,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_10)) return;
         // Polar Bear
         int polarBearIndex;
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) polarBearIndex = 17;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_26_1)) polarBearIndex = 18;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) polarBearIndex = 17;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) polarBearIndex = 16;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) polarBearIndex = 15;
         else polarBearIndex = 13;
@@ -539,7 +552,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Llama
         int llamaIndex;
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_18)) llamaIndex = 20;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_26_1)) llamaIndex = 21;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_18)) llamaIndex = 20;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) llamaIndex = 21;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) llamaIndex = 20;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) llamaIndex = 19;
@@ -552,7 +566,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_12)) return;
         // Parrot
         int parrotIndex;
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) parrotIndex = 19;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_26_1)) parrotIndex = 20;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) parrotIndex = 19;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) parrotIndex = 18;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) parrotIndex = 17;
         else parrotIndex = 15;
@@ -602,8 +617,11 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Pose
         register(new CustomTypeProperty<>("pose", 6, NpcPose.STANDING, EntityDataTypes.ENTITY_POSE, npcPose -> EntityPose.valueOf(npcPose.name())));
 
+        // TODO: Add Abstract Villager head shake property
+
         // Villager
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) villagerIndex = 18;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_26_1)) villagerIndex = 19;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) villagerIndex = 18;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) villagerIndex = 17;
         else villagerIndex = 16;
         register(new VillagerTypeProperty("villager_type", villagerIndex, VillagerType.PLAINS));
@@ -613,7 +631,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Cat
         int catIndex;
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) catIndex = 19;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_26_1)) catIndex = 20;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) catIndex = 19;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) catIndex = 18;
         else catIndex = 17;
         register(new EncodedIntegerProperty<>("cat_variant", CatVariant.BLACK, catIndex++, Enum::ordinal, EntityDataTypes.CAT_VARIANT));
@@ -623,7 +642,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Fox
         int foxIndex;
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) foxIndex = 17;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_26_1)) foxIndex = 18;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) foxIndex = 17;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) foxIndex = 16;
         else foxIndex = 15;
         register(new EncodedIntegerProperty<>("fox_variant", FoxVariant.RED, foxIndex++, Enum::ordinal));
@@ -633,14 +653,20 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         linkProperties("fox_sitting", "fox_crouching", "fox_sleeping");
 
         int mooshroomIndex;
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) mooshroomIndex = 17;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_26_1)) mooshroomIndex = 18;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) mooshroomIndex = 17;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) mooshroomIndex = 16;
         else mooshroomIndex = 15;
-        register(new EncodedStringProperty<>("mooshroom_variant", MooshroomVariant.RED, mooshroomIndex, MooshroomVariant::getVariantName));
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_21_5)) {
+            register(new EncodedIntegerProperty<>("mooshroom_variant", MooshroomVariant.RED, mooshroomIndex, Enum::ordinal));
+        } else {
+            register(new EncodedStringProperty<>("mooshroom_variant", MooshroomVariant.RED, mooshroomIndex, MooshroomVariant::getVariantName));
+        }
 
         // Panda
         int pandaIndex;
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) pandaIndex = 20;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_26_1)) pandaIndex = 21;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) pandaIndex = 20;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) pandaIndex = 19;
         else pandaIndex = 18;
         register(new EncodedByteProperty<>("panda_main_gene", PandaGene.NORMAL, pandaIndex++, obj -> (byte) obj.ordinal()));
@@ -665,51 +691,84 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Bee
         int beeIndex;
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) beeIndex = 17;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_26_1)) beeIndex = 18;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) beeIndex = 17;
         else beeIndex = 18;
         register(new BitsetProperty("has_nectar", beeIndex++, 0x08));
-        register(new EncodedIntegerProperty<>("angry", false, beeIndex, enabled -> enabled ? 1 : 0));
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_21_11)) {
+            register(new EncodedLongProperty<>("angry", false, beeIndex, b -> b ? 1L : -1L)); // TODO: Fix this because now it means end time in game ticks instead.
+        } else {
+            register(new EncodedIntegerProperty<>("angry", false, beeIndex, b -> b ? 1 : 0));
+        }
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_16)) return;
 
         // Hoglin and Piglin Zombification
-        final int zombificationIndex;
-        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) zombificationIndex = 17; // Change piglinIndex, pillagerIndex, striderIndex and vindicatorIndex if you change this
-        else zombificationIndex = 16;
-        register(new BooleanProperty("hoglin_immune_to_zombification", zombificationIndex, false, legacyBooleans));
-        register(new BooleanProperty("piglin_immune_to_zombification", zombificationIndex-1, false, legacyBooleans));
+        final int hoglinZombificationIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_26_1)) hoglinZombificationIndex = 18;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) hoglinZombificationIndex = 17;
+        else hoglinZombificationIndex = 16;
+        register(new BooleanProperty("hoglin_immune_to_zombification", hoglinZombificationIndex, false, legacyBooleans));
+
+        int piglinZombificationIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) piglinZombificationIndex = 16; // Change piglinIndex if you change this
+        else piglinZombificationIndex = 15;
+        register(new BooleanProperty("piglin_immune_to_zombification", piglinZombificationIndex, false, legacyBooleans));
 
         // Piglin
-        int piglinIndex = zombificationIndex;
+        int piglinIndex = piglinZombificationIndex + 1;
         register(new BooleanProperty("piglin_baby", piglinIndex++, false, legacyBooleans));
         register(new BooleanProperty("piglin_charging_crossbow", piglinIndex++, false, legacyBooleans));
         register(new BooleanProperty("piglin_dancing", piglinIndex, false, legacyBooleans));
 
         // Pillager
-        register(new BooleanProperty("pillager_charging", zombificationIndex, false, legacyBooleans));
+        int pillagerIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) pillagerIndex = 17;
+        else pillagerIndex = 16;
+        register(new BooleanProperty("pillager_charging", pillagerIndex, false, legacyBooleans));
 
         // Strider
-        int striderIndex = zombificationIndex + 1;
-        register(new BooleanProperty("strider_shaking", striderIndex++, false, legacyBooleans)); // TODO: Fix this, it needs to be set constantly i guess
-        register(new BooleanProperty("strider_saddled", striderIndex, false, legacyBooleans));
+        int striderIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_26_1)) striderIndex = 19;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) striderIndex = 18;
+        else striderIndex = 17;
+
+        int noAIIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) noAIIndex = 15;
+        else noAIIndex = 14;
+        register(new StriderShakingProperty(striderIndex, noAIIndex, 0x01));
+        if (ver.isOlderThan(ServerVersion.V_1_21_5)) {
+            register(new BooleanProperty("strider_saddled", striderIndex, false, legacyBooleans));
+        }
 
         // Vindicator
-        int vindicatorIndex = zombificationIndex -1;
+        int vindicatorIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) vindicatorIndex = 16;
+        else vindicatorIndex = 15;
         register(new BooleanProperty("celebrating", vindicatorIndex, false, legacyBooleans));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_17)) return;
         // Axolotl
-        register(new EncodedIntegerProperty<>("axolotl_variant", AxolotlVariant.LUCY, 17, Enum::ordinal));
-        register(new BooleanProperty("playing_dead", 18, false, legacyBooleans));
+        int axolotlIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_26_1)) axolotlIndex = 18;
+        else axolotlIndex = 17;
+        register(new EncodedIntegerProperty<>("axolotl_variant", AxolotlVariant.LUCY, axolotlIndex++, Enum::ordinal));
+        register(new BooleanProperty("playing_dead", axolotlIndex, false, legacyBooleans));
 
         // Goat
-        register(new BooleanProperty("has_left_horn", 18, true, legacyBooleans));
-        register(new BooleanProperty("has_right_horn", 19, true, legacyBooleans));
+        int goatIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_26_1)) goatIndex = 19;
+        else goatIndex = 18;
+        register(new BooleanProperty("has_left_horn", goatIndex++, true, legacyBooleans));
+        register(new BooleanProperty("has_right_horn", goatIndex, true, legacyBooleans));
 
         register(new EncodedIntegerProperty<>("shaking", false,7, enabled -> enabled ? 140 : 0));
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_19)) return;
         // Frog
-        register(new EncodedIntegerProperty<>("frog_variant", FrogVariant.TEMPERATE, 17, Enum::ordinal, EntityDataTypes.FROG_VARIANT));
+        int frogIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_26_1)) frogIndex = 18;
+        else frogIndex = 17;
+        register(new EncodedIntegerProperty<>("frog_variant", FrogVariant.TEMPERATE, frogIndex, Enum::ordinal, EntityDataTypes.FROG_VARIANT));
 
         // Warden
         register(new EncodedIntegerProperty<>("warden_anger", 0, 16, b -> Math.min(150, Math.max(0, b))));
@@ -717,16 +776,24 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_20)) return;
 
         // Camel
-        int camelIndex = 18;
+        int camelIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_26_1)) camelIndex = 19;
+        else camelIndex = 18;
         register(new BooleanProperty("bashing", camelIndex++, false, legacyBooleans));
         register(new CamelSittingProperty(6, camelIndex));
 
         // Sniffer
-        register(new CustomTypeProperty<>("sniffer_state", 17, SnifferState.IDLING, EntityDataTypes.SNIFFER_STATE, state -> com.github.retrooper.packetevents.protocol.entity.sniffer.SnifferState.valueOf(state.name())));
+        int snifferIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_26_1)) snifferIndex = 18;
+        else snifferIndex = 17;
+        register(new CustomTypeProperty<>("sniffer_state", snifferIndex, SnifferState.IDLING, EntityDataTypes.SNIFFER_STATE, state -> com.github.retrooper.packetevents.protocol.entity.sniffer.SnifferState.valueOf(state.name())));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_20_5)) return;
         // Armadillo
-        register(new CustomTypeProperty<>("armadillo_state", 17, ArmadilloState.IDLE, EntityDataTypes.ARMADILLO_STATE, state ->
+        int armadilloIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_26_1)) armadilloIndex = 18;
+        else armadilloIndex = 17;
+        register(new CustomTypeProperty<>("armadillo_state", armadilloIndex, ArmadilloState.IDLE, EntityDataTypes.ARMADILLO_STATE, state ->
                 com.github.retrooper.packetevents.protocol.entity.armadillo.ArmadilloState.valueOf(state.name())));
 
         // Attribute Scale
@@ -752,6 +819,10 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Creaking
         register(new BooleanProperty("creaking_crumbling", 18, false, legacyBooleans));
 
+        if (!ver.isNewerThanOrEquals(ServerVersion.V_1_21_5)) return;
+
+        register(new EquipmentProperty(packetFactory, "saddle", EquipmentSlot.SADDLE));
+
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_21_9)) return;
 
         // Copper Golem
@@ -763,7 +834,9 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_21_11)) return;
 
         // Nautilus
-        int nautilusIndex = 19;
+        int nautilusIndex;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_26_1)) nautilusIndex = 20;
+        else nautilusIndex = 19;
         nautilusIndex++; // skip unused index
 
         // Zombie Nautilus
