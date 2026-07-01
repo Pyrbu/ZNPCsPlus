@@ -842,6 +842,19 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Zombie Nautilus
         register(new CustomTypeProperty<>("zombie_nautilus_variant",  nautilusIndex, ZombieNautilusVariant.TEMPERATE, EntityDataTypes.ZOMBIE_NAUTILUS_VARIANT, variant ->
                 ZombieNautilusVariants.getRegistry().getByNameOrThrow(variant.name().toLowerCase())));
+
+        if (!ver.isNewerThanOrEquals(ServerVersion.V_26_2)) return;
+
+        // Slime, Magma Cube and Sulfur Cube
+        int cubeSizeIndex;
+        cubeSizeIndex = 18;
+        register(new IntegerProperty("cube_size", cubeSizeIndex, 1, legacyBooleans));
+
+        // Sulfur Cube
+        int sulfurCubeIndex;
+        sulfurCubeIndex = 19;
+
+        register(new IntegerProperty("max_fuse",  sulfurCubeIndex, -1));
     }
 
     private void registerSerializer(PropertySerializer<?> serializer) {

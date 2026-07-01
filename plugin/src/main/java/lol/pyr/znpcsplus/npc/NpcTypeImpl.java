@@ -166,7 +166,7 @@ public class NpcTypeImpl implements NpcType {
             if (EntityTypes.isTypeInstanceOf(type, EntityTypes.ABSTRACT_PIGLIN)) {
                 addProperties("piglin_immune_to_zombification");
             }
-            if (EntityTypes.isTypeInstanceOf(type, EntityTypes.SLIME) || EntityTypes.isTypeInstanceOf(type, EntityTypes.PHANTOM)) {
+            if (EntityTypes.isTypeInstanceOf(type, EntityTypes.PHANTOM)) {
                 addProperties("size");
             }
             if (version.isOlderThan(ServerVersion.V_1_14)) {
@@ -257,6 +257,17 @@ public class NpcTypeImpl implements NpcType {
                     addProperties("pig_saddled");
                 } else if (EntityTypes.isTypeInstanceOf(type, EntityTypes.STRIDER)) {
                     addProperties("strider_saddled");
+                }
+            }
+            if (version.isNewerThanOrEquals(ServerVersion.V_26_2)) {
+                if (EntityTypes.isTypeInstanceOf(type, EntityTypes.SLIME)
+                        || EntityTypes.isTypeInstanceOf(type, EntityTypes.MAGMA_CUBE)
+                        || EntityTypes.isTypeInstanceOf(type, EntityTypes.SULFUR_CUBE)) { // TODO: Change to Abstract Cube Mob when it is added to PacketEvents
+                    addProperties("cube_size");
+                }
+            } else {
+                if (EntityTypes.isTypeInstanceOf(type, EntityTypes.SLIME)) {
+                    addProperties("size");
                 }
             }
             return new NpcTypeImpl(name, type, hologramOffset, eyeHeight, new HashSet<>(allowedProperties), defaultProperties);

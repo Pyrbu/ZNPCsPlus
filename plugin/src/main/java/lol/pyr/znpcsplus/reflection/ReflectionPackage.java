@@ -24,6 +24,7 @@ public class ReflectionPackage {
      */
     public static final String MINECRAFT = joinWithDot("net.minecraft", flattened ? "server" + VERSION : "");
     public static final String ENTITY = flattened ? MINECRAFT : joinWithDot(MINECRAFT, "world.entity");
+    public static final String SERVER_LEVEL = flattened ? MINECRAFT : joinWithDot(MINECRAFT, "server.level");
 
     public static String joinWithDot(String... parts) {
         return Arrays.stream(parts)

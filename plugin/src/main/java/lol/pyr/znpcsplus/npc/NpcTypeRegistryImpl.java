@@ -523,6 +523,13 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .setHologramOffset(0.015)
                 .setEyeHeight(1.74F)
                 .addProperties("entity_sitting"));
+
+        if (!version.isNewerThanOrEquals(ServerVersion.V_26_2)) return;
+
+        register(builder(p, "sulfur_cube", EntityTypes.SULFUR_CUBE)
+                .setHologramOffset(-1.485)
+                .setEyeHeight(0.175F)
+                .addProperties("body", "max_fuse"));
     }
 
     public Collection<NpcType> getAll() {

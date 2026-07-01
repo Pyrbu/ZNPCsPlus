@@ -183,7 +183,9 @@ public class PacketEntity implements PropertyHolder {
     }
 
     private static int reserveEntityID() {
-        if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_14)) {
+        if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_26_2)) {
+            return Reflections.ATOMIC_ENTITY_ID_FIELD_26_2.get().incrementAndGet();
+        } else if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_14)) {
             return Reflections.ATOMIC_ENTITY_ID_FIELD.get().incrementAndGet();
         } else {
             int id = Reflections.ENTITY_ID_MODIFIER.get();
