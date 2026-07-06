@@ -125,6 +125,7 @@ public class ZNpcsPlus {
         TaskScheduler scheduler = FoliaUtil.isFolia() ? new FoliaScheduler(bootstrap) : new SpigotScheduler(bootstrap);
         shutdownTasks.add(scheduler::cancelAll);
         shutdownTasks.add(Viewable::shutdownExecutor);
+        shutdownTasks.add(FutureUtil::shutdownExecutor);
 
         PacketFactory packetFactory = setupPacketFactory(scheduler, propertyRegistry, configManager);
         propertyRegistry.registerTypes(packetFactory, textSerializer, scheduler);

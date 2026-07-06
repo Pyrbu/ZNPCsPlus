@@ -156,7 +156,7 @@ public class MojangSkinCache {
     public CompletableFuture<SkinImpl> fetchFromFile(String path) throws FileNotFoundException {
         File file = new File(skinsFolder, path);
         if (!file.exists()) throw new FileNotFoundException("File not found: " + path);
-        return CompletableFuture.supplyAsync(() -> {
+        return FutureUtil.exceptionPrintingSupplyAsync(() -> {
             URL apiUrl = parseUrl("https://api.mineskin.org/generate/upload");
             HttpURLConnection connection = null;
             try {

@@ -28,7 +28,7 @@ public class PrefetchedDescriptor implements BaseSkinDescriptor, SkinDescriptor 
     }
 
     public static CompletableFuture<PrefetchedDescriptor> fromFile(MojangSkinCache cache, String path) {
-        return CompletableFuture.supplyAsync(() -> {
+        return FutureUtil.exceptionPrintingSupplyAsync(() -> {
             try {
                 return new PrefetchedDescriptor(cache.fetchFromFile(path).join());
             } catch (FileNotFoundException e) {
