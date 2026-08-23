@@ -1,6 +1,9 @@
 # ZNPCsPlus [![](https://img.shields.io/discord/1099449144948555957?label=Discord&logo=Discord&style=plastic)](https://discord.gg/MAZz6XpPcg) [![](https://img.shields.io/jenkins/build?jobUrl=https%3A%2F%2Fci.pyr.lol%2Fjob%2FZNPCsPlus%2F&style=plastic&logo=jenkins)](https://ci.pyr.lol/job/ZNPCsPlus/)
 [![](https://img.shields.io/bstats/players/18244?style=plastic&label=bStats%20Players)]((https://bstats.org/plugin/bukkit/ZNPCsPlus/18244/)) [![](https://img.shields.io/bstats/servers/18244?style=plastic&label=bStats%20Servers)]((https://bstats.org/plugin/bukkit/ZNPCsPlus/18244/)) [![](https://img.shields.io/spiget/downloads/109380?style=plastic&label=Spigot%20Downloads)]((https://www.spigotmc.org/resources/znpcsplus.109380/))
 
+[![](https://raw.githubusercontent.com/Pyrbu/ZNPCsPlus/refs/heads/2.X/.github/sculkhosting.png?raw=true)](https://my.sculkhosting.com/ref/znpcsplus)
+https://my.sculkhosting.com/ref/znpcsplus
+
 [ZNPCsPlus](https://www.spigotmc.org/resources/znpcsplus.109380/) is a Spigot plugin that is used to create fake entities 
 that players can interact with to perform actions like switching servers on a network or executing commands.
 
